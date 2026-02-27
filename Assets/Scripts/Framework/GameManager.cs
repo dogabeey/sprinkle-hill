@@ -24,9 +24,13 @@ namespace Game
     public class GameManager : SingletonComponent<GameManager>
     {
         [Header("Managers")]
+        [InlineEditor]
         public EventManager eventManager;
+        [InlineEditor]
         public SoundManager soundManager;
+        [InlineEditor]
         public SaveManager saveManager;
+        [InlineEditor]
         public ElementVisualDataManager elementVisualDataManager;
         [Header("References")]
         public List<World> worlds;

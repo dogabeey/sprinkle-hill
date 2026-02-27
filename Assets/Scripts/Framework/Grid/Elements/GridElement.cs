@@ -23,12 +23,12 @@ namespace Game
         {
             this.ownerGrid = ownerGrid;
             this.elementInfo = elementInfo;
-            SetElementVisual();
+            SetElement();
         }
 
-        protected virtual void SetElementVisual()
+        protected virtual void SetElement()
         {
-            ElementVisualInfo visualInfo = GameManager.Instance.elementVisualDataManager.GetElementVisualInfo(elementInfo.elementVisual);
+            ElementData visualInfo = elementInfo.elementData;
             if (visualInfo != null)
             {
                 if (meshFilter != null && visualInfo.elementMesh != null)
@@ -57,11 +57,6 @@ namespace Game
     [System.Serializable]
     public class GridElementInfo
     {
-        public ElementVisualType elementVisual;
-
-        public GridElementInfo(ElementVisualType elementVisual)
-        {
-            this.elementVisual = elementVisual;
-        }
+        public ElementData elementData;
     }
 }
