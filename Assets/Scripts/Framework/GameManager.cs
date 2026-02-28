@@ -30,8 +30,8 @@ namespace Game
         public SoundManager soundManager;
         [InlineEditor]
         public SaveManager saveManager;
-        [InlineEditor]
-        public ElementVisualDataManager elementVisualDataManager;
+
+        public List<ElementData> elementDatas;
         [Header("References")]
         public List<World> worlds;
         public Transform levelContainer;
