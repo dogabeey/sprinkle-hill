@@ -36,11 +36,11 @@ public class UnityAdsManager : SingletonComponent<UnityAdsManager>
 
     private void OnEnable()
     {
-        EventManager.StartListening(Const.GameEvents.LEVEL_STARTED, OnLevelStarted);
+        EventManager.StartListening(ConstantManager.GameEvents.LEVEL_STARTED, OnLevelStarted);
     }
     private void OnDisable()
     {
-        EventManager.StopListening(Const.GameEvents.LEVEL_STARTED, OnLevelStarted);
+        EventManager.StopListening(ConstantManager.GameEvents.LEVEL_STARTED, OnLevelStarted);
     }
     private void OnLevelStarted(EventParam e)
     {
@@ -218,4 +218,5 @@ public class UnityAdsManager : SingletonComponent<UnityAdsManager>
             interstitialAd.OnFailedLoad -= OnAdFailedLoad;
         }
     }
+
 }
