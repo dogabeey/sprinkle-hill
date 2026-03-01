@@ -4938,6 +4938,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 254586920}
     - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: constantManager
+      value: 
+      objectReference: {fileID: 11400000, guid: b9406341470b1d141960d0d2aa97dec6, type: 2}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: worlds.Array.size
       value: 1
       objectReference: {fileID: 0}
