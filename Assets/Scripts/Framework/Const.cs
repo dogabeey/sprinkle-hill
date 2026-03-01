@@ -11,16 +11,11 @@ namespace Game
         LoseScreen,
         SettingScreen,
     }
-    public struct Const
-    {
 
-        public struct Values
-        {
-            public const float PICKUP_DROP_HEIGHT_TRY_STEP = 1f;
-            public const float MOVEMENT_OVERLAP_SPHERE_SENSITIVITY = 0.2f;
-            public const float MOVEMENT_DURATION = 0.2f;
-            internal const float MOVEMENT_STEP = 1;
-        }
+    [CreateAssetMenu(fileName = "ConstantManager", menuName = "Game/Constant Manager...", order = 1)]
+    public class ConstantManager : ScriptableObject
+    {
+        public float elementSwapMoveDuration = 0.3f;
 
         public struct TAGS
         {

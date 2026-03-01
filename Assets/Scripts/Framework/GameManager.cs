@@ -30,6 +30,8 @@ namespace Game
         public SoundManager soundManager;
         [InlineEditor]
         public SaveManager saveManager;
+        [InlineEditor]
+        public ConstantManager constantManager;
 
         public List<ElementData> elementDatas;
         [Header("References")]
@@ -52,19 +54,19 @@ namespace Game
 
                 currentWorld = value;
 
-                EventManager.TriggerEvent(Const.GameEvents.CURRENT_WORLD_CHANGED, new EventParam());
+                EventManager.TriggerEvent(ConstantManager.GameEvents.CURRENT_WORLD_CHANGED, new EventParam());
             }
         }
 
         private void OnEnable()
         {
-            EventManager.StartListening(Const.GameEvents.LEVEL_COMPLETED, OnLevelCompleted);
-            EventManager.StartListening(Const.GameEvents.LEVEL_FAILED, OnLevelFailed);
+            EventManager.StartListening(ConstantManager.GameEvents.LEVEL_COMPLETED, OnLevelCompleted);
+            EventManager.StartListening(ConstantManager.GameEvents.LEVEL_FAILED, OnLevelFailed);
         }
         private void OnDisable()
         {
-            EventManager.StopListening(Const.GameEvents.LEVEL_COMPLETED, OnLevelCompleted);
-            EventManager.StopListening(Const.GameEvents.LEVEL_FAILED, OnLevelFailed);
+            EventManager.StopListening(ConstantManager.GameEvents.LEVEL_COMPLETED, OnLevelCompleted);
+            EventManager.StopListening(ConstantManager.GameEvents.LEVEL_FAILED, OnLevelFailed);
         }
         void OnLevelCompleted(EventParam param)
         {
