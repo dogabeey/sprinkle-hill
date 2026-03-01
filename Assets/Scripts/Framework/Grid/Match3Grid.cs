@@ -1,5 +1,6 @@
 using UnityEngine;
 using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Game
@@ -18,12 +19,22 @@ namespace Game
             // Custom post-initialization logic for Match-3 grid
         }
 
-        public void MatchProcess()
+        public IEnumerator MatchProcess()
         {
+            List<List<Vector2Int>> matchedGroups;
+            // 1. Check for matches
+            while ((matchedGroups = CheckMatchOf(3)).Count > 0)
+            {
+                // 2. Clear matched elements with animations
+                yield return StartCoroutine(ClearMatches(matchedGroups));
+                // 3. Apply gravity and refill
+                yield return StartCoroutine(ApplyGravity());
+            }
 
+            yield break;
         }
 
-        public void SwapElements(Vector2Int first, Vector2Int second)
+        public IEnumerator SwapElements(Vector2Int first, Vector2Int second)
         {
             Vector3Int firstPos = new Vector3Int(first.x, 0, first.y);
             Vector3Int secondPos = new Vector3Int(second.x, 0, second.y);
@@ -33,7 +44,7 @@ namespace Game
 
             if (!hasFirst || !hasSecond)
             {
-                return;
+                yield break;
             }
 
             gridElements.Remove(firstPos);
@@ -44,7 +55,7 @@ namespace Game
             if (!generatedTiles.TryGetValue(firstPos, out Transform firstTile) ||
                 !generatedTiles.TryGetValue(secondPos, out Transform secondTile))
             {
-                return;
+                yield break;
             }
 
             GridElement firstElement = firstTile.GetComponentInChildren<GridElement>();
@@ -59,21 +70,20 @@ namespace Game
                 secondElement.transform.SetParent(firstParent, false);
 
                 firstElement.transform.DOLocalMove(Vector3.zero, GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack);
-                secondElement.transform.DOLocalMove(Vector3.zero, 0.3f).SetEase(Ease.OutBack);
+                yield return secondElement.transform.DOLocalMove(Vector3.zero, GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
             }
             else if (firstElement != null)
             {
                 firstElement.transform.SetParent(secondTile, false);
-                firstElement.transform.DOLocalMove(Vector3.zero, 0.3f).SetEase(Ease.OutBack);
+                yield return firstElement.transform.DOLocalMove(Vector3.zero, GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
             }
             else if (secondElement != null)
             {
                 secondElement.transform.SetParent(firstTile, false);
-                secondElement.transform.DOLocalMove(Vector3.zero, 0.3f).SetEase(Ease.OutBack);
+                yield return secondElement.transform.DOLocalMove(Vector3.zero, GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
             }
         }
-
-        public List<List<Vector2Int>> CheckMatchOf(int elementCount = 3)
+        private List<List<Vector2Int>> CheckMatchOf(int elementCount = 3)
         {
             Dictionary<Vector2Int, ElementData> matchedElements = new Dictionary<Vector2Int, ElementData>();
 
@@ -213,6 +223,154 @@ namespace Game
             }
 
             return groups;
+        }
+        // Clears matched elements from the grid and plays their destruction animations.
+        private IEnumerator ClearMatches(List<List<Vector2Int>> matchedPositions)
+        {
+            HashSet<Vector2Int> clearedPositions = new HashSet<Vector2Int>();
+            foreach (var group in matchedPositions)
+            {
+                foreach (var pos in group)
+                {
+                    if (clearedPositions.Contains(pos))
+                    {
+                        continue;
+                    }
+                    Vector3Int gridPos = new Vector3Int(pos.x, 0, pos.y);
+                    if (gridElements.TryGetValue(gridPos, out GridElementInfo elementInfo))
+                    {
+                        gridElements.Remove(gridPos);
+                        if (generatedTiles.TryGetValue(gridPos, out Transform tile))
+                        {
+                            GridElement element = tile.GetComponentInChildren<GridElement>();
+                            if (element != null)
+                            {
+                                yield return element.DestroyElement();
+                            }
+                        }
+                    }
+                    clearedPositions.Add(pos);
+                }
+                yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
+            }
+        }
+        private IEnumerator ApplyGravity()
+        {
+            ConstantManager constantManager = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
+            float moveDuration = constantManager != null ? constantManager.elementSwapMoveDuration : 0.3f;
+
+            List<ElementData> elementPool = new List<ElementData>();
+            foreach (GridElementInfo info in gridElements.Values)
+            {
+                if (info != null && info.elementData != null && !elementPool.Contains(info.elementData))
+                {
+                    elementPool.Add(info.elementData);
+                }
+            }
+
+            if (elementPool.Count == 0)
+            {
+                foreach (GridElement element in generatedElements)
+                {
+                    if (element != null && element.elementInfo != null && element.elementInfo.elementData != null && !elementPool.Contains(element.elementInfo.elementData))
+                    {
+                        elementPool.Add(element.elementInfo.elementData);
+                    }
+                }
+            }
+
+            if (elementPool.Count == 0)
+            {
+                yield break;
+            }
+
+            Sequence gravitySequence = DOTween.Sequence();
+            bool hasTween = false;
+            float spawnStep = 1f;
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                List<int> playableRows = new List<int>();
+                for (int z = 0; z < gridSize.z; z++)
+                {
+                    Vector3Int cellPos = new Vector3Int(x, 0, z);
+                    if (gridCellTypes.TryGetValue(cellPos, out CellType cellType) && cellType == CellType.Normal)
+                    {
+                        playableRows.Add(z);
+                    }
+                }
+
+                if (playableRows.Count == 0)
+                {
+                    continue;
+                }
+
+                int writeIndex = playableRows.Count - 1;
+
+                for (int readIndex = playableRows.Count - 1; readIndex >= 0; readIndex--)
+                {
+                    int readZ = playableRows[readIndex];
+                    Vector3Int readPos = new Vector3Int(x, 0, readZ);
+
+                    if (!gridElements.TryGetValue(readPos, out GridElementInfo movingInfo) || movingInfo == null || movingInfo.elementData == null)
+                    {
+                        continue;
+                    }
+
+                    int targetZ = playableRows[writeIndex];
+                    Vector3Int targetPos = new Vector3Int(x, 0, targetZ);
+
+                    if (targetPos != readPos)
+                    {
+                        gridElements.Remove(readPos);
+                        gridElements[targetPos] = movingInfo;
+
+                        if (generatedTiles.TryGetValue(readPos, out Transform fromTile) && generatedTiles.TryGetValue(targetPos, out Transform toTile))
+                        {
+                            GridElement movingElement = fromTile.GetComponentInChildren<GridElement>();
+                            if (movingElement != null)
+                            {
+                                movingElement.transform.SetParent(toTile, false);
+                                gravitySequence.Join(movingElement.transform.DOLocalMove(Vector3.zero, moveDuration).SetEase(Ease.OutQuad));
+                                hasTween = true;
+                            }
+                        }
+                    }
+
+                    writeIndex--;
+                }
+
+                int emptyCount = writeIndex + 1;
+                for (int emptyIndex = writeIndex; emptyIndex >= 0; emptyIndex--)
+                {
+                    int targetZ = playableRows[emptyIndex];
+                    Vector3Int targetPos = new Vector3Int(x, 0, targetZ);
+
+                    ElementData randomData = elementPool[Random.Range(0, elementPool.Count)];
+                    GridElementInfo newInfo = new GridElementInfo { elementData = randomData };
+                    gridElements[targetPos] = newInfo;
+
+                    if (generatedTiles.TryGetValue(targetPos, out Transform targetTile))
+                    {
+                        int stackOffset = emptyCount - emptyIndex;
+                        Vector3 spawnWorldPos = targetTile.position + Vector3.up * (spawnStep * stackOffset);
+                        GridElement newElement = Instantiate(gridElementPrefab, spawnWorldPos, Quaternion.identity, targetTile);
+                        newElement.elementInfo = newInfo;
+                        generatedElements.Add(newElement);
+                        newElement.InitElement(this, newInfo);
+
+                        gravitySequence.Join(newElement.transform.DOLocalMove(Vector3.zero, moveDuration).SetEase(Ease.OutQuad));
+                        hasTween = true;
+                    }
+                }
+            }
+
+            generatedElements.RemoveAll(element => element == null);
+
+            if (hasTween)
+            {
+                yield return gravitySequence.WaitForCompletion();
+            }
         }
     }
 }

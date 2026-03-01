@@ -16,6 +16,16 @@ namespace Game
     public class ConstantManager : ScriptableObject
     {
         public float elementSwapMoveDuration = 0.3f;
+        public float matchClearDelay = 0.3f;
+        [Header("Element Destroy Animation")]
+        public float elementDestroyPopHeight = 0.2f;
+        public float elementDestroyPopDuration = 0.08f;
+        public float elementDestroyFallDistance = 0.25f;
+        public float elementDestroyFallDuration = 0.12f;
+        public float elementDestroyTargetScaleMultiplier = 0.1f;
+        public float elementDestroyScaleDuration = 0.2f;
+        public float elementDestroyRotateZ = 120f;
+        public float elementDestroyRotateDuration = 0.2f;
 
         public struct TAGS
         {
