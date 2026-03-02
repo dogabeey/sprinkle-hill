@@ -8,20 +8,27 @@ namespace Game
 {
     public abstract class Grid3D : MonoBehaviour, IBusyChecker
     {
-        [Header("Grid 3D")]
+        [FoldoutGroup("Grid 3D")]
         [SerializeField] protected GridElement gridElementPrefab;
+        [FoldoutGroup("Grid 3D")]
         [Tooltip("Dictionary of cell types indexed by their cell positions. Used for tile generation (i.e. neighbors of empty cells will be generated ")]
         [SerializeField] protected SerializedDictionary<Vector3Int, CellType> gridCellTypes;
+        [FoldoutGroup("Grid 3D")]
         [Tooltip("Dictionary of grid elements indexed by their cell positions")]
         [SerializeField] protected SerializedDictionary<Vector3Int, GridElementInfo> gridElements = new();
+        [FoldoutGroup("Grid 3D")]
         [Tooltip("Tile data used for generation, based on the cell positions in the grid")]
         [SerializeField] protected TileData tileGenerationData;
+        [FoldoutGroup("Grid 3D")]
         [Tooltip("Parent transform for generated tiles")]
         [SerializeField] protected Transform parent;
+        [FoldoutGroup("Grid 3D")]
         [Tooltip("Size of the grid in number of cells")]
         [SerializeField] protected Vector3Int gridSize;
+        [FoldoutGroup("Grid 3D")]
         [Tooltip("If an axis is not selected, tiles will not be generated when axis is greater than 0")]
         [SerializeField] protected Axis tileGeneratedAxes = Axis.X | Axis.Y;
+        [FoldoutGroup("Grid 3D")]
         [Tooltip("If an axis is selected, tiles will be generated in reverse direction on that axis. Y is reversed by default.")]
         [SerializeField] protected Axis reversedAxes = Axis.Y;
 

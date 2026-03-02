@@ -19,16 +19,54 @@ namespace Game
             // Custom post-initialization logic for Match-3 grid
         }
 
-        public IEnumerator MatchProcess()
+        public bool TryGetElementPosition(GridElement element, out Vector2Int position)
+        {
+            if (element != null)
+            {
+                Transform elementParent = element.transform.parent;
+                foreach (var tileKvp in generatedTiles)
+                {
+                    if (tileKvp.Value == elementParent)
+                    {
+                        position = new Vector2Int(tileKvp.Key.x, tileKvp.Key.z);
+                        return true;
+                    }
+                }
+            }
+
+            position = default;
+            return false;
+        }
+
+        public static bool AreAdjacent(Vector2Int first, Vector2Int second)
+        {
+            return Mathf.Abs(first.x - second.x) + Mathf.Abs(first.y - second.y) == 1;
+        }
+
+        public IEnumerator SwapAndMatch(Vector2Int first, Vector2Int second)
+        {
+            yield return StartCoroutine(SwapElements(first, second));
+            yield return StartCoroutine(MatchProcess(first, second));
+        }
+
+        public IEnumerator MatchProcess(Vector2Int initialElement1, Vector2Int initialElement2)
         {
             List<List<Vector2Int>> matchedGroups;
+            int matchComboCount = 0;
             // 1. Check for matches
             while ((matchedGroups = CheckMatchOf(3)).Count > 0)
             {
+                matchComboCount++;
                 // 2. Clear matched elements with animations
                 yield return StartCoroutine(ClearMatches(matchedGroups));
                 // 3. Apply gravity and refill
                 yield return StartCoroutine(ApplyGravity());
+            }
+
+            if(matchComboCount == 0)
+            {
+                // If no matches were found, swap the elements back to their original positions
+                yield return StartCoroutine(SwapElements(initialElement1, initialElement2));
             }
 
             yield break;
@@ -373,4 +411,8 @@ namespace Game
             }
         }
     }
+}
+
+namespace Game
+{
 }

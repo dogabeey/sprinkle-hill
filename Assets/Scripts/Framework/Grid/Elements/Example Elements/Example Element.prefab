@@ -95,7 +95,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6970247201895706814}
-  - component: {fileID: 5138398046396196108}
   m_Layer: 0
   m_Name: Example Element
   m_TagString: Untagged
@@ -119,32 +118,3 @@ Transform:
   - {fileID: 1221920166832104848}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5138398046396196108
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4349021038660823731}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a8c6f7d172b0ec4419c2ca0a80bc2d09, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gridCellTypes:
-    m_Keys: []
-    m_Values: 
-  gridElements:
-    m_Keys: []
-    m_Values: []
-  tileGenerationData: {fileID: 0}
-  parent: {fileID: 0}
-  gridSize: {x: 0, y: 0, z: 0}
-  tileGeneratedAxes: 3
-  reversedAxes: 2
-  elementVisual: 4
-  meshDataArray:
-  - renderer: {fileID: 4385258465505715769}
-    materialIndex: 0
-  meshFilter: {fileID: 2345730465074780799}
-  ownerGrid: {fileID: 0}

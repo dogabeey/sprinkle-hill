@@ -15,10 +15,11 @@ namespace Game
             public int materialIndex;
         }
 
-        [Header("Grid Element")]
+        [FoldoutGroup("Grid Element")]
         public GridElementInfo elementInfo;
-        public MeshData[] meshDataArray;
-        public MeshFilter meshFilter;
+        [FoldoutGroup("Grid Element")]
+        public Renderer elementRenderer;
+        [FoldoutGroup("Grid Element")]
         [ReadOnly]
         public Grid3D ownerGrid;
 
@@ -34,23 +35,19 @@ namespace Game
             ElementData visualInfo = elementInfo.elementData;
             if (visualInfo != null)
             {
-                if (meshFilter != null && visualInfo.elementMesh != null)
+                if (elementRenderer != null && visualInfo.elementMesh != null)
                 {
-                    meshFilter.mesh = visualInfo.elementMesh;
-                }
-                if (meshDataArray != null && meshDataArray.Length > 0)
-                {
-                    foreach (var meshData in meshDataArray)
+                    if(elementRenderer is MeshRenderer meshRenderer)
                     {
-                        if (meshData.renderer != null && visualInfo.elementMaterial != null)
+                        MeshFilter meshFilter = meshRenderer.GetComponent<MeshFilter>();
+                        if (meshFilter != null)
                         {
-                            Material[] materials = meshData.renderer.materials;
-                            if (meshData.materialIndex < materials.Length)
-                            {
-                                materials[meshData.materialIndex] = visualInfo.elementMaterial;
-                                meshData.renderer.materials = materials;
-                            }
+                            meshFilter.mesh = visualInfo.elementMesh;
                         }
+                    }
+                    if(elementRenderer is SpriteRenderer spriteRenderer)
+                    {
+                        spriteRenderer.sprite = visualInfo.ElementSprite;
                     }
                 }
             }
