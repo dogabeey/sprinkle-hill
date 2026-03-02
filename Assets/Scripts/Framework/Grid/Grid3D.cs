@@ -1,21 +1,18 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace Game
 {
-    public abstract class Grid3D : MonoBehaviour, IBusyChecker
+    public abstract class Grid3D : SerializedMonoBehaviour, IBusyChecker
     {
         [FoldoutGroup("Grid 3D")]
         [SerializeField] protected GridElement gridElementPrefab;
         [FoldoutGroup("Grid 3D")]
-        [Tooltip("Dictionary of cell types indexed by their cell positions. Used for tile generation (i.e. neighbors of empty cells will be generated ")]
-        [SerializeField] protected SerializedDictionary<Vector3Int, CellType> gridCellTypes;
-        [FoldoutGroup("Grid 3D")]
-        [Tooltip("Dictionary of grid elements indexed by their cell positions")]
-        [SerializeField] protected SerializedDictionary<Vector3Int, GridElementInfo> gridElements = new();
+        [Tooltip("Matrix of grid cells indexed by their coordinates")]
+        [TableMatrix(DrawElementMethod = nameof(DrawGridCells), SquareCells = true)]
+        [SerializeField] protected GridCell[,] gridCells;
         [FoldoutGroup("Grid 3D")]
         [Tooltip("Tile data used for generation, based on the cell positions in the grid")]
         [SerializeField] protected TileData tileGenerationData;
@@ -24,7 +21,7 @@ namespace Game
         [SerializeField] protected Transform parent;
         [FoldoutGroup("Grid 3D")]
         [Tooltip("Size of the grid in number of cells")]
-        [SerializeField] protected Vector3Int gridSize;
+        [SerializeField] protected Vector2Int gridSize;
         [FoldoutGroup("Grid 3D")]
         [Tooltip("If an axis is not selected, tiles will not be generated when axis is greater than 0")]
         [SerializeField] protected Axis tileGeneratedAxes = Axis.X | Axis.Y;
@@ -34,7 +31,7 @@ namespace Game
 
         public List<BusyReason> BusyReasons { get; } = new();
 
-        protected Dictionary<Vector3Int, Transform> generatedTiles = new();
+        protected Dictionary<Vector2Int, Transform> generatedTiles = new();
         protected List<GridElement> generatedElements = new();
 
         protected virtual void Start()
@@ -43,9 +40,31 @@ namespace Game
             Init();
             PostInit();
         }
+        private GridCell DrawGridCells(Rect rect, GridCell value)
+        {
+            // INIT
+                value = new GridCell();
+                gridCells = new GridCell[gridSize.x, gridSize.y];
+            
+            for (int i = 0; i < gridSize.x; i++)
+            {
+                for(int j = 0; j < gridSize.y; j++)
+                {
+                    gridCells[i, j] = gridCells[i, j] ?? new GridCell { coordinates = new Vector2Int(i, j) };
+                    gridCells[i, j].cellType = CellType.Normal;
+                }
+            }
+            // DRAW
+
+            // EVENTS
+
+
+            return value;
+        }
 
         private void Init()
         {
+            EnsureGridCells();
             bool[,] generationData = GetGenerationData();
             if(tileGenerationData)
             {
@@ -56,13 +75,84 @@ namespace Game
 
         protected virtual void GenerateElements()
         {
-            foreach (var kvp in gridElements)
+            EnsureGridCells();
+            for (int x = 0; x < gridSize.x; x++)
             {
-                Transform tile = generatedTiles[kvp.Key];
-                GridElement element = Instantiate(gridElementPrefab, tile.position, Quaternion.identity, tile);
-                element.elementInfo = kvp.Value;
-                generatedElements.Add(element);
-                element.InitElement(this, element.elementInfo);
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    GridCell cell = gridCells[x, y];
+                    if (cell == null || cell.elementInfo == null)
+                    {
+                        continue;
+                    }
+
+                    if (!generatedTiles.TryGetValue(cell.coordinates, out Transform tile))
+                    {
+                        continue;
+                    }
+
+                    GridElement element = Instantiate(gridElementPrefab, tile.position, Quaternion.identity, tile);
+                    element.elementInfo = cell.elementInfo;
+                    generatedElements.Add(element);
+                    element.InitElement(this, element.elementInfo);
+                }
+            }
+        }
+
+        protected GridCell GetCell(Vector2Int cellPos)
+        {
+            EnsureGridCells();
+
+            if (cellPos.x < 0 || cellPos.y < 0 || cellPos.x >= gridSize.x || cellPos.y >= gridSize.y)
+            {
+                return null;
+            }
+
+            return gridCells[cellPos.x, cellPos.y];
+        }
+
+        protected virtual void EnsureGridCells()
+        {
+            if (gridSize.x <= 0 || gridSize.y <= 0)
+            {
+                gridCells = new GridCell[0, 0];
+                return;
+            }
+
+            if (gridCells == null ||
+                gridCells.GetLength(0) != gridSize.x ||
+                gridCells.GetLength(1) != gridSize.y)
+            {
+                GridCell[,] newCells = new GridCell[gridSize.x, gridSize.y];
+
+                if (gridCells != null)
+                {
+                    int maxX = Mathf.Min(gridCells.GetLength(0), gridSize.x);
+                    int maxY = Mathf.Min(gridCells.GetLength(1), gridSize.y);
+
+                    for (int x = 0; x < maxX; x++)
+                    {
+                        for (int y = 0; y < maxY; y++)
+                        {
+                            newCells[x, y] = gridCells[x, y];
+                        }
+                    }
+                }
+
+                gridCells = newCells;
+            }
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    if (gridCells[x, y] == null)
+                    {
+                        gridCells[x, y] = new GridCell();
+                    }
+
+                    gridCells[x, y].coordinates = new Vector2Int(x, y);
+                }
             }
         }
 
@@ -76,27 +166,29 @@ namespace Game
         public abstract void PostInit();
         public virtual bool[,] GetGenerationData()
         {
+            EnsureGridCells();
             bool[,] generationData;
 
-            // Populate generationData based on gridCellTypes. 1 if occupied or blocked, 0 if empty.
-            generationData = new bool[gridSize.x, gridSize.z];
+            // Populate generationData based on gridCells. 1 if occupied or blocked, 0 if empty.
+            generationData = new bool[gridSize.x, gridSize.y];
             for (int x = 0; x < gridSize.x; x++)
             {
-                for (int z = 0; z < gridSize.z; z++)
+                for (int y = 0; y < gridSize.y; y++)
                 {
-                    Vector3Int cellPos = new Vector3Int(x, 0, z);
-                    if (gridCellTypes.ContainsKey(cellPos))
-                    {
-                        generationData[x, z] = gridCellTypes[cellPos] != CellType.Empty;
-                    }
-                    else
-                    {
-                        generationData[x, z] = false; // Default to empty if not specified
-                    }
+                    GridCell cell = GetCell(new Vector2Int(x, y));
+                    generationData[x, y] = cell != null && cell.cellType != CellType.Empty;
                 }
             }
 
             return generationData;
+        }
+
+        [System.Serializable]
+        public class GridCell
+        {
+            public Vector2Int coordinates;
+            public CellType cellType;
+            public GridElementInfo elementInfo;
         }
 
         [System.Flags]
@@ -104,8 +196,7 @@ namespace Game
         {
             X = 1 << 0,
             Y = 1 << 1,
-            Z = 1 << 2,
-            All = X | Y | Z
+            All = X | Y
         }
 
         public enum CellType

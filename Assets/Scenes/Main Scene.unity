@@ -3884,6 +3884,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Base Level
       objectReference: {fileID: 0}
+    - target: {fileID: 6111944330127197299, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: gridElements.m_Keys.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6111944330127197299, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: gridElements.m_Values.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

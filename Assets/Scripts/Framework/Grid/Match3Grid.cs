@@ -28,7 +28,7 @@ namespace Game
                 {
                     if (tileKvp.Value == elementParent)
                     {
-                        position = new Vector2Int(tileKvp.Key.x, tileKvp.Key.z);
+                        position = new Vector2Int(tileKvp.Key.x, tileKvp.Key.y);
                         return true;
                     }
                 }
@@ -74,21 +74,27 @@ namespace Game
 
         public IEnumerator SwapElements(Vector2Int first, Vector2Int second)
         {
-            Vector3Int firstPos = new Vector3Int(first.x, 0, first.y);
-            Vector3Int secondPos = new Vector3Int(second.x, 0, second.y);
+            Vector2Int firstPos = new Vector2Int(first.x, first.y);
+            Vector2Int secondPos = new Vector2Int(second.x, second.y);
 
-            bool hasFirst = gridElements.TryGetValue(firstPos, out GridElementInfo firstInfo);
-            bool hasSecond = gridElements.TryGetValue(secondPos, out GridElementInfo secondInfo);
+            GridCell firstCell = GetCell(firstPos);
+            GridCell secondCell = GetCell(secondPos);
 
-            if (!hasFirst || !hasSecond)
+            if (firstCell == null || secondCell == null)
             {
                 yield break;
             }
 
-            gridElements.Remove(firstPos);
-            gridElements.Remove(secondPos);
-            gridElements[secondPos] = firstInfo;
-            gridElements[firstPos] = secondInfo;
+            GridElementInfo firstInfo = firstCell.elementInfo;
+            GridElementInfo secondInfo = secondCell.elementInfo;
+
+            if (firstInfo == null || secondInfo == null)
+            {
+                yield break;
+            }
+
+            firstCell.elementInfo = secondInfo;
+            secondCell.elementInfo = firstInfo;
 
             if (!generatedTiles.TryGetValue(firstPos, out Transform firstTile) ||
                 !generatedTiles.TryGetValue(secondPos, out Transform secondTile))
@@ -125,30 +131,29 @@ namespace Game
         {
             Dictionary<Vector2Int, ElementData> matchedElements = new Dictionary<Vector2Int, ElementData>();
 
-            ElementData GetElementData(int x, int z)
+            ElementData GetElementData(int x, int y)
             {
-                return gridElements.TryGetValue(new Vector3Int(x, 0, z), out GridElementInfo info)
-                    ? info.elementData
-                    : null;
+                GridCell cell = GetCell(new Vector2Int(x, y));
+                return cell != null ? cell.elementInfo?.elementData : null;
             }
 
-            void AddMatched(int x, int z, ElementData data)
+            void AddMatched(int x, int y, ElementData data)
             {
-                Vector2Int pos = new Vector2Int(x, z);
+                Vector2Int pos = new Vector2Int(x, y);
                 if (!matchedElements.ContainsKey(pos))
                 {
                     matchedElements.Add(pos, data);
                 }
             }
 
-            for (int z = 0; z < gridSize.z; z++)
+            for (int y = 0; y < gridSize.y; y++)
             {
                 ElementData currentData = null;
                 int runLength = 0;
 
                 for (int x = 0; x < gridSize.x; x++)
                 {
-                    ElementData data = GetElementData(x, z);
+                    ElementData data = GetElementData(x, y);
 
                     if (data != null && data == currentData)
                     {
@@ -160,7 +165,7 @@ namespace Game
                     {
                         for (int matchX = x - runLength; matchX < x; matchX++)
                         {
-                            AddMatched(matchX, z, currentData);
+                            AddMatched(matchX, y, currentData);
                         }
                     }
 
@@ -172,7 +177,7 @@ namespace Game
                 {
                     for (int matchX = gridSize.x - runLength; matchX < gridSize.x; matchX++)
                     {
-                        AddMatched(matchX, z, currentData);
+                        AddMatched(matchX, y, currentData);
                     }
                 }
             }
@@ -182,9 +187,9 @@ namespace Game
                 ElementData currentData = null;
                 int runLength = 0;
 
-                for (int z = 0; z < gridSize.z; z++)
+                for (int y = 0; y < gridSize.y; y++)
                 {
-                    ElementData data = GetElementData(x, z);
+                    ElementData data = GetElementData(x, y);
 
                     if (data != null && data == currentData)
                     {
@@ -194,9 +199,9 @@ namespace Game
 
                     if (currentData != null && runLength >= elementCount)
                     {
-                        for (int matchZ = z - runLength; matchZ < z; matchZ++)
+                        for (int matchY = y - runLength; matchY < y; matchY++)
                         {
-                            AddMatched(x, matchZ, currentData);
+                            AddMatched(x, matchY, currentData);
                         }
                     }
 
@@ -206,9 +211,9 @@ namespace Game
 
                 if (currentData != null && runLength >= elementCount)
                 {
-                    for (int matchZ = gridSize.z - runLength; matchZ < gridSize.z; matchZ++)
+                    for (int matchY = gridSize.y - runLength; matchY < gridSize.y; matchY++)
                     {
-                        AddMatched(x, matchZ, currentData);
+                        AddMatched(x, matchY, currentData);
                     }
                 }
             }
@@ -274,10 +279,11 @@ namespace Game
                     {
                         continue;
                     }
-                    Vector3Int gridPos = new Vector3Int(pos.x, 0, pos.y);
-                    if (gridElements.TryGetValue(gridPos, out GridElementInfo elementInfo))
+                    Vector2Int gridPos = new Vector2Int(pos.x, pos.y);
+                    GridCell cell = GetCell(gridPos);
+                    if (cell != null && cell.elementInfo != null)
                     {
-                        gridElements.Remove(gridPos);
+                        cell.elementInfo = null;
                         if (generatedTiles.TryGetValue(gridPos, out Transform tile))
                         {
                             GridElement element = tile.GetComponentInChildren<GridElement>();
@@ -297,12 +303,18 @@ namespace Game
             ConstantManager constantManager = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
             float moveDuration = constantManager != null ? constantManager.elementSwapMoveDuration : 0.3f;
 
+            EnsureGridCells();
             List<ElementData> elementPool = new List<ElementData>();
-            foreach (GridElementInfo info in gridElements.Values)
+            for (int x = 0; x < gridSize.x; x++)
             {
-                if (info != null && info.elementData != null && !elementPool.Contains(info.elementData))
+                for (int y = 0; y < gridSize.y; y++)
                 {
-                    elementPool.Add(info.elementData);
+                    GridCell cell = GetCell(new Vector2Int(x, y));
+                    ElementData data = cell != null ? cell.elementInfo?.elementData : null;
+                    if (data != null && !elementPool.Contains(data))
+                    {
+                        elementPool.Add(data);
+                    }
                 }
             }
 
@@ -329,12 +341,13 @@ namespace Game
             for (int x = 0; x < gridSize.x; x++)
             {
                 List<int> playableRows = new List<int>();
-                for (int z = 0; z < gridSize.z; z++)
+                for (int y = 0; y < gridSize.y; y++)
                 {
-                    Vector3Int cellPos = new Vector3Int(x, 0, z);
-                    if (gridCellTypes.TryGetValue(cellPos, out CellType cellType) && cellType == CellType.Normal)
+                    Vector2Int cellPos = new Vector2Int(x, y);
+                    GridCell cell = GetCell(cellPos);
+                    if (cell != null && cell.cellType == CellType.Normal)
                     {
-                        playableRows.Add(z);
+                        playableRows.Add(y);
                     }
                 }
 
@@ -347,21 +360,29 @@ namespace Game
 
                 for (int readIndex = playableRows.Count - 1; readIndex >= 0; readIndex--)
                 {
-                    int readZ = playableRows[readIndex];
-                    Vector3Int readPos = new Vector3Int(x, 0, readZ);
+                    int readY = playableRows[readIndex];
+                    Vector2Int readPos = new Vector2Int(x, readY);
 
-                    if (!gridElements.TryGetValue(readPos, out GridElementInfo movingInfo) || movingInfo == null || movingInfo.elementData == null)
+                    GridCell readCell = GetCell(readPos);
+                    GridElementInfo movingInfo = readCell != null ? readCell.elementInfo : null;
+                    if (movingInfo == null || movingInfo.elementData == null)
                     {
                         continue;
                     }
 
-                    int targetZ = playableRows[writeIndex];
-                    Vector3Int targetPos = new Vector3Int(x, 0, targetZ);
+                    int targetY = playableRows[writeIndex];
+                    Vector2Int targetPos = new Vector2Int(x, targetY);
+                    GridCell targetCell = GetCell(targetPos);
+
+                    if (targetCell == null)
+                    {
+                        continue;
+                    }
 
                     if (targetPos != readPos)
                     {
-                        gridElements.Remove(readPos);
-                        gridElements[targetPos] = movingInfo;
+                        readCell.elementInfo = null;
+                        targetCell.elementInfo = movingInfo;
 
                         if (generatedTiles.TryGetValue(readPos, out Transform fromTile) && generatedTiles.TryGetValue(targetPos, out Transform toTile))
                         {
@@ -381,12 +402,18 @@ namespace Game
                 int emptyCount = writeIndex + 1;
                 for (int emptyIndex = writeIndex; emptyIndex >= 0; emptyIndex--)
                 {
-                    int targetZ = playableRows[emptyIndex];
-                    Vector3Int targetPos = new Vector3Int(x, 0, targetZ);
+                    int targetY = playableRows[emptyIndex];
+                    Vector2Int targetPos = new Vector2Int(x, targetY);
+                    GridCell targetCell = GetCell(targetPos);
+
+                    if (targetCell == null)
+                    {
+                        continue;
+                    }
 
                     ElementData randomData = elementPool[Random.Range(0, elementPool.Count)];
                     GridElementInfo newInfo = new GridElementInfo { elementData = randomData };
-                    gridElements[targetPos] = newInfo;
+                    targetCell.elementInfo = newInfo;
 
                     if (generatedTiles.TryGetValue(targetPos, out Transform targetTile))
                     {

@@ -184,6 +184,37 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &5642222179130585919
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2551075996391198597}
+  m_Layer: 0
+  m_Name: Grid Area
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2551075996391198597
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5642222179130585919}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4666472968248984407}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5821180565261088150
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,6 +245,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7842758307956592058}
+  - {fileID: 2551075996391198597}
   m_Father: {fileID: 5120543934254136594}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6806889991896997094
@@ -368,15 +400,87 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9ef57257d7b9fa48b06ea8966a3115f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: gridCells
+      Entry: 7
+      Data: 0|Game.Grid3D+GridCell[,], Assembly-CSharp
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: ranks
+      Entry: 1
+      Data: 2|2
+    - Name: 
+      Entry: 7
+      Data: 1|Game.Grid3D+GridCell, Assembly-CSharp
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 1
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 2|Game.Grid3D+GridCell, Assembly-CSharp
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 1
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
   gridElementPrefab: {fileID: 0}
-  gridCellTypes:
-    m_Keys: []
-    m_Values: 
-  gridElements:
-    m_Keys: []
-    m_Values: []
-  tileGenerationData: {fileID: 0}
-  parent: {fileID: 0}
-  gridSize: {x: 0, y: 0, z: 0}
+  tileGenerationData: {fileID: 11400000, guid: 564a348655db59242b1a35f4cba0f2fe, type: 2}
+  parent: {fileID: 2551075996391198597}
+  gridSize: {x: 10, y: 10}
   tileGeneratedAxes: 3
   reversedAxes: 2

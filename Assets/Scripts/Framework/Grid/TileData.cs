@@ -42,9 +42,9 @@ namespace Game
         //public LayerMask layerMaskToDetect;
         //public float overlapSphereRadius = 0.1f;
 
-        public Dictionary<Vector3Int, Transform> Generate(bool[,] createData, Vector3 startPosition, DrawStartingCorner drawStartingCorner, Transform parent, bool combineMeshes = false)
+        public Dictionary<Vector2Int, Transform> Generate(bool[,] createData, Vector3 startPosition, DrawStartingCorner drawStartingCorner, Transform parent, bool combineMeshes = false)
         {
-            Dictionary<Vector3Int, Transform> generatedTileDict = new Dictionary<Vector3Int, Transform>();
+            Dictionary<Vector2Int, Transform> generatedTileDict = new Dictionary<Vector2Int, Transform>();
             List<GameObject> generatedObjects = new List<GameObject>();
 
             int rows = createData.GetLength(0);
@@ -59,16 +59,16 @@ namespace Game
                         switch (drawStartingCorner)
                         {
                             case DrawStartingCorner.TopLeft:
-                                position = startPosition + new Vector3(i * spacing.x, 0, -j * spacing.y);
+                                position = startPosition + new Vector3(i * spacing.x, -j * spacing.y, 0f);
                                 break;
                             case DrawStartingCorner.TopRight:
-                                position = startPosition + new Vector3(-i * spacing.x, 0, -j * spacing.y);
+                                position = startPosition + new Vector3(-i * spacing.x, -j * spacing.y, 0f);
                                 break;
                             case DrawStartingCorner.BottomLeft:
-                                position = startPosition + new Vector3(i * spacing.x, 0, j * spacing.y);
+                                position = startPosition + new Vector3(i * spacing.x, j * spacing.y, 0f);
                                 break;
                             case DrawStartingCorner.BottomRight:
-                                position = startPosition + new Vector3(-i * spacing.x, 0, j * spacing.y);
+                                position = startPosition + new Vector3(-i * spacing.x, j * spacing.y, 0f);
                                 break;
                         }
                         GameObject tileToInstantiate = DetermineTileType(createData, i, j, drawStartingCorner);
@@ -76,7 +76,7 @@ namespace Game
                         {
                             GameObject obj = Instantiate(tileToInstantiate, position, Quaternion.identity, parent);
                             generatedObjects.Add(obj);
-                            generatedTileDict.Add(new Vector3Int(i, 0, j), obj.transform);
+                            generatedTileDict.Add(new Vector2Int(i, j), obj.transform);
                         }
                     }
                 }
