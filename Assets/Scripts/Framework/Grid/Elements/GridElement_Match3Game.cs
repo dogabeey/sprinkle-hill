@@ -24,6 +24,11 @@ namespace Game
             }
         }
 
+        protected override GridCell DrawGridCells(Rect rect, GridCell value)
+        {
+            return value;
+        }
+
         private void OnDisable()
         {
             SetSelected(false);

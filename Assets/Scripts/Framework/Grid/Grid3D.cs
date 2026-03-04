@@ -29,6 +29,8 @@ namespace Game
         [Tooltip("If an axis is selected, tiles will be generated in reverse direction on that axis. Y is reversed by default.")]
         [SerializeField] protected Axis reversedAxes = Axis.Y;
 
+
+
         public List<BusyReason> BusyReasons { get; } = new();
 
         protected Dictionary<Vector2Int, Transform> generatedTiles = new();
@@ -40,27 +42,7 @@ namespace Game
             Init();
             PostInit();
         }
-        private GridCell DrawGridCells(Rect rect, GridCell value)
-        {
-            // INIT
-                value = new GridCell();
-                gridCells = new GridCell[gridSize.x, gridSize.y];
-            
-            for (int i = 0; i < gridSize.x; i++)
-            {
-                for(int j = 0; j < gridSize.y; j++)
-                {
-                    gridCells[i, j] = gridCells[i, j] ?? new GridCell { coordinates = new Vector2Int(i, j) };
-                    gridCells[i, j].cellType = CellType.Normal;
-                }
-            }
-            // DRAW
-
-            // EVENTS
-
-
-            return value;
-        }
+        protected abstract GridCell DrawGridCells(Rect rect, GridCell value);
 
         private void Init()
         {
@@ -203,7 +185,6 @@ namespace Game
         {
             Empty,
             Normal,
-            Blocked
         }
     }
 }
