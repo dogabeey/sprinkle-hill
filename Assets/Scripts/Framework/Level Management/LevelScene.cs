@@ -17,7 +17,7 @@ namespace Game
 
         public string levelName;
 
-        virtual protected void Awake()
+        protected virtual void Awake()
         {
             Instance = this;
             EventManager.TriggerEvent(ConstantManager.GameEvents.LEVEL_STARTED, new EventParam());

@@ -8,12 +8,9 @@ namespace Game
 {
     public abstract class Grid3D : SerializedMonoBehaviour, IBusyChecker
     {
-        [FoldoutGroup("Grid 3D")]
-        [SerializeField] private LevelCreationMode levelCreationMode = LevelCreationMode.LevelEditor;
-        [FoldoutGroup("Grid 3D"), ShowIf(nameof(UseLevelEditor))]
-        [SerializeField] private LevelEditor levelEditor;
-        [FoldoutGroup("Grid 3D"), ShowIf(nameof(UseProcedural))]
-        [SerializeField] private ProceduralGenerationSettings proceduralGeneration = new ProceduralGenerationSettings();
+        private LevelCreationMode levelCreationMode = LevelCreationMode.LevelEditor;
+        private LevelEditor levelEditor;
+        private ProceduralGenerationSettings proceduralGeneration = new ProceduralGenerationSettings();
 
         [FoldoutGroup("Grid 3D")]
         [SerializeField] protected GridElement gridElementPrefab;
@@ -28,7 +25,7 @@ namespace Game
         [SerializeField] protected Transform parent;
         [FoldoutGroup("Grid 3D")]
         [Tooltip("Size of the grid in number of cells")]
-        [ShowIf(nameof(UseProcedural))]
+        [HideInInspector]
         [SerializeField] protected Vector2Int gridSize;
         [FoldoutGroup("Grid 3D")]
         [Tooltip("If an axis is not selected, tiles will not be generated when axis is greater than 0")]
@@ -49,6 +46,18 @@ namespace Game
             PreInit();
             Init();
             PostInit();
+        }
+
+        public void ConfigureLevelSettings(LevelCreationMode mode, LevelEditor editor, ProceduralGenerationSettings settings, Vector2Int proceduralGridSize)
+        {
+            levelCreationMode = mode;
+            levelEditor = editor;
+            proceduralGeneration = settings ?? new ProceduralGenerationSettings();
+
+            if (mode == LevelCreationMode.Procedural)
+            {
+                gridSize = proceduralGridSize;
+            }
         }
 
         private void Init()
