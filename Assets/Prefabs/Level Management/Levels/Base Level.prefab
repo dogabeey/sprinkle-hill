@@ -119,8 +119,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5120543934254136594}
-  - component: {fileID: 8150175311825758849}
   - component: {fileID: 5697706280711501034}
+  - component: {fileID: 5642481185505650832}
   m_Layer: 0
   m_Name: Base Level
   m_TagString: Untagged
@@ -146,22 +146,6 @@ Transform:
   - {fileID: 4666472968248984407}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8150175311825758849
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5120543934254136597}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0a59566781b86a438e55bddbdc53974, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isWin: 0
-  isLose: 0
-  isEnded: 0
-  levelName: 
 --- !u!95 &5697706280711501034
 Animator:
   serializedVersion: 7
@@ -184,6 +168,37 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5642481185505650832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5120543934254136597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee9fe75e936300c4991051a510dfe923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isWin: 0
+  isLose: 0
+  isEnded: 0
+  levelName: 
+  grid: {fileID: 6111944330127197299}
+  levelCreationMode: 1
+  levelEditor: {fileID: 11400000, guid: 7a3257018b70ead4a81299d022a11654, type: 2}
+  proceduralGridSize: {x: 8, y: 8}
+  proceduralGeneration:
+    useRandomSeed: 1
+    seed: 0
+    emptyCellChance: 0
+    elementPool:
+    - {fileID: 11400000, guid: f006f435c88374942881e4fd9742c0ca, type: 2}
+    - {fileID: 11400000, guid: fcba4310cd5fca344aad5d26ad52423f, type: 2}
+    - {fileID: 11400000, guid: 69d335464f54691419e9101cf98729e0, type: 2}
+    - {fileID: 11400000, guid: cfc8f8a90e8c1f34aade67c0a2ddc391, type: 2}
+    - {fileID: 11400000, guid: 1e4613ba78c8827438d09790fc8fce3c, type: 2}
+    - {fileID: 11400000, guid: 0aff893b628e16b449d95f9a8befead9, type: 2}
 --- !u!1 &5642222179130585919
 GameObject:
   m_ObjectHideFlags: 0
@@ -303,13 +318,6 @@ MonoBehaviour:
     - Name: gridCells
       Entry: 6
       Data: 
-  levelCreationMode: 0
-  levelEditor: {fileID: 11400000, guid: 7a3257018b70ead4a81299d022a11654, type: 2}
-  proceduralGeneration:
-    useRandomSeed: 1
-    seed: 0
-    emptyCellChance: 0
-    elementPool: []
   gridElementPrefab: {fileID: 8349045300224855682, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
   tileGenerationData: {fileID: 11400000, guid: 564a348655db59242b1a35f4cba0f2fe, type: 2}
   parent: {fileID: 2551075996391198597}

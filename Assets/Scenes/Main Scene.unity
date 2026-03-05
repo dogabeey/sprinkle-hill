@@ -3156,36 +3156,6 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
---- !u!1 &1489936248 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5120543934254136597, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
-  m_PrefabInstance: {fileID: 1955937876}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1489936252
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1489936248}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee9fe75e936300c4991051a510dfe923, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isWin: 0
-  isLose: 0
-  isEnded: 0
-  levelName: 
-  grid: {fileID: 1806480925}
-  levelCreationMode: 0
-  levelEditor: {fileID: 11400000, guid: 7a3257018b70ead4a81299d022a11654, type: 2}
-  proceduralGridSize: {x: 8, y: 8}
-  proceduralGeneration:
-    useRandomSeed: 1
-    seed: 0
-    emptyCellChance: 0
-    elementPool: []
 --- !u!4 &1495213569 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5092102555726562431, guid: a834de95be05b4446860498d9de41de9, type: 3}
@@ -3636,17 +3606,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1783475298}
   m_CullTransparentMesh: 1
---- !u!114 &1806480925 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6111944330127197299, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
-  m_PrefabInstance: {fileID: 1955937876}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9ef57257d7b9fa48b06ea8966a3115f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1831688220
 GameObject:
   m_ObjectHideFlags: 0
@@ -3894,14 +3853,10 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 6111944330127197299, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
-    m_RemovedComponents:
-    - {fileID: 8150175311825758849, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5120543934254136597, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1489936252}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
 --- !u!1 &1974982360
 GameObject:
