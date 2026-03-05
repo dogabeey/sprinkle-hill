@@ -1,8 +1,6 @@
-using DG.Tweening;
-using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
@@ -438,119 +436,6 @@ namespace Game
             if (hasTween)
             {
                 yield return gravitySequence.WaitForCompletion();
-            }
-        }
-
-        protected override GridCell DrawGridCells(Rect rect, GridCell value)
-        {
-            // INIT
-            Color emptyCellColor = new Color(0.8f, 0.8f, 0.8f, 0.5f);
-            Color normalCellColor = new Color(0.5f, 0.5f, 1f, 0.5f);
-            // Draw a smaller rect within the rect to contain the elements.
-            Rect elementRect = new Rect(rect.x + rect.width * 0.1f, rect.y + rect.height * 0.1f, rect.width * 0.8f, rect.height * 0.8f);
-
-            // DRAW
-            // Draw the coordinates as text for debugging purposes
-            //EditorGUI.LabelField(rect, $"{value.coordinates.x},{value.coordinates.y}", EditorStyles.centeredGreyMiniLabel);
-            // Draw the cell background based on its type
-            switch (value.cellType)
-            {
-                case CellType.Normal:
-                    EditorGUI.DrawRect(rect, normalCellColor);
-                    break;
-                case CellType.Empty:
-                    EditorGUI.DrawRect(rect, emptyCellColor);
-                    break;
-                    // Add more cases for different cell types if needed
-            }
-            // Draw the element if it exists
-            if (value.elementInfo != null && value.elementInfo.elementData != null)
-            {
-                Rect currentSpriteRect = value.elementInfo.elementData.ElementSprite.rect;
-                Texture2D elementTexture = new Texture2D((int)currentSpriteRect.width, (int)currentSpriteRect.height);
-                elementTexture.SetPixels(value.elementInfo.elementData.ElementSprite.texture.GetPixels(
-                    (int)currentSpriteRect.x,
-                    (int)currentSpriteRect.y,
-                    (int)currentSpriteRect.width,
-                    (int)currentSpriteRect.height
-                ));
-                elementTexture.Apply();
-                if (elementTexture != null)
-                {
-                    GUI.DrawTexture(elementRect, elementTexture, ScaleMode.ScaleToFit);
-                }
-            }
-            // EVENTS
-            // Is mouse on this cell?
-            if (rect.Contains(Event.current.mousePosition))
-            {
-                // Cell type change
-                if (Event.current.type == EventType.KeyDown)
-                {
-                    if (Event.current.keyCode == KeyCode.E)
-                    {
-                        value.cellType = CellType.Empty;
-                        Event.current.Use();
-                    }
-                    else if (Event.current.keyCode == KeyCode.N)
-                    {
-                        value.cellType = CellType.Normal;
-                        Event.current.Use();
-                    }
-                }
-                // Element assignment on mouse right click by opening a context menu with all available elements in the project
-                else if (Event.current.type == EventType.MouseDown && Event.current.button == 1)
-                {
-                    GenericMenu menu = new GenericMenu();
-                    string[] elementGuids = AssetDatabase.FindAssets("t:ElementData");
-                    foreach (string guid in elementGuids)
-                    {
-                        string path = AssetDatabase.GUIDToAssetPath(guid);
-                        ElementData elementData = AssetDatabase.LoadAssetAtPath<ElementData>(path);
-                        if (elementData != null)
-                        {
-                            menu.AddItem(new GUIContent(elementData.name), false, () =>
-                            {
-                                value.elementInfo = new GridElementInfo { elementData = elementData };
-                            });
-                        }
-                    }
-                    menu.ShowAsContext();
-                    Event.current.Use();
-                }
-                // Also allow use of alphanumerical 1-9 keys to assign elements based on their order in the element pool
-                else if (Event.current.type == EventType.KeyDown && Event.current.keyCode >= KeyCode.Alpha1 && Event.current.keyCode <= KeyCode.Alpha9)
-                {
-                    int index = Event.current.keyCode - KeyCode.Alpha1;
-                    string[] elementGuids = AssetDatabase.FindAssets("t:ElementData");
-                    if (index < elementGuids.Length)
-                    {
-                        string path = AssetDatabase.GUIDToAssetPath(elementGuids[index]);
-                        ElementData elementData = AssetDatabase.LoadAssetAtPath<ElementData>(path);
-                        if (elementData != null)
-                        {
-                            value.elementInfo = new GridElementInfo { elementData = elementData };
-                        }
-                    }
-                    Event.current.Use();
-                }
-            }
-            return value;
-        }
-
-        [Button("Init Cells")]
-        public void InitCells()
-        {
-            for (int x = 0; x < gridSize.x; x++)
-            {
-                for (int y = 0; y < gridSize.y; y++)
-                {
-                    gridCells[x, y] = new GridCell
-                    {
-                        coordinates = new Vector2Int(x, y),
-                        cellType = CellType.Normal,
-                    };
-                }
             }
         }
     }

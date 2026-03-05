@@ -1,5 +1,6 @@
-using Sirenix.OdinInspector;
+using System;
 using System.Collections.Generic;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -8,10 +9,16 @@ namespace Game
     public abstract class Grid3D : SerializedMonoBehaviour, IBusyChecker
     {
         [FoldoutGroup("Grid 3D")]
+        [SerializeField] private LevelCreationMode levelCreationMode = LevelCreationMode.LevelEditor;
+        [FoldoutGroup("Grid 3D"), ShowIf(nameof(UseLevelEditor))]
+        [SerializeField] private LevelEditor levelEditor;
+        [FoldoutGroup("Grid 3D"), ShowIf(nameof(UseProcedural))]
+        [SerializeField] private ProceduralGenerationSettings proceduralGeneration = new ProceduralGenerationSettings();
+
+        [FoldoutGroup("Grid 3D")]
         [SerializeField] protected GridElement gridElementPrefab;
         [FoldoutGroup("Grid 3D")]
         [Tooltip("Matrix of grid cells indexed by their coordinates")]
-        [TableMatrix(DrawElementMethod = nameof(DrawGridCells), SquareCells = true)]
         [SerializeField] protected GridCell[,] gridCells;
         [FoldoutGroup("Grid 3D")]
         [Tooltip("Tile data used for generation, based on the cell positions in the grid")]
@@ -21,6 +28,7 @@ namespace Game
         [SerializeField] protected Transform parent;
         [FoldoutGroup("Grid 3D")]
         [Tooltip("Size of the grid in number of cells")]
+        [ShowIf(nameof(UseProcedural))]
         [SerializeField] protected Vector2Int gridSize;
         [FoldoutGroup("Grid 3D")]
         [Tooltip("If an axis is not selected, tiles will not be generated when axis is greater than 0")]
@@ -42,16 +50,72 @@ namespace Game
             Init();
             PostInit();
         }
-        protected abstract GridCell DrawGridCells(Rect rect, GridCell value);
 
         private void Init()
         {
+            InitializeGridCells();
             EnsureGridCells();
             bool[,] generationData = GetGenerationData();
-            if(tileGenerationData)
+            if (tileGenerationData)
             {
                 generatedTiles = tileGenerationData.Generate(generationData, parent.position, TileData.DrawStartingCorner.TopLeft, parent);
                 GenerateElements();
+            }
+        }
+
+        private void InitializeGridCells()
+        {
+            if (UseLevelEditor)
+            {
+                ApplyLevelEditor();
+                return;
+            }
+
+            ApplyProceduralGeneration();
+        }
+
+        private void ApplyLevelEditor()
+        {
+            if (levelEditor == null)
+            {
+                gridCells = new GridCell[0, 0];
+                return;
+            }
+
+            gridSize = levelEditor.GridSize;
+            gridCells = levelEditor.CreateRuntimeGrid();
+        }
+
+        private void ApplyProceduralGeneration()
+        {
+            if (gridSize.x <= 0 || gridSize.y <= 0)
+            {
+                gridCells = new GridCell[0, 0];
+                return;
+            }
+
+            gridCells = new GridCell[gridSize.x, gridSize.y];
+            System.Random random = proceduralGeneration.CreateRandom();
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    bool isEmpty = random.NextDouble() < proceduralGeneration.emptyCellChance;
+                    ElementData elementData = null;
+                    if (!isEmpty && proceduralGeneration.elementPool != null && proceduralGeneration.elementPool.Count > 0)
+                    {
+                        int index = random.Next(proceduralGeneration.elementPool.Count);
+                        elementData = proceduralGeneration.elementPool[index];
+                    }
+
+                    gridCells[x, y] = new GridCell
+                    {
+                        coordinates = new Vector2Int(x, y),
+                        cellType = isEmpty ? CellType.Empty : CellType.Normal,
+                        elementInfo = elementData != null ? new GridElementInfo { elementData = elementData } : null
+                    };
+                }
             }
         }
 
@@ -163,6 +227,30 @@ namespace Game
             }
 
             return generationData;
+        }
+
+        private bool UseLevelEditor => levelCreationMode == LevelCreationMode.LevelEditor;
+        private bool UseProcedural => levelCreationMode == LevelCreationMode.Procedural;
+
+        [System.Serializable]
+        public class ProceduralGenerationSettings
+        {
+            public bool useRandomSeed = true;
+            public int seed;
+            [Range(0f, 1f)]
+            public float emptyCellChance;
+            public List<ElementData> elementPool = new List<ElementData>();
+
+            public System.Random CreateRandom()
+            {
+                return useRandomSeed ? new System.Random() : new System.Random(seed);
+            }
+        }
+
+        public enum LevelCreationMode
+        {
+            LevelEditor,
+            Procedural
         }
 
         [System.Serializable]

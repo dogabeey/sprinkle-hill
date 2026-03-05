@@ -30,10 +30,5 @@ namespace Game
         public override void PreInit()
         {
         }
-
-        protected override GridCell DrawGridCells(Rect rect, GridCell value)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

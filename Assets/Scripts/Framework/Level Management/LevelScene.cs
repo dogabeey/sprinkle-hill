@@ -17,13 +17,13 @@ namespace Game
 
         public string levelName;
 
-        private void Awake()
+        virtual protected void Awake()
         {
             Instance = this;
             EventManager.TriggerEvent(ConstantManager.GameEvents.LEVEL_STARTED, new EventParam());
         }
 
-        private void Update()
+        virtual protected void Update()
         {
             if (isEnded) return;
             if (isWin) // PUT YOUR WIN CONDITIONS HERE

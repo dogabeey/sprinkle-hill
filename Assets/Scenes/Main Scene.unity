@@ -753,6 +753,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 18573379}
     m_Modifications:
+    - target: {fileID: 1999000980689706461, guid: e5128bc36d805684ebc33c78e679743c, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 1999000980689706461, guid: e5128bc36d805684ebc33c78e679743c, type: 3}
+    - target: {fileID: 5105714310592881757, guid: e5128bc36d805684ebc33c78e679743c, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 5105714310592881757, guid: e5128bc36d805684ebc33c78e679743c, type: 3}
     - target: {fileID: 6126315467163966779, guid: e5128bc36d805684ebc33c78e679743c, type: 3}
       propertyPath: m_Name
       value: Level 1
@@ -3437,6 +3445,38 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 5.83
       objectReference: {fileID: 0}
+    - target: {fileID: 763665953176220216, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -38.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 763665953176220216, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 763665953176220216, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 763665953176220216, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 763665953176220216, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 763665953176220216, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 3.41
+      objectReference: {fileID: 0}
+    - target: {fileID: 763665953176220216, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -3.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 763665953176220216, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3930519526556714707, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -3884,6 +3924,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Base Level
       objectReference: {fileID: 0}
+    - target: {fileID: 6111944330127197299, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: tileGenerationData
+      value: 
+      objectReference: {fileID: 11400000, guid: 564a348655db59242b1a35f4cba0f2fe, type: 2}
+    - target: {fileID: 6111944330127197299, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 6111944330127197299, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
     - target: {fileID: 6111944330127197299, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: gridElements.m_Keys.Array.size
       value: 0
