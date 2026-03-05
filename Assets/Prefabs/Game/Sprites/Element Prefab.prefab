@@ -220,21 +220,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8d75e06590b08c47840fe9cb8af504e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: gridCells
+      Entry: 6
+      Data: 
   gridElementPrefab: {fileID: 0}
-  gridCellTypes:
-    m_Keys: []
-    m_Values: 
-  gridElements:
-    m_Keys: []
-    m_Values: []
   tileGenerationData: {fileID: 0}
   parent: {fileID: 0}
-  gridSize: {x: 0, y: 0, z: 0}
+  gridSize: {x: 0, y: 0}
   tileGeneratedAxes: 3
   reversedAxes: 2
   elementInfo:
     elementData: {fileID: 0}
-  meshDataArray: []
   elementRenderer: {fileID: 482629601680886882}
   ownerGrid: {fileID: 0}
-  highlightSprite: {fileID: 0}
+  highlightSprite: {fileID: 961667231535525662}

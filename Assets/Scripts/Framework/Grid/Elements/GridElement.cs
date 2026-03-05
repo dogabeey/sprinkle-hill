@@ -35,7 +35,7 @@ namespace Game
             ElementData visualInfo = elementInfo.elementData;
             if (visualInfo != null)
             {
-                if (elementRenderer != null && visualInfo.elementMesh != null)
+                if (elementRenderer != null || visualInfo.elementMesh != null)
                 {
                     if(elementRenderer is MeshRenderer meshRenderer)
                     {
