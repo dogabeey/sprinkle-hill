@@ -128,6 +128,76 @@ namespace Game
                 yield return secondElement.transform.DOLocalMove(Vector3.zero, GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
             }
         }
+
+        protected override void GenerateElements()
+        {
+            EnsureGridCells();
+            List<ElementData> elementPool = new List<ElementData>();
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    GridCell cell = gridCells[x, y];
+                    ElementData data = cell != null ? cell.elementInfo?.elementData : null;
+                    if (data != null && !elementPool.Contains(data))
+                    {
+                        elementPool.Add(data);
+                    }
+                }
+            }
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    GridCell cell = gridCells[x, y];
+                    if (cell == null || cell.cellType == CellType.Empty || cell.elementInfo == null || cell.elementInfo.elementData == null)
+                    {
+                        continue;
+                    }
+
+                    if (elementPool.Count > 1)
+                    {
+                        List<ElementData> candidates = new List<ElementData>();
+                        foreach (ElementData data in elementPool)
+                        {
+                            if (!WouldCreateMatch(x, y, data))
+                            {
+                                candidates.Add(data);
+                            }
+                        }
+
+                        if (candidates.Count > 0)
+                        {
+                            cell.elementInfo.elementData = candidates[Random.Range(0, candidates.Count)];
+                        }
+                    }
+
+                    if (!generatedTiles.TryGetValue(cell.coordinates, out Transform tile))
+                    {
+                        continue;
+                    }
+
+                    GridElement element = Instantiate(gridElementPrefab, tile.position, Quaternion.identity, tile);
+                    element.elementInfo = cell.elementInfo;
+                    generatedElements.Add(element);
+                    element.InitElement(this, element.elementInfo);
+                }
+            }
+        }
+
+        private bool WouldCreateMatch(int x, int y, ElementData data)
+        {
+            return IsSameElement(x - 1, y, data) && IsSameElement(x - 2, y, data)
+                || IsSameElement(x, y - 1, data) && IsSameElement(x, y - 2, data);
+        }
+
+        private bool IsSameElement(int x, int y, ElementData data)
+        {
+            GridCell cell = GetCell(new Vector2Int(x, y));
+            return cell != null && cell.cellType != CellType.Empty && cell.elementInfo != null && cell.elementInfo.elementData == data;
+        }
+
         private List<List<Vector2Int>> CheckMatchOf(int elementCount = 3)
         {
             Dictionary<Vector2Int, ElementData> matchedElements = new Dictionary<Vector2Int, ElementData>();
@@ -349,7 +419,7 @@ namespace Game
                     if (cell != null && cell.cellType == CellType.Normal)
                     {
                         playableRows.Add(y);
-                    }
+                      }
                 }
 
                 if (playableRows.Count == 0)
