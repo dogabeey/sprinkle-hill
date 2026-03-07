@@ -111,20 +111,20 @@ namespace Game
                 Transform firstParent = firstElement.transform.parent;
                 Transform secondParent = secondElement.transform.parent;
 
-                firstElement.transform.SetParent(secondParent, false);
-                secondElement.transform.SetParent(firstParent, false);
+                firstElement.transform.SetParent(secondParent, true);
+                secondElement.transform.SetParent(firstParent, true);
 
                 firstElement.transform.DOLocalMove(Vector3.zero, GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack);
                 yield return secondElement.transform.DOLocalMove(Vector3.zero, GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
             }
             else if (firstElement != null)
             {
-                firstElement.transform.SetParent(secondTile, false);
+                firstElement.transform.SetParent(secondTile, true);
                 yield return firstElement.transform.DOLocalMove(Vector3.zero, GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
             }
             else if (secondElement != null)
             {
-                secondElement.transform.SetParent(firstTile, false);
+                secondElement.transform.SetParent(firstTile, true);
                 yield return secondElement.transform.DOLocalMove(Vector3.zero, GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
             }
         }
@@ -290,7 +290,7 @@ namespace Game
                             GridElement element = tile.GetComponentInChildren<GridElement>();
                             if (element != null)
                             {
-                                yield return element.DestroyElement();
+                                StartCoroutine(element.DestroyElement());
                             }
                         }
                     }
@@ -302,7 +302,7 @@ namespace Game
         private IEnumerator ApplyGravity()
         {
             ConstantManager constantManager = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
-            float moveDuration = constantManager != null ? constantManager.elementSwapMoveDuration : 0.3f;
+            float fallSpeed = constantManager != null ? constantManager.elementFallSpeed : 3.3f;
 
             EnsureGridCells();
             List<ElementData> elementPool = new List<ElementData>();
@@ -390,7 +390,9 @@ namespace Game
                             GridElement movingElement = fromTile.GetComponentInChildren<GridElement>();
                             if (movingElement != null)
                             {
-                                movingElement.transform.SetParent(toTile, false);
+                                movingElement.transform.SetParent(toTile, true);
+                                float moveDistance = movingElement.transform.localPosition.magnitude;
+                                float moveDuration = fallSpeed > 0f ? moveDistance / fallSpeed : 0f;
                                 gravitySequence.Join(movingElement.transform.DOLocalMove(Vector3.zero, moveDuration).SetEase(Ease.OutQuad));
                                 hasTween = true;
                             }
@@ -425,7 +427,9 @@ namespace Game
                         generatedElements.Add(newElement);
                         newElement.InitElement(this, newInfo);
 
-                        gravitySequence.Join(newElement.transform.DOLocalMove(Vector3.zero, moveDuration).SetEase(Ease.OutQuad));
+                        float spawnDistance = newElement.transform.localPosition.magnitude;
+                        float spawnDuration = fallSpeed > 0f ? spawnDistance / fallSpeed : 0f;
+                        gravitySequence.Join(newElement.transform.DOLocalMove(Vector3.zero, spawnDuration).SetEase(Ease.OutQuad));
                         hasTween = true;
                     }
                 }
