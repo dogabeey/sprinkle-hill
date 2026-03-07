@@ -45,13 +45,7 @@ namespace Game
                 return;
             }
 
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            if (!Physics.Raycast(ray, out RaycastHit hit))
-            {
-                return;
-            }
-
-            GridElement_Match3Game clickedElement = hit.collider.GetComponentInParent<GridElement_Match3Game>();
+            GridElement_Match3Game clickedElement = GetClickedElement(cam);
             if (clickedElement == null || clickedElement.ownerGrid != match3Grid)
             {
                 return;
@@ -83,6 +77,23 @@ namespace Game
             }
 
             StartCoroutine(SwapAndMatchRoutine(firstPos, secondPos));
+        }
+
+        private GridElement_Match3Game GetClickedElement(Camera cam)
+        {
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                return hit.collider.GetComponentInParent<GridElement_Match3Game>();
+            }
+
+            RaycastHit2D hit2D = Physics2D.GetRayIntersection(ray);
+            if (hit2D.collider != null)
+            {
+                return hit2D.collider.GetComponentInParent<GridElement_Match3Game>();
+            }
+
+            return null;
         }
 
         private IEnumerator SwapAndMatchRoutine(Vector2Int firstPos, Vector2Int secondPos)

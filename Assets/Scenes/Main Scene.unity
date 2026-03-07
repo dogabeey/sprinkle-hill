@@ -3849,6 +3849,38 @@ PrefabInstance:
       propertyPath: m_Name
       value: Base Level
       objectReference: {fileID: 0}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: levelCreationMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: proceduralGeneration.emptyCellChance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: proceduralGeneration.elementPool.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: 'proceduralGeneration.elementPool.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 69d335464f54691419e9101cf98729e0, type: 2}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: 'proceduralGeneration.elementPool.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: cfc8f8a90e8c1f34aade67c0a2ddc391, type: 2}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: 'proceduralGeneration.elementPool.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 1e4613ba78c8827438d09790fc8fce3c, type: 2}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: 'proceduralGeneration.elementPool.Array.data[4]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 0aff893b628e16b449d95f9a8befead9, type: 2}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: 'proceduralGeneration.elementPool.Array.data[5]'
+      value: 
+      objectReference: {fileID: 11400000, guid: fcba4310cd5fca344aad5d26ad52423f, type: 2}
     - target: {fileID: 6111944330127197299, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: serializationData.Prefab
       value: 
