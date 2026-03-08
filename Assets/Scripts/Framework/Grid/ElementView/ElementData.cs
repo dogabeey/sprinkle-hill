@@ -11,4 +11,20 @@ public class ElementData : ScriptableObject
     public Mesh elementMesh;
     public Material elementMaterial;
     public Sprite ElementSprite;
+
+    public static ElementData GetElementDataByName(string name, List<ElementData> elementDataList)
+    {
+        if (elementDataList == null)
+        {
+            return null;
+        }
+        for (int i = 0; i < elementDataList.Count; i++)
+        {
+            if (elementDataList[i] != null && elementDataList[i].elementName == name)
+            {
+                return elementDataList[i];
+            }
+        }
+        return null;
+    }
 }
