@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,13 +23,19 @@ namespace Game
                 }
                 else
                 {
-                    Debug.LogWarning("Not enough generated elements to assign to customElementParentList after index: " + i);  
+                    Debug.LogWarning("Not enough generated elements to assign to customElementParentList after index: " + i);
                     break;
                 }
             }
         }
         public override void PreInit()
         {
+        }
+
+        public override IEnumerator DestroyElement()
+        {
+            Destroy(gameObject);
+            yield break;
         }
     }
 }
