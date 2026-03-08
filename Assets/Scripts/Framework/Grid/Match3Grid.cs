@@ -428,6 +428,7 @@ namespace Game
                 }
 
                 int writeIndex = playableRows.Count - 1;
+                int highestExistingElementIndex = -1;
 
                 for (int readIndex = playableRows.Count - 1; readIndex >= 0; readIndex--)
                 {
@@ -439,6 +440,12 @@ namespace Game
                     if (movingInfo == null || movingInfo.elementData == null)
                     {
                         continue;
+                    }
+
+                    // Track the highest existing element
+                    if (highestExistingElementIndex == -1)
+                    {
+                        highestExistingElementIndex = readIndex;
                     }
 
                     int targetY = playableRows[writeIndex];
@@ -473,6 +480,10 @@ namespace Game
                 }
 
                 int emptyCount = writeIndex + 1;
+                
+                // Calculate spawn offset based on the highest existing element position
+                int spawnBaseOffset = highestExistingElementIndex != -1 ? (playableRows.Count - highestExistingElementIndex) : 0;
+                
                 for (int emptyIndex = writeIndex; emptyIndex >= 0; emptyIndex--)
                 {
                     int targetY = playableRows[emptyIndex];
@@ -490,16 +501,17 @@ namespace Game
 
                     if (generatedTiles.TryGetValue(targetPos, out Transform targetTile))
                     {
-                        int stackOffset = emptyCount - emptyIndex;
-                        Vector3 spawnWorldPos = targetTile.position + Vector3.up * (spawnStep * stackOffset);
-                        GridElement newElement = Instantiate(gridElementPrefab, spawnWorldPos, Quaternion.identity, targetTile);
+                        int stackOffset = spawnBaseOffset + (writeIndex - emptyIndex + 1);
+                        Vector3 spawnWorldPos = targetTile.position + Vector3.up * ( stackOffset);
+                        GridElement newElement = Instantiate(gridElementPrefab, spawnWorldPos, Quaternion.identity);
+                        newElement.transform.SetParent(targetTile, true);
                         newElement.elementInfo = newInfo;
                         generatedElements.Add(newElement);
                         newElement.InitElement(this, newInfo);
 
                         float spawnDistance = newElement.transform.localPosition.magnitude;
                         float spawnDuration = fallSpeed > 0f ? spawnDistance / fallSpeed : 0f;
-                        gravitySequence.Join(newElement.transform.DOLocalMove(Vector3.zero, spawnDuration).SetEase(Ease.OutQuad));
+                        gravitySequence.Join(newElement.transform.DOLocalMove(Vector3.zero, spawnDuration).SetEase(Ease.Linear));
                         hasTween = true;
                     }
                 }

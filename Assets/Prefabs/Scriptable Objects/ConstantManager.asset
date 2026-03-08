@@ -13,3 +13,13 @@ MonoBehaviour:
   m_Name: ConstantManager
   m_EditorClassIdentifier: 
   elementSwapMoveDuration: 0.3
+  elementFallSpeed: 10
+  matchClearDelay: 0.3
+  elementDestroyPopHeight: 0.2
+  elementDestroyPopDuration: 0.08
+  elementDestroyFallDistance: 0.25
+  elementDestroyFallDuration: 0.12
+  elementDestroyTargetScaleMultiplier: 0.1
+  elementDestroyScaleDuration: 0.2
+  elementDestroyRotateZ: 120
+  elementDestroyRotateDuration: 0.2
