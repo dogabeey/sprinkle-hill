@@ -5,6 +5,20 @@ using UnityEngine;
 
 namespace Game
 {
+    public enum GameEvents
+    {
+        COLLECTIBLE_EARNED,
+        OBJECTIVE_COMPLETED,
+        OBJECTIVE_FAILED,
+        LEVEL_COMPLETED,
+        LEVEL_FAILED,
+        LEVEL_STARTED,
+        CURRENT_WORLD_CHANGED,
+        ELEMENT_SELECTED,
+        ELEMENT_MATCHED,
+        ELEMENT_DESTROYED
+    }
+
     [CreateAssetMenu(fileName = "EventManager", menuName = "Game/Managers/EventManager")]
     public class EventManager : ScriptableObject, IManager
     {
@@ -48,6 +62,11 @@ namespace Game
             }
         }
 
+        public static void StartListening(GameEvents eventName, Action<EventParam> listener)
+        {
+            StartListening(eventName.ToString(), listener);
+        }
+
         public static void StopListening(string eventName, Action<EventParam> listener)
         {
             if (GameManager.Instance.eventManager == null) return;
@@ -62,6 +81,11 @@ namespace Game
             }
         }
 
+        public static void StopListening(GameEvents eventName, Action<EventParam> listener)
+        {
+            StopListening(eventName.ToString(), listener);
+        }
+
         public static void TriggerEvent(string eventName)
         {
             EventParam eventParam = new EventParam();
@@ -72,6 +96,12 @@ namespace Game
                 // OR USE  instance.eventDictionary[eventName](eventParam);
             }
         }
+
+        public static void TriggerEvent(GameEvents eventName)
+        {
+            TriggerEvent(eventName.ToString());
+        }
+
         public static void TriggerEvent(string eventName, EventParam eventParam)
         {
             Action<EventParam> thisEvent = null;
@@ -80,6 +110,11 @@ namespace Game
                 thisEvent.Invoke(eventParam);
                 // OR USE  instance.eventDictionary[eventName](eventParam);
             }
+        }
+
+        public static void TriggerEvent(GameEvents eventName, EventParam eventParam)
+        {
+            TriggerEvent(eventName.ToString(), eventParam);
         }
 
     }

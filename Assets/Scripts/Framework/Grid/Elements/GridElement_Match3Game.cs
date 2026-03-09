@@ -59,7 +59,7 @@ namespace Game
             destroySequence.Join(transform.DOLocalRotate(new Vector3(0f, 0f, rotateZ), rotateDuration, RotateMode.LocalAxisAdd).SetEase(Ease.InQuad));
             destroySequence.OnComplete(() => Destroy(gameObject));
 
-            EventManager.TriggerEvent(ConstantManager.GameEvents.ELEMENT_DESTROYED, 
+            EventManager.TriggerEvent(GameEvents.ELEMENT_DESTROYED, 
                 eventParam: new EventParam(paramStr: elementInfo.elementData.elementName));
 
             yield return destroySequence.WaitForCompletion();

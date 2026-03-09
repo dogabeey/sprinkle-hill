@@ -36,11 +36,11 @@ public class UnityAdsManager : SingletonComponent<UnityAdsManager>
 
     private void OnEnable()
     {
-        EventManager.StartListening(ConstantManager.GameEvents.LEVEL_STARTED, OnLevelStarted);
+        EventManager.StartListening(GameEvents.LEVEL_STARTED, OnLevelStarted);
     }
     private void OnDisable()
     {
-        EventManager.StopListening(ConstantManager.GameEvents.LEVEL_STARTED, OnLevelStarted);
+        EventManager.StopListening(GameEvents.LEVEL_STARTED, OnLevelStarted);
     }
     private void OnLevelStarted(EventParam e)
     {

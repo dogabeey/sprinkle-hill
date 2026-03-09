@@ -58,22 +58,5 @@ namespace Game
                 public const string LEVEL_FAILED = "LevelFailed";
             }
         }
-
-        public struct GameEvents
-        {
-            public const string COLLECTIBLE_EARNED = "COLLECTIBLE_EARNED";
-            public const string OBJECTIVE_COMPLETED = "OBJECTIVE_COMPLETED";
-            public const string OBJECTIVE_FAILED = "OBJECTIVE_FAILED";
-
-            public const string LEVEL_COMPLETED = "LEVEL_COMPLETED";
-            public const string LEVEL_FAILED = "LEVEL_FAILED";
-            public const string LEVEL_STARTED = "LEVEL_STARTED";
-
-            public const string CURRENT_WORLD_CHANGED = "CURRENT_WORLD_CHANGED";
-
-            public const string ELEMENT_SELECTED = "ELEMENT_SELECTED";
-            public const string ELEMENT_MATCHED = "ELEMENT_MATCHED";
-            public const string ELEMENT_DESTROYED = "ELEMENT_DESTROYED";
-        }
     }
 }
