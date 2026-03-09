@@ -47,7 +47,7 @@ namespace Game
                     }
                     if(elementRenderer is SpriteRenderer spriteRenderer)
                     {
-                        spriteRenderer.sprite = visualInfo.ElementSprite;
+                        spriteRenderer.sprite = visualInfo.displayIcon;
                     }
                 }
             }

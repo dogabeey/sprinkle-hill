@@ -140,9 +140,9 @@ namespace Game
 
             if (value.elementInfo != null && value.elementInfo.elementData != null)
             {
-                Rect currentSpriteRect = value.elementInfo.elementData.ElementSprite.rect;
+                Rect currentSpriteRect = value.elementInfo.elementData.displayIcon.rect;
                 Texture2D elementTexture = new Texture2D((int)currentSpriteRect.width, (int)currentSpriteRect.height);
-                elementTexture.SetPixels(value.elementInfo.elementData.ElementSprite.texture.GetPixels(
+                elementTexture.SetPixels(value.elementInfo.elementData.displayIcon.texture.GetPixels(
                     (int)currentSpriteRect.x,
                     (int)currentSpriteRect.y,
                     (int)currentSpriteRect.width,

@@ -54,19 +54,19 @@ namespace Game
 
                 currentWorld = value;
 
-                EventManager.TriggerEvent(GameEvents.CURRENT_WORLD_CHANGED, new EventParam());
+                EventManager.TriggerEvent(GameEvent.CURRENT_WORLD_CHANGED, new EventParam());
             }
         }
 
         private void OnEnable()
         {
-            EventManager.StartListening(GameEvents.LEVEL_COMPLETED, OnLevelCompleted);
-            EventManager.StartListening(GameEvents.LEVEL_FAILED, OnLevelFailed);
+            EventManager.StartListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
+            EventManager.StartListening(GameEvent.LEVEL_FAILED, OnLevelFailed);
         }
         private void OnDisable()
         {
-            EventManager.StopListening(GameEvents.LEVEL_COMPLETED, OnLevelCompleted);
-            EventManager.StopListening(GameEvents.LEVEL_FAILED, OnLevelFailed);
+            EventManager.StopListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
+            EventManager.StopListening(GameEvent.LEVEL_FAILED, OnLevelFailed);
         }
         void OnLevelCompleted(EventParam param)
         {

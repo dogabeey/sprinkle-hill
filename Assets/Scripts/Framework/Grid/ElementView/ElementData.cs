@@ -2,15 +2,20 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(fileName = "ElementVisualData", menuName = "Game/Element Data...")]
-public class ElementData : ScriptableObject
+
+public class VisualizableScriptableObject : ScriptableObject
 {
-    public string elementName;
+    public string displayName;
     [ColorUsage(false)]
-    public Color ElementColor;
+    public Color displayColor;
+    public Sprite displayIcon;
+}
+
+[CreateAssetMenu(fileName = "ElementVisualData", menuName = "Game/Element Data...")]
+public class ElementData : VisualizableScriptableObject
+{
     public Mesh elementMesh;
     public Material elementMaterial;
-    public Sprite ElementSprite;
 
     public static ElementData GetElementDataByName(string name, List<ElementData> elementDataList)
     {
@@ -20,7 +25,7 @@ public class ElementData : ScriptableObject
         }
         for (int i = 0; i < elementDataList.Count; i++)
         {
-            if (elementDataList[i] != null && elementDataList[i].elementName == name)
+            if (elementDataList[i] != null && elementDataList[i].displayName == name)
             {
                 return elementDataList[i];
             }

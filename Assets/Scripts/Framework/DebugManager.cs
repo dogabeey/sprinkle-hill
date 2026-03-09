@@ -12,11 +12,11 @@ namespace Game
         {
             if (Input.GetKeyDown(KeyCode.W))
             {
-                EventManager.TriggerEvent(GameEvents.LEVEL_COMPLETED);
+                EventManager.TriggerEvent(GameEvent.LEVEL_COMPLETED);
             }
             if (Input.GetKeyDown(KeyCode.F))
             {
-                EventManager.TriggerEvent(GameEvents.LEVEL_FAILED);
+                EventManager.TriggerEvent(GameEvent.LEVEL_FAILED);
             }
             if (Input.GetKeyDown(KeyCode.R))
             {

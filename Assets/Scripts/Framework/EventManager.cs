@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game;
 
-public enum GameEvents
+public enum GameEvent
 {
     COLLECTIBLE_EARNED,
     OBJECTIVE_COMPLETED,
@@ -61,7 +61,7 @@ public class EventManager : ScriptableObject, IManager
         }
     }
 
-    public static void StartListening(GameEvents eventName, Action<EventParam> listener)
+    public static void StartListening(GameEvent eventName, Action<EventParam> listener)
     {
         StartListening(eventName.ToString(), listener);
     }
@@ -80,7 +80,7 @@ public class EventManager : ScriptableObject, IManager
         }
     }
 
-    public static void StopListening(GameEvents eventName, Action<EventParam> listener)
+    public static void StopListening(GameEvent eventName, Action<EventParam> listener)
     {
         StopListening(eventName.ToString(), listener);
     }
@@ -96,7 +96,7 @@ public class EventManager : ScriptableObject, IManager
         }
     }
 
-    public static void TriggerEvent(GameEvents eventName)
+    public static void TriggerEvent(GameEvent eventName)
     {
         TriggerEvent(eventName.ToString());
     }
@@ -111,7 +111,7 @@ public class EventManager : ScriptableObject, IManager
         }
     }
 
-    public static void TriggerEvent(GameEvents eventName, EventParam eventParam)
+    public static void TriggerEvent(GameEvent eventName, EventParam eventParam)
     {
         TriggerEvent(eventName.ToString(), eventParam);
     }
@@ -122,10 +122,12 @@ public class EventManager : ScriptableObject, IManager
 public class EventParam
 {
     public GameObject paramObj;
+    public ScriptableObject paramScriptable;
     public int paramInt;
     public float paramFloat;
     public string paramStr;
     public Type paramType;
+    public Vector3[] vectorList;
     public bool paramBool;
     public Dictionary<string, object> paramDictionary;
 
@@ -139,15 +141,17 @@ public class EventParam
         this.paramDictionary = paramDictionary;
     }
 
-    public EventParam(GameObject paramObj = null, int paramInt = 0, float paramFloat = 0f, string paramStr = "", Type paramType = null, Dictionary<string, object> paramDictionary = null,
+    public EventParam(GameObject paramObj = null, ScriptableObject paramScriptable = null, int paramInt = 0, float paramFloat = 0f, string paramStr = "", Type paramType = null, Dictionary<string, object> paramDictionary = null,
     Vector3[] vectorList = null, bool paramBool = false)
     {
         this.paramObj = paramObj;
+        this.paramScriptable = paramScriptable;
         this.paramInt = paramInt;
         this.paramFloat = paramFloat;
         this.paramStr = paramStr;
         this.paramType = paramType;
         this.paramDictionary = paramDictionary;
+        this.vectorList = vectorList;
         this.paramBool = paramBool;
     }
 }
