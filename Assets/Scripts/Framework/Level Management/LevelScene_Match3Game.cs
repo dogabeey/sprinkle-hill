@@ -1,4 +1,5 @@
 using Sirenix.OdinInspector;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game
@@ -6,15 +7,17 @@ namespace Game
     public class LevelScene_Match3Game : LevelScene
     {
         [FoldoutGroup("Level Settings")]
-        [SerializeField] private Grid3D grid;
+        public List<Objective> objectives;
         [FoldoutGroup("Level Settings")]
-        [SerializeField] private Grid3D.LevelCreationMode levelCreationMode = Grid3D.LevelCreationMode.LevelEditor;
+        public Grid3D grid;
+        [FoldoutGroup("Level Settings")]
+        public Grid3D.LevelCreationMode levelCreationMode = Grid3D.LevelCreationMode.LevelEditor;
         [FoldoutGroup("Level Settings"), ShowIf(nameof(UseLevelEditor))]
-        [SerializeField] private LevelEditor levelEditor;
+        public LevelEditor levelEditor;
         [FoldoutGroup("Level Settings"), ShowIf(nameof(UseProcedural))]
-        [SerializeField] private Vector2Int proceduralGridSize = new Vector2Int(8, 8);
+        public Vector2Int proceduralGridSize = new Vector2Int(8, 8);
         [FoldoutGroup("Level Settings"), ShowIf(nameof(UseProcedural))]
-        [SerializeField] private Grid3D.ProceduralGenerationSettings proceduralGeneration = new Grid3D.ProceduralGenerationSettings();
+        public Grid3D.ProceduralGenerationSettings proceduralGeneration = new Grid3D.ProceduralGenerationSettings();
 
         protected override void Awake()
         {
@@ -29,6 +32,8 @@ namespace Game
                 return;
             }
 
+            ObjectiveManager.Instance.activeObjectives = objectives;
+            EventManager.TriggerEvent(GameEvent.OBJECTIVES_INITIALIZED);
             grid.ConfigureLevelSettings(levelCreationMode, levelEditor, proceduralGeneration, proceduralGridSize);
         }
 

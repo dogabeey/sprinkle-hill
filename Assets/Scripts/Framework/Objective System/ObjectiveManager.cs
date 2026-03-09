@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ObjectiveManager : SerializedMonoBehaviour
+public class ObjectiveManager : SingletonComponent<ObjectiveManager>
 {
     public List<Objective> activeObjectives;
 

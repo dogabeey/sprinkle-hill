@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Element Collection
   m_EditorClassIdentifier: 
   objectiveTypeName: Element Collection
-  description: 'Collect '
+  description: Collect %c %o.
   completionEvent: 9
