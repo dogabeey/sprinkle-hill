@@ -7,21 +7,29 @@ using UnityEngine;
 
 public abstract class UIElement : MonoBehaviour
 {
+    public GameEvent initEvent;
     public GameEvent fireEvent;
 
     private void OnEnable()
     {
-        EventManager.StartListening(fireEvent, OnEvent);
+        EventManager.StartListening(initEvent, OnInitEvent);
+        EventManager.StartListening(fireEvent, OnFireEvent);
     }
     private void OnDisable()
     {
-        EventManager.StopListening(fireEvent, OnEvent);
+        EventManager.StopListening(initEvent, OnInitEvent);
+        EventManager.StopListening(fireEvent, OnFireEvent);
     }
 
-    public void OnEvent(EventParam e)
+    public void OnInitEvent(EventParam e)
+    {
+        InitUI();
+    }
+    public void OnFireEvent(EventParam e)
     {
         DrawUI();
     }
 
+    public abstract void InitUI();
     public abstract void DrawUI();
 }

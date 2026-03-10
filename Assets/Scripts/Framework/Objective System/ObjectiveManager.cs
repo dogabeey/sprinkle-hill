@@ -1,5 +1,6 @@
 using Game;
 using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,11 @@ public class ObjectiveManager : SingletonComponent<ObjectiveManager>
     private void OnDisable()
     {
         
+    }
+
+    internal int GetCurrentCount(Objective objective)
+    {
+        return objective.requiredCount;
     }
 }
 
