@@ -1,6 +1,6 @@
 public class ObjectiveUI : UIElement
 {
-    public Objective objective;
+    public ObjectiveManager objectiveManager;
 
     public override void DrawUI()
     {
