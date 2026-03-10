@@ -12,4 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 411241972bce68c4bbf6095b86d0e0c3, type: 3}
   m_Name: SoundManager
   m_EditorClassIdentifier: 
-  soundInfos: []
+  soundInfos:
+  - id: 
+    audioClips: []
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 1

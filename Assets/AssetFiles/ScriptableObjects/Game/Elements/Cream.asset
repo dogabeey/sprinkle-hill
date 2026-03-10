@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd567b4ecb2599643a9d8e24b3610941, type: 3}
   m_Name: Cream
   m_EditorClassIdentifier: 
-  elementName: Cream
-  ElementColor: {r: 1, g: 0.9955232, b: 0.8349056, a: 0}
+  displayName: 
+  displayColor: {r: 1, g: 0.98205245, b: 0.8160377, a: 0}
+  displayIcon: {fileID: 323059212, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
   elementMesh: {fileID: 0}
   elementMaterial: {fileID: 0}
-  ElementSprite: {fileID: 323059212, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}

@@ -34,6 +34,11 @@ namespace Game
 
         public override IEnumerator DestroyElement()
         {
+            EventManager.TriggerEvent(GameEvent.BOX_DESTROYED, new EventParam(
+                paramObj: gameObject,
+                paramScriptable: elementInfo?.elementData
+            ));
+            
             Destroy(gameObject);
             yield break;
         }

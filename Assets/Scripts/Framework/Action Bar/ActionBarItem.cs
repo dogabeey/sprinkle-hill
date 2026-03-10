@@ -43,7 +43,12 @@ namespace Game
             InvokeRepeating("SetVisibility", 0, visibilityCheckInterval);
             InvokeRepeating("SetClickability", 0, clickabilityCheckInterval);
 
-            onClickButton.onClick.AddListener(OnClick);
+            onClickButton.onClick.AddListener(() => {
+                EventManager.TriggerEvent(GameEvent.ACTION_CLICKED, new EventParam(
+                    paramStr: actionName
+                ));
+                OnClick();
+            });
         }
 
         // Update is called once per frame

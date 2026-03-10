@@ -117,6 +117,10 @@ namespace Game
             if (selectedElement != null)
             {
                 selectedElement.SetSelected(true);
+                EventManager.TriggerEvent(GameEvent.ELEMENT_SELECTED, new EventParam(
+                    paramObj: selectedElement.gameObject,
+                    paramScriptable: selectedElement.elementInfo?.elementData
+                ));
             }
         }
 

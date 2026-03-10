@@ -53,6 +53,12 @@ namespace Game
             {
                 AddCoinAnimation(source.transform.position, coinTransform.position, coinAmount);
             }
+            
+            EventManager.TriggerEvent(GameEvent.CURRENCY_EARNED, new EventParam(
+                paramStr: "Coin",
+                paramFloat: coinAmount,
+                paramObj: source
+            ));
         }
         public void AddCurrency(string currencyID, float premiumCurrencyAmount, GameObject source = null)
         {
@@ -63,6 +69,12 @@ namespace Game
             }
 
             currencyModel.Amount += premiumCurrencyAmount;
+            
+            EventManager.TriggerEvent(GameEvent.CURRENCY_EARNED, new EventParam(
+                paramStr: currencyID,
+                paramFloat: premiumCurrencyAmount,
+                paramObj: source
+            ));
         }
         
         private void AddCoinAnimation(Vector3 sourcePosition, Vector3  targetPosition, float coinAmount)
@@ -100,6 +112,35 @@ namespace Game
         internal float GetCurrencyAmount(CurrencyModel costCurrency)
         {
             return currencyInfos.Find(x => x.currencyModel == costCurrency).Amount;
+        }
+        
+        public bool SpendCoin(float coinAmount)
+        {
+            if (Coin >= coinAmount)
+            {
+                Coin -= coinAmount;
+                EventManager.TriggerEvent(GameEvent.CURRENCY_SPENT, new EventParam(
+                    paramStr: "Coin",
+                    paramFloat: coinAmount
+                ));
+                return true;
+            }
+            return false;
+        }
+        
+        public bool SpendCurrency(string currencyID, float amount)
+        {
+            CurrencyInfo currencyInfo = currencyInfos.Find(x => x.currencyModel.currencyID == currencyID);
+            if (currencyInfo != null && currencyInfo.Amount >= amount)
+            {
+                currencyInfo.Amount -= amount;
+                EventManager.TriggerEvent(GameEvent.CURRENCY_SPENT, new EventParam(
+                    paramStr: currencyID,
+                    paramFloat: amount
+                ));
+                return true;
+            }
+            return false;
         }
     }
 }

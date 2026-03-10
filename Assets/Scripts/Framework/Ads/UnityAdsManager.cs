@@ -128,6 +128,7 @@ public class UnityAdsManager : SingletonComponent<UnityAdsManager>
         if (interstitialAd.AdState == AdState.Loaded)
         {
             interstitialAd.ShowAsync();
+            EventManager.TriggerEvent(GameEvent.AD_SHOWN);
         }
         else
         {
@@ -139,6 +140,7 @@ public class UnityAdsManager : SingletonComponent<UnityAdsManager>
         if (rewardedAd.AdState == AdState.Loaded)
         {
             rewardedAd.ShowAsync();
+            EventManager.TriggerEvent(GameEvent.REWARDED_AD_SHOWN);
         }
         else
         {
@@ -151,6 +153,7 @@ public class UnityAdsManager : SingletonComponent<UnityAdsManager>
         Debug.Log("Ad closed");
         interstitialAd.LoadAsync();
         onAdClickedEvent.Invoke(sender, e);
+        EventManager.TriggerEvent(GameEvent.AD_CLOSED);
     }
 
     private void OnAdFailedShow(object sender, ShowErrorEventArgs e)
@@ -158,6 +161,7 @@ public class UnityAdsManager : SingletonComponent<UnityAdsManager>
         Debug.LogError($"Ad failed to show: {e.Message}");
         interstitialAd.LoadAsync();
         onAdFailedShowEvent.Invoke(sender, e);
+        EventManager.TriggerEvent(GameEvent.AD_FAILED, new EventParam(paramStr: e.Message));
     }
 
     private void OnAdLoaded(object sender, EventArgs e)
@@ -177,12 +181,14 @@ public class UnityAdsManager : SingletonComponent<UnityAdsManager>
         Debug.Log("Rewarded Ad closed");
         rewardedAd.LoadAsync();
         onRewardedClosedEvent.Invoke(sender, e);
+        EventManager.TriggerEvent(GameEvent.REWARDED_AD_COMPLETED);
     }
     private void OnRewardedFailedShow(object sender, ShowErrorEventArgs e)
     {
         Debug.LogError($"Rewarded Ad failed to show: {e.Message}");
         rewardedAd.LoadAsync();
         onRewardedFailedShowEvent.Invoke(sender, e);
+        EventManager.TriggerEvent(GameEvent.REWARDED_AD_FAILED, new EventParam(paramStr: e.Message));
     }
     private void OnRewardedLoaded(object sender, EventArgs e)
     {

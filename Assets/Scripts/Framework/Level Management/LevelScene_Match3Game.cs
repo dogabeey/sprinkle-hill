@@ -33,6 +33,7 @@ namespace Game
             }
 
             ObjectiveManager.Instance.activeObjectives = objectives;
+            ObjectiveManager.Instance.InitializeObjectives();
             EventManager.TriggerEvent(GameEvent.OBJECTIVES_INITIALIZED);
             grid.ConfigureLevelSettings(levelCreationMode, levelEditor, proceduralGeneration, proceduralGridSize);
         }

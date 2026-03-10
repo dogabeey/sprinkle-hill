@@ -70,6 +70,10 @@ namespace Game
                 generatedTiles = tileGenerationData.Generate(generationData, parent.position, TileData.DrawStartingCorner.TopLeft, parent);
                 GenerateElements();
             }
+            
+            EventManager.TriggerEvent(GameEvent.GRID_INITIALIZED, new EventParam(
+                paramInt: gridSize.x * gridSize.y
+            ));
         }
 
         private void InitializeGridCells()

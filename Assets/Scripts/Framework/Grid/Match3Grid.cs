@@ -47,6 +47,11 @@ namespace Game
         public IEnumerator SwapAndMatch(Vector2Int first, Vector2Int second)
         {
             yield return StartCoroutine(SwapElements(first, second));
+            
+            EventManager.TriggerEvent(GameEvent.ELEMENTS_SWAPPED, new EventParam(
+                vectorList: new Vector3[] { new Vector3(first.x, first.y, 0), new Vector3(second.x, second.y, 0) }
+            ));
+            
             yield return StartCoroutine(MatchProcess(first, second));
         }
 
@@ -58,6 +63,29 @@ namespace Game
             while ((matchedGroups = CheckMatchOf(3)).Count > 0)
             {
                 matchComboCount++;
+                
+                // Trigger match detected event
+                EventManager.TriggerEvent(GameEvent.MATCH_DETECTED, new EventParam(
+                    paramInt: matchedGroups.Count
+                ));
+                
+                // Trigger combo event if this is a chain match
+                if (matchComboCount > 1)
+                {
+                    EventManager.TriggerEvent(GameEvent.COMBO_TRIGGERED, new EventParam(
+                        paramInt: matchComboCount
+                    ));
+                }
+                
+                // Trigger element matched event for each group
+                foreach (var group in matchedGroups)
+                {
+                    EventManager.TriggerEvent(GameEvent.ELEMENT_MATCHED, new EventParam(
+                        paramScriptable: GetCell(group[0])?.elementInfo?.elementData,
+                        paramInt: group.Count
+                    ));
+                }
+                
                 // 2. Clear matched elements with animations
                 yield return StartCoroutine(ClearMatches(matchedGroups));
                 // 3. Apply gravity and refill
@@ -67,7 +95,15 @@ namespace Game
             if(matchComboCount == 0)
             {
                 // If no matches were found, swap the elements back to their original positions
+                EventManager.TriggerEvent(GameEvent.SWAP_FAILED, new EventParam(
+                    vectorList: new Vector3[] { new Vector3(initialElement1.x, initialElement1.y, 0), new Vector3(initialElement2.x, initialElement2.y, 0) }
+                ));
                 yield return StartCoroutine(SwapElements(initialElement1, initialElement2));
+            }
+            else
+            {
+                // Grid is now stable after all matches
+                EventManager.TriggerEvent(GameEvent.GRID_STABLE);
             }
 
             yield break;
@@ -371,6 +407,8 @@ namespace Game
         }
         private IEnumerator ApplyGravity()
         {
+            EventManager.TriggerEvent(GameEvent.GRAVITY_STARTED);
+            
             ConstantManager constantManager = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
             float fallSpeed = constantManager != null ? constantManager.elementFallSpeed : 3.3f;
 
@@ -417,7 +455,7 @@ namespace Game
                     Vector2Int cellPos = new Vector2Int(x, y);
                     GridCell cell = GetCell(cellPos);
                     if (cell != null && cell.cellType == CellType.Normal)
-                    {
+                      {
                         playableRows.Add(y);
                       }
                 }
@@ -522,6 +560,27 @@ namespace Game
             if (hasTween)
             {
                 yield return gravitySequence.WaitForCompletion();
+            }
+            
+            EventManager.TriggerEvent(GameEvent.GRAVITY_COMPLETED);
+            
+            // Count refilled elements
+            int refilledCount = 0;
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    GridCell cell = GetCell(new Vector2Int(x, y));
+                    if (cell != null && cell.elementInfo != null && cell.elementInfo.elementData != null)
+                    {
+                        refilledCount++;
+                    }
+                }
+            }
+            
+            if (refilledCount > 0)
+            {
+                EventManager.TriggerEvent(GameEvent.ELEMENTS_REFILLED, new EventParam(paramInt: refilledCount));
             }
         }
     }

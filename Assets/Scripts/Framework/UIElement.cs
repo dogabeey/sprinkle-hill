@@ -7,8 +7,7 @@ using UnityEngine;
 
 public abstract class UIElement : MonoBehaviour
 {
-    [ValueDropdown("GetStructElementsAsStrings", AppendNextDrawer = true)]
-    public string fireEvent;
+    public GameEvent fireEvent;
 
     private void OnEnable()
     {
@@ -25,18 +24,4 @@ public abstract class UIElement : MonoBehaviour
     }
 
     public abstract void DrawUI();
-
-    public static List<string> GetStructElementsAsStrings<T>(T structInstance)
-    {
-        List<string> elements = new List<string>();
-        FieldInfo[] fields = typeof(T).GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-
-        foreach (var field in fields)
-        {
-            object value = field.GetValue(structInstance);
-            elements.Add(value?.ToString() ?? "null");
-        }
-
-        return elements;
-    }
 }

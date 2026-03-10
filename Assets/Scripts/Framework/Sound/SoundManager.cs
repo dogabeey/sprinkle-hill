@@ -178,6 +178,16 @@ namespace Game
             {
                 playingAudioSources.Add(playingSound);
             }
+            
+            // Trigger appropriate event
+            if (soundInfo.type == SoundType.Music)
+            {
+                EventManager.TriggerEvent(GameEvent.MUSIC_STARTED, new EventParam(paramStr: id));
+            }
+            else
+            {
+                EventManager.TriggerEvent(GameEvent.SOUND_PLAYED, new EventParam(paramStr: id));
+            }
         }
 
         /// <summary>
@@ -187,6 +197,12 @@ namespace Game
         {
             StopAllSounds(id, playingAudioSources);
             StopAllSounds(id, loopingAudioSources);
+            
+            SoundInfo soundInfo = GetSoundInfo(id);
+            if (soundInfo != null && soundInfo.type == SoundType.Music)
+            {
+                EventManager.TriggerEvent(GameEvent.MUSIC_STOPPED, new EventParam(paramStr: id));
+            }
         }
 
         /// <summary>
@@ -237,8 +253,11 @@ namespace Game
 
                     break;
             }
-
-
+            
+            EventManager.TriggerEvent(GameEvent.SOUND_SETTINGS_CHANGED, new EventParam(
+                paramStr: type.ToString(),
+                paramBool: isOn
+            ));
         }
 
         public void SetVibrationOnOff(bool isOn)
@@ -249,6 +268,11 @@ namespace Game
             }
 
             IsVibrationOn = isOn;
+            
+            EventManager.TriggerEvent(GameEvent.SOUND_SETTINGS_CHANGED, new EventParam(
+                paramStr: "Vibration",
+                paramBool: isOn
+            ));
         }
 
         #endregion

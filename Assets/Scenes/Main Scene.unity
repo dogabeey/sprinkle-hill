@@ -3605,24 +3605,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c3f5a82b1bf7d344ba4719f630049ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
+  dontDestroyOnLoad: 1
   activeObjectives:
-  - completionEvent: 9
-    checkedParameterTypes: 64
-    objectParameter: {fileID: 0}
+  - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
     scriptableObjectParameter: {fileID: 11400000, guid: f006f435c88374942881e4fd9742c0ca, type: 2}
-    stringParameter: 
-    intParameter: 0
-    floatParameter: 0
-    boolParameter: 0
+    requiredCount: 10
 --- !u!1 &1783475298
 GameObject:
   m_ObjectHideFlags: 0

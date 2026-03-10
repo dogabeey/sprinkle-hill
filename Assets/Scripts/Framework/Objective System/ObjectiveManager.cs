@@ -9,8 +9,9 @@ public class ObjectiveManager : SingletonComponent<ObjectiveManager>
 {
     public List<Objective> activeObjectives;
 
-    private void OnEnable()
+    public void InitializeObjectives()
     {
+        ClearObjectiveListeners();
         foreach (Objective objective in activeObjectives)
         {
             EventManager.StartListening(objective.objectiveType.completionEvent, (EventParam param) =>
@@ -22,9 +23,19 @@ public class ObjectiveManager : SingletonComponent<ObjectiveManager>
                     {
                         // Objective completed, trigger event or call method here
                         Debug.Log("Objective completed: " + objective.objectiveType.completionEvent);
+                        EventManager.TriggerEvent(GameEvent.OBJECTIVE_COMPLETED, new EventParam(
+                            paramScriptable: objective.objectiveType
+                        ));
                     }
                 }
             });
+        }
+    }
+    public void ClearObjectiveListeners()
+    {
+        foreach (Objective objective in activeObjectives)
+        {
+            EventManager.StopListening(objective.objectiveType.completionEvent, null);
         }
     }
     private void OnDisable()
