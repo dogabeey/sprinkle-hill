@@ -33,6 +33,20 @@ namespace Game
         public float sparklingTrailDuration = 0.5f;
         public float sparklingTrailSpawnDelay = 0.05f;
         public float sparklingTrailFadeDelay = 0.5f;
+        
+        [Header("Sparkling Camera Shake")]
+        public float sparklingShakeBaseMagnitude = 0.1f;
+        public float sparklingShakeMagnitudeIncrement = 0.05f;
+        public float sparklingShakeDuration = 0.2f;
+        public int sparklingShakeVibrato = 10;
+        public float sparklingShakeRandomness = 90f;
+        
+        [Header("Match Camera Shake")]
+        public float matchShakeBaseMagnitude = 0.15f;
+        public float matchShakeComboMultiplier = 0.1f;
+        public float matchShakeDuration = 0.3f;
+        public int matchShakeVibrato = 10;
+        public float matchShakeRandomness = 90f;
 
         public struct TAGS
         {

@@ -152,11 +152,14 @@ namespace Game
             List<Coroutine> trailCoroutines = new List<Coroutine>();
             
             // Create and animate trails sequentially with delay
+            int trailIndex = 0;
             foreach (var targetPos in targetPositions)
             {
-                // Start a coroutine for each individual trail
-                Coroutine trailCoroutine = StartCoroutine(AnimateSingleTrail(sourceWorldPos, targetPos, sparklingElementData, constantManager));
+                // Start a coroutine for each individual trail, passing the trail index for shake magnitude
+                Coroutine trailCoroutine = StartCoroutine(AnimateSingleTrail(sourceWorldPos, targetPos, sparklingElementData, constantManager, trailIndex));
                 trailCoroutines.Add(trailCoroutine);
+                
+                trailIndex++;
                 
                 // Wait for the spawn delay before creating the next trail
                 yield return new WaitForSeconds(constantManager.sparklingTrailSpawnDelay);
@@ -168,7 +171,7 @@ namespace Game
             yield return new WaitForSeconds(maxWaitTime);
         }
         
-        private IEnumerator AnimateSingleTrail(Vector3 sourcePos, Vector2Int targetPos, ElementData sparklingElementData, ConstantManager constantManager)
+        private IEnumerator AnimateSingleTrail(Vector3 sourcePos, Vector2Int targetPos, ElementData sparklingElementData, ConstantManager constantManager, int trailIndex)
         {
             if (!generatedTiles.TryGetValue(targetPos, out Transform targetTile))
             {
@@ -213,6 +216,19 @@ namespace Game
             
             // Animate trail to target position
             yield return trailObj.transform.DOMove(targetWorldPos, constantManager.sparklingTrailDuration).SetEase(Ease.InOutQuad).WaitForCompletion();
+            
+            // Shake camera with increasing magnitude based on trail index
+            Camera mainCamera = Camera.main;
+            if (mainCamera != null)
+            {
+                float shakeMagnitude = constantManager.sparklingShakeBaseMagnitude + (trailIndex * constantManager.sparklingShakeMagnitudeIncrement);
+                mainCamera.transform.DOShakePosition(
+                    constantManager.sparklingShakeDuration,
+                    shakeMagnitude,
+                    constantManager.sparklingShakeVibrato,
+                    constantManager.sparklingShakeRandomness
+                );
+            }
             
             // Convert the element at this position NOW (after trail arrives)
             GridCell cell = GetCell(targetPos);
@@ -569,6 +585,20 @@ namespace Game
         // Clears matched elements from the grid and plays their destruction animations.
         private IEnumerator ClearMatches(List<List<Vector2Int>> matchedPositions)
         {
+            // Shake camera based on current combo count
+            Camera mainCamera = Camera.main;
+            if (mainCamera != null)
+            {
+                ConstantManager constantManager = GameManager.Instance.constantManager;
+                float shakeMagnitude = constantManager.matchShakeBaseMagnitude + ((currentComboCount - 1) * constantManager.matchShakeComboMultiplier);
+                mainCamera.transform.DOShakePosition(
+                    constantManager.matchShakeDuration,
+                    shakeMagnitude,
+                    constantManager.matchShakeVibrato,
+                    constantManager.matchShakeRandomness
+                );
+            }
+            
             HashSet<Vector2Int> clearedPositions = new HashSet<Vector2Int>();
             foreach (var group in matchedPositions)
             {

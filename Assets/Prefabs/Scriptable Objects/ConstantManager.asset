@@ -24,6 +24,11 @@ MonoBehaviour:
   elementDestroyRotateZ: 120
   elementDestroyRotateDuration: 0.2
   sparklingTrailPrefab: {fileID: 7547541700686798408, guid: b54214516bc3cd145a31ccd5639beb98, type: 3}
-  sparklingTrailDuration: 0.5
-  sparklingTrailSpawnDelay: 0.3
-  sparklingTrailFadeDelay: 0.1
+  sparklingTrailDuration: 0.3
+  sparklingTrailSpawnDelay: 0.2
+  sparklingTrailFadeDelay: 0
+  sparklingShakeBaseMagnitude: 0.1
+  sparklingShakeMagnitudeIncrement: 0.05
+  sparklingShakeDuration: 0.1
+  sparklingShakeVibrato: 10
+  sparklingShakeRandomness: 90
