@@ -295,8 +295,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 1e4613ba78c8827438d09790fc8fce3c, type: 2}
     - {fileID: 11400000, guid: 0aff893b628e16b449d95f9a8befead9, type: 2}
     - {fileID: 11400000, guid: fcba4310cd5fca344aad5d26ad52423f, type: 2}
-  sparklingPowerAfterXCombo: 2
-  sparklingAppearChance: 0.168
+  sparklingPowerAfterXCombo: 1
+  sparklingAppearChance: 0.262
 --- !u!1 &5642222179130585919
 GameObject:
   m_ObjectHideFlags: 0

@@ -72,6 +72,11 @@ namespace Game
             yield return StartCoroutine(MatchProcess(first, second));
         }
 
+        /// <summary>
+        /// Handles the special swap behavior when a sparkling element is involved.
+        /// Converts all elements matching the target type to the sparkling element's type.
+        /// Trails are spawned sequentially and convert elements as they arrive.
+        /// </summary>
         private IEnumerator HandleSparklingSwap(Vector2Int sparklingPos, Vector2Int targetPos, GridCell sparklingCell, GridCell targetCell)
         {
             if (targetCell?.elementInfo?.elementData == null)
@@ -94,7 +99,7 @@ namespace Game
                 }
             }
             
-            // Convert all elements of the target type to the sparkling element type
+            // Collect all positions that need to be converted
             List<Vector2Int> convertedPositions = new List<Vector2Int>();
             for (int x = 0; x < gridSize.x; x++)
             {
@@ -105,29 +110,16 @@ namespace Game
                     
                     if (cell?.elementInfo?.elementData == targetElementData)
                     {
-                        cell.elementInfo.elementData = sparklingElementData;
-                        cell.elementInfo.isSparkling = false; // Converted elements don't spark
                         convertedPositions.Add(pos);
-                        
-                        // Update visual representation
-                        if (generatedTiles.TryGetValue(pos, out Transform tile))
-                        {
-                            GridElement element = tile.GetComponentInChildren<GridElement>();
-                            if (element != null)
-                            {
-                                // Stop all coroutines (including sparkling animation) on the element
-                                element.StopAllCoroutines();
-                                
-                                // Update element info
-                                element.elementInfo.elementData = sparklingElementData;
-                                element.elementInfo.isSparkling = false;
-                                
-                                // Re-initialize element to update visuals properly
-                                element.InitElement(this, element.elementInfo);
-                            }
-                        }
                     }
                 }
+            }
+            
+            // Create and animate trail renderers flying to each converted element
+            // Elements will be converted as each trail arrives
+            if (convertedPositions.Count > 0)
+            {
+                yield return StartCoroutine(AnimateSparklingTrails(sparklingPos, convertedPositions, sparklingElementData));
             }
             
             // Destroy the sparkling element
@@ -145,6 +137,114 @@ namespace Game
             
             // Check for matches
             yield return StartCoroutine(MatchProcess(targetPos, sparklingPos));
+        }
+        
+        private IEnumerator AnimateSparklingTrails(Vector2Int sourcePos, List<Vector2Int> targetPositions, ElementData sparklingElementData)
+        {
+            ConstantManager constantManager = GameManager.Instance.constantManager;
+            
+            if (!generatedTiles.TryGetValue(sourcePos, out Transform sourceTile))
+            {
+                yield break;
+            }
+            
+            Vector3 sourceWorldPos = sourceTile.position;
+            List<Coroutine> trailCoroutines = new List<Coroutine>();
+            
+            // Create and animate trails sequentially with delay
+            foreach (var targetPos in targetPositions)
+            {
+                // Start a coroutine for each individual trail
+                Coroutine trailCoroutine = StartCoroutine(AnimateSingleTrail(sourceWorldPos, targetPos, sparklingElementData, constantManager));
+                trailCoroutines.Add(trailCoroutine);
+                
+                // Wait for the spawn delay before creating the next trail
+                yield return new WaitForSeconds(constantManager.sparklingTrailSpawnDelay);
+            }
+            
+            // Wait for all trails to complete (they're already running in parallel)
+            // The longest trail will take: sparklingTrailDuration (no fade delay anymore)
+            float maxWaitTime = constantManager.sparklingTrailDuration;
+            yield return new WaitForSeconds(maxWaitTime);
+        }
+        
+        private IEnumerator AnimateSingleTrail(Vector3 sourcePos, Vector2Int targetPos, ElementData sparklingElementData, ConstantManager constantManager)
+        {
+            if (!generatedTiles.TryGetValue(targetPos, out Transform targetTile))
+            {
+                yield break;
+            }
+            
+            Vector3 targetWorldPos = targetTile.position;
+            GameObject trailObj = null;
+            
+            // Instantiate trail prefab or create a default trail object
+            if (constantManager.sparklingTrailPrefab != null)
+            {
+                trailObj = Instantiate(constantManager.sparklingTrailPrefab, sourcePos, Quaternion.identity);
+            }
+            else
+            {
+                // Create default trail object if no prefab is assigned
+                trailObj = new GameObject($"SparklingTrail_{targetPos.x}_{targetPos.y}");
+                trailObj.transform.position = sourcePos;
+                
+                // Add and configure default trail renderer
+                TrailRenderer trail = trailObj.AddComponent<TrailRenderer>();
+                trail.time = 0.5f;
+                trail.startWidth = 0.1f;
+                trail.endWidth = 0f;
+                trail.widthCurve = AnimationCurve.Linear(0, 1, 1, 0);
+                trail.numCapVertices = 5;
+                trail.numCornerVertices = 5;
+                
+                // Create a default gradient
+                Gradient gradient = new Gradient();
+                GradientColorKey[] colorKeys = new GradientColorKey[2];
+                colorKeys[0] = new GradientColorKey(Color.white, 0f);
+                colorKeys[1] = new GradientColorKey(Color.white, 1f);
+                GradientAlphaKey[] alphaKeys = new GradientAlphaKey[2];
+                alphaKeys[0] = new GradientAlphaKey(1f, 0f);
+                alphaKeys[1] = new GradientAlphaKey(0f, 1f);
+                gradient.SetKeys(colorKeys, alphaKeys);
+                trail.colorGradient = gradient;
+                trail.material = new Material(Shader.Find("Sprites/Default"));
+            }
+            
+            // Animate trail to target position
+            yield return trailObj.transform.DOMove(targetWorldPos, constantManager.sparklingTrailDuration).SetEase(Ease.InOutQuad).WaitForCompletion();
+            
+            // Convert the element at this position NOW (after trail arrives)
+            GridCell cell = GetCell(targetPos);
+            if (cell?.elementInfo != null)
+            {
+                cell.elementInfo.elementData = sparklingElementData;
+                cell.elementInfo.isSparkling = false;
+                
+                // Update visual representation
+                if (generatedTiles.TryGetValue(targetPos, out Transform tile))
+                {
+                    GridElement element = tile.GetComponentInChildren<GridElement>();
+                    if (element != null)
+                    {
+                        // Stop all coroutines (including sparkling animation) on the element
+                        element.StopAllCoroutines();
+                        
+                        // Update element info
+                        element.elementInfo.elementData = sparklingElementData;
+                        element.elementInfo.isSparkling = false;
+                        
+                        // Re-initialize element to update visuals properly
+                        element.InitElement(this, element.elementInfo);
+                    }
+                }
+            }
+            
+            // Destroy trail immediately after reaching destination
+            if (trailObj != null)
+            {
+                Destroy(trailObj);
+            }
         }
 
         public IEnumerator MatchProcess(Vector2Int initialElement1, Vector2Int initialElement2)

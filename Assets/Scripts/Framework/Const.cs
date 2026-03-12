@@ -27,6 +27,12 @@ namespace Game
         public float elementDestroyScaleDuration = 0.2f;
         public float elementDestroyRotateZ = 120f;
         public float elementDestroyRotateDuration = 0.2f;
+        
+        [Header("Sparkling Trail Animation")]
+        public GameObject sparklingTrailPrefab;
+        public float sparklingTrailDuration = 0.5f;
+        public float sparklingTrailSpawnDelay = 0.05f;
+        public float sparklingTrailFadeDelay = 0.5f;
 
         public struct TAGS
         {
