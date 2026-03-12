@@ -28,6 +28,11 @@ namespace Game
             this.ownerGrid = ownerGrid;
             this.elementInfo = elementInfo;
             SetElement();
+            
+            if (elementInfo.isSparkling)
+            {
+                StartCoroutine(HueAnim());
+            }
         }
 
         protected virtual void SetElement()
@@ -53,6 +58,11 @@ namespace Game
             }
         }
 
+        protected virtual IEnumerator HueAnim()
+        {
+            yield break;
+        }
+
         public abstract IEnumerator DestroyElement();
     }
 
@@ -60,5 +70,6 @@ namespace Game
     public class GridElementInfo
     {
         public ElementData elementData;
+        public bool isSparkling;
     }
 }

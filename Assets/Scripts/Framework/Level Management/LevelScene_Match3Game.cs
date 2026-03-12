@@ -26,6 +26,11 @@ namespace Game
         public Vector2Int proceduralGridSize = new Vector2Int(8, 8);
         [FoldoutGroup("Level Settings"), ShowIf(nameof(UseProcedural))]
         public Grid3D.ProceduralGenerationSettings proceduralGeneration = new Grid3D.ProceduralGenerationSettings();
+        
+        [FoldoutGroup("Power Up Settings")]
+        public int sparklingPowerAfterXCombo = 3;
+        [FoldoutGroup("Power Up Settings"), Range(0f, 1f)]
+        public float sparklingAppearChance = 0.3f;
 
         protected override void Awake()
         {

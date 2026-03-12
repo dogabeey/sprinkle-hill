@@ -11,6 +11,8 @@ namespace Game
     /// </summary>
     public class Match3Grid : Grid3D
     {
+        private int currentComboCount = 0;
+        
         public override void PreInit()
         {
             // Custom pre-initialization logic for Match-3 grid
@@ -46,6 +48,21 @@ namespace Game
 
         public IEnumerator SwapAndMatch(Vector2Int first, Vector2Int second)
         {
+            // Check if either element is sparkling
+            GridCell firstCell = GetCell(first);
+            GridCell secondCell = GetCell(second);
+            
+            if (firstCell?.elementInfo?.isSparkling == true)
+            {
+                yield return StartCoroutine(HandleSparklingSwap(first, second, firstCell, secondCell));
+                yield break;
+            }
+            else if (secondCell?.elementInfo?.isSparkling == true)
+            {
+                yield return StartCoroutine(HandleSparklingSwap(second, first, secondCell, firstCell));
+                yield break;
+            }
+            
             yield return StartCoroutine(SwapElements(first, second));
             
             EventManager.TriggerEvent(GameEvent.ELEMENTS_SWAPPED, new EventParam(
@@ -55,14 +72,89 @@ namespace Game
             yield return StartCoroutine(MatchProcess(first, second));
         }
 
+        private IEnumerator HandleSparklingSwap(Vector2Int sparklingPos, Vector2Int targetPos, GridCell sparklingCell, GridCell targetCell)
+        {
+            if (targetCell?.elementInfo?.elementData == null)
+            {
+                yield break;
+            }
+            
+            ElementData targetElementData = targetCell.elementInfo.elementData;
+            ElementData sparklingElementData = sparklingCell.elementInfo.elementData;
+            
+            // Move sparkling element to target position
+            if (generatedTiles.TryGetValue(sparklingPos, out Transform sparklingTile) && 
+                generatedTiles.TryGetValue(targetPos, out Transform targetTile))
+            {
+                GridElement sparklingElement = sparklingTile.GetComponentInChildren<GridElement>();
+                if (sparklingElement != null)
+                {
+                    yield return sparklingElement.transform.DOLocalMove(targetTile.position - sparklingTile.position, 
+                        GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
+                }
+            }
+            
+            // Convert all elements of the target type to the sparkling element type
+            List<Vector2Int> convertedPositions = new List<Vector2Int>();
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    GridCell cell = GetCell(pos);
+                    
+                    if (cell?.elementInfo?.elementData == targetElementData)
+                    {
+                        cell.elementInfo.elementData = sparklingElementData;
+                        cell.elementInfo.isSparkling = false; // Converted elements don't spark
+                        convertedPositions.Add(pos);
+                        
+                        // Update visual representation
+                        if (generatedTiles.TryGetValue(pos, out Transform tile))
+                        {
+                            GridElement element = tile.GetComponentInChildren<GridElement>();
+                            if (element != null)
+                            {
+                                // Stop all coroutines (including sparkling animation) on the element
+                                element.StopAllCoroutines();
+                                
+                                // Update element info
+                                element.elementInfo.elementData = sparklingElementData;
+                                element.elementInfo.isSparkling = false;
+                                
+                                // Re-initialize element to update visuals properly
+                                element.InitElement(this, element.elementInfo);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Destroy the sparkling element
+            sparklingCell.elementInfo = null;
+            if (generatedTiles.TryGetValue(sparklingPos, out Transform sparklingElementTile))
+            {
+                GridElement elementToDestroy = sparklingElementTile.GetComponentInChildren<GridElement>();
+                if (elementToDestroy != null)
+                {
+                    StartCoroutine(elementToDestroy.DestroyElement());
+                }
+            }
+            
+            yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
+            
+            // Check for matches
+            yield return StartCoroutine(MatchProcess(targetPos, sparklingPos));
+        }
+
         public IEnumerator MatchProcess(Vector2Int initialElement1, Vector2Int initialElement2)
         {
             List<List<Vector2Int>> matchedGroups;
-            int matchComboCount = 0;
+            currentComboCount = 0;
             // 1. Check for matches
             while ((matchedGroups = CheckMatchOf(3)).Count > 0)
             {
-                matchComboCount++;
+                currentComboCount++;
                 
                 // Trigger match detected event
                 EventManager.TriggerEvent(GameEvent.MATCH_DETECTED, new EventParam(
@@ -70,10 +162,10 @@ namespace Game
                 ));
                 
                 // Trigger combo event if this is a chain match
-                if (matchComboCount > 1)
+                if (currentComboCount > 1)
                 {
                     EventManager.TriggerEvent(GameEvent.COMBO_TRIGGERED, new EventParam(
-                        paramInt: matchComboCount
+                        paramInt: currentComboCount
                     ));
                 }
                 
@@ -92,7 +184,7 @@ namespace Game
                 yield return StartCoroutine(ApplyGravity());
             }
 
-            if(matchComboCount == 0)
+            if(currentComboCount == 0)
             {
                 // If no matches were found, swap the elements back to their original positions
                 EventManager.TriggerEvent(GameEvent.SWAP_FAILED, new EventParam(
@@ -442,6 +534,16 @@ namespace Game
             {
                 yield break;
             }
+            
+            // Check if we should apply sparkling power-up
+            bool shouldApplySparkling = false;
+            float sparklingChance = 0f;
+            
+            if (GameManager.Instance.CurrentLevel is LevelScene_Match3Game match3Level)
+            {
+                shouldApplySparkling = currentComboCount >= match3Level.sparklingPowerAfterXCombo;
+                sparklingChance = match3Level.sparklingAppearChance;
+            }
 
             Sequence gravitySequence = DOTween.Sequence();
             bool hasTween = false;
@@ -534,7 +636,12 @@ namespace Game
                     }
 
                     ElementData randomData = elementPool[Random.Range(0, elementPool.Count)];
-                    GridElementInfo newInfo = new GridElementInfo { elementData = randomData };
+                    bool isSparkling = shouldApplySparkling && Random.value < sparklingChance;
+                    GridElementInfo newInfo = new GridElementInfo 
+                    { 
+                        elementData = randomData,
+                        isSparkling = isSparkling
+                    };
                     targetCell.elementInfo = newInfo;
 
                     if (generatedTiles.TryGetValue(targetPos, out Transform targetTile))

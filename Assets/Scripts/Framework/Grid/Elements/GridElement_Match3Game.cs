@@ -31,6 +31,12 @@ namespace Game
             SetSelected(false);
         }
 
+        protected override IEnumerator HueAnim()
+        {
+            elementRenderer.material.SetFloat("_HueShiftSpeed", 5);
+            yield break;
+        }
+
         public override IEnumerator DestroyElement()
         {
             transform.DOKill();
@@ -64,5 +70,7 @@ namespace Game
 
             yield return destroySequence.WaitForCompletion();
         }
+
     }
+
 }
