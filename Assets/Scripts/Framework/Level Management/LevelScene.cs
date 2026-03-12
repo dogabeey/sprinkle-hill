@@ -12,6 +12,7 @@ namespace Game
         [HideInInspector] public bool isWin;
         [HideInInspector] public bool isLose;
         [HideInInspector] public bool isEnded;
+        [HideInInspector] public bool isPaused;
 
         public static LevelScene Instance;
 
@@ -22,6 +23,16 @@ namespace Game
             Instance = this;
             EventManager.TriggerEvent(GameEvent.LEVEL_STARTED, new EventParam());
         }
+
+        public void CompleteLevel()
+        {
+            isWin = true;
+        }
+        public void FailLevel()
+        {
+            isLose = true;
+        }
+
 
         virtual protected void Update()
         {

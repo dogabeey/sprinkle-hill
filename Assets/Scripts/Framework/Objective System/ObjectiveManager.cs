@@ -24,6 +24,7 @@ public class ObjectiveManager : SingletonComponent<ObjectiveManager>
                     {
                         // Objective completed, trigger event or call method here
                         Debug.Log("Objective completed: " + objective.objectiveType.completionEvent);
+                        objective.isCompleted = true;
                         EventManager.TriggerEvent(GameEvent.OBJECTIVE_COMPLETED, new EventParam(
                             paramScriptable: objective.objectiveType
                         ));
@@ -43,13 +44,25 @@ public class ObjectiveManager : SingletonComponent<ObjectiveManager>
 
     private void OnEnable()
     {
-        
+        EventManager.StartListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
+        EventManager.StartListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
+        EventManager.StartListening(GameEvent.LEVEL_FAILED, OnLevelCompleted);
     }
     private void OnDisable()
     {
-        
+        EventManager.StopListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
+        EventManager.StopListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
+        EventManager.StopListening(GameEvent.LEVEL_FAILED, OnLevelCompleted);
     }
 
+    private void OnLevelStarted(EventParam param)
+    {
+    }
+    private void OnLevelCompleted(EventParam param)
+    {
+        activeObjectives.Clear();
+        ClearObjectiveListeners();
+    }
     internal int GetCurrentCount(Objective objective)
     {
         return objective.requiredCount;
@@ -64,4 +77,5 @@ public class Objective
     [Tooltip("The scriptable object parameter associated with this objective's event. Every time the event specified in objective type is sent with this specific scriptable object, the required objective count will decreased.")]
     public VisualizableScriptableObject scriptableObjectParameter;
     public int requiredCount;
+    public bool isCompleted;
 }

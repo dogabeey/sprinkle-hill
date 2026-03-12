@@ -271,13 +271,15 @@ MonoBehaviour:
   isWin: 0
   isLose: 0
   isEnded: 0
+  isPaused: 0
   levelName: 
   objectives:
   - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
     scriptableObjectParameter: {fileID: 11400000, guid: f006f435c88374942881e4fd9742c0ca, type: 2}
     requiredCount: 7
+    isCompleted: 0
   targetElement: {fileID: 11400000, guid: d35d7301f52f6504a8cc2a157fc9a0b8, type: 2}
-  timer: 120
+  timer: 10
   grid: {fileID: 6111944330127197299}
   levelCreationMode: 1
   levelEditor: {fileID: 11400000, guid: 7a3257018b70ead4a81299d022a11654, type: 2}
@@ -293,8 +295,6 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 1e4613ba78c8827438d09790fc8fce3c, type: 2}
     - {fileID: 11400000, guid: 0aff893b628e16b449d95f9a8befead9, type: 2}
     - {fileID: 11400000, guid: fcba4310cd5fca344aad5d26ad52423f, type: 2}
-  objectiveTargetImage: {fileID: 0}
-  timerText: {fileID: 0}
 --- !u!1 &5642222179130585919
 GameObject:
   m_ObjectHideFlags: 0

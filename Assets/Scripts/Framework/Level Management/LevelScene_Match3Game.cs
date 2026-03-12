@@ -26,16 +26,48 @@ namespace Game
         public Vector2Int proceduralGridSize = new Vector2Int(8, 8);
         [FoldoutGroup("Level Settings"), ShowIf(nameof(UseProcedural))]
         public Grid3D.ProceduralGenerationSettings proceduralGeneration = new Grid3D.ProceduralGenerationSettings();
-        [FoldoutGroup("UI References")]
-        public Image objectiveTargetImage;
-        [FoldoutGroup("UI References")]
-        public TMP_Text timerText;
 
         protected override void Awake()
         {
             ApplyLevelSettings();
             base.Awake();
+            StartCoroutine(TimerCoroutine());
         }
+        private void OnEnable()
+        {
+            EventManager.StartListening(GameEvent.OBJECTIVE_COMPLETED, OnObjectiveCompleted);
+        }
+        private void OnDisable()
+        {
+            EventManager.StopListening(GameEvent.OBJECTIVE_COMPLETED, OnObjectiveCompleted);
+        }
+        private void OnObjectiveCompleted(EventParam param)
+        {
+            if(ObjectiveManager.Instance.activeObjectives.TrueForAll(o => o.isCompleted))
+            {
+                CompleteLevel();
+            }
+        }
+        public IEnumerator TimerCoroutine()
+        {
+            while (!isEnded && timer > 0)
+            {
+                yield return new WaitForSeconds(1f);
+                if (!isPaused)
+                {
+                    timer--;
+                    EventManager.TriggerEvent(GameEvent.TIMER_PASSED);
+                }
+
+                if (timer <= 0)
+                {
+                    timer = 0;
+                    EventManager.TriggerEvent(GameEvent.TIMER_EXPIRED);
+                    FailLevel();
+                }
+            }
+        }
+
         private void ApplyLevelSettings()
         {
             if (grid == null)

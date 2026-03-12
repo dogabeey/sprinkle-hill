@@ -22,8 +22,8 @@ public class UpperPanelUI : UIElement
     public override void InitUI()
     {
         InstantiateObjectiveNodes();
-        StartCoroutine(TimerCoroutine());
         StartCoroutine(SetObjectiveTargetCoroutine());
+        StartCoroutine(UpdateTimerCoroutine());
     }
     public override void DrawUI()
     {
@@ -32,6 +32,9 @@ public class UpperPanelUI : UIElement
 
     private void InstantiateObjectiveNodes()
     {
+        objectiveNodes.ForEach(node => Destroy(node.gameObject));
+        objectiveNodes.Clear();
+
         objectiveManager.activeObjectives.ForEach(objective => {
             ObjectiveUINode node = Instantiate(objectiveNodePrefab, transform);
             node.Initialize(objective);
@@ -47,18 +50,14 @@ public class UpperPanelUI : UIElement
         });
     }
 
-    private IEnumerator TimerCoroutine()
+    public IEnumerator UpdateTimerCoroutine()
     {
         yield return new WaitUntil(() => GameManager.Instance.CurrentLevel != null);
         LevelScene_Match3Game levelScene = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
-        int timer = levelScene.timer;
-
-
-        float elapsedTime = timer;
         while (!levelScene.isEnded)
         {
-            elapsedTime -= Time.deltaTime;
-            timerText.text = elapsedTime > 0 ? FormatTime(elapsedTime) : "0:00";
+            int timer = levelScene.timer;
+            timerText.text = timer > 0 ? FormatTime(timer) : "0:00";
             yield return null;
         }
     }
