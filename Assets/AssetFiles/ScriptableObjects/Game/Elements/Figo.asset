@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd567b4ecb2599643a9d8e24b3610941, type: 3}
-  m_Name: Chocolate
+  m_Name: Figo
   m_EditorClassIdentifier: 
-  displayName: Chocolate
-  displayColor: {r: 0.3584906, g: 0.124051094, b: 0.093004644, a: 0}
-  displayIcon: {fileID: -1805616606, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
+  displayName: Fig
+  displayColor: {r: 0.6745098, g: 0.43921572, b: 0.31764707, a: 0}
+  displayIcon: {fileID: 286648928, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
   elementMesh: {fileID: 0}
   elementMaterial: {fileID: 0}
