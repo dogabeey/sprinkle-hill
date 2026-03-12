@@ -57,6 +57,7 @@ namespace Game
                 EventManager.TriggerEvent(GameEvent.CURRENT_WORLD_CHANGED, new EventParam());
             }
         }
+        public LevelScene CurrentLevel => World.Instance.CurrentLevel;
 
         private void OnEnable()
         {

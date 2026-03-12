@@ -31,6 +31,7 @@ public class ObjectiveManager : SingletonComponent<ObjectiveManager>
                 }
             });
         }
+
     }
     public void ClearObjectiveListeners()
     {
@@ -38,6 +39,11 @@ public class ObjectiveManager : SingletonComponent<ObjectiveManager>
         {
             EventManager.StopListening(objective.objectiveType.completionEvent, null);
         }
+    }
+
+    private void OnEnable()
+    {
+        
     }
     private void OnDisable()
     {
