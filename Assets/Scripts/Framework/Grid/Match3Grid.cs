@@ -655,13 +655,35 @@ namespace Game
                 yield break;
             }
 
-            if (generatedTiles.TryGetValue(wallPos, out GridCellController wallTile))
+            if (generatedTiles.TryGetValue(wallPos, out GridCellController wallTile) && wallTile != null)
             {
-                BreakableWall breakableWall = wallTile.GetComponentInChildren<BreakableWall>();
+                Transform wallParent = wallTile.transform.parent;
+                Vector3 wallPosition = wallTile.transform.position;
+                Quaternion wallRotation = wallTile.transform.rotation;
+                Vector3 wallScale = wallTile.transform.localScale;
+
+                BreakableWall breakableWall = wallTile as BreakableWall;
+                if (breakableWall == null)
+                {
+                    breakableWall = wallTile.GetComponent<BreakableWall>();
+                }
+
                 if (breakableWall != null)
                 {
                     yield return StartCoroutine(breakableWall.WallBreak());
-                    Destroy(breakableWall.gameObject);
+                }
+
+                if (tileGenerationData != null && tileGenerationData.normalCell != null)
+                {
+                    GridCellController normalTile = Instantiate(tileGenerationData.normalCell, wallPosition, wallRotation, wallParent);
+                    normalTile.transform.localScale = wallScale;
+                    normalTile.Bind(wallPos);
+                    generatedTiles[wallPos] = normalTile;
+                }
+
+                if (wallTile != null)
+                {
+                    Destroy(wallTile.gameObject);
                 }
             }
 
@@ -788,7 +810,9 @@ namespace Game
                             readCell.elementInfo = null;
                             targetCell.elementInfo = movingInfo;
 
-                            if (generatedTiles.TryGetValue(readPos, out GridCellController fromTile) && generatedTiles.TryGetValue(targetPos, out GridCellController toTile))
+                            if (generatedTiles.TryGetValue(readPos, out GridCellController fromTile) &&
+                                generatedTiles.TryGetValue(targetPos, out GridCellController toTile) &&
+                                fromTile != null && toTile != null)
                             {
                                 GridElement movingElement = fromTile.GetComponentInChildren<GridElement>();
                                 if (movingElement != null)
@@ -827,7 +851,7 @@ namespace Game
                         };
                         targetCell.elementInfo = newInfo;
 
-                        if (generatedTiles.TryGetValue(targetPos, out GridCellController targetTile))
+                        if (generatedTiles.TryGetValue(targetPos, out GridCellController targetTile) && targetTile != null)
                         {
                             int stackOffset = spawnBaseOffset + (writeIndex - emptyIndex + 1);
                             Vector3 spawnWorldPos = targetTile.transform.position + Vector3.up * stackOffset;

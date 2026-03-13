@@ -12,36 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fda7e12cf25807488823af8618bc05d, type: 3}
   m_Name: PlayGround_GridData
   m_EditorClassIdentifier: 
-  topLeftCorner: {fileID: 9189655048167896280, guid: e86aa5c51954ad64dbf9a9e7e3eb07da, type: 3}
-  topRightCorner: {fileID: 9189655048167896280, guid: bca004ea784e7a044bff41fe1433d334, type: 3}
-  bottomLeftCorner: {fileID: 9189655048167896280, guid: f95b2b6699f3e7149a0aad0578e4bc20, type: 3}
-  bottomRightCorner: {fileID: 9189655048167896280, guid: fcb57af3889226b438904de47ebffaeb, type: 3}
-  topEdge: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  bottomEdge: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  leftEdge: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  rightEdge: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  topLeftConvexCorner: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  topRightConvexCorner: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  bottomLeftConvexCorner: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  bottomRightConvexCorner: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  topTip: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  bottomTip: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  leftTip: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  rightTip: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  singleTileStandalone: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  singleInnerTile: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  verticalTile: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  horizontalTile: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  verticalWithLeftConnectionTile: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  verticalWithRightConnectionTile: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  horizontalWithUpConnectionTile: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  horizontalWithDownConnectionTile: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  onlyVerticalAndHorizontalConnectionTile: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  upperAndLeftTile: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  upperAndRightTile: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  lowerAndLeftTile: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  lowerAndRightTile: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
-  errorTile: {fileID: 9189655048167896280, guid: 5f918cf114937bf449ce439b9df5b8fe, type: 3}
-  breakableWallTile: {fileID: 9189655048167896280, guid: ba3f33d2583db034bac290c91a22a1fc, type: 3}
+  normalCell: {fileID: -1835132901946771215, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
+  breakableWall: {fileID: -7147398998111169648, guid: ba3f33d2583db034bac290c91a22a1fc, type: 3}
   generalPositionOffset: {x: 0, y: 0, z: 0}
   spacing: {x: 1, y: 1}
