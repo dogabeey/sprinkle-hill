@@ -26,25 +26,17 @@ namespace Game
             Right = 8
         }
 
-        public GameObject topLeftCorner, topRightCorner, bottomLeftCorner, bottomRightCorner;
-        public GameObject topEdge, bottomEdge, leftEdge, rightEdge;
-        public GameObject topLeftConvexCorner, topRightConvexCorner, bottomLeftConvexCorner, bottomRightConvexCorner;
-        public GameObject topTip, bottomTip, leftTip, rightTip;
-        public GameObject singleTileStandalone, singleInnerTile;
-        public GameObject verticalTile, horizontalTile;
-        public GameObject verticalWithLeftConnectionTile, verticalWithRightConnectionTile, horizontalWithUpConnectionTile, horizontalWithDownConnectionTile;
-        public GameObject onlyVerticalAndHorizontalConnectionTile;
-        public GameObject upperAndLeftTile, upperAndRightTile, lowerAndLeftTile, lowerAndRightTile;
-        public GameObject errorTile;
+        public GridCellController normalCell;
+        public GridCellController breakableWall;
         [Header("Settings")]
         public Vector3 generalPositionOffset;
         public Vector2 spacing;
         //public LayerMask layerMaskToDetect;
         //public float overlapSphereRadius = 0.1f;
 
-        public Dictionary<Vector2Int, Transform> Generate(bool[,] createData, Vector3 startPosition, DrawStartingCorner drawStartingCorner, Transform parent, bool combineMeshes = false)
+        public Dictionary<Vector2Int, GridCellController> Generate(bool[,] createData, Vector3 startPosition, DrawStartingCorner drawStartingCorner, Transform parent, bool combineMeshes = false, Grid3D.GridCell[,] gridCells = null)
         {
-            Dictionary<Vector2Int, Transform> generatedTileDict = new Dictionary<Vector2Int, Transform>();
+            Dictionary<Vector2Int, GridCellController> generatedTileDict = new Dictionary<Vector2Int, GridCellController>();
             List<GameObject> generatedObjects = new List<GameObject>();
 
             int rows = createData.GetLength(0);
@@ -71,12 +63,16 @@ namespace Game
                                 position = startPosition + new Vector3(-i * spacing.x, j * spacing.y, 0f);
                                 break;
                         }
-                        GameObject tileToInstantiate = DetermineTileType(createData, i, j, drawStartingCorner);
-                        if (tileToInstantiate != null)
+
+                        GridCellController tilePrefab = DetermineTileType(gridCells, i, j);
+                        if (tilePrefab != null)
                         {
-                            GameObject obj = Instantiate(tileToInstantiate, position, Quaternion.identity, parent);
-                            generatedObjects.Add(obj);
-                            generatedTileDict.Add(new Vector2Int(i, j), obj.transform);
+                            GridCellController cellController = Instantiate(tilePrefab, position, Quaternion.identity, parent);
+                            generatedObjects.Add(cellController.gameObject);
+
+                            Vector2Int coordinates = new Vector2Int(i, j);
+                            cellController.Bind(coordinates);
+                            generatedTileDict.Add(coordinates, cellController);
                         }
                     }
                 }
@@ -95,10 +91,27 @@ namespace Game
                     Destroy(obj);
                 }
             }
-            
+
 
             return generatedTileDict;
         }
+
+        private GridCellController DetermineTileType(Grid3D.GridCell[,] gridCells, int x, int y)
+        {
+            bool isBreakableWall = gridCells != null &&
+                                   x < gridCells.GetLength(0) &&
+                                   y < gridCells.GetLength(1) &&
+                                   gridCells[x, y] != null &&
+                                   gridCells[x, y].cellType == Grid3D.CellType.BreakableWall;
+
+            if (isBreakableWall && breakableWall != null)
+            {
+                return breakableWall;
+            }
+
+            return normalCell;
+        }
+
         public static GameObject CombineMeshes<T>(List<T> sources, Transform parent, string objectName, ShadowCastingMode shadowCastingMode = ShadowCastingMode.On) where T : Component
         {
             Dictionary<Material, List<CombineInstance>> materialToCombineInstances =
@@ -199,7 +212,7 @@ namespace Game
                 child.parent = parent;
             }
         }
-
+        /*
         /// <summary>
         /// Determines the type of tile to use based on the surrounding tiles.
         /// </summary>
@@ -298,7 +311,7 @@ namespace Game
             // If ALL true
             if (up && down && left && right && upLeft && upRight && downLeft && downRight) return singleInnerTile;
             return errorTile;
-        }
+        }*/
         /*
         /// <summary>
         /// Scans a rectangular area in the game world to decide if there can be walls placed based on the presence of colliders of a specific layermask, then returns a boolean matrix representing where walls should be created.

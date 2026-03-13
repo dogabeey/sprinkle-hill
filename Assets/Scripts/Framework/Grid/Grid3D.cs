@@ -38,7 +38,7 @@ namespace Game
 
         public List<BusyReason> BusyReasons { get; } = new();
 
-        protected Dictionary<Vector2Int, Transform> generatedTiles = new();
+        protected Dictionary<Vector2Int, GridCellController> generatedTiles = new();
         protected List<GridElement> generatedElements = new();
 
         protected virtual void Start()
@@ -67,7 +67,7 @@ namespace Game
             bool[,] generationData = GetGenerationData();
             if (tileGenerationData)
             {
-                generatedTiles = tileGenerationData.Generate(generationData, parent.position, TileData.DrawStartingCorner.TopLeft, parent);
+                generatedTiles = tileGenerationData.Generate(generationData, parent.position, TileData.DrawStartingCorner.TopLeft, parent, false, gridCells);
                 GenerateElements();
             }
             
@@ -110,13 +110,30 @@ namespace Game
             gridCells = new GridCell[gridSize.x, gridSize.y];
             System.Random random = proceduralGeneration.CreateRandom();
 
+            float emptyChance = Mathf.Clamp01(proceduralGeneration.emptyCellChance);
+            float breakableWallChance = Mathf.Clamp01(proceduralGeneration.breakableWallChance);
+
             for (int x = 0; x < gridSize.x; x++)
             {
                 for (int y = 0; y < gridSize.y; y++)
                 {
-                    bool isEmpty = random.NextDouble() < proceduralGeneration.emptyCellChance;
+                    double roll = random.NextDouble();
+                    CellType cellType;
+                    if (roll < emptyChance)
+                    {
+                        cellType = CellType.Empty;
+                    }
+                    else if (roll < emptyChance + breakableWallChance)
+                    {
+                        cellType = CellType.BreakableWall;
+                    }
+                    else
+                    {
+                        cellType = CellType.Normal;
+                    }
+
                     ElementData elementData = null;
-                    if (!isEmpty && proceduralGeneration.elementPool != null && proceduralGeneration.elementPool.Count > 0)
+                    if (cellType == CellType.Normal && proceduralGeneration.elementPool != null && proceduralGeneration.elementPool.Count > 0)
                     {
                         int index = random.Next(proceduralGeneration.elementPool.Count);
                         elementData = proceduralGeneration.elementPool[index];
@@ -125,7 +142,7 @@ namespace Game
                     gridCells[x, y] = new GridCell
                     {
                         coordinates = new Vector2Int(x, y),
-                        cellType = isEmpty ? CellType.Empty : CellType.Normal,
+                        cellType = cellType,
                         elementInfo = elementData != null ? new GridElementInfo { elementData = elementData } : null
                     };
                 }
@@ -140,17 +157,17 @@ namespace Game
                 for (int y = 0; y < gridSize.y; y++)
                 {
                     GridCell cell = gridCells[x, y];
-                    if (cell == null || cell.elementInfo == null)
+                    if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null)
                     {
                         continue;
                     }
 
-                    if (!generatedTiles.TryGetValue(cell.coordinates, out Transform tile))
+                    if (!generatedTiles.TryGetValue(cell.coordinates, out GridCellController tile))
                     {
                         continue;
                     }
 
-                    GridElement element = Instantiate(gridElementPrefab, tile.position, Quaternion.identity, tile);
+                    GridElement element = Instantiate(gridElementPrefab, tile.transform.position, Quaternion.identity, tile.transform);
                     element.elementInfo = cell.elementInfo;
                     generatedElements.Add(element);
                     element.InitElement(this, element.elementInfo);
@@ -252,6 +269,8 @@ namespace Game
             public int seed;
             [Range(0f, 1f)]
             public float emptyCellChance;
+            [Range(0f, 1f)]
+            public float breakableWallChance;
             public List<ElementData> elementPool = new List<ElementData>();
 
             public System.Random CreateRandom()
@@ -286,6 +305,7 @@ namespace Game
         {
             Empty,
             Normal,
+            BreakableWall,
         }
     }
 }

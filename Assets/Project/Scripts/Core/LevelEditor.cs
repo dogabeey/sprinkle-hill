@@ -55,14 +55,15 @@ namespace Game
                 for (int y = 0; y < gridSize.y; y++)
                 {
                     Grid3D.GridCell sourceCell = gridCells[x, y];
-                    GridElementInfo elementInfo = sourceCell != null && sourceCell.elementInfo != null && sourceCell.elementInfo.elementData != null
+                    Grid3D.CellType cellType = sourceCell != null ? sourceCell.cellType : Grid3D.CellType.Empty;
+                    GridElementInfo elementInfo = cellType == Grid3D.CellType.Normal && sourceCell != null && sourceCell.elementInfo != null && sourceCell.elementInfo.elementData != null
                         ? new GridElementInfo { elementData = sourceCell.elementInfo.elementData }
                         : null;
 
                     runtimeCells[x, y] = new Grid3D.GridCell
                     {
                         coordinates = new Vector2Int(x, y),
-                        cellType = sourceCell != null ? sourceCell.cellType : Grid3D.CellType.Empty,
+                        cellType = cellType,
                         elementInfo = elementInfo
                     };
                 }
@@ -126,6 +127,7 @@ namespace Game
 
             Color emptyCellColor = new Color(0.8f, 0.8f, 0.8f, 0.5f);
             Color normalCellColor = new Color(0.5f, 0.5f, 1f, 0.5f);
+            Color breakableWallColor = new Color(1f, 0.5f, 0.2f, 0.8f);
             Rect elementRect = new Rect(rect.x + rect.width * 0.1f, rect.y + rect.height * 0.1f, rect.width * 0.8f, rect.height * 0.8f);
 
             switch (value.cellType)
@@ -136,6 +138,14 @@ namespace Game
                 case Grid3D.CellType.Empty:
                     EditorGUI.DrawRect(rect, emptyCellColor);
                     break;
+                case Grid3D.CellType.BreakableWall:
+                    EditorGUI.DrawRect(rect, breakableWallColor);
+                    break;
+            }
+
+            if (value.cellType != Grid3D.CellType.Normal)
+            {
+                value.elementInfo = null;
             }
 
             if (value.elementInfo != null && value.elementInfo.elementData != null)
@@ -159,11 +169,18 @@ namespace Game
                     if (Event.current.keyCode == KeyCode.E)
                     {
                         value.cellType = Grid3D.CellType.Empty;
+                        value.elementInfo = null;
                         Event.current.Use();
                     }
                     else if (Event.current.keyCode == KeyCode.N)
                     {
                         value.cellType = Grid3D.CellType.Normal;
+                        Event.current.Use();
+                    }
+                    else if (Event.current.keyCode == KeyCode.B)
+                    {
+                        value.cellType = Grid3D.CellType.BreakableWall;
+                        value.elementInfo = null;
                         Event.current.Use();
                     }
                 }
@@ -179,6 +196,7 @@ namespace Game
                         {
                             menu.AddItem(new GUIContent(elementData.name), false, () =>
                             {
+                                value.cellType = Grid3D.CellType.Normal;
                                 value.elementInfo = new GridElementInfo { elementData = elementData };
                             });
                         }
@@ -196,6 +214,7 @@ namespace Game
                         ElementData elementData = AssetDatabase.LoadAssetAtPath<ElementData>(path);
                         if (elementData != null)
                         {
+                            value.cellType = Grid3D.CellType.Normal;
                             value.elementInfo = new GridElementInfo { elementData = elementData };
                         }
                     }

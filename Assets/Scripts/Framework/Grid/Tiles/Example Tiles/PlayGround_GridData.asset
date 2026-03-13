@@ -42,5 +42,6 @@ MonoBehaviour:
   lowerAndLeftTile: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
   lowerAndRightTile: {fileID: 9189655048167896280, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
   errorTile: {fileID: 9189655048167896280, guid: 5f918cf114937bf449ce439b9df5b8fe, type: 3}
+  breakableWallTile: {fileID: 9189655048167896280, guid: ba3f33d2583db034bac290c91a22a1fc, type: 3}
   generalPositionOffset: {x: 0, y: 0, z: 0}
   spacing: {x: 1, y: 1}

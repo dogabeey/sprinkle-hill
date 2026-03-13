@@ -29,7 +29,7 @@ namespace Game
                 Transform elementParent = element.transform.parent;
                 foreach (var tileKvp in generatedTiles)
                 {
-                    if (tileKvp.Value == elementParent)
+                    if (tileKvp.Value != null && tileKvp.Value.transform == elementParent)
                     {
                         position = new Vector2Int(tileKvp.Key.x, tileKvp.Key.y);
                         return true;
@@ -88,13 +88,13 @@ namespace Game
             ElementData sparklingElementData = sparklingCell.elementInfo.elementData;
             
             // Move sparkling element to target position
-            if (generatedTiles.TryGetValue(sparklingPos, out Transform sparklingTile) && 
-                generatedTiles.TryGetValue(targetPos, out Transform targetTile))
+            if (generatedTiles.TryGetValue(sparklingPos, out GridCellController sparklingTile) && 
+                generatedTiles.TryGetValue(targetPos, out GridCellController targetTile))
             {
                 GridElement sparklingElement = sparklingTile.GetComponentInChildren<GridElement>();
                 if (sparklingElement != null)
                 {
-                    yield return sparklingElement.transform.DOLocalMove(targetTile.position - sparklingTile.position, 
+                    yield return sparklingElement.transform.DOLocalMove(targetTile.transform.position - sparklingTile.transform.position, 
                         GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
                 }
             }
@@ -124,7 +124,7 @@ namespace Game
             
             // Destroy the sparkling element
             sparklingCell.elementInfo = null;
-            if (generatedTiles.TryGetValue(sparklingPos, out Transform sparklingElementTile))
+            if (generatedTiles.TryGetValue(sparklingPos, out GridCellController sparklingElementTile))
             {
                 GridElement elementToDestroy = sparklingElementTile.GetComponentInChildren<GridElement>();
                 if (elementToDestroy != null)
@@ -143,12 +143,12 @@ namespace Game
         {
             ConstantManager constantManager = GameManager.Instance.constantManager;
             
-            if (!generatedTiles.TryGetValue(sourcePos, out Transform sourceTile))
+            if (!generatedTiles.TryGetValue(sourcePos, out GridCellController sourceTile))
             {
                 yield break;
             }
             
-            Vector3 sourceWorldPos = sourceTile.position;
+            Vector3 sourceWorldPos = sourceTile.transform.position;
             List<Coroutine> trailCoroutines = new List<Coroutine>();
             
             // Create and animate trails sequentially with delay
@@ -173,12 +173,12 @@ namespace Game
         
         private IEnumerator AnimateSingleTrail(Vector3 sourcePos, Vector2Int targetPos, ElementData sparklingElementData, ConstantManager constantManager, int trailIndex)
         {
-            if (!generatedTiles.TryGetValue(targetPos, out Transform targetTile))
+            if (!generatedTiles.TryGetValue(targetPos, out GridCellController targetTile))
             {
                 yield break;
             }
             
-            Vector3 targetWorldPos = targetTile.position;
+            Vector3 targetWorldPos = targetTile.transform.position;
             GameObject trailObj = null;
             
             // Instantiate trail prefab or create a default trail object
@@ -238,19 +238,14 @@ namespace Game
                 cell.elementInfo.isSparkling = false;
                 
                 // Update visual representation
-                if (generatedTiles.TryGetValue(targetPos, out Transform tile))
+                if (generatedTiles.TryGetValue(targetPos, out GridCellController tile))
                 {
                     GridElement element = tile.GetComponentInChildren<GridElement>();
                     if (element != null)
                     {
-                        // Stop all coroutines (including sparkling animation) on the element
                         element.StopAllCoroutines();
-                        
-                        // Update element info
                         element.elementInfo.elementData = sparklingElementData;
                         element.elementInfo.isSparkling = false;
-                        
-                        // Re-initialize element to update visuals properly
                         element.InitElement(this, element.elementInfo);
                     }
                 }
@@ -341,8 +336,8 @@ namespace Game
             firstCell.elementInfo = secondInfo;
             secondCell.elementInfo = firstInfo;
 
-            if (!generatedTiles.TryGetValue(firstPos, out Transform firstTile) ||
-                !generatedTiles.TryGetValue(secondPos, out Transform secondTile))
+            if (!generatedTiles.TryGetValue(firstPos, out GridCellController firstTile) ||
+                !generatedTiles.TryGetValue(secondPos, out GridCellController secondTile))
             {
                 yield break;
             }
@@ -363,12 +358,12 @@ namespace Game
             }
             else if (firstElement != null)
             {
-                firstElement.transform.SetParent(secondTile, true);
+                firstElement.transform.SetParent(secondTile.transform, true);
                 yield return firstElement.transform.DOLocalMove(Vector3.zero, GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
             }
             else if (secondElement != null)
             {
-                secondElement.transform.SetParent(firstTile, true);
+                secondElement.transform.SetParent(firstTile.transform, true);
                 yield return secondElement.transform.DOLocalMove(Vector3.zero, GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
             }
         }
@@ -395,7 +390,7 @@ namespace Game
                 for (int y = 0; y < gridSize.y; y++)
                 {
                     GridCell cell = gridCells[x, y];
-                    if (cell == null || cell.cellType == CellType.Empty || cell.elementInfo == null || cell.elementInfo.elementData == null)
+                    if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null || cell.elementInfo.elementData == null)
                     {
                         continue;
                     }
@@ -417,12 +412,12 @@ namespace Game
                         }
                     }
 
-                    if (!generatedTiles.TryGetValue(cell.coordinates, out Transform tile))
+                    if (!generatedTiles.TryGetValue(cell.coordinates, out GridCellController tile))
                     {
                         continue;
                     }
 
-                    GridElement element = Instantiate(gridElementPrefab, tile.position, Quaternion.identity, tile);
+                    GridElement element = Instantiate(gridElementPrefab, tile.transform.position, Quaternion.identity, tile.transform);
                     element.elementInfo = cell.elementInfo;
                     generatedElements.Add(element);
                     element.InitElement(this, element.elementInfo);
@@ -439,7 +434,7 @@ namespace Game
         private bool IsSameElement(int x, int y, ElementData data)
         {
             GridCell cell = GetCell(new Vector2Int(x, y));
-            return cell != null && cell.cellType != CellType.Empty && cell.elementInfo != null && cell.elementInfo.elementData == data;
+            return cell != null && cell.cellType == CellType.Normal && cell.elementInfo != null && cell.elementInfo.elementData == data;
         }
 
         private List<List<Vector2Int>> CheckMatchOf(int elementCount = 3)
@@ -600,6 +595,7 @@ namespace Game
             }
             
             HashSet<Vector2Int> clearedPositions = new HashSet<Vector2Int>();
+            HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
             foreach (var group in matchedPositions)
             {
                 foreach (var pos in group)
@@ -613,7 +609,7 @@ namespace Game
                     if (cell != null && cell.elementInfo != null)
                     {
                         cell.elementInfo = null;
-                        if (generatedTiles.TryGetValue(gridPos, out Transform tile))
+                        if (generatedTiles.TryGetValue(gridPos, out GridCellController tile))
                         {
                             GridElement element = tile.GetComponentInChildren<GridElement>();
                             if (element != null)
@@ -621,12 +617,57 @@ namespace Game
                                 StartCoroutine(element.DestroyElement());
                             }
                         }
+
+                        Vector2Int[] adjacentOffsets =
+                        {
+                            new Vector2Int(0, 1),
+                            new Vector2Int(0, -1),
+                            new Vector2Int(-1, 0),
+                            new Vector2Int(1, 0)
+                        };
+
+                        foreach (Vector2Int offset in adjacentOffsets)
+                        {
+                            Vector2Int adjacentPos = gridPos + offset;
+                            GridCell adjacentCell = GetCell(adjacentPos);
+                            if (adjacentCell != null && adjacentCell.cellType == CellType.BreakableWall)
+                            {
+                                wallsToBreak.Add(adjacentPos);
+                            }
+                        }
                     }
                     clearedPositions.Add(pos);
                 }
                 yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
             }
+
+            foreach (Vector2Int wallPos in wallsToBreak)
+            {
+                yield return StartCoroutine(BreakWall(wallPos));
+            }
         }
+
+        private IEnumerator BreakWall(Vector2Int wallPos)
+        {
+            GridCell cell = GetCell(wallPos);
+            if (cell == null || cell.cellType != CellType.BreakableWall)
+            {
+                yield break;
+            }
+
+            if (generatedTiles.TryGetValue(wallPos, out GridCellController wallTile))
+            {
+                BreakableWall breakableWall = wallTile.GetComponentInChildren<BreakableWall>();
+                if (breakableWall != null)
+                {
+                    yield return StartCoroutine(breakableWall.WallBreak());
+                    Destroy(breakableWall.gameObject);
+                }
+            }
+
+            cell.cellType = CellType.Normal;
+        }
+
         private IEnumerator ApplyGravity()
         {
             EventManager.TriggerEvent(GameEvent.GRAVITY_STARTED);
@@ -665,7 +706,6 @@ namespace Game
                 yield break;
             }
             
-            // Check if we should apply sparkling power-up
             bool shouldApplySparkling = false;
             float sparklingChance = 0f;
             
@@ -677,117 +717,131 @@ namespace Game
 
             Sequence gravitySequence = DOTween.Sequence();
             bool hasTween = false;
-            float spawnStep = 1f;
 
             for (int x = 0; x < gridSize.x; x++)
             {
-                List<int> playableRows = new List<int>();
+                List<List<int>> sections = new List<List<int>>();
+                List<int> currentSection = new List<int>();
+
                 for (int y = 0; y < gridSize.y; y++)
                 {
                     Vector2Int cellPos = new Vector2Int(x, y);
                     GridCell cell = GetCell(cellPos);
+
                     if (cell != null && cell.cellType == CellType.Normal)
-                      {
-                        playableRows.Add(y);
-                      }
-                }
-
-                if (playableRows.Count == 0)
-                {
-                    continue;
-                }
-
-                int writeIndex = playableRows.Count - 1;
-                int highestExistingElementIndex = -1;
-
-                for (int readIndex = playableRows.Count - 1; readIndex >= 0; readIndex--)
-                {
-                    int readY = playableRows[readIndex];
-                    Vector2Int readPos = new Vector2Int(x, readY);
-
-                    GridCell readCell = GetCell(readPos);
-                    GridElementInfo movingInfo = readCell != null ? readCell.elementInfo : null;
-                    if (movingInfo == null || movingInfo.elementData == null)
                     {
-                        continue;
+                        currentSection.Add(y);
                     }
-
-                    // Track the highest existing element
-                    if (highestExistingElementIndex == -1)
+                    else
                     {
-                        highestExistingElementIndex = readIndex;
-                    }
-
-                    int targetY = playableRows[writeIndex];
-                    Vector2Int targetPos = new Vector2Int(x, targetY);
-                    GridCell targetCell = GetCell(targetPos);
-
-                    if (targetCell == null)
-                    {
-                        continue;
-                    }
-
-                    if (targetPos != readPos)
-                    {
-                        readCell.elementInfo = null;
-                        targetCell.elementInfo = movingInfo;
-
-                        if (generatedTiles.TryGetValue(readPos, out Transform fromTile) && generatedTiles.TryGetValue(targetPos, out Transform toTile))
+                        if (currentSection.Count > 0)
                         {
-                            GridElement movingElement = fromTile.GetComponentInChildren<GridElement>();
-                            if (movingElement != null)
-                            {
-                                movingElement.transform.SetParent(toTile, true);
-                                float moveDistance = movingElement.transform.localPosition.magnitude;
-                                float moveDuration = fallSpeed > 0f ? moveDistance / fallSpeed : 0f;
-                                gravitySequence.Join(movingElement.transform.DOLocalMove(Vector3.zero, moveDuration).SetEase(Ease.OutQuad));
-                                hasTween = true;
-                            }
+                            sections.Add(new List<int>(currentSection));
+                            currentSection.Clear();
                         }
                     }
-
-                    writeIndex--;
                 }
 
-                int emptyCount = writeIndex + 1;
-                
-                // Calculate spawn offset based on the highest existing element position
-                int spawnBaseOffset = highestExistingElementIndex != -1 ? (playableRows.Count - highestExistingElementIndex) : 0;
-                
-                for (int emptyIndex = writeIndex; emptyIndex >= 0; emptyIndex--)
+                if (currentSection.Count > 0)
                 {
-                    int targetY = playableRows[emptyIndex];
-                    Vector2Int targetPos = new Vector2Int(x, targetY);
-                    GridCell targetCell = GetCell(targetPos);
+                    sections.Add(currentSection);
+                }
 
-                    if (targetCell == null)
+                foreach (List<int> playableRows in sections)
+                {
+                    if (playableRows.Count == 0)
                     {
                         continue;
                     }
 
-                    ElementData randomData = elementPool[Random.Range(0, elementPool.Count)];
-                    bool isSparkling = shouldApplySparkling && Random.value < sparklingChance;
-                    GridElementInfo newInfo = new GridElementInfo 
-                    { 
-                        elementData = randomData,
-                        isSparkling = isSparkling
-                    };
-                    targetCell.elementInfo = newInfo;
+                    int writeIndex = playableRows.Count - 1;
+                    int highestExistingElementIndex = -1;
 
-                    if (generatedTiles.TryGetValue(targetPos, out Transform targetTile))
+                    for (int readIndex = playableRows.Count - 1; readIndex >= 0; readIndex--)
                     {
-                        int stackOffset = spawnBaseOffset + (writeIndex - emptyIndex + 1);
-                        Vector3 spawnWorldPos = targetTile.position + Vector3.up * ( stackOffset);
-                        GridElement newElement = Instantiate(gridElementPrefab, spawnWorldPos, Quaternion.identity);
-                        newElement.transform.SetParent(targetTile, true);
-                        newElement.elementInfo = newInfo;
-                        generatedElements.Add(newElement);
-                        newElement.InitElement(this, newInfo);
+                        int readY = playableRows[readIndex];
+                        Vector2Int readPos = new Vector2Int(x, readY);
 
-                        float spawnDistance = newElement.transform.localPosition.magnitude;
-                        float spawnDuration = fallSpeed > 0f ? spawnDistance / fallSpeed : 0f;
-                        gravitySequence.Join(newElement.transform.DOLocalMove(Vector3.zero, spawnDuration).SetEase(Ease.Linear));
-                        hasTween = true;
+                        GridCell readCell = GetCell(readPos);
+                        GridElementInfo movingInfo = readCell != null ? readCell.elementInfo : null;
+                        if (movingInfo == null || movingInfo.elementData == null)
+                        {
+                            continue;
+                        }
+
+                        if (highestExistingElementIndex == -1)
+                        {
+                            highestExistingElementIndex = readIndex;
+                        }
+
+                        int targetY = playableRows[writeIndex];
+                        Vector2Int targetPos = new Vector2Int(x, targetY);
+                        GridCell targetCell = GetCell(targetPos);
+
+                        if (targetCell == null)
+                        {
+                            continue;
+                        }
+
+                        if (targetPos != readPos)
+                        {
+                            readCell.elementInfo = null;
+                            targetCell.elementInfo = movingInfo;
+
+                            if (generatedTiles.TryGetValue(readPos, out GridCellController fromTile) && generatedTiles.TryGetValue(targetPos, out GridCellController toTile))
+                            {
+                                GridElement movingElement = fromTile.GetComponentInChildren<GridElement>();
+                                if (movingElement != null)
+                                {
+                                    movingElement.transform.SetParent(toTile.transform, true);
+                                    float moveDistance = movingElement.transform.localPosition.magnitude;
+                                    float moveDuration = fallSpeed > 0f ? moveDistance / fallSpeed : 0f;
+                                    gravitySequence.Join(movingElement.transform.DOLocalMove(Vector3.zero, moveDuration).SetEase(Ease.OutQuad));
+                                    hasTween = true;
+                                }
+                            }
+                        }
+
+                        writeIndex--;
+                    }
+
+                    int spawnBaseOffset = highestExistingElementIndex != -1 ? (playableRows.Count - highestExistingElementIndex) : 0;
+
+                    for (int emptyIndex = writeIndex; emptyIndex >= 0; emptyIndex--)
+                    {
+                        int targetY = playableRows[emptyIndex];
+                        Vector2Int targetPos = new Vector2Int(x, targetY);
+                        GridCell targetCell = GetCell(targetPos);
+
+                        if (targetCell == null)
+                        {
+                            continue;
+                        }
+
+                        ElementData randomData = elementPool[Random.Range(0, elementPool.Count)];
+                        bool isSparkling = shouldApplySparkling && Random.value < sparklingChance;
+                        GridElementInfo newInfo = new GridElementInfo
+                        {
+                            elementData = randomData,
+                            isSparkling = isSparkling
+                        };
+                        targetCell.elementInfo = newInfo;
+
+                        if (generatedTiles.TryGetValue(targetPos, out GridCellController targetTile))
+                        {
+                            int stackOffset = spawnBaseOffset + (writeIndex - emptyIndex + 1);
+                            Vector3 spawnWorldPos = targetTile.transform.position + Vector3.up * stackOffset;
+                            GridElement newElement = Instantiate(gridElementPrefab, spawnWorldPos, Quaternion.identity);
+                            newElement.transform.SetParent(targetTile.transform, true);
+                            newElement.elementInfo = newInfo;
+                            generatedElements.Add(newElement);
+                            newElement.InitElement(this, newInfo);
+
+                            float spawnDistance = newElement.transform.localPosition.magnitude;
+                            float spawnDuration = fallSpeed > 0f ? spawnDistance / fallSpeed : 0f;
+                            gravitySequence.Join(newElement.transform.DOLocalMove(Vector3.zero, spawnDuration).SetEase(Ease.Linear));
+                            hasTween = true;
+                        }
                     }
                 }
             }
@@ -800,8 +854,7 @@ namespace Game
             }
             
             EventManager.TriggerEvent(GameEvent.GRAVITY_COMPLETED);
-            
-            // Count refilled elements
+
             int refilledCount = 0;
             for (int x = 0; x < gridSize.x; x++)
             {

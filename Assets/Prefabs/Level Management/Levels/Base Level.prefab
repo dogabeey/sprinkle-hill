@@ -288,6 +288,7 @@ MonoBehaviour:
     useRandomSeed: 1
     seed: 0
     emptyCellChance: 0
+    breakableWallChance: 0.157
     elementPool:
     - {fileID: 11400000, guid: f006f435c88374942881e4fd9742c0ca, type: 2}
     - {fileID: 11400000, guid: 69d335464f54691419e9101cf98729e0, type: 2}
