@@ -112,6 +112,7 @@ namespace Game
 
             float emptyChance = Mathf.Clamp01(proceduralGeneration.emptyCellChance);
             float breakableWallChance = Mathf.Clamp01(proceduralGeneration.breakableWallChance);
+            float hiddenBoxChance = Mathf.Clamp01(proceduralGeneration.hiddenBoxChance);
 
             for (int x = 0; x < gridSize.x; x++)
             {
@@ -133,17 +134,19 @@ namespace Game
                     }
 
                     ElementData elementData = null;
+                    bool isHidden = false;
                     if (cellType == CellType.Normal && proceduralGeneration.elementPool != null && proceduralGeneration.elementPool.Count > 0)
                     {
                         int index = random.Next(proceduralGeneration.elementPool.Count);
                         elementData = proceduralGeneration.elementPool[index];
+                        isHidden = random.NextDouble() < hiddenBoxChance;
                     }
 
                     gridCells[x, y] = new GridCell
                     {
                         coordinates = new Vector2Int(x, y),
                         cellType = cellType,
-                        elementInfo = elementData != null ? new GridElementInfo { elementData = elementData } : null
+                        elementInfo = elementData != null ? new GridElementInfo { elementData = elementData, isHidden = isHidden } : null
                     };
                 }
             }
@@ -259,8 +262,8 @@ namespace Game
             return generationData;
         }
 
-        private bool UseLevelEditor => levelCreationMode == LevelCreationMode.LevelEditor;
-        private bool UseProcedural => levelCreationMode == LevelCreationMode.Procedural;
+        protected bool UseLevelEditor => levelCreationMode == LevelCreationMode.LevelEditor;
+        protected bool UseProcedural => levelCreationMode == LevelCreationMode.Procedural;
 
         [System.Serializable]
         public class ProceduralGenerationSettings
@@ -271,6 +274,8 @@ namespace Game
             public float emptyCellChance;
             [Range(0f, 1f)]
             public float breakableWallChance;
+            [Range(0f, 1f)]
+            public float hiddenBoxChance;
             public List<ElementData> elementPool = new List<ElementData>();
 
             public System.Random CreateRandom()

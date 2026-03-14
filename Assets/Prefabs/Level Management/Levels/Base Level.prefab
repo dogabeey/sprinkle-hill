@@ -288,7 +288,8 @@ MonoBehaviour:
     useRandomSeed: 1
     seed: 0
     emptyCellChance: 0
-    breakableWallChance: 0.157
+    breakableWallChance: 0
+    hiddenBoxChance: 0.325
     elementPool:
     - {fileID: 11400000, guid: f006f435c88374942881e4fd9742c0ca, type: 2}
     - {fileID: 11400000, guid: 69d335464f54691419e9101cf98729e0, type: 2}
@@ -297,7 +298,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 0aff893b628e16b449d95f9a8befead9, type: 2}
     - {fileID: 11400000, guid: fcba4310cd5fca344aad5d26ad52423f, type: 2}
   sparklingPowerAfterXCombo: 1
-  sparklingAppearChance: 0.262
+  sparklingAppearChance: 0
 --- !u!1 &5642222179130585919
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,17 +407,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
+    SerializedFormat: 0
+    SerializedBytes: 2d01090000006700720069006400430065006c006c007300
     ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes:
-    - Name: gridCells
-      Entry: 6
-      Data: 
+    SerializationNodes: []
   gridElementPrefab: {fileID: 8349045300224855682, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
   tileGenerationData: {fileID: 11400000, guid: 564a348655db59242b1a35f4cba0f2fe, type: 2}
   parent: {fileID: 2551075996391198597}

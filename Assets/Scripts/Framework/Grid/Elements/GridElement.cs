@@ -20,6 +20,8 @@ namespace Game
         [FoldoutGroup("Grid Element")]
         public Renderer elementRenderer;
         [FoldoutGroup("Grid Element")]
+        public Sprite hiddenSprite;
+        [FoldoutGroup("Grid Element")]
         [ReadOnly]
         public Grid3D ownerGrid;
 
@@ -29,7 +31,7 @@ namespace Game
             this.elementInfo = elementInfo;
             SetElement();
             
-            if (elementInfo.isSparkling)
+            if (elementInfo.isSparkling && !elementInfo.isHidden)
             {
                 StartCoroutine(HueAnim());
             }
@@ -40,17 +42,22 @@ namespace Game
             ElementData visualInfo = elementInfo.elementData;
             if (visualInfo != null)
             {
-                if (elementRenderer != null || visualInfo.elementMesh != null)
+                if (elementRenderer is MeshRenderer meshRenderer)
                 {
-                    if(elementRenderer is MeshRenderer meshRenderer)
+                    MeshFilter meshFilter = meshRenderer.GetComponent<MeshFilter>();
+                    if (meshFilter != null && visualInfo.elementMesh != null)
                     {
-                        MeshFilter meshFilter = meshRenderer.GetComponent<MeshFilter>();
-                        if (meshFilter != null)
-                        {
-                            meshFilter.mesh = visualInfo.elementMesh;
-                        }
+                        meshFilter.mesh = visualInfo.elementMesh;
                     }
-                    if(elementRenderer is SpriteRenderer spriteRenderer)
+                }
+
+                if (elementRenderer is SpriteRenderer spriteRenderer)
+                {
+                    if (elementInfo != null && elementInfo.isHidden && hiddenSprite != null)
+                    {
+                        spriteRenderer.sprite = hiddenSprite;
+                    }
+                    else
                     {
                         spriteRenderer.sprite = visualInfo.displayIcon;
                     }
@@ -71,5 +78,6 @@ namespace Game
     {
         public ElementData elementData;
         public bool isSparkling;
+        public bool isHidden;
     }
 }

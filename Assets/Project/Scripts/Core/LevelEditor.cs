@@ -56,8 +56,16 @@ namespace Game
                 {
                     Grid3D.GridCell sourceCell = gridCells[x, y];
                     Grid3D.CellType cellType = sourceCell != null ? sourceCell.cellType : Grid3D.CellType.Empty;
-                    GridElementInfo elementInfo = cellType == Grid3D.CellType.Normal && sourceCell != null && sourceCell.elementInfo != null && sourceCell.elementInfo.elementData != null
-                        ? new GridElementInfo { elementData = sourceCell.elementInfo.elementData }
+                    GridElementInfo elementInfo = cellType == Grid3D.CellType.Normal &&
+                                                  sourceCell != null &&
+                                                  sourceCell.elementInfo != null &&
+                                                  sourceCell.elementInfo.elementData != null
+                        ? new GridElementInfo
+                        {
+                            elementData = sourceCell.elementInfo.elementData,
+                            isSparkling = sourceCell.elementInfo.isSparkling,
+                            isHidden = sourceCell.elementInfo.isHidden
+                        }
                         : null;
 
                     runtimeCells[x, y] = new Grid3D.GridCell

@@ -242,7 +242,9 @@ MonoBehaviour:
   elementInfo:
     elementData: {fileID: 0}
     isSparkling: 0
+    isHidden: 0
   elementRenderer: {fileID: 482629601680886882}
+  hiddenSprite: {fileID: -136137942, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
   ownerGrid: {fileID: 0}
   highlightSprite: {fileID: 961667231535525662}
 --- !u!61 &43135049299317513

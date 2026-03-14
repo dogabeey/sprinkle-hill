@@ -72,6 +72,60 @@ namespace Game
             yield return StartCoroutine(MatchProcess(first, second));
         }
 
+        public IEnumerator MatchProcess(Vector2Int initialElement1, Vector2Int initialElement2)
+        {
+            List<List<Vector2Int>> matchedGroups;
+            currentComboCount = 0;
+            // 1. Check for matches
+            while ((matchedGroups = CheckMatchOf(3)).Count > 0)
+            {
+                currentComboCount++;
+                
+                // Trigger match detected event
+                EventManager.TriggerEvent(GameEvent.MATCH_DETECTED, new EventParam(
+                    paramInt: matchedGroups.Count
+                ));
+                
+                // Trigger combo event if this is a chain match
+                if (currentComboCount > 1)
+                {
+                    EventManager.TriggerEvent(GameEvent.COMBO_TRIGGERED, new EventParam(
+                        paramInt: currentComboCount
+                    ));
+                }
+                
+                // Trigger element matched event for each group
+                foreach (var group in matchedGroups)
+                {
+                    EventManager.TriggerEvent(GameEvent.ELEMENT_MATCHED, new EventParam(
+                        paramScriptable: GetCell(group[0])?.elementInfo?.elementData,
+                        paramInt: group.Count
+                    ));
+                }
+                
+                // 2. Clear matched elements with animations
+                yield return StartCoroutine(ClearMatches(matchedGroups));
+                // 3. Apply gravity and refill
+                yield return StartCoroutine(ApplyGravity());
+            }
+
+            if(currentComboCount == 0)
+            {
+                // If no matches were found, swap the elements back to their original positions
+                EventManager.TriggerEvent(GameEvent.SWAP_FAILED, new EventParam(
+                    vectorList: new Vector3[] { new Vector3(initialElement1.x, initialElement1.y, 0), new Vector3(initialElement2.x, initialElement2.y, 0) }
+                ));
+                yield return StartCoroutine(SwapElements(initialElement1, initialElement2));
+            }
+            else
+            {
+                // Grid is now stable after all matches
+                EventManager.TriggerEvent(GameEvent.GRID_STABLE);
+            }
+
+            yield break;
+        }
+
         /// <summary>
         /// Handles the special swap behavior when a sparkling element is involved.
         /// Converts all elements matching the target type to the sparkling element's type.
@@ -258,60 +312,6 @@ namespace Game
             }
         }
 
-        public IEnumerator MatchProcess(Vector2Int initialElement1, Vector2Int initialElement2)
-        {
-            List<List<Vector2Int>> matchedGroups;
-            currentComboCount = 0;
-            // 1. Check for matches
-            while ((matchedGroups = CheckMatchOf(3)).Count > 0)
-            {
-                currentComboCount++;
-                
-                // Trigger match detected event
-                EventManager.TriggerEvent(GameEvent.MATCH_DETECTED, new EventParam(
-                    paramInt: matchedGroups.Count
-                ));
-                
-                // Trigger combo event if this is a chain match
-                if (currentComboCount > 1)
-                {
-                    EventManager.TriggerEvent(GameEvent.COMBO_TRIGGERED, new EventParam(
-                        paramInt: currentComboCount
-                    ));
-                }
-                
-                // Trigger element matched event for each group
-                foreach (var group in matchedGroups)
-                {
-                    EventManager.TriggerEvent(GameEvent.ELEMENT_MATCHED, new EventParam(
-                        paramScriptable: GetCell(group[0])?.elementInfo?.elementData,
-                        paramInt: group.Count
-                    ));
-                }
-                
-                // 2. Clear matched elements with animations
-                yield return StartCoroutine(ClearMatches(matchedGroups));
-                // 3. Apply gravity and refill
-                yield return StartCoroutine(ApplyGravity());
-            }
-
-            if(currentComboCount == 0)
-            {
-                // If no matches were found, swap the elements back to their original positions
-                EventManager.TriggerEvent(GameEvent.SWAP_FAILED, new EventParam(
-                    vectorList: new Vector3[] { new Vector3(initialElement1.x, initialElement1.y, 0), new Vector3(initialElement2.x, initialElement2.y, 0) }
-                ));
-                yield return StartCoroutine(SwapElements(initialElement1, initialElement2));
-            }
-            else
-            {
-                // Grid is now stable after all matches
-                EventManager.TriggerEvent(GameEvent.GRID_STABLE);
-            }
-
-            yield break;
-        }
-
         public IEnumerator SwapElements(Vector2Int first, Vector2Int second)
         {
             Vector2Int firstPos = new Vector2Int(first.x, first.y);
@@ -395,7 +395,7 @@ namespace Game
                         continue;
                     }
 
-                    if (elementPool.Count > 1)
+                    if (!UseLevelEditor && !cell.elementInfo.isHidden && elementPool.Count > 1)
                     {
                         List<ElementData> candidates = new List<ElementData>();
                         foreach (ElementData data in elementPool)
@@ -434,7 +434,11 @@ namespace Game
         private bool IsSameElement(int x, int y, ElementData data)
         {
             GridCell cell = GetCell(new Vector2Int(x, y));
-            return cell != null && cell.cellType == CellType.Normal && cell.elementInfo != null && cell.elementInfo.elementData == data;
+            return cell != null &&
+                   cell.cellType == CellType.Normal &&
+                   cell.elementInfo != null &&
+                   !cell.elementInfo.isHidden &&
+                   cell.elementInfo.elementData == data;
         }
 
         private List<List<Vector2Int>> CheckMatchOf(int elementCount = 3)
@@ -444,7 +448,12 @@ namespace Game
             ElementData GetElementData(int x, int y)
             {
                 GridCell cell = GetCell(new Vector2Int(x, y));
-                return cell != null ? cell.elementInfo?.elementData : null;
+                if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null || cell.elementInfo.isHidden)
+                {
+                    return null;
+                }
+
+                return cell.elementInfo.elementData;
             }
 
             void AddMatched(int x, int y, ElementData data)
@@ -596,6 +605,15 @@ namespace Game
             
             HashSet<Vector2Int> clearedPositions = new HashSet<Vector2Int>();
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
+            HashSet<Vector2Int> hiddenToReveal = new HashSet<Vector2Int>();
+            Vector2Int[] adjacentOffsets =
+            {
+                new Vector2Int(0, 1),
+                new Vector2Int(0, -1),
+                new Vector2Int(-1, 0),
+                new Vector2Int(1, 0)
+            };
+
             foreach (var group in matchedPositions)
             {
                 foreach (var pos in group)
@@ -604,6 +622,7 @@ namespace Game
                     {
                         continue;
                     }
+
                     Vector2Int gridPos = new Vector2Int(pos.x, pos.y);
                     GridCell cell = GetCell(gridPos);
                     if (cell != null && cell.elementInfo != null)
@@ -618,32 +637,63 @@ namespace Game
                             }
                         }
 
-                        Vector2Int[] adjacentOffsets =
-                        {
-                            new Vector2Int(0, 1),
-                            new Vector2Int(0, -1),
-                            new Vector2Int(-1, 0),
-                            new Vector2Int(1, 0)
-                        };
-
                         foreach (Vector2Int offset in adjacentOffsets)
                         {
                             Vector2Int adjacentPos = gridPos + offset;
                             GridCell adjacentCell = GetCell(adjacentPos);
-                            if (adjacentCell != null && adjacentCell.cellType == CellType.BreakableWall)
+                            if (adjacentCell == null)
+                            {
+                                continue;
+                            }
+
+                            if (adjacentCell.cellType == CellType.BreakableWall)
                             {
                                 wallsToBreak.Add(adjacentPos);
                             }
+
+                            if (adjacentCell.cellType == CellType.Normal &&
+                                adjacentCell.elementInfo != null &&
+                                adjacentCell.elementInfo.isHidden)
+                            {
+                                hiddenToReveal.Add(adjacentPos);
+                            }
                         }
                     }
+
                     clearedPositions.Add(pos);
                 }
+
                 yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
+            }
+
+            foreach (Vector2Int revealPos in hiddenToReveal)
+            {
+                RevealHiddenElement(revealPos);
             }
 
             foreach (Vector2Int wallPos in wallsToBreak)
             {
                 yield return StartCoroutine(BreakWall(wallPos));
+            }
+        }
+
+        private void RevealHiddenElement(Vector2Int pos)
+        {
+            GridCell cell = GetCell(pos);
+            if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null || !cell.elementInfo.isHidden)
+            {
+                return;
+            }
+
+            cell.elementInfo.isHidden = false;
+
+            if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)
+            {
+                GridElement element = tile.GetComponentInChildren<GridElement>();
+                if (element != null)
+                {
+                    element.InitElement(this, cell.elementInfo);
+                }
             }
         }
 
