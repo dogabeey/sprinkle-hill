@@ -3342,6 +3342,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 143639485734066057, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
+      propertyPath: orthographic
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 143639485734066057, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
+      propertyPath: orthographic size
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 163029965363092784, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 5.83
@@ -3529,7 +3537,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 143639485734066059, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2032321148}
   m_SourcePrefab: {fileID: 100100000, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
 --- !u!1 &1723669257
 GameObject:
@@ -4205,6 +4216,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 59.156, y: -29.391, z: 0.473}
+--- !u!1 &2032321143 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 143639485734066059, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
+  m_PrefabInstance: {fileID: 1675246476}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2032321148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2032321143}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7246cebcae98404aacbd6d217a01bd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initDelay: 0.1
+  boundsOffset: {x: 1, y: 1, z: 1, w: 4}
 --- !u!4 &2095311502 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8054950767382582105, guid: 33ffe7376da104e4da346a82d1243245, type: 3}
