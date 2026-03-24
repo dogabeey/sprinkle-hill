@@ -46,6 +46,11 @@ namespace Game
             return Mathf.Abs(first.x - second.x) + Mathf.Abs(first.y - second.y) == 1;
         }
 
+        public bool IsValidPosition(Vector2Int pos)
+        {
+            return GetCell(pos) != null;
+        }
+
         public IEnumerator SwapAndMatch(Vector2Int first, Vector2Int second)
         {
             // Check if either element is sparkling
