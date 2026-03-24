@@ -111,27 +111,15 @@ namespace Game
             System.Random random = proceduralGeneration.CreateRandom();
 
             float emptyChance = Mathf.Clamp01(proceduralGeneration.emptyCellChance);
-            float breakableWallChance = Mathf.Clamp01(proceduralGeneration.breakableWallChance);
             float hiddenBoxChance = Mathf.Clamp01(proceduralGeneration.hiddenBoxChance);
 
+            // First pass: fill all cells as Normal or Empty (no breakable walls yet)
             for (int x = 0; x < gridSize.x; x++)
             {
                 for (int y = 0; y < gridSize.y; y++)
                 {
                     double roll = random.NextDouble();
-                    CellType cellType;
-                    if (roll < emptyChance)
-                    {
-                        cellType = CellType.Empty;
-                    }
-                    else if (roll < emptyChance + breakableWallChance)
-                    {
-                        cellType = CellType.BreakableWall;
-                    }
-                    else
-                    {
-                        cellType = CellType.Normal;
-                    }
+                    CellType cellType = roll < emptyChance ? CellType.Empty : CellType.Normal;
 
                     ElementData elementData = null;
                     bool isHidden = false;
@@ -148,6 +136,72 @@ namespace Game
                         cellType = cellType,
                         elementInfo = elementData != null ? new GridElementInfo { elementData = elementData, isHidden = isHidden } : null
                     };
+                }
+            }
+
+            // Second pass: place breakable walls according to the chosen placement mode.
+            int baseCount = Mathf.Max(0, proceduralGeneration.triangleWidth);
+
+            switch (proceduralGeneration.breakableWallPlacementMode)
+            {
+                case BreakableWallPlacementMode.Flat:
+                {
+                    int wallsToPlace = baseCount;
+                    for (int y = gridSize.y - 1; y >= 0 && wallsToPlace > 0; y--)
+                    {
+                        for (int x = 0; x < gridSize.x && wallsToPlace > 0; x++)
+                        {
+                            GridCell cell = gridCells[x, y];
+                            if (cell != null && cell.cellType == CellType.Normal)
+                            {
+                                cell.cellType = CellType.BreakableWall;
+                                cell.elementInfo = null;
+                                wallsToPlace--;
+                            }
+                        }
+                    }
+                    break;
+                }
+                case BreakableWallPlacementMode.Triangle:
+                {
+                    int decrement = Mathf.Max(1, proceduralGeneration.triangleDecrement);
+                    int rowQuota = baseCount;
+                    for (int y = gridSize.y - 1; y >= 0 && rowQuota > 0; y--, rowQuota -= decrement)
+                    {
+                        int wallsThisRow = 0;
+                        for (int x = 0; x < gridSize.x && wallsThisRow < rowQuota; x++)
+                        {
+                            GridCell cell = gridCells[x, y];
+                            if (cell != null && cell.cellType == CellType.Normal)
+                            {
+                                cell.cellType = CellType.BreakableWall;
+                                cell.elementInfo = null;
+                                wallsThisRow++;
+                            }
+                        }
+                    }
+                    break;
+                }
+                case BreakableWallPlacementMode.Rectangle:
+                {
+                    int minX = Mathf.Clamp(Mathf.Min(proceduralGeneration.rectangleStart.x, proceduralGeneration.rectangleEnd.x), 0, gridSize.x - 1);
+                    int maxX = Mathf.Clamp(Mathf.Max(proceduralGeneration.rectangleStart.x, proceduralGeneration.rectangleEnd.x), 0, gridSize.x - 1);
+                    int minY = Mathf.Clamp(Mathf.Min(proceduralGeneration.rectangleStart.y, proceduralGeneration.rectangleEnd.y), 0, gridSize.y - 1);
+                    int maxY = Mathf.Clamp(Mathf.Max(proceduralGeneration.rectangleStart.y, proceduralGeneration.rectangleEnd.y), 0, gridSize.y - 1);
+
+                    for (int y = minY; y <= maxY; y++)
+                    {
+                        for (int x = minX; x <= maxX; x++)
+                        {
+                            GridCell cell = gridCells[x, y];
+                            if (cell != null && cell.cellType == CellType.Normal)
+                            {
+                                cell.cellType = CellType.BreakableWall;
+                                cell.elementInfo = null;
+                            }
+                        }
+                    }
+                    break;
                 }
             }
         }
@@ -272,8 +326,18 @@ namespace Game
             public int seed;
             [Range(0f, 1f)]
             public float emptyCellChance;
-            [Range(0f, 1f)]
-            public float breakableWallChance;
+            public BreakableWallPlacementMode breakableWallPlacementMode;
+            [Min(0)]
+            [LabelText("Wall Count / Triangle Width")]
+            [HideIf(nameof(breakableWallPlacementMode), BreakableWallPlacementMode.Rectangle)]
+            public int triangleWidth;
+            [Min(1)]
+            [ShowIf(nameof(breakableWallPlacementMode), BreakableWallPlacementMode.Triangle)]
+            public int triangleDecrement = 1;
+            [ShowIf(nameof(breakableWallPlacementMode), BreakableWallPlacementMode.Rectangle)]
+            public Vector2Int rectangleStart;
+            [ShowIf(nameof(breakableWallPlacementMode), BreakableWallPlacementMode.Rectangle)]
+            public Vector2Int rectangleEnd;
             [Range(0f, 1f)]
             public float hiddenBoxChance;
             public List<ElementData> elementPool = new List<ElementData>();
@@ -282,6 +346,16 @@ namespace Game
             {
                 return useRandomSeed ? new System.Random() : new System.Random(seed);
             }
+        }
+
+        public enum BreakableWallPlacementMode
+        {
+            /// <summary>Fills exactly triangleWidth cells from the bottom row upward, left to right.</summary>
+            Flat,
+            /// <summary>Fills triangleWidth cells on the bottom row, decreasing by triangleDecrement each row up, forming a triangle.</summary>
+            Triangle,
+            /// <summary>Fills every Normal cell inside the rectangle defined by rectangleStart and rectangleEnd (inclusive).</summary>
+            Rectangle,
         }
 
         public enum LevelCreationMode
