@@ -79,5 +79,6 @@ namespace Game
         public ElementData elementData;
         public bool isSparkling;
         public bool isHidden;
+        public bool isBomb;
     }
 }

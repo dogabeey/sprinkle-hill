@@ -31,6 +31,8 @@ namespace Game
         public int sparklingPowerAfterXCombo = 3;
         [FoldoutGroup("Power Up Settings"), Range(0f, 1f)]
         public float sparklingAppearChance = 0.3f;
+        [FoldoutGroup("Power Up Settings")]
+        public ElementData bombElementData;
 
         protected override void Awake()
         {

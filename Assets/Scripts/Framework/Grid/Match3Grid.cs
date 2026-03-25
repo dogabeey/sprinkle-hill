@@ -56,6 +56,17 @@ namespace Game
             // Check if either element is sparkling
             GridCell firstCell = GetCell(first);
             GridCell secondCell = GetCell(second);
+
+            if (firstCell?.elementInfo?.isBomb == true)
+            {
+                yield return StartCoroutine(ActivateBombAt(first));
+                yield break;
+            }
+            else if (secondCell?.elementInfo?.isBomb == true)
+            {
+                yield return StartCoroutine(ActivateBombAt(second));
+                yield break;
+            }
             
             if (firstCell?.elementInfo?.isSparkling == true)
             {
@@ -85,6 +96,14 @@ namespace Game
             while ((matchedGroups = CheckMatchOf(3)).Count > 0)
             {
                 currentComboCount++;
+
+                List<BombSpawnRequest> bombSpawns = FindBombSpawnsFromSquareMatches(matchedGroups, initialElement1, initialElement2);
+                HashSet<Vector2Int> protectedPositions = new HashSet<Vector2Int>();
+                for (int i = 0; i < bombSpawns.Count; i++)
+                {
+                    protectedPositions.Add(bombSpawns[i].position);
+                    CreateBombAt(bombSpawns[i].position, bombSpawns[i].sourceData);
+                }
                 
                 // Trigger match detected event
                 EventManager.TriggerEvent(GameEvent.MATCH_DETECTED, new EventParam(
@@ -109,7 +128,7 @@ namespace Game
                 }
                 
                 // 2. Clear matched elements with animations
-                yield return StartCoroutine(ClearMatches(matchedGroups));
+                yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions));
                 // 3. Apply gravity and refill
                 yield return StartCoroutine(ApplyGravity());
             }
@@ -169,6 +188,11 @@ namespace Game
                     
                     if (cell?.elementInfo?.elementData == targetElementData)
                     {
+                        if (cell.elementInfo.isBomb)
+                        {
+                            continue;
+                        }
+
                         convertedPositions.Add(pos);
                     }
                 }
@@ -295,6 +319,7 @@ namespace Game
             {
                 cell.elementInfo.elementData = sparklingElementData;
                 cell.elementInfo.isSparkling = false;
+                cell.elementInfo.isBomb = false;
                 
                 // Update visual representation
                 if (generatedTiles.TryGetValue(targetPos, out GridCellController tile))
@@ -305,6 +330,7 @@ namespace Game
                         element.StopAllCoroutines();
                         element.elementInfo.elementData = sparklingElementData;
                         element.elementInfo.isSparkling = false;
+                        element.elementInfo.isBomb = false;
                         element.InitElement(this, element.elementInfo);
                     }
                 }
@@ -314,6 +340,263 @@ namespace Game
             if (trailObj != null)
             {
                 Destroy(trailObj);
+            }
+        }
+
+        private struct BombSpawnRequest
+        {
+            public Vector2Int position;
+            public ElementData sourceData;
+        }
+
+        public bool IsBombAt(Vector2Int pos)
+        {
+            GridCell cell = GetCell(pos);
+            return cell?.elementInfo?.isBomb == true;
+        }
+
+        public IEnumerator ActivateBombAt(Vector2Int bombPos)
+        {
+            GridCell bombCell = GetCell(bombPos);
+            if (bombCell?.elementInfo == null || !bombCell.elementInfo.isBomb)
+            {
+                yield break;
+            }
+
+            Vector2Int targetPos = GetRandomNormalCellPosition();
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+
+            if (generatedTiles.TryGetValue(bombPos, out GridCellController bombTile) && bombTile != null)
+            {
+                GridElement bombElement = bombTile.GetComponentInChildren<GridElement>();
+                if (bombElement != null)
+                {
+                    Transform tempParent = parent != null ? parent : transform;
+                    bombElement.transform.SetParent(tempParent, true);
+
+                    if (generatedTiles.TryGetValue(targetPos, out GridCellController targetTile) && targetTile != null)
+                    {
+                        yield return bombElement.transform.DOMove(targetTile.transform.position, GameManager.Instance.constantManager.elementSwapMoveDuration)
+                            .SetEase(Ease.InOutQuad)
+                            .WaitForCompletion();
+                    }
+
+                    StartCoroutine(bombElement.DestroyElement());
+                }
+            }
+
+            bombCell.elementInfo = null;
+
+            yield return StartCoroutine(ClearAreaAt(targetPos, 1));
+            yield return StartCoroutine(ResolveBoardAfterSpecialClear());
+        }
+
+        private IEnumerator ResolveBoardAfterSpecialClear()
+        {
+            currentComboCount = 0;
+            yield return StartCoroutine(ApplyGravity());
+
+            List<List<Vector2Int>> matchedGroups;
+            while ((matchedGroups = CheckMatchOf(3)).Count > 0)
+            {
+                currentComboCount++;
+
+                EventManager.TriggerEvent(GameEvent.MATCH_DETECTED, new EventParam(paramInt: matchedGroups.Count));
+                if (currentComboCount > 1)
+                {
+                    EventManager.TriggerEvent(GameEvent.COMBO_TRIGGERED, new EventParam(paramInt: currentComboCount));
+                }
+
+                foreach (var group in matchedGroups)
+                {
+                    EventManager.TriggerEvent(GameEvent.ELEMENT_MATCHED, new EventParam(
+                        paramScriptable: GetCell(group[0])?.elementInfo?.elementData,
+                        paramInt: group.Count
+                    ));
+                }
+
+                yield return StartCoroutine(ClearMatches(matchedGroups));
+                yield return StartCoroutine(ApplyGravity());
+            }
+
+            EventManager.TriggerEvent(GameEvent.GRID_STABLE);
+        }
+
+        private IEnumerator ClearAreaAt(Vector2Int center, int radius)
+        {
+            HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
+
+            for (int x = center.x - radius; x <= center.x + radius; x++)
+            {
+                for (int y = center.y - radius; y <= center.y + radius; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    GridCell cell = GetCell(pos);
+                    if (cell == null)
+                    {
+                        continue;
+                    }
+
+                    if (cell.cellType == CellType.BreakableWall)
+                    {
+                        wallsToBreak.Add(pos);
+                        continue;
+                    }
+
+                    if (cell.cellType != CellType.Normal || cell.elementInfo == null)
+                    {
+                        continue;
+                    }
+
+                    cell.elementInfo = null;
+                    if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)
+                    {
+                        GridElement element = tile.GetComponentInChildren<GridElement>();
+                        if (element != null)
+                        {
+                            StartCoroutine(element.DestroyElement());
+                        }
+                    }
+                }
+            }
+
+            yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
+
+            foreach (Vector2Int wallPos in wallsToBreak)
+            {
+                yield return StartCoroutine(BreakWall(wallPos));
+            }
+        }
+
+        private Vector2Int GetRandomNormalCellPosition()
+        {
+            List<Vector2Int> candidates = new List<Vector2Int>();
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    GridCell cell = GetCell(pos);
+                    if (cell != null && cell.cellType == CellType.Normal)
+                    {
+                        candidates.Add(pos);
+                    }
+                }
+            }
+
+            if (candidates.Count == 0)
+            {
+                return Vector2Int.zero;
+            }
+
+            return candidates[Random.Range(0, candidates.Count)];
+        }
+
+        private List<BombSpawnRequest> FindBombSpawnsFromSquareMatches(List<List<Vector2Int>> matchedGroups, Vector2Int initialElement1, Vector2Int initialElement2)
+        {
+            List<BombSpawnRequest> spawns = new List<BombSpawnRequest>();
+            HashSet<Vector2Int> usedPositions = new HashSet<Vector2Int>();
+
+            for (int groupIndex = 0; groupIndex < matchedGroups.Count; groupIndex++)
+            {
+                List<Vector2Int> group = matchedGroups[groupIndex];
+                if (group.Count != 4)
+                {
+                    continue;
+                }
+
+                HashSet<Vector2Int> groupSet = new HashSet<Vector2Int>(group);
+                bool foundForGroup = false;
+
+                for (int x = 0; x < gridSize.x - 1 && !foundForGroup; x++)
+                {
+                    for (int y = 0; y < gridSize.y - 1 && !foundForGroup; y++)
+                    {
+                        Vector2Int p1 = new Vector2Int(x, y);
+                        Vector2Int p2 = new Vector2Int(x + 1, y);
+                        Vector2Int p3 = new Vector2Int(x, y + 1);
+                        Vector2Int p4 = new Vector2Int(x + 1, y + 1);
+
+                        if (!groupSet.Contains(p1) || !groupSet.Contains(p2) || !groupSet.Contains(p3) || !groupSet.Contains(p4))
+                        {
+                            continue;
+                        }
+
+                        ElementData sourceData = GetCell(p1)?.elementInfo?.elementData;
+                        if (sourceData == null)
+                        {
+                            continue;
+                        }
+
+                        GridCell p2Cell = GetCell(p2);
+                        GridCell p3Cell = GetCell(p3);
+                        GridCell p4Cell = GetCell(p4);
+                        if (p2Cell?.elementInfo?.elementData != sourceData ||
+                            p3Cell?.elementInfo?.elementData != sourceData ||
+                            p4Cell?.elementInfo?.elementData != sourceData)
+                        {
+                            continue;
+                        }
+
+                        Vector2Int spawnPos = p1;
+                        if (groupSet.Contains(initialElement2) && (initialElement2 == p1 || initialElement2 == p2 || initialElement2 == p3 || initialElement2 == p4))
+                        {
+                            spawnPos = initialElement2;
+                        }
+                        else if (groupSet.Contains(initialElement1) && (initialElement1 == p1 || initialElement1 == p2 || initialElement1 == p3 || initialElement1 == p4))
+                        {
+                            spawnPos = initialElement1;
+                        }
+
+                        if (usedPositions.Add(spawnPos))
+                        {
+                            spawns.Add(new BombSpawnRequest
+                            {
+                                position = spawnPos,
+                                sourceData = sourceData
+                            });
+                        }
+
+                        foundForGroup = true;
+                    }
+                }
+            }
+
+            return spawns;
+        }
+
+        private void CreateBombAt(Vector2Int pos, ElementData sourceData)
+        {
+            GridCell cell = GetCell(pos);
+            if (cell == null || cell.cellType != CellType.Normal)
+            {
+                return;
+            }
+
+            ElementData bombData = sourceData;
+            if (GameManager.Instance.CurrentLevel is LevelScene_Match3Game match3Level && match3Level.bombElementData != null)
+            {
+                bombData = match3Level.bombElementData;
+            }
+
+            if (cell.elementInfo == null)
+            {
+                cell.elementInfo = new GridElementInfo();
+            }
+
+            cell.elementInfo.elementData = bombData;
+            cell.elementInfo.isBomb = true;
+            cell.elementInfo.isSparkling = false;
+            cell.elementInfo.isHidden = false;
+
+            if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)
+            {
+                GridElement element = tile.GetComponentInChildren<GridElement>();
+                if (element != null)
+                {
+                    element.elementInfo = cell.elementInfo;
+                    element.InitElement(this, cell.elementInfo);
+                }
             }
         }
 
@@ -383,7 +666,7 @@ namespace Game
                 {
                     GridCell cell = gridCells[x, y];
                     ElementData data = cell != null ? cell.elementInfo?.elementData : null;
-                    if (data != null && !elementPool.Contains(data))
+                    if (data != null && (cell.elementInfo == null || !cell.elementInfo.isBomb) && !elementPool.Contains(data))
                     {
                         elementPool.Add(data);
                     }
@@ -443,6 +726,7 @@ namespace Game
                    cell.cellType == CellType.Normal &&
                    cell.elementInfo != null &&
                    !cell.elementInfo.isHidden &&
+                   !cell.elementInfo.isBomb &&
                    cell.elementInfo.elementData == data;
         }
 
@@ -453,7 +737,11 @@ namespace Game
             ElementData GetElementData(int x, int y)
             {
                 GridCell cell = GetCell(new Vector2Int(x, y));
-                if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null || cell.elementInfo.isHidden)
+                if (cell == null ||
+                    cell.cellType != CellType.Normal ||
+                    cell.elementInfo == null ||
+                    cell.elementInfo.isHidden ||
+                    cell.elementInfo.isBomb)
                 {
                     return null;
                 }
@@ -542,6 +830,30 @@ namespace Game
                 }
             }
 
+            for (int x = 0; x < gridSize.x - 1; x++)
+            {
+                for (int y = 0; y < gridSize.y - 1; y++)
+                {
+                    ElementData bottomLeft = GetElementData(x, y);
+                    if (bottomLeft == null)
+                    {
+                        continue;
+                    }
+
+                    ElementData bottomRight = GetElementData(x + 1, y);
+                    ElementData topLeft = GetElementData(x, y + 1);
+                    ElementData topRight = GetElementData(x + 1, y + 1);
+
+                    if (bottomRight == bottomLeft && topLeft == bottomLeft && topRight == bottomLeft)
+                    {
+                        AddMatched(x, y, bottomLeft);
+                        AddMatched(x + 1, y, bottomLeft);
+                        AddMatched(x, y + 1, bottomLeft);
+                        AddMatched(x + 1, y + 1, bottomLeft);
+                    }
+                }
+            }
+
             List<List<Vector2Int>> groups = new List<List<Vector2Int>>();
             HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
 
@@ -592,7 +904,7 @@ namespace Game
             return groups;
         }
         // Clears matched elements from the grid and plays their destruction animations.
-        private IEnumerator ClearMatches(List<List<Vector2Int>> matchedPositions)
+        private IEnumerator ClearMatches(List<List<Vector2Int>> matchedPositions, HashSet<Vector2Int> protectedPositions = null)
         {
             // Shake camera based on current combo count
             Camera mainCamera = Camera.main;
@@ -623,6 +935,11 @@ namespace Game
             {
                 foreach (var pos in group)
                 {
+                    if (protectedPositions != null && protectedPositions.Contains(pos))
+                    {
+                        continue;
+                    }
+
                     if (clearedPositions.Contains(pos))
                     {
                         continue;
@@ -760,7 +1077,7 @@ namespace Game
                 {
                     GridCell cell = GetCell(new Vector2Int(x, y));
                     ElementData data = cell != null ? cell.elementInfo?.elementData : null;
-                    if (data != null && !elementPool.Contains(data))
+                    if (data != null && (cell.elementInfo == null || !cell.elementInfo.isBomb) && !elementPool.Contains(data))
                     {
                         elementPool.Add(data);
                     }
@@ -771,7 +1088,7 @@ namespace Game
             {
                 foreach (GridElement element in generatedElements)
                 {
-                    if (element != null && element.elementInfo != null && element.elementInfo.elementData != null && !elementPool.Contains(element.elementInfo.elementData))
+                    if (element != null && element.elementInfo != null && element.elementInfo.elementData != null && !element.elementInfo.isBomb && !elementPool.Contains(element.elementInfo.elementData))
                     {
                         elementPool.Add(element.elementInfo.elementData);
                     }
@@ -902,7 +1219,8 @@ namespace Game
                         GridElementInfo newInfo = new GridElementInfo
                         {
                             elementData = randomData,
-                            isSparkling = isSparkling
+                            isSparkling = isSparkling,
+                            isBomb = false
                         };
                         targetCell.elementInfo = newInfo;
 

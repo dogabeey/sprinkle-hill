@@ -39,7 +39,7 @@ namespace Game
             }
             else if (Input.GetMouseButtonUp(0))
             {
-                CancelDrag();
+                TryHandleClickActivationOrCancel();
             }
         }
 
@@ -139,6 +139,31 @@ namespace Game
             }
 
             return null;
+        }
+
+        private void TryHandleClickActivationOrCancel()
+        {
+            if (draggedElement != null && !dragConsumed && match3Grid != null)
+            {
+                if (match3Grid.TryGetElementPosition(draggedElement, out Vector2Int bombPos) &&
+                    match3Grid.IsBombAt(bombPos))
+                {
+                    draggedElement.SetSelected(false);
+                    draggedElement = null;
+                    dragConsumed = false;
+                    StartCoroutine(ActivateBombRoutine(bombPos));
+                    return;
+                }
+            }
+
+            CancelDrag();
+        }
+
+        private IEnumerator ActivateBombRoutine(Vector2Int bombPos)
+        {
+            isProcessing = true;
+            yield return StartCoroutine(match3Grid.ActivateBombAt(bombPos));
+            isProcessing = false;
         }
 
         private IEnumerator SwapAndMatchRoutine(Vector2Int firstPos, Vector2Int secondPos)
