@@ -1189,6 +1189,8 @@ namespace Game
                 colliders[i].enabled = false;
             }
 
+            SetElementEmission(element, 5f);
+
             float duration = Mathf.Max(0.08f, GameManager.Instance.constantManager.elementSwapMoveDuration * 0.6f);
             Sequence mergeSequence = DOTween.Sequence();
             mergeSequence.Join(t.DOMove(targetTile.transform.position, duration).SetEase(Ease.InBack));
@@ -1203,6 +1205,24 @@ namespace Game
             if (element != null)
             {
                 Destroy(element.gameObject);
+            }
+        }
+
+        private void SetElementEmission(GridElement element, float emissionValue)
+        {
+            if (element == null)
+            {
+                return;
+            }
+
+            Renderer[] renderers = element.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                Material mat = renderers[i] != null ? renderers[i].material : null;
+                if (mat != null && mat.HasProperty("_Emission"))
+                {
+                    mat.SetFloat("_Emission", emissionValue);
+                }
             }
         }
 
