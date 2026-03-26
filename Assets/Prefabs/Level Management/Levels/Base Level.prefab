@@ -289,9 +289,9 @@ MonoBehaviour:
     useRandomSeed: 1
     seed: 0
     emptyCellChance: 0
-    breakableWallPlacementMode: 2
+    breakableWallPlacementMode: 1
     triangleWidth: 9
-    triangleDecrement: 2
+    triangleDecrement: 1
     rectangleStart: {x: 8, y: 11}
     rectangleEnd: {x: 0, y: 8}
     hiddenBoxChance: 0
