@@ -103,7 +103,6 @@ namespace Game
                 for (int i = 0; i < bombSpawns.Count; i++)
                 {
                     protectedPositions.Add(bombSpawns[i].position);
-                    CreateBombAt(bombSpawns[i].position, bombSpawns[i].sourceData);
                 }
                 
                 // Trigger match detected event
@@ -130,6 +129,13 @@ namespace Game
                 
                 // 2. Clear matched elements with animations
                 yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions));
+
+                // 2.5 Create bombs after merge/clear animations complete
+                for (int i = 0; i < bombSpawns.Count; i++)
+                {
+                    CreateBombAt(bombSpawns[i].position, bombSpawns[i].sourceData);
+                }
+
                 // 3. Apply gravity and refill
                 yield return StartCoroutine(ApplyGravity());
             }
@@ -1068,6 +1074,8 @@ namespace Game
 
             foreach (var group in matchedPositions)
             {
+                Vector2Int? mergeTarget = GetMergeTargetForGroup(group, protectedPositions);
+
                 foreach (var pos in group)
                 {
                     if (protectedPositions != null && protectedPositions.Contains(pos))
@@ -1090,7 +1098,14 @@ namespace Game
                             GridElement element = tile.GetComponentInChildren<GridElement>();
                             if (element != null)
                             {
-                                StartCoroutine(element.DestroyElement());
+                                if (mergeTarget.HasValue)
+                                {
+                                    StartCoroutine(MergeElementIntoTarget(element, mergeTarget.Value));
+                                }
+                                else
+                                {
+                                    StartCoroutine(element.DestroyElement());
+                                }
                             }
                         }
 
@@ -1134,6 +1149,63 @@ namespace Game
             }
         }
 
+        private Vector2Int? GetMergeTargetForGroup(List<Vector2Int> group, HashSet<Vector2Int> protectedPositions)
+        {
+            if (protectedPositions == null || group == null)
+            {
+                return null;
+            }
+
+            for (int i = 0; i < group.Count; i++)
+            {
+                if (protectedPositions.Contains(group[i]))
+                {
+                    return group[i];
+                }
+            }
+
+            return null;
+        }
+
+        private IEnumerator MergeElementIntoTarget(GridElement element, Vector2Int targetPos)
+        {
+            if (element == null)
+            {
+                yield break;
+            }
+
+            if (!generatedTiles.TryGetValue(targetPos, out GridCellController targetTile) || targetTile == null)
+            {
+                yield return StartCoroutine(element.DestroyElement());
+                yield break;
+            }
+
+            Transform t = element.transform;
+            t.DOKill();
+
+            Collider[] colliders = element.GetComponentsInChildren<Collider>(true);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                colliders[i].enabled = false;
+            }
+
+            float duration = Mathf.Max(0.08f, GameManager.Instance.constantManager.elementSwapMoveDuration * 0.6f);
+            Sequence mergeSequence = DOTween.Sequence();
+            mergeSequence.Join(t.DOMove(targetTile.transform.position, duration).SetEase(Ease.InBack));
+            mergeSequence.Join(t.DOScale(Vector3.zero, duration).SetEase(Ease.InBack));
+            mergeSequence.Join(t.DORotate(new Vector3(0f, 0f, 180f), duration, RotateMode.LocalAxisAdd).SetEase(Ease.InQuad));
+
+            EventManager.TriggerEvent(GameEvent.ELEMENT_DESTROYED,
+                eventParam: new EventParam(paramScriptable: element.elementInfo != null ? element.elementInfo.elementData : null));
+
+            yield return mergeSequence.WaitForCompletion();
+
+            if (element != null)
+            {
+                Destroy(element.gameObject);
+            }
+        }
+
         private void RevealHiddenElement(Vector2Int pos)
         {
             GridCell cell = GetCell(pos);
@@ -1169,12 +1241,7 @@ namespace Game
                 Quaternion wallRotation = wallTile.transform.rotation;
                 Vector3 wallScale = wallTile.transform.localScale;
 
-                BreakableWall breakableWall = wallTile as BreakableWall;
-                if (breakableWall == null)
-                {
-                    breakableWall = wallTile.GetComponent<BreakableWall>();
-                }
-
+                BreakableWall breakableWall = wallTile.GetComponent<BreakableWall>();
                 if (breakableWall != null)
                 {
                     yield return StartCoroutine(breakableWall.WallBreak());
