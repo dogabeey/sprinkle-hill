@@ -120,7 +120,7 @@ Shader "Universal Render Pipeline/Sprites/HueShift"
                     finalColor.rgb = HSVtoRGB(hsv) * finalColor.a;
                 }
 
-                finalColor.rgb *= (1 + _Emission);
+                finalColor.rgb += _Emission;
                 
                 return finalColor;
             }

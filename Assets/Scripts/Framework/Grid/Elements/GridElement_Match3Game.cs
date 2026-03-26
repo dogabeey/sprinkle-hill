@@ -9,7 +9,7 @@ namespace Game
     {
         [FoldoutGroup("Match3")]
         public SpriteRenderer highlightSprite;
-        private const float MaxAnimationEmission = 5f;
+        public float maxAnimationEmission = 1f;
 
         public override void PostInit()
         {
@@ -48,7 +48,7 @@ namespace Game
                 colliders[i].enabled = false;
             }
 
-            SetEmissionForAnimation(MaxAnimationEmission);
+            SetEmissionForAnimation(maxAnimationEmission);
 
             ConstantManager constantManager = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
             float popHeight = constantManager != null ? constantManager.elementDestroyPopHeight : 0.2f;
@@ -82,7 +82,7 @@ namespace Game
                 Material mat = renderers[i] != null ? renderers[i].material : null;
                 if (mat != null && mat.HasProperty("_Emission"))
                 {
-                    mat.SetFloat("_Emission", emissionValue);
+                    mat.DOFloat(emissionValue, "_Emission", 0.2f);
                 }
             }
         }

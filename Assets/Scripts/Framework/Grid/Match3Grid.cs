@@ -714,6 +714,7 @@ namespace Game
                 {
                     element.elementInfo = cell.elementInfo;
                     element.InitElement(this, cell.elementInfo);
+                    SetElementEmission(element, 0f);
                     ApplyBombSortingPriority(element, true);
                 }
             }
@@ -1076,6 +1077,15 @@ namespace Game
             {
                 Vector2Int? mergeTarget = GetMergeTargetForGroup(group, protectedPositions);
 
+                if (mergeTarget.HasValue && generatedTiles.TryGetValue(mergeTarget.Value, out GridCellController mergeTargetTile) && mergeTargetTile != null)
+                {
+                    GridElement mergeTargetElement = mergeTargetTile.GetComponentInChildren<GridElement>();
+                    if (mergeTargetElement != null)
+                    {
+                        AnimateElementEmission(mergeTargetElement, 5f, 0.2f);
+                    }
+                }
+
                 foreach (var pos in group)
                 {
                     if (protectedPositions != null && protectedPositions.Contains(pos))
@@ -1149,6 +1159,24 @@ namespace Game
             }
         }
 
+        private void AnimateElementEmission(GridElement element, float emissionValue, float duration)
+        {
+            if (element == null)
+            {
+                return;
+            }
+
+            Renderer[] renderers = element.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                Material mat = renderers[i] != null ? renderers[i].material : null;
+                if (mat != null && mat.HasProperty("_Emission"))
+                {
+                    mat.DOFloat(emissionValue, "_Emission", duration);
+                }
+            }
+        }
+
         private Vector2Int? GetMergeTargetForGroup(List<Vector2Int> group, HashSet<Vector2Int> protectedPositions)
         {
             if (protectedPositions == null || group == null)
@@ -1192,15 +1220,12 @@ namespace Game
             SetElementEmission(element, 5f);
 
             float duration = Mathf.Max(0.08f, GameManager.Instance.constantManager.elementSwapMoveDuration * 0.6f);
-            Sequence mergeSequence = DOTween.Sequence();
-            mergeSequence.Join(t.DOMove(targetTile.transform.position, duration).SetEase(Ease.InBack));
-            mergeSequence.Join(t.DOScale(Vector3.zero, duration).SetEase(Ease.InBack));
-            mergeSequence.Join(t.DORotate(new Vector3(0f, 0f, 180f), duration, RotateMode.LocalAxisAdd).SetEase(Ease.InQuad));
+            Tween moveTween = t.DOMove(targetTile.transform.position, duration).SetEase(Ease.InBack);
 
             EventManager.TriggerEvent(GameEvent.ELEMENT_DESTROYED,
                 eventParam: new EventParam(paramScriptable: element.elementInfo != null ? element.elementInfo.elementData : null));
 
-            yield return mergeSequence.WaitForCompletion();
+            yield return moveTween.WaitForCompletion();
 
             if (element != null)
             {
