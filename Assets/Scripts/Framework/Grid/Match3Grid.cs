@@ -500,11 +500,6 @@ namespace Game
             for (int groupIndex = 0; groupIndex < matchedGroups.Count; groupIndex++)
             {
                 List<Vector2Int> group = matchedGroups[groupIndex];
-                if (group.Count != 4)
-                {
-                    continue;
-                }
-
                 HashSet<Vector2Int> groupSet = new HashSet<Vector2Int>(group);
                 bool foundForGroup = false;
 
