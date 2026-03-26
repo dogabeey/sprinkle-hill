@@ -12,6 +12,7 @@ namespace Game
     public class Match3Grid : Grid3D
     {
         private int currentComboCount = 0;
+        private const int BombSortingOrderBoost = 200;
         
         public override void PreInit()
         {
@@ -363,8 +364,11 @@ namespace Game
                 yield break;
             }
 
-            Vector2Int targetPos = GetRandomNormalCellPosition();
+            Vector2Int targetPos = GetBombTargetPositionWithObstaclePriority();
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            Vector3 impactWorldPos = generatedTiles.TryGetValue(targetPos, out GridCellController impactTile) && impactTile != null
+                ? impactTile.transform.position
+                : Vector3.zero;
 
             if (generatedTiles.TryGetValue(bombPos, out GridCellController bombTile) && bombTile != null)
             {
@@ -376,11 +380,11 @@ namespace Game
 
                     if (generatedTiles.TryGetValue(targetPos, out GridCellController targetTile) && targetTile != null)
                     {
-                        yield return bombElement.transform.DOMove(targetTile.transform.position, GameManager.Instance.constantManager.elementSwapMoveDuration)
-                            .SetEase(Ease.InOutQuad)
-                            .WaitForCompletion();
+                        impactWorldPos = targetTile.transform.position;
+                        yield return StartCoroutine(AnimateBombFlight(bombElement, impactWorldPos));
                     }
 
+                    PlayBombImpactEffects(impactWorldPos);
                     StartCoroutine(bombElement.DestroyElement());
                 }
             }
@@ -389,6 +393,62 @@ namespace Game
 
             yield return StartCoroutine(ClearAreaAt(targetPos, 1));
             yield return StartCoroutine(ResolveBoardAfterSpecialClear());
+        }
+
+        private void PlayBombImpactEffects(Vector3 impactWorldPos)
+        {
+            ConstantManager constantManager = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
+            if (constantManager == null)
+            {
+                return;
+            }
+
+            if (constantManager.bombImpactParticlePrefab != null)
+            {
+                ParticleSystem impactParticle = Instantiate(constantManager.bombImpactParticlePrefab, impactWorldPos, Quaternion.identity);
+                impactParticle.Play();
+                Destroy(impactParticle.gameObject, impactParticle.main.duration + impactParticle.main.startLifetime.constantMax + 0.2f);
+            }
+
+            Camera mainCamera = Camera.main;
+            if (mainCamera != null)
+            {
+                mainCamera.transform.DOShakePosition(
+                    constantManager.bombImpactShakeDuration,
+                    constantManager.bombImpactShakeMagnitude,
+                    constantManager.bombImpactShakeVibrato,
+                    constantManager.bombImpactShakeRandomness
+                );
+            }
+        }
+
+        private IEnumerator AnimateBombFlight(GridElement bombElement, Vector3 targetWorldPosition)
+        {
+            if (bombElement == null)
+            {
+                yield break;
+            }
+
+            Transform bombTransform = bombElement.transform;
+            Vector3 startPos = bombTransform.position;
+            float duration = Mathf.Max(0.25f, GameManager.Instance.constantManager.elementSwapMoveDuration * 2f);
+
+            Vector3 arcOffset = Vector3.up * 1.1f;
+            Vector3 midPoint = Vector3.Lerp(startPos, targetWorldPosition, 0.5f) + arcOffset;
+            Vector3[] path = new Vector3[] { startPos, midPoint, targetWorldPosition };
+
+            Sequence flightSequence = DOTween.Sequence();
+            flightSequence.Join(bombTransform.DOPath(path, duration, PathType.CatmullRom)
+                .SetEase(Ease.OutQuad)
+                .SetOptions(false));
+            flightSequence.Join(bombTransform.DORotate(new Vector3(0f, 0f, 540f), duration, RotateMode.FastBeyond360)
+                .SetEase(Ease.Linear)
+                .SetRelative());
+            flightSequence.Join(bombTransform.DOScale(1.18f, duration * 0.45f)
+                .SetLoops(2, LoopType.Yoyo)
+                .SetEase(Ease.InOutSine));
+
+            yield return flightSequence.WaitForCompletion();
         }
 
         private IEnumerator ResolveBoardAfterSpecialClear()
@@ -492,6 +552,63 @@ namespace Game
             return candidates[Random.Range(0, candidates.Count)];
         }
 
+        private Vector2Int GetBombTargetPositionWithObstaclePriority()
+        {
+            List<Vector2Int> obstaclePriorityCandidates = new List<Vector2Int>();
+            List<Vector2Int> fallbackCandidates = new List<Vector2Int>();
+
+            Vector2Int[] neighborOffsets = new Vector2Int[]
+            {
+                new Vector2Int(0, 1),
+                new Vector2Int(0, -1),
+                new Vector2Int(-1, 0),
+                new Vector2Int(1, 0)
+            };
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    GridCell cell = GetCell(pos);
+                    if (cell == null || cell.cellType != CellType.Normal)
+                    {
+                        continue;
+                    }
+
+                    fallbackCandidates.Add(pos);
+
+                    bool hasObstacleNeighbor = false;
+                    for (int i = 0; i < neighborOffsets.Length; i++)
+                    {
+                        GridCell neighbor = GetCell(pos + neighborOffsets[i]);
+                        if (neighbor != null && neighbor.cellType == CellType.BreakableWall)
+                        {
+                            hasObstacleNeighbor = true;
+                            break;
+                        }
+                    }
+
+                    if (hasObstacleNeighbor)
+                    {
+                        obstaclePriorityCandidates.Add(pos);
+                    }
+                }
+            }
+
+            if (obstaclePriorityCandidates.Count > 0)
+            {
+                return obstaclePriorityCandidates[Random.Range(0, obstaclePriorityCandidates.Count)];
+            }
+
+            if (fallbackCandidates.Count > 0)
+            {
+                return fallbackCandidates[Random.Range(0, fallbackCandidates.Count)];
+            }
+
+            return GetRandomNormalCellPosition();
+        }
+
         private List<BombSpawnRequest> FindBombSpawnsFromSquareMatches(List<List<Vector2Int>> matchedGroups, Vector2Int initialElement1, Vector2Int initialElement2)
         {
             List<BombSpawnRequest> spawns = new List<BombSpawnRequest>();
@@ -591,6 +708,28 @@ namespace Game
                 {
                     element.elementInfo = cell.elementInfo;
                     element.InitElement(this, cell.elementInfo);
+                    ApplyBombSortingPriority(element, true);
+                }
+            }
+        }
+
+        private void ApplyBombSortingPriority(GridElement element, bool isBomb)
+        {
+            if (element == null)
+            {
+                return;
+            }
+
+            Renderer[] renderers = element.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (isBomb)
+                {
+                    renderers[i].sortingOrder += BombSortingOrderBoost;
+                }
+                else if (renderers[i].sortingOrder >= BombSortingOrderBoost)
+                {
+                    renderers[i].sortingOrder -= BombSortingOrderBoost;
                 }
             }
         }
@@ -704,6 +843,7 @@ namespace Game
                     element.elementInfo = cell.elementInfo;
                     generatedElements.Add(element);
                     element.InitElement(this, element.elementInfo);
+                    ApplyBombSortingPriority(element, cell.elementInfo != null && cell.elementInfo.isBomb);
                 }
             }
         }
@@ -1228,6 +1368,7 @@ namespace Game
                             newElement.elementInfo = newInfo;
                             generatedElements.Add(newElement);
                             newElement.InitElement(this, newInfo);
+                            ApplyBombSortingPriority(newElement, false);
 
                             float spawnDistance = newElement.transform.localPosition.magnitude;
                             float spawnDuration = fallSpeed > 0f ? spawnDistance / fallSpeed : 0f;

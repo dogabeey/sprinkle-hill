@@ -48,6 +48,13 @@ namespace Game
         public int matchShakeVibrato = 10;
         public float matchShakeRandomness = 90f;
 
+        [Header("Bomb Impact")]
+        public ParticleSystem bombImpactParticlePrefab;
+        public float bombImpactShakeDuration = 0.25f;
+        public float bombImpactShakeMagnitude = 0.35f;
+        public int bombImpactShakeVibrato = 12;
+        public float bombImpactShakeRandomness = 90f;
+
         public struct TAGS
         {
             public const string PLAYER = "Player";

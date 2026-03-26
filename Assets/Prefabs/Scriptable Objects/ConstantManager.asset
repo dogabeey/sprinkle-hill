@@ -23,6 +23,7 @@ MonoBehaviour:
   elementDestroyScaleDuration: 0.2
   elementDestroyRotateZ: 120
   elementDestroyRotateDuration: 0.2
+  elementDestroyParticlePrefab: {fileID: 6553830495741696104, guid: c66bb7ca972ded84692b09698947ca71, type: 3}
   sparklingTrailPrefab: {fileID: 7547541700686798408, guid: b54214516bc3cd145a31ccd5639beb98, type: 3}
   sparklingTrailDuration: 0.3
   sparklingTrailSpawnDelay: 0.2
@@ -32,3 +33,13 @@ MonoBehaviour:
   sparklingShakeDuration: 0.1
   sparklingShakeVibrato: 10
   sparklingShakeRandomness: 90
+  matchShakeBaseMagnitude: 0.15
+  matchShakeComboMultiplier: 0.1
+  matchShakeDuration: 0.3
+  matchShakeVibrato: 10
+  matchShakeRandomness: 90
+  bombImpactParticlePrefab: {fileID: 6553830495741696104, guid: 0b989c0118a79ff489a67064e4ccd54b, type: 3}
+  bombImpactShakeDuration: 0.25
+  bombImpactShakeMagnitude: 0.35
+  bombImpactShakeVibrato: 12
+  bombImpactShakeRandomness: 90
