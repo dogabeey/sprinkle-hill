@@ -27,6 +27,11 @@ namespace Game
         public float elementDestroyScaleDuration = 0.2f;
         public float elementDestroyRotateZ = 120f;
         public float elementDestroyRotateDuration = 0.2f;
+        public Vector3 elementDestroyPunchScale = new Vector3(0.25f, 0.25f, 0f);
+        public float elementDestroyPunchDuration = 0.2f;
+        public int elementDestroyPunchVibrato = 8;
+        public float elementDestroyPunchElasticity = 0.8f;
+        public ParticleSystem elementDestroyParticlePrefab;
         
         [Header("Sparkling Trail Animation")]
         public GameObject sparklingTrailPrefab;

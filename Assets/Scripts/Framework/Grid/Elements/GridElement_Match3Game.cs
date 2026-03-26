@@ -51,27 +51,26 @@ namespace Game
             SetEmissionForAnimation(maxAnimationEmission);
 
             ConstantManager constantManager = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
-            float popHeight = constantManager != null ? constantManager.elementDestroyPopHeight : 0.2f;
-            float popDuration = constantManager != null ? constantManager.elementDestroyPopDuration : 0.08f;
-            float fallDistance = constantManager != null ? constantManager.elementDestroyFallDistance : 0.25f;
-            float fallDuration = constantManager != null ? constantManager.elementDestroyFallDuration : 0.12f;
-            float targetScaleMultiplier = constantManager != null ? constantManager.elementDestroyTargetScaleMultiplier : 0.1f;
-            float scaleDuration = constantManager != null ? constantManager.elementDestroyScaleDuration : 0.2f;
-            float rotateZ = constantManager != null ? constantManager.elementDestroyRotateZ : 120f;
-            float rotateDuration = constantManager != null ? constantManager.elementDestroyRotateDuration : 0.2f;
+            Vector3 punchScale = constantManager != null ? constantManager.elementDestroyPunchScale : new Vector3(0.25f, 0.25f, 0f);
+            float punchDuration = constantManager != null ? constantManager.elementDestroyPunchDuration : 0.2f;
+            int punchVibrato = constantManager != null ? constantManager.elementDestroyPunchVibrato : 8;
+            float punchElasticity = constantManager != null ? constantManager.elementDestroyPunchElasticity : 0.8f;
 
-            Vector3 initialScale = transform.localScale;
-            Sequence destroySequence = DOTween.Sequence();
-            destroySequence.Append(transform.DOLocalMoveY(popHeight, popDuration).SetRelative().SetEase(Ease.OutQuad));
-            destroySequence.Append(transform.DOLocalMoveY(-fallDistance, fallDuration).SetRelative().SetEase(Ease.InQuad));
-            destroySequence.Join(transform.DOScale(initialScale * targetScaleMultiplier, scaleDuration).SetEase(Ease.InBack));
-            destroySequence.Join(transform.DOLocalRotate(new Vector3(0f, 0f, rotateZ), rotateDuration, RotateMode.LocalAxisAdd).SetEase(Ease.InQuad));
-            destroySequence.OnComplete(() => Destroy(gameObject));
+            Tween destroyTween = transform.DOPunchScale(punchScale, punchDuration, punchVibrato, punchElasticity);
 
-            EventManager.TriggerEvent(GameEvent.ELEMENT_DESTROYED, 
-                eventParam: new EventParam(paramScriptable: elementInfo.elementData));
+            EventManager.TriggerEvent(GameEvent.ELEMENT_DESTROYED,
+                eventParam: new EventParam(paramScriptable: elementInfo != null ? elementInfo.elementData : null));
 
-            yield return destroySequence.WaitForCompletion();
+            yield return destroyTween.WaitForCompletion();
+
+            if (constantManager != null && constantManager.elementDestroyParticlePrefab != null)
+            {
+                ParticleSystem destroyParticle = Instantiate(constantManager.elementDestroyParticlePrefab, transform.position, Quaternion.identity);
+                destroyParticle.Play();
+                Destroy(destroyParticle.gameObject, destroyParticle.main.duration + destroyParticle.main.startLifetime.constantMax + 0.2f);
+            }
+
+            Destroy(gameObject);
         }
 
         private void SetEmissionForAnimation(float emissionValue)
