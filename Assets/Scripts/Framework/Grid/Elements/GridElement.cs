@@ -91,4 +91,43 @@ namespace Game
         BigBomb,
         Scatter
     }
+
+    /// <summary>
+    /// Shared utility methods for grid elements. Eliminates duplicated emission / renderer helpers.
+    /// </summary>
+    public static class GridHelper
+    {
+        private const string EmissionProperty = "_Emission";
+
+        public static void SetEmission(GridElement element, float value)
+        {
+            if (element == null) return;
+            Renderer[] renderers = element.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                Material mat = renderers[i] != null ? renderers[i].material : null;
+                if (mat != null && mat.HasProperty(EmissionProperty))
+                    mat.SetFloat(EmissionProperty, value);
+            }
+        }
+
+        public static void AnimateEmission(GridElement element, float value, float duration)
+        {
+            if (element == null) return;
+            Renderer[] renderers = element.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                Material mat = renderers[i] != null ? renderers[i].material : null;
+                if (mat != null && mat.HasProperty(EmissionProperty))
+                    mat.DOFloat(value, EmissionProperty, duration);
+            }
+        }
+
+        public static void ShakeCamera(float duration, float magnitude, int vibrato, float randomness)
+        {
+            Camera cam = Camera.main;
+            if (cam != null)
+                cam.transform.DOShakePosition(duration, magnitude, vibrato, randomness);
+        }
+    }
 }

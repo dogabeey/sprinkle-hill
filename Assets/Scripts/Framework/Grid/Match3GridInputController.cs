@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using static Game.Grid3D;
 
 namespace Game
 {
@@ -145,24 +146,27 @@ namespace Game
         {
             if (draggedElement != null && !dragConsumed && match3Grid != null)
             {
-                if (match3Grid.TryGetElementPosition(draggedElement, out Vector2Int bombPos) &&
-                    match3Grid.IsBombAt(bombPos))
+                if (match3Grid.TryGetElementPosition(draggedElement, out Vector2Int pos))
                 {
-                    draggedElement.SetSelected(false);
-                    draggedElement = null;
-                    dragConsumed = false;
-                    StartCoroutine(ActivateBombRoutine(bombPos));
-                    return;
+                    GridCell cell = match3Grid.GetCellPublic(pos);
+                    if (cell?.elementInfo != null && PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType))
+                    {
+                        draggedElement.SetSelected(false);
+                        draggedElement = null;
+                        dragConsumed = false;
+                        StartCoroutine(ActivatePowerUpRoutine(pos));
+                        return;
+                    }
                 }
             }
 
             CancelDrag();
         }
 
-        private IEnumerator ActivateBombRoutine(Vector2Int bombPos)
+        private IEnumerator ActivatePowerUpRoutine(Vector2Int pos)
         {
             isProcessing = true;
-            yield return StartCoroutine(match3Grid.ActivateBombAt(bombPos));
+            yield return StartCoroutine(match3Grid.SwapAndMatch(pos, pos));
             isProcessing = false;
         }
 

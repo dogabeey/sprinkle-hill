@@ -48,7 +48,7 @@ namespace Game
                 colliders[i].enabled = false;
             }
 
-            SetEmissionForAnimation(maxAnimationEmission);
+            GridHelper.AnimateEmission(this, maxAnimationEmission, 0.2f);
 
             ConstantManager constantManager = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
             Vector3 punchScale = constantManager != null ? constantManager.elementDestroyPunchScale : new Vector3(0.25f, 0.25f, 0f);
@@ -72,20 +72,5 @@ namespace Game
 
             Destroy(gameObject);
         }
-
-        private void SetEmissionForAnimation(float emissionValue)
-        {
-            Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
-            for (int i = 0; i < renderers.Length; i++)
-            {
-                Material mat = renderers[i] != null ? renderers[i].material : null;
-                if (mat != null && mat.HasProperty("_Emission"))
-                {
-                    mat.DOFloat(emissionValue, "_Emission", 0.2f);
-                }
-            }
-        }
-
     }
-
 }

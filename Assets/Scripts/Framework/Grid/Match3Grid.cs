@@ -8,21 +8,49 @@ namespace Game
 {
     /// <summary>
     /// Represents a grid specialized for Match-3 gameplay.
+    /// Power-up detection / creation / activation is handled by <see cref="PowerUpHandler"/>.
+    /// Shared renderer helpers live in <see cref="GridHelper"/>.
     /// </summary>
     public class Match3Grid : Grid3D
     {
         private int currentComboCount = 0;
-        private const int BombSortingOrderBoost = 200;
-        
-        public override void PreInit()
+        private PowerUpHandler powerUpHandler;
+
+        // ------------------------------------------------------------------
+        //  Public accessors used by PowerUpHandler & helpers
+        // ------------------------------------------------------------------
+        public Vector2Int GridSize => gridSize;
+        public Transform GridParent => parent;
+
+        public GridCell GetCellPublic(Vector2Int pos) => GetCell(pos);
+
+        public GridElement GetElementAt(Vector2Int pos)
         {
-            // Custom pre-initialization logic for Match-3 grid
-        }
-        public override void PostInit()
-        {
-            // Custom post-initialization logic for Match-3 grid
+            if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)
+                return tile.GetComponentInChildren<GridElement>();
+            return null;
         }
 
+        public Vector3 GetWorldPosition(Vector2Int pos)
+        {
+            if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)
+                return tile.transform.position;
+            return Vector3.zero;
+        }
+
+        // ------------------------------------------------------------------
+        //  Lifecycle
+        // ------------------------------------------------------------------
+        public override void PreInit()
+        {
+            powerUpHandler = new PowerUpHandler(this);
+        }
+
+        public override void PostInit() { }
+
+        // ------------------------------------------------------------------
+        //  Position helpers
+        // ------------------------------------------------------------------
         public bool TryGetElementPosition(GridElement element, out Vector2Int position)
         {
             if (element != null)
@@ -37,714 +65,118 @@ namespace Game
                     }
                 }
             }
-
             position = default;
             return false;
         }
 
-        public static bool AreAdjacent(Vector2Int first, Vector2Int second)
+        public static bool AreAdjacent(Vector2Int a, Vector2Int b)
         {
-            return Mathf.Abs(first.x - second.x) + Mathf.Abs(first.y - second.y) == 1;
+            return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) == 1;
         }
 
-        public bool IsValidPosition(Vector2Int pos)
-        {
-            return GetCell(pos) != null;
-        }
+        public bool IsValidPosition(Vector2Int pos) => GetCell(pos) != null;
 
+        // ------------------------------------------------------------------
+        //  Swap & Match entry point
+        // ------------------------------------------------------------------
         public IEnumerator SwapAndMatch(Vector2Int first, Vector2Int second)
         {
-            // Check if either element is sparkling
             GridCell firstCell = GetCell(first);
             GridCell secondCell = GetCell(second);
 
-            if (firstCell?.elementInfo?.powerUpType == ElementPowerUpType.Bomb)
+            // Activate power-ups on swap
+            ElementPowerUpType firstType = firstCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
+            ElementPowerUpType secondType = secondCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
+
+            if (PowerUpHandler.IsSpecialPowerUp(firstType))
             {
-                yield return StartCoroutine(ActivateBombAt(first));
+                yield return StartCoroutine(powerUpHandler.ActivateAt(first));
                 yield break;
             }
-            else if (secondCell?.elementInfo?.powerUpType == ElementPowerUpType.Bomb)
+            if (PowerUpHandler.IsSpecialPowerUp(secondType))
             {
-                yield return StartCoroutine(ActivateBombAt(second));
+                yield return StartCoroutine(powerUpHandler.ActivateAt(second));
                 yield break;
             }
-            else if (firstCell?.elementInfo?.powerUpType == ElementPowerUpType.HorizontalRocket ||
-                     firstCell?.elementInfo?.powerUpType == ElementPowerUpType.VerticalRocket)
-            {
-                yield return StartCoroutine(ActivateRocketAt(first));
-                yield break;
-            }
-            else if (secondCell?.elementInfo?.powerUpType == ElementPowerUpType.HorizontalRocket ||
-                     secondCell?.elementInfo?.powerUpType == ElementPowerUpType.VerticalRocket)
-            {
-                yield return StartCoroutine(ActivateRocketAt(second));
-                yield break;
-            }
-            
+
+            // Sparkling swap
             if (firstCell?.elementInfo?.isSparkling == true)
             {
                 yield return StartCoroutine(HandleSparklingSwap(first, second, firstCell, secondCell));
                 yield break;
             }
-            else if (secondCell?.elementInfo?.isSparkling == true)
+            if (secondCell?.elementInfo?.isSparkling == true)
             {
                 yield return StartCoroutine(HandleSparklingSwap(second, first, secondCell, firstCell));
                 yield break;
             }
-            
+
+            // Normal swap
             yield return StartCoroutine(SwapElements(first, second));
-            
             EventManager.TriggerEvent(GameEvent.ELEMENTS_SWAPPED, new EventParam(
                 vectorList: new Vector3[] { new Vector3(first.x, first.y, 0), new Vector3(second.x, second.y, 0) }
             ));
-            
             yield return StartCoroutine(MatchProcess(first, second));
         }
 
-        public IEnumerator MatchProcess(Vector2Int initialElement1, Vector2Int initialElement2)
+        // ------------------------------------------------------------------
+        //  Core match loop
+        // ------------------------------------------------------------------
+        public IEnumerator MatchProcess(Vector2Int init1, Vector2Int init2)
         {
             List<List<Vector2Int>> matchedGroups;
             currentComboCount = 0;
-            // 1. Check for matches
+
             while ((matchedGroups = CheckMatchOf(3)).Count > 0)
             {
                 currentComboCount++;
 
-                List<BombSpawnRequest> bombSpawns = FindBombSpawnsFromSquareMatches(matchedGroups, initialElement1, initialElement2);
-                List<RocketSpawnRequest> rocketSpawns = FindRocketSpawnsFromLineMatches(matchedGroups, initialElement1, initialElement2);
+                // Detect power-up spawns
+                List<PowerUpHandler.SpawnRequest> bombSpawns = powerUpHandler.FindBombSpawns(matchedGroups, init1, init2);
+                List<PowerUpHandler.SpawnRequest> rocketSpawns = powerUpHandler.FindRocketSpawns(matchedGroups, init1, init2);
+
                 HashSet<Vector2Int> protectedPositions = new HashSet<Vector2Int>();
-                for (int i = 0; i < bombSpawns.Count; i++)
-                {
-                    protectedPositions.Add(bombSpawns[i].position);
-                }
-                for (int i = 0; i < rocketSpawns.Count; i++)
-                {
-                    protectedPositions.Add(rocketSpawns[i].position);
-                }
-                
-                // Trigger match detected event
-                EventManager.TriggerEvent(GameEvent.MATCH_DETECTED, new EventParam(
-                    paramInt: matchedGroups.Count
-                ));
-                
-                // Trigger combo event if this is a chain match
+                for (int i = 0; i < bombSpawns.Count; i++) protectedPositions.Add(bombSpawns[i].position);
+                for (int i = 0; i < rocketSpawns.Count; i++) protectedPositions.Add(rocketSpawns[i].position);
+
+                // Events
+                EventManager.TriggerEvent(GameEvent.MATCH_DETECTED, new EventParam(paramInt: matchedGroups.Count));
                 if (currentComboCount > 1)
-                {
-                    EventManager.TriggerEvent(GameEvent.COMBO_TRIGGERED, new EventParam(
-                        paramInt: currentComboCount
-                    ));
-                }
-                
-                // Trigger element matched event for each group
+                    EventManager.TriggerEvent(GameEvent.COMBO_TRIGGERED, new EventParam(paramInt: currentComboCount));
                 foreach (var group in matchedGroups)
-                {
                     EventManager.TriggerEvent(GameEvent.ELEMENT_MATCHED, new EventParam(
-                        paramScriptable: GetCell(group[0])?.elementInfo?.elementData,
-                        paramInt: group.Count
-                    ));
-                }
-                
-                // 2. Clear matched elements with animations
+                        paramScriptable: GetCell(group[0])?.elementInfo?.elementData, paramInt: group.Count));
+
+                // Clear
                 yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions));
 
-                // 2.5 Create bombs after merge/clear animations complete
+                // Create power-ups
                 for (int i = 0; i < bombSpawns.Count; i++)
-                {
-                    CreateBombAt(bombSpawns[i].position, bombSpawns[i].sourceData);
-                }
-
+                    powerUpHandler.CreatePowerUpAt(bombSpawns[i].position, bombSpawns[i].sourceData, bombSpawns[i].powerUpType);
                 for (int i = 0; i < rocketSpawns.Count; i++)
-                {
-                    CreateRocketAt(rocketSpawns[i].position, rocketSpawns[i].sourceData, rocketSpawns[i].powerUpType);
-                }
+                    powerUpHandler.CreatePowerUpAt(rocketSpawns[i].position, rocketSpawns[i].sourceData, rocketSpawns[i].powerUpType);
 
-                // 3. Apply gravity and refill
+                // Gravity
                 yield return StartCoroutine(ApplyGravity());
             }
 
-            if(currentComboCount == 0)
+            if (currentComboCount == 0)
             {
-                // If no matches were found, swap the elements back to their original positions
                 EventManager.TriggerEvent(GameEvent.SWAP_FAILED, new EventParam(
-                    vectorList: new Vector3[] { new Vector3(initialElement1.x, initialElement1.y, 0), new Vector3(initialElement2.x, initialElement2.y, 0) }
+                    vectorList: new Vector3[] { new Vector3(init1.x, init1.y, 0), new Vector3(init2.x, init2.y, 0) }
                 ));
-                yield return StartCoroutine(SwapElements(initialElement1, initialElement2));
+                yield return StartCoroutine(SwapElements(init1, init2));
             }
             else
             {
-                // Grid is now stable after all matches
                 EventManager.TriggerEvent(GameEvent.GRID_STABLE);
             }
-
-            yield break;
         }
 
-        /// <summary>
-        /// Handles the special swap behavior when a sparkling element is involved.
-        /// Converts all elements matching the target type to the sparkling element's type.
-        /// Trails are spawned sequentially and convert elements as they arrive.
-        /// </summary>
-        private IEnumerator HandleSparklingSwap(Vector2Int sparklingPos, Vector2Int targetPos, GridCell sparklingCell, GridCell targetCell)
-        {
-            if (targetCell?.elementInfo?.elementData == null)
-            {
-                yield break;
-            }
-            
-            ElementData targetElementData = targetCell.elementInfo.elementData;
-            ElementData sparklingElementData = sparklingCell.elementInfo.elementData;
-            
-            // Move sparkling element to target position
-            if (generatedTiles.TryGetValue(sparklingPos, out GridCellController sparklingTile) && 
-                generatedTiles.TryGetValue(targetPos, out GridCellController targetTile))
-            {
-                GridElement sparklingElement = sparklingTile.GetComponentInChildren<GridElement>();
-                if (sparklingElement != null)
-                {
-                    yield return sparklingElement.transform.DOLocalMove(targetTile.transform.position - sparklingTile.transform.position, 
-                        GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
-                }
-            }
-            
-            // Collect all positions that need to be converted
-            List<Vector2Int> convertedPositions = new List<Vector2Int>();
-            for (int x = 0; x < gridSize.x; x++)
-            {
-                for (int y = 0; y < gridSize.y; y++)
-                {
-                    Vector2Int pos = new Vector2Int(x, y);
-                    GridCell cell = GetCell(pos);
-                    
-                    if (cell?.elementInfo?.elementData == targetElementData)
-                    {
-                        if (cell.elementInfo.powerUpType != ElementPowerUpType.None)
-                        {
-                            continue;
-                        }
-
-                        convertedPositions.Add(pos);
-                    }
-                }
-            }
-            
-            // Create and animate trail renderers flying to each converted element
-            // Elements will be converted as each trail arrives
-            if (convertedPositions.Count > 0)
-            {
-                yield return StartCoroutine(AnimateSparklingTrails(sparklingPos, convertedPositions, sparklingElementData));
-            }
-            
-            // Destroy the sparkling element
-            sparklingCell.elementInfo = null;
-            if (generatedTiles.TryGetValue(sparklingPos, out GridCellController sparklingElementTile))
-            {
-                GridElement elementToDestroy = sparklingElementTile.GetComponentInChildren<GridElement>();
-                if (elementToDestroy != null)
-                {
-                    StartCoroutine(elementToDestroy.DestroyElement());
-                }
-            }
-            
-            yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
-            
-            // Check for matches
-            yield return StartCoroutine(MatchProcess(targetPos, sparklingPos));
-        }
-        
-        private IEnumerator AnimateSparklingTrails(Vector2Int sourcePos, List<Vector2Int> targetPositions, ElementData sparklingElementData)
-        {
-            ConstantManager constantManager = GameManager.Instance.constantManager;
-            
-            if (!generatedTiles.TryGetValue(sourcePos, out GridCellController sourceTile))
-            {
-                yield break;
-            }
-            
-            Vector3 sourceWorldPos = sourceTile.transform.position;
-            List<Coroutine> trailCoroutines = new List<Coroutine>();
-            
-            // Create and animate trails sequentially with delay
-            int trailIndex = 0;
-            foreach (var targetPos in targetPositions)
-            {
-                // Start a coroutine for each individual trail, passing the trail index for shake magnitude
-                Coroutine trailCoroutine = StartCoroutine(AnimateSingleTrail(sourceWorldPos, targetPos, sparklingElementData, constantManager, trailIndex));
-                trailCoroutines.Add(trailCoroutine);
-                
-                trailIndex++;
-                
-                // Wait for the spawn delay before creating the next trail
-                yield return new WaitForSeconds(constantManager.sparklingTrailSpawnDelay);
-            }
-            
-            // Wait for all trails to complete (they're already running in parallel)
-            // The longest trail will take: sparklingTrailDuration (no fade delay anymore)
-            float maxWaitTime = constantManager.sparklingTrailDuration;
-            yield return new WaitForSeconds(maxWaitTime);
-        }
-        
-        private IEnumerator AnimateSingleTrail(Vector3 sourcePos, Vector2Int targetPos, ElementData sparklingElementData, ConstantManager constantManager, int trailIndex)
-        {
-            if (!generatedTiles.TryGetValue(targetPos, out GridCellController targetTile))
-            {
-                yield break;
-            }
-            
-            Vector3 targetWorldPos = targetTile.transform.position;
-            GameObject trailObj = null;
-            
-            // Instantiate trail prefab or create a default trail object
-            if (constantManager.sparklingTrailPrefab != null)
-            {
-                trailObj = Instantiate(constantManager.sparklingTrailPrefab, sourcePos, Quaternion.identity);
-            }
-            else
-            {
-                // Create default trail object if no prefab is assigned
-                trailObj = new GameObject($"SparklingTrail_{targetPos.x}_{targetPos.y}");
-                trailObj.transform.position = sourcePos;
-                
-                // Add and configure default trail renderer
-                TrailRenderer trail = trailObj.AddComponent<TrailRenderer>();
-                trail.time = 0.5f;
-                trail.startWidth = 0.1f;
-                trail.endWidth = 0f;
-                trail.widthCurve = AnimationCurve.Linear(0, 1, 1, 0);
-                trail.numCapVertices = 5;
-                trail.numCornerVertices = 5;
-                
-                // Create a default gradient
-                Gradient gradient = new Gradient();
-                GradientColorKey[] colorKeys = new GradientColorKey[2];
-                colorKeys[0] = new GradientColorKey(Color.white, 0f);
-                colorKeys[1] = new GradientColorKey(Color.white, 1f);
-                GradientAlphaKey[] alphaKeys = new GradientAlphaKey[2];
-                alphaKeys[0] = new GradientAlphaKey(1f, 0f);
-                alphaKeys[1] = new GradientAlphaKey(0f, 1f);
-                gradient.SetKeys(colorKeys, alphaKeys);
-                trail.colorGradient = gradient;
-                trail.material = new Material(Shader.Find("Sprites/Default"));
-            }
-            
-            // Animate trail to target position
-            yield return trailObj.transform.DOMove(targetWorldPos, constantManager.sparklingTrailDuration).SetEase(Ease.InOutQuad).WaitForCompletion();
-            
-            // Shake camera with increasing magnitude based on trail index
-            Camera mainCamera = Camera.main;
-            if (mainCamera != null)
-            {
-                float shakeMagnitude = constantManager.sparklingShakeBaseMagnitude + (trailIndex * constantManager.sparklingShakeMagnitudeIncrement);
-                mainCamera.transform.DOShakePosition(
-                    constantManager.sparklingShakeDuration,
-                    shakeMagnitude,
-                    constantManager.sparklingShakeVibrato,
-                    constantManager.sparklingShakeRandomness
-                );
-            }
-            
-            // Convert the element at this position NOW (after trail arrives)
-            GridCell cell = GetCell(targetPos);
-            if (cell?.elementInfo != null)
-            {
-                cell.elementInfo.elementData = sparklingElementData;
-                cell.elementInfo.isSparkling = false;
-                cell.elementInfo.powerUpType = ElementPowerUpType.None;
-                
-                // Update visual representation
-                if (generatedTiles.TryGetValue(targetPos, out GridCellController tile))
-                {
-                    GridElement element = tile.GetComponentInChildren<GridElement>();
-                    if (element != null)
-                    {
-                        element.StopAllCoroutines();
-                        element.elementInfo.elementData = sparklingElementData;
-                        element.elementInfo.isSparkling = false;
-                        element.elementInfo.powerUpType = ElementPowerUpType.None;
-                        element.InitElement(this, element.elementInfo);
-                    }
-                }
-            }
-            
-            // Destroy trail immediately after reaching destination
-            if (trailObj != null)
-            {
-                Destroy(trailObj);
-            }
-        }
-
-        private struct BombSpawnRequest
-        {
-            public Vector2Int position;
-            public ElementData sourceData;
-        }
-
-        private struct RocketSpawnRequest
-        {
-            public Vector2Int position;
-            public ElementData sourceData;
-            public ElementPowerUpType powerUpType;
-        }
-
-        private static bool IsRocketPowerUp(ElementPowerUpType powerUpType)
-        {
-            return powerUpType == ElementPowerUpType.HorizontalRocket ||
-                   powerUpType == ElementPowerUpType.VerticalRocket;
-        }
-
-        private Vector2Int SelectPreferredSpawnPosition(HashSet<Vector2Int> candidatePositions, Vector2Int initialElement1, Vector2Int initialElement2)
-        {
-            if (candidatePositions.Contains(initialElement2))
-            {
-                return initialElement2;
-            }
-
-            if (candidatePositions.Contains(initialElement1))
-            {
-                return initialElement1;
-            }
-
-            foreach (Vector2Int pos in candidatePositions)
-            {
-                return pos;
-            }
-
-            return initialElement1;
-        }
-
-        private List<RocketSpawnRequest> FindRocketSpawnsFromLineMatches(List<List<Vector2Int>> matchedGroups, Vector2Int initialElement1, Vector2Int initialElement2)
-        {
-            List<RocketSpawnRequest> spawns = new List<RocketSpawnRequest>();
-            HashSet<Vector2Int> usedPositions = new HashSet<Vector2Int>();
-
-            for (int groupIndex = 0; groupIndex < matchedGroups.Count; groupIndex++)
-            {
-                List<Vector2Int> group = matchedGroups[groupIndex];
-                if (group == null || group.Count < 4)
-                {
-                    continue;
-                }
-
-                HashSet<Vector2Int> groupSet = new HashSet<Vector2Int>(group);
-                ElementData sourceData = GetCell(group[0])?.elementInfo?.elementData;
-                if (sourceData == null)
-                {
-                    continue;
-                }
-
-                bool found = false;
-
-                for (int y = 0; y < gridSize.y && !found; y++)
-                {
-                    int runLength = 0;
-                    HashSet<Vector2Int> runPositions = new HashSet<Vector2Int>();
-                    for (int x = 0; x < gridSize.x; x++)
-                    {
-                        Vector2Int pos = new Vector2Int(x, y);
-                        if (groupSet.Contains(pos))
-                        {
-                            runLength++;
-                            runPositions.Add(pos);
-                        }
-                        else
-                        {
-                            if (runLength >= 4)
-                            {
-                                Vector2Int spawnPos = SelectPreferredSpawnPosition(runPositions, initialElement1, initialElement2);
-                                if (usedPositions.Add(spawnPos))
-                                {
-                                    spawns.Add(new RocketSpawnRequest
-                                    {
-                                        position = spawnPos,
-                                        sourceData = sourceData,
-                                        powerUpType = ElementPowerUpType.HorizontalRocket
-                                    });
-                                }
-
-                                found = true;
-                                break;
-                            }
-
-                            runLength = 0;
-                            runPositions.Clear();
-                        }
-                    }
-
-                    if (!found && runLength >= 4)
-                    {
-                        Vector2Int spawnPos = SelectPreferredSpawnPosition(runPositions, initialElement1, initialElement2);
-                        if (usedPositions.Add(spawnPos))
-                        {
-                            spawns.Add(new RocketSpawnRequest
-                            {
-                                position = spawnPos,
-                                sourceData = sourceData,
-                                powerUpType = ElementPowerUpType.HorizontalRocket
-                            });
-                        }
-
-                        found = true;
-                    }
-                }
-
-                for (int x = 0; x < gridSize.x && !found; x++)
-                {
-                    int runLength = 0;
-                    HashSet<Vector2Int> runPositions = new HashSet<Vector2Int>();
-                    for (int y = 0; y < gridSize.y; y++)
-                    {
-                        Vector2Int pos = new Vector2Int(x, y);
-                        if (groupSet.Contains(pos))
-                        {
-                            runLength++;
-                            runPositions.Add(pos);
-                        }
-                        else
-                        {
-                            if (runLength >= 4)
-                            {
-                                Vector2Int spawnPos = SelectPreferredSpawnPosition(runPositions, initialElement1, initialElement2);
-                                if (usedPositions.Add(spawnPos))
-                                {
-                                    spawns.Add(new RocketSpawnRequest
-                                    {
-                                        position = spawnPos,
-                                        sourceData = sourceData,
-                                        powerUpType = ElementPowerUpType.VerticalRocket
-                                    });
-                                }
-
-                                found = true;
-                                break;
-                            }
-
-                            runLength = 0;
-                            runPositions.Clear();
-                        }
-                    }
-
-                    if (!found && runLength >= 4)
-                    {
-                        Vector2Int spawnPos = SelectPreferredSpawnPosition(runPositions, initialElement1, initialElement2);
-                        if (usedPositions.Add(spawnPos))
-                        {
-                            spawns.Add(new RocketSpawnRequest
-                            {
-                                position = spawnPos,
-                                sourceData = sourceData,
-                                powerUpType = ElementPowerUpType.VerticalRocket
-                            });
-                        }
-
-                        found = true;
-                    }
-                }
-            }
-
-            return spawns;
-        }
-
-        public bool IsBombAt(Vector2Int pos)
-        {
-            GridCell cell = GetCell(pos);
-            return cell?.elementInfo?.powerUpType == ElementPowerUpType.Bomb;
-        }
-
-        public IEnumerator ActivateBombAt(Vector2Int bombPos)
-        {
-            GridCell bombCell = GetCell(bombPos);
-            if (bombCell?.elementInfo == null || bombCell.elementInfo.powerUpType != ElementPowerUpType.Bomb)
-            {
-                yield break;
-            }
-
-            Vector2Int targetPos = GetBombTargetPositionWithObstaclePriority();
-            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
-            Vector3 impactWorldPos = generatedTiles.TryGetValue(targetPos, out GridCellController impactTile) && impactTile != null
-                ? impactTile.transform.position
-                : Vector3.zero;
-
-            if (generatedTiles.TryGetValue(bombPos, out GridCellController bombTile) && bombTile != null)
-            {
-                GridElement bombElement = bombTile.GetComponentInChildren<GridElement>();
-                if (bombElement != null)
-                {
-                    Transform tempParent = parent != null ? parent : transform;
-                    bombElement.transform.SetParent(tempParent, true);
-
-                    if (generatedTiles.TryGetValue(targetPos, out GridCellController targetTile) && targetTile != null)
-                    {
-                        impactWorldPos = targetTile.transform.position;
-                        yield return StartCoroutine(AnimateBombFlight(bombElement, impactWorldPos));
-                    }
-
-                    PlayBombImpactEffects(impactWorldPos);
-                    StartCoroutine(bombElement.DestroyElement());
-                }
-            }
-
-            bombCell.elementInfo = null;
-
-            yield return StartCoroutine(ClearAreaAt(targetPos, 1));
-            yield return StartCoroutine(ResolveBoardAfterSpecialClear());
-        }
-
-        public IEnumerator ActivateRocketAt(Vector2Int rocketPos)
-        {
-            GridCell rocketCell = GetCell(rocketPos);
-            ElementPowerUpType rocketType = rocketCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
-            if (!IsRocketPowerUp(rocketType))
-            {
-                yield break;
-            }
-
-            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
-
-            if (generatedTiles.TryGetValue(rocketPos, out GridCellController rocketTile) && rocketTile != null)
-            {
-                GridElement rocketElement = rocketTile.GetComponentInChildren<GridElement>();
-                if (rocketElement != null)
-                {
-                    StartCoroutine(rocketElement.DestroyElement());
-                }
-            }
-
-            rocketCell.elementInfo = null;
-
-            yield return StartCoroutine(ClearLineAt(rocketPos, rocketType));
-            yield return StartCoroutine(ResolveBoardAfterSpecialClear());
-        }
-
-        private IEnumerator ClearLineAt(Vector2Int origin, ElementPowerUpType rocketType)
-        {
-            HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
-
-            if (rocketType == ElementPowerUpType.HorizontalRocket)
-            {
-                for (int x = 0; x < gridSize.x; x++)
-                {
-                    Vector2Int pos = new Vector2Int(x, origin.y);
-                    ClearLineCell(pos, origin, wallsToBreak);
-                }
-            }
-            else if (rocketType == ElementPowerUpType.VerticalRocket)
-            {
-                for (int y = 0; y < gridSize.y; y++)
-                {
-                    Vector2Int pos = new Vector2Int(origin.x, y);
-                    ClearLineCell(pos, origin, wallsToBreak);
-                }
-            }
-
-            yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
-
-            foreach (Vector2Int wallPos in wallsToBreak)
-            {
-                yield return StartCoroutine(BreakWall(wallPos));
-            }
-        }
-
-        private void ClearLineCell(Vector2Int pos, Vector2Int origin, HashSet<Vector2Int> wallsToBreak)
-        {
-            if (pos == origin)
-            {
-                return;
-            }
-
-            GridCell cell = GetCell(pos);
-            if (cell == null)
-            {
-                return;
-            }
-
-            if (cell.cellType == CellType.BreakableWall)
-            {
-                wallsToBreak.Add(pos);
-                return;
-            }
-
-            if (cell.cellType != CellType.Normal || cell.elementInfo == null)
-            {
-                return;
-            }
-
-            cell.elementInfo = null;
-
-            if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)
-            {
-                GridElement element = tile.GetComponentInChildren<GridElement>();
-                if (element != null)
-                {
-                    StartCoroutine(element.DestroyElement());
-                }
-            }
-        }
-
-        private void PlayBombImpactEffects(Vector3 impactWorldPos)
-        {
-            ConstantManager constantManager = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
-            if (constantManager == null)
-            {
-                return;
-            }
-
-            if (constantManager.bombImpactParticlePrefab != null)
-            {
-                ParticleSystem impactParticle = Instantiate(constantManager.bombImpactParticlePrefab, impactWorldPos, Quaternion.identity);
-                impactParticle.Play();
-                Destroy(impactParticle.gameObject, impactParticle.main.duration + impactParticle.main.startLifetime.constantMax + 0.2f);
-            }
-
-            Camera mainCamera = Camera.main;
-            if (mainCamera != null)
-            {
-                mainCamera.transform.DOShakePosition(
-                    constantManager.bombImpactShakeDuration,
-                    constantManager.bombImpactShakeMagnitude,
-                    constantManager.bombImpactShakeVibrato,
-                    constantManager.bombImpactShakeRandomness
-                );
-            }
-        }
-
-        private void PlayRocketLaunchEffects(Vector2Int rocketPos, Vector2Int targetPos)
-        {
-        }
-
-        private IEnumerator AnimateBombFlight(GridElement bombElement, Vector3 targetWorldPosition)
-        {
-            if (bombElement == null)
-            {
-                yield break;
-            }
-
-            Transform bombTransform = bombElement.transform;
-            Vector3 startPos = bombTransform.position;
-            float duration = Mathf.Max(0.25f, GameManager.Instance.constantManager.elementSwapMoveDuration * 2f);
-
-            Vector3 arcOffset = Vector3.up * 1.1f;
-            Vector3 midPoint = Vector3.Lerp(startPos, targetWorldPosition, 0.5f) + arcOffset;
-            Vector3[] path = new Vector3[] { startPos, midPoint, targetWorldPosition };
-
-            Sequence flightSequence = DOTween.Sequence();
-            flightSequence.Join(bombTransform.DOPath(path, duration, PathType.CatmullRom)
-                .SetEase(Ease.OutQuad)
-                .SetOptions(false));
-            flightSequence.Join(bombTransform.DORotate(new Vector3(0f, 0f, 540f), duration, RotateMode.FastBeyond360)
-                .SetEase(Ease.Linear)
-                .SetRelative());
-            flightSequence.Join(bombTransform.DOScale(1.18f, duration * 0.45f)
-                .SetLoops(2, LoopType.Yoyo)
-                .SetEase(Ease.InOutSine));
-
-            yield return flightSequence.WaitForCompletion();
-        }
-
-        private IEnumerator AnimateRocketFlight(GridElement rocketElement, Vector3 targetWorldPosition)
-        {
-            yield break;
-        }
-
-        private IEnumerator ResolveBoardAfterSpecialClear()
+        // ------------------------------------------------------------------
+        //  Board resolution (after special clears)
+        // ------------------------------------------------------------------
+        public IEnumerator ResolveBoardAfterSpecialClear()
         {
             currentComboCount = 0;
             yield return StartCoroutine(ApplyGravity());
@@ -753,20 +185,12 @@ namespace Game
             while ((matchedGroups = CheckMatchOf(3)).Count > 0)
             {
                 currentComboCount++;
-
                 EventManager.TriggerEvent(GameEvent.MATCH_DETECTED, new EventParam(paramInt: matchedGroups.Count));
                 if (currentComboCount > 1)
-                {
                     EventManager.TriggerEvent(GameEvent.COMBO_TRIGGERED, new EventParam(paramInt: currentComboCount));
-                }
-
                 foreach (var group in matchedGroups)
-                {
                     EventManager.TriggerEvent(GameEvent.ELEMENT_MATCHED, new EventParam(
-                        paramScriptable: GetCell(group[0])?.elementInfo?.elementData,
-                        paramInt: group.Count
-                    ));
-                }
+                        paramScriptable: GetCell(group[0])?.elementInfo?.elementData, paramInt: group.Count));
 
                 yield return StartCoroutine(ClearMatches(matchedGroups));
                 yield return StartCoroutine(ApplyGravity());
@@ -775,7 +199,10 @@ namespace Game
             EventManager.TriggerEvent(GameEvent.GRID_STABLE);
         }
 
-        private IEnumerator ClearAreaAt(Vector2Int center, int radius)
+        // ------------------------------------------------------------------
+        //  Area clear (used by bomb)
+        // ------------------------------------------------------------------
+        public IEnumerator ClearAreaAt(Vector2Int center, int radius)
         {
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
 
@@ -785,78 +212,30 @@ namespace Game
                 {
                     Vector2Int pos = new Vector2Int(x, y);
                     GridCell cell = GetCell(pos);
-                    if (cell == null)
-                    {
-                        continue;
-                    }
-
-                    if (cell.cellType == CellType.BreakableWall)
-                    {
-                        wallsToBreak.Add(pos);
-                        continue;
-                    }
-
-                    if (cell.cellType != CellType.Normal || cell.elementInfo == null)
-                    {
-                        continue;
-                    }
+                    if (cell == null) continue;
+                    if (cell.cellType == CellType.BreakableWall) { wallsToBreak.Add(pos); continue; }
+                    if (cell.cellType != CellType.Normal || cell.elementInfo == null) continue;
 
                     cell.elementInfo = null;
-                    if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)
-                    {
-                        GridElement element = tile.GetComponentInChildren<GridElement>();
-                        if (element != null)
-                        {
-                            StartCoroutine(element.DestroyElement());
-                        }
-                    }
+                    GridElement element = GetElementAt(pos);
+                    if (element != null) StartCoroutine(element.DestroyElement());
                 }
             }
 
             yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
 
             foreach (Vector2Int wallPos in wallsToBreak)
-            {
-                yield return StartCoroutine(BreakWall(wallPos));
-            }
+                yield return StartCoroutine(BreakWallAt(wallPos));
         }
 
-        private Vector2Int GetRandomNormalCellPosition()
+        // ------------------------------------------------------------------
+        //  Bomb target selection
+        // ------------------------------------------------------------------
+        public Vector2Int GetBombTargetPosition()
         {
-            List<Vector2Int> candidates = new List<Vector2Int>();
-            for (int x = 0; x < gridSize.x; x++)
-            {
-                for (int y = 0; y < gridSize.y; y++)
-                {
-                    Vector2Int pos = new Vector2Int(x, y);
-                    GridCell cell = GetCell(pos);
-                    if (cell != null && cell.cellType == CellType.Normal)
-                    {
-                        candidates.Add(pos);
-                    }
-                }
-            }
-
-            if (candidates.Count == 0)
-            {
-                return Vector2Int.zero;
-            }
-
-            return candidates[Random.Range(0, candidates.Count)];
-        }
-
-        private Vector2Int GetBombTargetPositionWithObstaclePriority()
-        {
-            List<Vector2Int> obstaclePriorityCandidates = new List<Vector2Int>();
-            List<Vector2Int> fallbackCandidates = new List<Vector2Int>();
-
-            Vector2Int[] neighborOffsets = new Vector2Int[]
-            {
-                new Vector2Int(0, 1),
-                new Vector2Int(0, -1),
-                new Vector2Int(-1, 0),
-                new Vector2Int(1, 0)
-            };
+            List<Vector2Int> obstacleCandidates = new List<Vector2Int>();
+            List<Vector2Int> fallback = new List<Vector2Int>();
+            Vector2Int[] offsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
 
             for (int x = 0; x < gridSize.x; x++)
             {
@@ -864,335 +243,232 @@ namespace Game
                 {
                     Vector2Int pos = new Vector2Int(x, y);
                     GridCell cell = GetCell(pos);
-                    if (cell == null || cell.cellType != CellType.Normal)
-                    {
-                        continue;
-                    }
+                    if (cell == null || cell.cellType != CellType.Normal) continue;
+                    fallback.Add(pos);
 
-                    fallbackCandidates.Add(pos);
-
-                    bool hasObstacleNeighbor = false;
-                    for (int i = 0; i < neighborOffsets.Length; i++)
+                    for (int i = 0; i < offsets.Length; i++)
                     {
-                        GridCell neighbor = GetCell(pos + neighborOffsets[i]);
+                        GridCell neighbor = GetCell(pos + offsets[i]);
                         if (neighbor != null && neighbor.cellType == CellType.BreakableWall)
                         {
-                            hasObstacleNeighbor = true;
+                            obstacleCandidates.Add(pos);
                             break;
                         }
                     }
-
-                    if (hasObstacleNeighbor)
-                    {
-                        obstaclePriorityCandidates.Add(pos);
-                    }
                 }
             }
 
-            if (obstaclePriorityCandidates.Count > 0)
-            {
-                return obstaclePriorityCandidates[Random.Range(0, obstaclePriorityCandidates.Count)];
-            }
-
-            if (fallbackCandidates.Count > 0)
-            {
-                return fallbackCandidates[Random.Range(0, fallbackCandidates.Count)];
-            }
-
-            return GetRandomNormalCellPosition();
+            if (obstacleCandidates.Count > 0) return obstacleCandidates[Random.Range(0, obstacleCandidates.Count)];
+            if (fallback.Count > 0) return fallback[Random.Range(0, fallback.Count)];
+            return Vector2Int.zero;
         }
 
-        private List<BombSpawnRequest> FindBombSpawnsFromSquareMatches(List<List<Vector2Int>> matchedGroups, Vector2Int initialElement1, Vector2Int initialElement2)
+        // ------------------------------------------------------------------
+        //  Sparkling swap
+        // ------------------------------------------------------------------
+        private IEnumerator HandleSparklingSwap(Vector2Int sparklingPos, Vector2Int targetPos, GridCell sparklingCell, GridCell targetCell)
         {
-            List<BombSpawnRequest> spawns = new List<BombSpawnRequest>();
-            HashSet<Vector2Int> usedPositions = new HashSet<Vector2Int>();
+            if (targetCell?.elementInfo?.elementData == null) yield break;
 
-            for (int groupIndex = 0; groupIndex < matchedGroups.Count; groupIndex++)
+            ElementData targetElementData = targetCell.elementInfo.elementData;
+            ElementData sparklingElementData = sparklingCell.elementInfo.elementData;
+
+            // Animate sparkling element move
+            if (generatedTiles.TryGetValue(sparklingPos, out GridCellController sTile) &&
+                generatedTiles.TryGetValue(targetPos, out GridCellController tTile))
             {
-                List<Vector2Int> group = matchedGroups[groupIndex];
-                HashSet<Vector2Int> groupSet = new HashSet<Vector2Int>(group);
-                bool foundForGroup = false;
+                GridElement sparklingElement = sTile.GetComponentInChildren<GridElement>();
+                if (sparklingElement != null)
+                    yield return sparklingElement.transform.DOLocalMove(tTile.transform.position - sTile.transform.position,
+                        GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
+            }
 
-                for (int x = 0; x < gridSize.x - 1 && !foundForGroup; x++)
+            // Collect convertible positions
+            List<Vector2Int> convertedPositions = new List<Vector2Int>();
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
                 {
-                    for (int y = 0; y < gridSize.y - 1 && !foundForGroup; y++)
-                    {
-                        Vector2Int p1 = new Vector2Int(x, y);
-                        Vector2Int p2 = new Vector2Int(x + 1, y);
-                        Vector2Int p3 = new Vector2Int(x, y + 1);
-                        Vector2Int p4 = new Vector2Int(x + 1, y + 1);
-
-                        if (!groupSet.Contains(p1) || !groupSet.Contains(p2) || !groupSet.Contains(p3) || !groupSet.Contains(p4))
-                        {
-                            continue;
-                        }
-
-                        ElementData sourceData = GetCell(p1)?.elementInfo?.elementData;
-                        if (sourceData == null)
-                        {
-                            continue;
-                        }
-
-                        GridCell p2Cell = GetCell(p2);
-                        GridCell p3Cell = GetCell(p3);
-                        GridCell p4Cell = GetCell(p4);
-                        if (p2Cell?.elementInfo?.elementData != sourceData ||
-                            p3Cell?.elementInfo?.elementData != sourceData ||
-                            p4Cell?.elementInfo?.elementData != sourceData)
-                        {
-                            continue;
-                        }
-
-                        Vector2Int spawnPos = p1;
-                        if (groupSet.Contains(initialElement2) && (initialElement2 == p1 || initialElement2 == p2 || initialElement2 == p3 || initialElement2 == p4))
-                        {
-                            spawnPos = initialElement2;
-                        }
-                        else if (groupSet.Contains(initialElement1) && (initialElement1 == p1 || initialElement1 == p2 || initialElement1 == p3 || initialElement1 == p4))
-                        {
-                            spawnPos = initialElement1;
-                        }
-
-                        if (usedPositions.Add(spawnPos))
-                        {
-                            spawns.Add(new BombSpawnRequest
-                            {
-                                position = spawnPos,
-                                sourceData = sourceData
-                            });
-                        }
-
-                        foundForGroup = true;
-                    }
+                    Vector2Int pos = new Vector2Int(x, y);
+                    GridCell cell = GetCell(pos);
+                    if (cell?.elementInfo?.elementData == targetElementData &&
+                        cell.elementInfo.powerUpType == ElementPowerUpType.None)
+                        convertedPositions.Add(pos);
                 }
             }
 
-            return spawns;
+            if (convertedPositions.Count > 0)
+                yield return StartCoroutine(AnimateSparklingTrails(sparklingPos, convertedPositions, sparklingElementData));
+
+            // Destroy sparkling element
+            sparklingCell.elementInfo = null;
+            GridElement toDestroy = GetElementAt(sparklingPos);
+            if (toDestroy != null) StartCoroutine(toDestroy.DestroyElement());
+
+            yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
+            yield return StartCoroutine(MatchProcess(targetPos, sparklingPos));
         }
 
-        private List<RocketSpawnRequest> FindRocketSpawnsFromLineMatches_Legacy(List<List<Vector2Int>> matchedGroups, Vector2Int initialElement1, Vector2Int initialElement2)
+        private IEnumerator AnimateSparklingTrails(Vector2Int sourcePos, List<Vector2Int> targets, ElementData sparklingData)
         {
-            return new List<RocketSpawnRequest>();
+            ConstantManager cm = GameManager.Instance.constantManager;
+            if (!generatedTiles.TryGetValue(sourcePos, out GridCellController sourceTile)) yield break;
+
+            Vector3 sourceWorldPos = sourceTile.transform.position;
+            int trailIndex = 0;
+            foreach (var targetPos in targets)
+            {
+                StartCoroutine(AnimateSingleTrail(sourceWorldPos, targetPos, sparklingData, cm, trailIndex));
+                trailIndex++;
+                yield return new WaitForSeconds(cm.sparklingTrailSpawnDelay);
+            }
+            yield return new WaitForSeconds(cm.sparklingTrailDuration);
         }
 
-        private void CreateBombAt(Vector2Int pos, ElementData sourceData)
+        private IEnumerator AnimateSingleTrail(Vector3 sourcePos, Vector2Int targetPos, ElementData sparklingData, ConstantManager cm, int trailIndex)
         {
-            GridCell cell = GetCell(pos);
-            if (cell == null || cell.cellType != CellType.Normal)
-            {
-                return;
-            }
+            if (!generatedTiles.TryGetValue(targetPos, out GridCellController targetTile)) yield break;
 
-            ElementData bombData = sourceData;
-            if (GameManager.Instance.CurrentLevel is LevelScene_Match3Game match3Level && match3Level.bombElementData != null)
-            {
-                bombData = match3Level.bombElementData;
-            }
+            Vector3 targetWorldPos = targetTile.transform.position;
+            GameObject trailObj = cm.sparklingTrailPrefab != null
+                ? Instantiate(cm.sparklingTrailPrefab, sourcePos, Quaternion.identity)
+                : CreateDefaultTrail(sourcePos, targetPos);
 
-            if (cell.elementInfo == null)
-            {
-                cell.elementInfo = new GridElementInfo();
-            }
+            yield return trailObj.transform.DOMove(targetWorldPos, cm.sparklingTrailDuration).SetEase(Ease.InOutQuad).WaitForCompletion();
 
-            cell.elementInfo.elementData = bombData;
-            cell.elementInfo.powerUpType = ElementPowerUpType.Bomb;
-            cell.elementInfo.isSparkling = false;
-            cell.elementInfo.isHidden = false;
+            float shakeMag = cm.sparklingShakeBaseMagnitude + (trailIndex * cm.sparklingShakeMagnitudeIncrement);
+            GridHelper.ShakeCamera(cm.sparklingShakeDuration, shakeMag, cm.sparklingShakeVibrato, cm.sparklingShakeRandomness);
 
-            if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)
+            // Convert element
+            GridCell cell = GetCell(targetPos);
+            if (cell?.elementInfo != null)
             {
-                GridElement element = tile.GetComponentInChildren<GridElement>();
+                cell.elementInfo.elementData = sparklingData;
+                cell.elementInfo.isSparkling = false;
+                cell.elementInfo.powerUpType = ElementPowerUpType.None;
+
+                GridElement element = GetElementAt(targetPos);
                 if (element != null)
                 {
-                    element.elementInfo = cell.elementInfo;
-                    element.InitElement(this, cell.elementInfo);
-                    SetElementEmission(element, 0f);
-                    ApplyBombSortingPriority(element, true);
+                    element.StopAllCoroutines();
+                    element.elementInfo.elementData = sparklingData;
+                    element.elementInfo.isSparkling = false;
+                    element.elementInfo.powerUpType = ElementPowerUpType.None;
+                    element.InitElement(this, element.elementInfo);
                 }
             }
+
+            if (trailObj != null) Destroy(trailObj);
         }
 
-        private void CreateRocketAt(Vector2Int pos, ElementData sourceData, ElementPowerUpType rocketType)
+        private GameObject CreateDefaultTrail(Vector3 pos, Vector2Int targetPos)
         {
-            if (!IsRocketPowerUp(rocketType))
-            {
-                return;
-            }
-
-            GridCell cell = GetCell(pos);
-            if (cell == null || cell.cellType != CellType.Normal)
-            {
-                return;
-            }
-
-            ElementData rocketData = sourceData;
-            if (GameManager.Instance.CurrentLevel is LevelScene_Match3Game match3Level && match3Level.rocketElementData != null)
-            {
-                rocketData = match3Level.rocketElementData;
-            }
-
-            if (cell.elementInfo == null)
-            {
-                cell.elementInfo = new GridElementInfo();
-            }
-
-            cell.elementInfo.elementData = rocketData;
-            cell.elementInfo.powerUpType = rocketType;
-            cell.elementInfo.isSparkling = false;
-            cell.elementInfo.isHidden = false;
-
-            if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)
-            {
-                GridElement element = tile.GetComponentInChildren<GridElement>();
-                if (element != null)
-                {
-                    element.elementInfo = cell.elementInfo;
-                    element.InitElement(this, cell.elementInfo);
-                    SetElementEmission(element, 0f);
-                    ApplyBombSortingPriority(element, false);
-                }
-            }
+            GameObject obj = new GameObject($"SparklingTrail_{targetPos.x}_{targetPos.y}");
+            obj.transform.position = pos;
+            TrailRenderer trail = obj.AddComponent<TrailRenderer>();
+            trail.time = 0.5f;
+            trail.startWidth = 0.1f;
+            trail.endWidth = 0f;
+            trail.widthCurve = AnimationCurve.Linear(0, 1, 1, 0);
+            trail.numCapVertices = 5;
+            trail.numCornerVertices = 5;
+            Gradient gradient = new Gradient();
+            gradient.SetKeys(
+                new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0f, 1f) });
+            trail.colorGradient = gradient;
+            trail.material = new Material(Shader.Find("Sprites/Default"));
+            return obj;
         }
 
-        private void ApplyBombSortingPriority(GridElement element, bool isBomb)
-        {
-            if (element == null)
-            {
-                return;
-            }
-
-            Renderer[] renderers = element.GetComponentsInChildren<Renderer>(true);
-            for (int i = 0; i < renderers.Length; i++)
-            {
-                if (isBomb)
-                {
-                    renderers[i].sortingOrder += BombSortingOrderBoost;
-                }
-                else if (renderers[i].sortingOrder >= BombSortingOrderBoost)
-                {
-                    renderers[i].sortingOrder -= BombSortingOrderBoost;
-                }
-            }
-        }
-
+        // ------------------------------------------------------------------
+        //  Swap animation
+        // ------------------------------------------------------------------
         public IEnumerator SwapElements(Vector2Int first, Vector2Int second)
         {
-            Vector2Int firstPos = new Vector2Int(first.x, first.y);
-            Vector2Int secondPos = new Vector2Int(second.x, second.y);
-
-            GridCell firstCell = GetCell(firstPos);
-            GridCell secondCell = GetCell(secondPos);
-
-            if (firstCell == null || secondCell == null)
-            {
-                yield break;
-            }
+            GridCell firstCell = GetCell(first);
+            GridCell secondCell = GetCell(second);
+            if (firstCell == null || secondCell == null) yield break;
 
             GridElementInfo firstInfo = firstCell.elementInfo;
             GridElementInfo secondInfo = secondCell.elementInfo;
-
-            if (firstInfo == null || secondInfo == null)
-            {
-                yield break;
-            }
+            if (firstInfo == null || secondInfo == null) yield break;
 
             firstCell.elementInfo = secondInfo;
             secondCell.elementInfo = firstInfo;
 
-            if (!generatedTiles.TryGetValue(firstPos, out GridCellController firstTile) ||
-                !generatedTiles.TryGetValue(secondPos, out GridCellController secondTile))
-            {
+            if (!generatedTiles.TryGetValue(first, out GridCellController firstTile) ||
+                !generatedTiles.TryGetValue(second, out GridCellController secondTile))
                 yield break;
-            }
 
-            GridElement firstElement = firstTile.GetComponentInChildren<GridElement>();
-            GridElement secondElement = secondTile.GetComponentInChildren<GridElement>();
+            GridElement firstEl = firstTile.GetComponentInChildren<GridElement>();
+            GridElement secondEl = secondTile.GetComponentInChildren<GridElement>();
+            float dur = GameManager.Instance.constantManager.elementSwapMoveDuration;
 
-            if (firstElement != null && secondElement != null)
+            if (firstEl != null && secondEl != null)
             {
-                Transform firstParent = firstElement.transform.parent;
-                Transform secondParent = secondElement.transform.parent;
-
-                firstElement.transform.SetParent(secondParent, true);
-                secondElement.transform.SetParent(firstParent, true);
-
-                firstElement.transform.DOLocalMove(Vector3.zero, GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack);
-                yield return secondElement.transform.DOLocalMove(Vector3.zero, GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
+                Transform fp = firstEl.transform.parent;
+                Transform sp = secondEl.transform.parent;
+                firstEl.transform.SetParent(sp, true);
+                secondEl.transform.SetParent(fp, true);
+                firstEl.transform.DOLocalMove(Vector3.zero, dur).SetEase(Ease.OutBack);
+                yield return secondEl.transform.DOLocalMove(Vector3.zero, dur).SetEase(Ease.OutBack).WaitForCompletion();
             }
-            else if (firstElement != null)
+            else if (firstEl != null)
             {
-                firstElement.transform.SetParent(secondTile.transform, true);
-                yield return firstElement.transform.DOLocalMove(Vector3.zero, GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
+                firstEl.transform.SetParent(secondTile.transform, true);
+                yield return firstEl.transform.DOLocalMove(Vector3.zero, dur).SetEase(Ease.OutBack).WaitForCompletion();
             }
-            else if (secondElement != null)
+            else if (secondEl != null)
             {
-                secondElement.transform.SetParent(firstTile.transform, true);
-                yield return secondElement.transform.DOLocalMove(Vector3.zero, GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
+                secondEl.transform.SetParent(firstTile.transform, true);
+                yield return secondEl.transform.DOLocalMove(Vector3.zero, dur).SetEase(Ease.OutBack).WaitForCompletion();
             }
         }
 
+        // ------------------------------------------------------------------
+        //  Element generation
+        // ------------------------------------------------------------------
         protected override void GenerateElements()
         {
             EnsureGridCells();
-            List<ElementData> elementPool = new List<ElementData>();
-            for (int x = 0; x < gridSize.x; x++)
-            {
-                for (int y = 0; y < gridSize.y; y++)
-                {
-                    GridCell cell = gridCells[x, y];
-                    ElementData data = cell != null ? cell.elementInfo?.elementData : null;
-                    if (data != null && (cell.elementInfo == null || cell.elementInfo.powerUpType == ElementPowerUpType.None) && !elementPool.Contains(data))
-                    {
-                        elementPool.Add(data);
-                    }
-                }
-            }
+            List<ElementData> elementPool = BuildElementPool();
 
             for (int x = 0; x < gridSize.x; x++)
             {
                 for (int y = 0; y < gridSize.y; y++)
                 {
                     GridCell cell = gridCells[x, y];
-                    if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null || cell.elementInfo.elementData == null)
-                    {
+                    if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo?.elementData == null)
                         continue;
-                    }
 
                     if (!UseLevelEditor && !cell.elementInfo.isHidden && elementPool.Count > 1)
                     {
                         List<ElementData> candidates = new List<ElementData>();
                         foreach (ElementData data in elementPool)
-                        {
-                            if (!WouldCreateMatch(x, y, data))
-                            {
-                                candidates.Add(data);
-                            }
-                        }
-
+                            if (!WouldCreateMatch(x, y, data)) candidates.Add(data);
                         if (candidates.Count > 0)
-                        {
                             cell.elementInfo.elementData = candidates[Random.Range(0, candidates.Count)];
-                        }
                     }
 
-                    if (!generatedTiles.TryGetValue(cell.coordinates, out GridCellController tile))
-                    {
-                        continue;
-                    }
+                    if (!generatedTiles.TryGetValue(cell.coordinates, out GridCellController tile)) continue;
 
                     GridElement element = Instantiate(gridElementPrefab, tile.transform.position, Quaternion.identity, tile.transform);
                     element.elementInfo = cell.elementInfo;
                     generatedElements.Add(element);
                     element.InitElement(this, element.elementInfo);
-                    ApplyBombSortingPriority(element, cell.elementInfo != null && cell.elementInfo.powerUpType == ElementPowerUpType.Bomb);
+                    powerUpHandler.ApplySortingBoost(element, cell.elementInfo.powerUpType == ElementPowerUpType.Bomb);
                 }
             }
         }
 
+        // ------------------------------------------------------------------
+        //  Match detection
+        // ------------------------------------------------------------------
         private bool WouldCreateMatch(int x, int y, ElementData data)
         {
-            return IsSameElement(x - 1, y, data) && IsSameElement(x - 2, y, data)
-                || IsSameElement(x, y - 1, data) && IsSameElement(x, y - 2, data);
+            return (IsSameElement(x - 1, y, data) && IsSameElement(x - 2, y, data))
+                || (IsSameElement(x, y - 1, data) && IsSameElement(x, y - 2, data));
         }
 
         private bool IsSameElement(int x, int y, ElementData data)
@@ -1206,412 +482,196 @@ namespace Game
                    cell.elementInfo.elementData == data;
         }
 
-        private List<List<Vector2Int>> CheckMatchOf(int elementCount = 3)
+        private List<List<Vector2Int>> CheckMatchOf(int minCount = 3)
         {
-            Dictionary<Vector2Int, ElementData> matchedElements = new Dictionary<Vector2Int, ElementData>();
+            Dictionary<Vector2Int, ElementData> matched = new Dictionary<Vector2Int, ElementData>();
 
-            ElementData GetElementData(int x, int y)
+            ElementData GetData(int x, int y)
             {
                 GridCell cell = GetCell(new Vector2Int(x, y));
-                if (cell == null ||
-                    cell.cellType != CellType.Normal ||
-                    cell.elementInfo == null ||
-                    cell.elementInfo.isHidden ||
-                    cell.elementInfo.powerUpType == ElementPowerUpType.Bomb)
-                {
+                if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null ||
+                    cell.elementInfo.isHidden || PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType))
                     return null;
-                }
-
                 return cell.elementInfo.elementData;
             }
 
-            void AddMatched(int x, int y, ElementData data)
-            {
-                Vector2Int pos = new Vector2Int(x, y);
-                if (!matchedElements.ContainsKey(pos))
-                {
-                    matchedElements.Add(pos, data);
-                }
-            }
+            void Add(int x, int y, ElementData d) { Vector2Int p = new Vector2Int(x, y); if (!matched.ContainsKey(p)) matched.Add(p, d); }
 
+            // Horizontal
             for (int y = 0; y < gridSize.y; y++)
             {
-                ElementData currentData = null;
-                int runLength = 0;
-
-                for (int x = 0; x < gridSize.x; x++)
+                ElementData cur = null; int run = 0;
+                for (int x = 0; x <= gridSize.x; x++)
                 {
-                    ElementData data = GetElementData(x, y);
-
-                    if (data != null && data == currentData)
-                    {
-                        runLength++;
-                        continue;
-                    }
-
-                    if (currentData != null && runLength >= elementCount)
-                    {
-                        for (int matchX = x - runLength; matchX < x; matchX++)
-                        {
-                            AddMatched(matchX, y, currentData);
-                        }
-                    }
-
-                    currentData = data;
-                    runLength = data != null ? 1 : 0;
-                }
-
-                if (currentData != null && runLength >= elementCount)
-                {
-                    for (int matchX = gridSize.x - runLength; matchX < gridSize.x; matchX++)
-                    {
-                        AddMatched(matchX, y, currentData);
-                    }
+                    ElementData d = x < gridSize.x ? GetData(x, y) : null;
+                    if (d != null && d == cur) { run++; continue; }
+                    if (cur != null && run >= minCount)
+                        for (int mx = x - run; mx < x; mx++) Add(mx, y, cur);
+                    cur = d; run = d != null ? 1 : 0;
                 }
             }
 
+            // Vertical
             for (int x = 0; x < gridSize.x; x++)
             {
-                ElementData currentData = null;
-                int runLength = 0;
-
-                for (int y = 0; y < gridSize.y; y++)
+                ElementData cur = null; int run = 0;
+                for (int y = 0; y <= gridSize.y; y++)
                 {
-                    ElementData data = GetElementData(x, y);
-
-                    if (data != null && data == currentData)
-                    {
-                        runLength++;
-                        continue;
-                    }
-
-                    if (currentData != null && runLength >= elementCount)
-                    {
-                        for (int matchY = y - runLength; matchY < y; matchY++)
-                        {
-                            AddMatched(x, matchY, currentData);
-                        }
-                    }
-
-                    currentData = data;
-                    runLength = data != null ? 1 : 0;
-                }
-
-                if (currentData != null && runLength >= elementCount)
-                {
-                    for (int matchY = gridSize.y - runLength; matchY < gridSize.y; matchY++)
-                    {
-                        AddMatched(x, matchY, currentData);
-                    }
+                    ElementData d = y < gridSize.y ? GetData(x, y) : null;
+                    if (d != null && d == cur) { run++; continue; }
+                    if (cur != null && run >= minCount)
+                        for (int my = y - run; my < y; my++) Add(x, my, cur);
+                    cur = d; run = d != null ? 1 : 0;
                 }
             }
 
+            // 2x2 squares
             for (int x = 0; x < gridSize.x - 1; x++)
             {
                 for (int y = 0; y < gridSize.y - 1; y++)
                 {
-                    ElementData bottomLeft = GetElementData(x, y);
-                    if (bottomLeft == null)
+                    ElementData bl = GetData(x, y);
+                    if (bl != null && GetData(x + 1, y) == bl && GetData(x, y + 1) == bl && GetData(x + 1, y + 1) == bl)
                     {
-                        continue;
-                    }
-
-                    ElementData bottomRight = GetElementData(x + 1, y);
-                    ElementData topLeft = GetElementData(x, y + 1);
-                    ElementData topRight = GetElementData(x + 1, y + 1);
-
-                    if (bottomRight == bottomLeft && topLeft == bottomLeft && topRight == bottomLeft)
-                    {
-                        AddMatched(x, y, bottomLeft);
-                        AddMatched(x + 1, y, bottomLeft);
-                        AddMatched(x, y + 1, bottomLeft);
-                        AddMatched(x + 1, y + 1, bottomLeft);
+                        Add(x, y, bl); Add(x + 1, y, bl); Add(x, y + 1, bl); Add(x + 1, y + 1, bl);
                     }
                 }
             }
 
+            // Flood-fill into groups
             List<List<Vector2Int>> groups = new List<List<Vector2Int>>();
             HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
+            Vector2Int[] dirs = { Vector2Int.right, Vector2Int.left, Vector2Int.up, Vector2Int.down };
 
-            foreach (var kvp in matchedElements)
+            foreach (var kvp in matched)
             {
-                if (visited.Contains(kvp.Key))
-                {
-                    continue;
-                }
-
+                if (visited.Contains(kvp.Key)) continue;
                 List<Vector2Int> group = new List<Vector2Int>();
                 Queue<Vector2Int> queue = new Queue<Vector2Int>();
-                queue.Enqueue(kvp.Key);
-                visited.Add(kvp.Key);
-
+                queue.Enqueue(kvp.Key); visited.Add(kvp.Key);
                 while (queue.Count > 0)
                 {
                     Vector2Int pos = queue.Dequeue();
                     group.Add(pos);
-                    ElementData data = matchedElements[pos];
-
-                    Vector2Int[] neighbors =
+                    ElementData data = matched[pos];
+                    for (int i = 0; i < dirs.Length; i++)
                     {
-                        new Vector2Int(pos.x + 1, pos.y),
-                        new Vector2Int(pos.x - 1, pos.y),
-                        new Vector2Int(pos.x, pos.y + 1),
-                        new Vector2Int(pos.x, pos.y - 1)
-                    };
-
-                    foreach (Vector2Int neighbor in neighbors)
-                    {
-                        if (matchedElements.TryGetValue(neighbor, out ElementData neighborData) &&
-                            neighborData == data &&
-                            !visited.Contains(neighbor))
-                        {
-                            visited.Add(neighbor);
-                            queue.Enqueue(neighbor);
-                        }
+                        Vector2Int n = pos + dirs[i];
+                        if (matched.TryGetValue(n, out ElementData nd) && nd == data && !visited.Contains(n))
+                        { visited.Add(n); queue.Enqueue(n); }
                     }
                 }
-
-                if (group.Count >= elementCount)
-                {
-                    groups.Add(group);
-                }
+                if (group.Count >= minCount) groups.Add(group);
             }
-
             return groups;
         }
-        // Clears matched elements from the grid and plays their destruction animations.
+
+        // ------------------------------------------------------------------
+        //  Clear matches
+        // ------------------------------------------------------------------
         private IEnumerator ClearMatches(List<List<Vector2Int>> matchedPositions, HashSet<Vector2Int> protectedPositions = null)
         {
-            // Shake camera based on current combo count
-            Camera mainCamera = Camera.main;
-            if (mainCamera != null)
-            {
-                ConstantManager constantManager = GameManager.Instance.constantManager;
-                float shakeMagnitude = constantManager.matchShakeBaseMagnitude + ((currentComboCount - 1) * constantManager.matchShakeComboMultiplier);
-                mainCamera.transform.DOShakePosition(
-                    constantManager.matchShakeDuration,
-                    shakeMagnitude,
-                    constantManager.matchShakeVibrato,
-                    constantManager.matchShakeRandomness
-                );
-            }
-            
-            HashSet<Vector2Int> clearedPositions = new HashSet<Vector2Int>();
+            ConstantManager cm = GameManager.Instance.constantManager;
+            float shakeMag = cm.matchShakeBaseMagnitude + ((currentComboCount - 1) * cm.matchShakeComboMultiplier);
+            GridHelper.ShakeCamera(cm.matchShakeDuration, shakeMag, cm.matchShakeVibrato, cm.matchShakeRandomness);
+
+            HashSet<Vector2Int> cleared = new HashSet<Vector2Int>();
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
             HashSet<Vector2Int> hiddenToReveal = new HashSet<Vector2Int>();
-            Vector2Int[] adjacentOffsets =
-            {
-                new Vector2Int(0, 1),
-                new Vector2Int(0, -1),
-                new Vector2Int(-1, 0),
-                new Vector2Int(1, 0)
-            };
+            Vector2Int[] adjacentOffsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
 
             foreach (var group in matchedPositions)
             {
-                Vector2Int? mergeTarget = GetMergeTargetForGroup(group, protectedPositions);
+                Vector2Int? mergeTarget = FindMergeTarget(group, protectedPositions);
 
-                if (mergeTarget.HasValue && generatedTiles.TryGetValue(mergeTarget.Value, out GridCellController mergeTargetTile) && mergeTargetTile != null)
+                if (mergeTarget.HasValue)
                 {
-                    GridElement mergeTargetElement = mergeTargetTile.GetComponentInChildren<GridElement>();
-                    if (mergeTargetElement != null)
-                    {
-                        AnimateElementEmission(mergeTargetElement, 5f, 0.2f);
-                    }
+                    GridElement mergeEl = GetElementAt(mergeTarget.Value);
+                    if (mergeEl != null) GridHelper.AnimateEmission(mergeEl, 5f, 0.2f);
                 }
 
                 foreach (var pos in group)
                 {
-                    if (protectedPositions != null && protectedPositions.Contains(pos))
+                    if (protectedPositions != null && protectedPositions.Contains(pos)) continue;
+                    if (cleared.Contains(pos)) continue;
+
+                    GridCell cell = GetCell(pos);
+                    if (cell?.elementInfo == null) continue;
+
+                    cell.elementInfo = null;
+                    GridElement element = GetElementAt(pos);
+                    if (element != null)
                     {
-                        continue;
+                        if (mergeTarget.HasValue) StartCoroutine(MergeElementIntoTarget(element, mergeTarget.Value));
+                        else StartCoroutine(element.DestroyElement());
                     }
 
-                    if (clearedPositions.Contains(pos))
+                    foreach (Vector2Int offset in adjacentOffsets)
                     {
-                        continue;
+                        GridCell adj = GetCell(pos + offset);
+                        if (adj == null) continue;
+                        if (adj.cellType == CellType.BreakableWall) wallsToBreak.Add(pos + offset);
+                        if (adj.cellType == CellType.Normal && adj.elementInfo != null && adj.elementInfo.isHidden) hiddenToReveal.Add(pos + offset);
                     }
 
-                    Vector2Int gridPos = new Vector2Int(pos.x, pos.y);
-                    GridCell cell = GetCell(gridPos);
-                    if (cell != null && cell.elementInfo != null)
-                    {
-                        cell.elementInfo = null;
-                        if (generatedTiles.TryGetValue(gridPos, out GridCellController tile))
-                        {
-                            GridElement element = tile.GetComponentInChildren<GridElement>();
-                            if (element != null)
-                            {
-                                if (mergeTarget.HasValue)
-                                {
-                                    StartCoroutine(MergeElementIntoTarget(element, mergeTarget.Value));
-                                }
-                                else
-                                {
-                                    StartCoroutine(element.DestroyElement());
-                                }
-                            }
-                        }
-
-                        foreach (Vector2Int offset in adjacentOffsets)
-                        {
-                            Vector2Int adjacentPos = gridPos + offset;
-                            GridCell adjacentCell = GetCell(adjacentPos);
-                            if (adjacentCell == null)
-                            {
-                                continue;
-                            }
-
-                            if (adjacentCell.cellType == CellType.BreakableWall)
-                            {
-                                wallsToBreak.Add(adjacentPos);
-                            }
-
-                            if (adjacentCell.cellType == CellType.Normal &&
-                                adjacentCell.elementInfo != null &&
-                                adjacentCell.elementInfo.isHidden)
-                            {
-                                hiddenToReveal.Add(adjacentPos);
-                            }
-                        }
-                    }
-
-                    clearedPositions.Add(pos);
+                    cleared.Add(pos);
                 }
 
-                yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
+                yield return new WaitForSeconds(cm.matchClearDelay);
             }
 
-            foreach (Vector2Int revealPos in hiddenToReveal)
-            {
-                RevealHiddenElement(revealPos);
-            }
-
-            foreach (Vector2Int wallPos in wallsToBreak)
-            {
-                yield return StartCoroutine(BreakWall(wallPos));
-            }
+            foreach (Vector2Int rp in hiddenToReveal) RevealHiddenElement(rp);
+            foreach (Vector2Int wp in wallsToBreak) yield return StartCoroutine(BreakWallAt(wp));
         }
 
-        private void AnimateElementEmission(GridElement element, float emissionValue, float duration)
+        private Vector2Int? FindMergeTarget(List<Vector2Int> group, HashSet<Vector2Int> protectedPositions)
         {
-            if (element == null)
-            {
-                return;
-            }
-
-            Renderer[] renderers = element.GetComponentsInChildren<Renderer>(true);
-            for (int i = 0; i < renderers.Length; i++)
-            {
-                Material mat = renderers[i] != null ? renderers[i].material : null;
-                if (mat != null && mat.HasProperty("_Emission"))
-                {
-                    mat.DOFloat(emissionValue, "_Emission", duration);
-                }
-            }
-        }
-
-        private Vector2Int? GetMergeTargetForGroup(List<Vector2Int> group, HashSet<Vector2Int> protectedPositions)
-        {
-            if (protectedPositions == null || group == null)
-            {
-                return null;
-            }
-
+            if (protectedPositions == null || group == null) return null;
             for (int i = 0; i < group.Count; i++)
-            {
-                if (protectedPositions.Contains(group[i]))
-                {
-                    return group[i];
-                }
-            }
-
+                if (protectedPositions.Contains(group[i])) return group[i];
             return null;
         }
 
         private IEnumerator MergeElementIntoTarget(GridElement element, Vector2Int targetPos)
         {
-            if (element == null)
-            {
-                yield break;
-            }
-
-            if (!generatedTiles.TryGetValue(targetPos, out GridCellController targetTile) || targetTile == null)
-            {
-                yield return StartCoroutine(element.DestroyElement());
-                yield break;
-            }
+            if (element == null) yield break;
+            GridCellController targetTile = null;
+            if (!generatedTiles.TryGetValue(targetPos, out targetTile) || targetTile == null)
+            { yield return StartCoroutine(element.DestroyElement()); yield break; }
 
             Transform t = element.transform;
             t.DOKill();
-
             Collider[] colliders = element.GetComponentsInChildren<Collider>(true);
-            for (int i = 0; i < colliders.Length; i++)
-            {
-                colliders[i].enabled = false;
-            }
+            for (int i = 0; i < colliders.Length; i++) colliders[i].enabled = false;
 
-            SetElementEmission(element, 5f);
+            GridHelper.SetEmission(element, 5f);
 
-            float duration = Mathf.Max(0.08f, GameManager.Instance.constantManager.elementSwapMoveDuration * 0.6f);
-            Tween moveTween = t.DOMove(targetTile.transform.position, duration).SetEase(Ease.InBack);
+            float dur = Mathf.Max(0.08f, GameManager.Instance.constantManager.elementSwapMoveDuration * 0.6f);
+            Tween move = t.DOMove(targetTile.transform.position, dur).SetEase(Ease.InBack);
 
             EventManager.TriggerEvent(GameEvent.ELEMENT_DESTROYED,
-                eventParam: new EventParam(paramScriptable: element.elementInfo != null ? element.elementInfo.elementData : null));
+                eventParam: new EventParam(paramScriptable: element.elementInfo?.elementData));
 
-            yield return moveTween.WaitForCompletion();
-
-            if (element != null)
-            {
-                Destroy(element.gameObject);
-            }
+            yield return move.WaitForCompletion();
+            if (element != null) Destroy(element.gameObject);
         }
 
-        private void SetElementEmission(GridElement element, float emissionValue)
-        {
-            if (element == null)
-            {
-                return;
-            }
-
-            Renderer[] renderers = element.GetComponentsInChildren<Renderer>(true);
-            for (int i = 0; i < renderers.Length; i++)
-            {
-                Material mat = renderers[i] != null ? renderers[i].material : null;
-                if (mat != null && mat.HasProperty("_Emission"))
-                {
-                    mat.SetFloat("_Emission", emissionValue);
-                }
-            }
-        }
-
+        // ------------------------------------------------------------------
+        //  Hidden elements & wall breaking
+        // ------------------------------------------------------------------
         private void RevealHiddenElement(Vector2Int pos)
         {
             GridCell cell = GetCell(pos);
-            if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null || !cell.elementInfo.isHidden)
-            {
-                return;
-            }
-
+            if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null || !cell.elementInfo.isHidden) return;
             cell.elementInfo.isHidden = false;
-
-            if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)
-            {
-                GridElement element = tile.GetComponentInChildren<GridElement>();
-                if (element != null)
-                {
-                    element.InitElement(this, cell.elementInfo);
-                }
-            }
+            GridElement element = GetElementAt(pos);
+            if (element != null) element.InitElement(this, cell.elementInfo);
         }
 
-        private IEnumerator BreakWall(Vector2Int wallPos)
+        public IEnumerator BreakWallAt(Vector2Int wallPos)
         {
             GridCell cell = GetCell(wallPos);
-            if (cell == null || cell.cellType != CellType.BreakableWall)
-            {
-                yield break;
-            }
+            if (cell == null || cell.cellType != CellType.BreakableWall) yield break;
 
             if (generatedTiles.TryGetValue(wallPos, out GridCellController wallTile) && wallTile != null)
             {
@@ -1620,11 +680,8 @@ namespace Game
                 Quaternion wallRotation = wallTile.transform.rotation;
                 Vector3 wallScale = wallTile.transform.localScale;
 
-                BreakableWall breakableWall = wallTile.GetComponent<BreakableWall>();
-                if (breakableWall != null)
-                {
-                    yield return StartCoroutine(breakableWall.WallBreak());
-                }
+                BreakableWall breakable = wallTile.GetComponent<BreakableWall>();
+                if (breakable != null) yield return StartCoroutine(breakable.WallBreak());
 
                 if (tileGenerationData != null && tileGenerationData.normalCell != null)
                 {
@@ -1634,129 +691,69 @@ namespace Game
                     generatedTiles[wallPos] = normalTile;
                 }
 
-                if (wallTile != null)
-                {
-                    Destroy(wallTile.gameObject);
-                }
+                if (wallTile != null) Destroy(wallTile.gameObject);
             }
 
             cell.cellType = CellType.Normal;
         }
 
+        // ------------------------------------------------------------------
+        //  Gravity
+        // ------------------------------------------------------------------
         private IEnumerator ApplyGravity()
         {
             EventManager.TriggerEvent(GameEvent.GRAVITY_STARTED);
-            
-            ConstantManager constantManager = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
-            float fallSpeed = constantManager != null ? constantManager.elementFallSpeed : 3.3f;
+
+            ConstantManager cm = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
+            float fallSpeed = cm != null ? cm.elementFallSpeed : 3.3f;
 
             EnsureGridCells();
-            List<ElementData> elementPool = new List<ElementData>();
-            for (int x = 0; x < gridSize.x; x++)
-            {
-                for (int y = 0; y < gridSize.y; y++)
-                {
-                    GridCell cell = GetCell(new Vector2Int(x, y));
-                    ElementData data = cell != null ? cell.elementInfo?.elementData : null;
-                    if (data != null && (cell.elementInfo == null || cell.elementInfo.powerUpType == ElementPowerUpType.None) && !elementPool.Contains(data))
-                    {
-                        elementPool.Add(data);
-                    }
-                }
-            }
-
+            List<ElementData> elementPool = BuildElementPool();
             if (elementPool.Count == 0)
             {
-                foreach (GridElement element in generatedElements)
-                {
-                    if (element != null && element.elementInfo != null && element.elementInfo.elementData != null && element.elementInfo.powerUpType == ElementPowerUpType.None && !elementPool.Contains(element.elementInfo.elementData))
-                    {
-                        elementPool.Add(element.elementInfo.elementData);
-                    }
-                }
+                // Fallback: scan instantiated elements
+                foreach (GridElement el in generatedElements)
+                    if (el != null && el.elementInfo != null && el.elementInfo.elementData != null &&
+                        el.elementInfo.powerUpType == ElementPowerUpType.None && !elementPool.Contains(el.elementInfo.elementData))
+                        elementPool.Add(el.elementInfo.elementData);
             }
+            if (elementPool.Count == 0) yield break;
 
-            if (elementPool.Count == 0)
-            {
-                yield break;
-            }
-            
             bool shouldApplySparkling = false;
             float sparklingChance = 0f;
-            
             if (GameManager.Instance.CurrentLevel is LevelScene_Match3Game match3Level)
             {
                 shouldApplySparkling = currentComboCount >= match3Level.sparklingPowerAfterXCombo;
                 sparklingChance = match3Level.sparklingAppearChance;
             }
 
-            Sequence gravitySequence = DOTween.Sequence();
+            Sequence gravitySeq = DOTween.Sequence();
             bool hasTween = false;
 
             for (int x = 0; x < gridSize.x; x++)
             {
-                List<List<int>> sections = new List<List<int>>();
-                List<int> currentSection = new List<int>();
-
-                for (int y = 0; y < gridSize.y; y++)
-                {
-                    Vector2Int cellPos = new Vector2Int(x, y);
-                    GridCell cell = GetCell(cellPos);
-
-                    if (cell != null && cell.cellType == CellType.Normal)
-                    {
-                        currentSection.Add(y);
-                    }
-                    else
-                    {
-                        if (currentSection.Count > 0)
-                        {
-                            sections.Add(new List<int>(currentSection));
-                            currentSection.Clear();
-                        }
-                    }
-                }
-
-                if (currentSection.Count > 0)
-                {
-                    sections.Add(currentSection);
-                }
+                List<List<int>> sections = BuildColumnSections(x);
 
                 foreach (List<int> playableRows in sections)
                 {
-                    if (playableRows.Count == 0)
-                    {
-                        continue;
-                    }
-
+                    if (playableRows.Count == 0) continue;
                     int writeIndex = playableRows.Count - 1;
-                    int highestExistingElementIndex = -1;
+                    int highestExisting = -1;
 
+                    // Compact existing elements downward
                     for (int readIndex = playableRows.Count - 1; readIndex >= 0; readIndex--)
                     {
                         int readY = playableRows[readIndex];
                         Vector2Int readPos = new Vector2Int(x, readY);
-
                         GridCell readCell = GetCell(readPos);
-                        GridElementInfo movingInfo = readCell != null ? readCell.elementInfo : null;
-                        if (movingInfo == null || movingInfo.elementData == null)
-                        {
-                            continue;
-                        }
-
-                        if (highestExistingElementIndex == -1)
-                        {
-                            highestExistingElementIndex = readIndex;
-                        }
+                        GridElementInfo movingInfo = readCell?.elementInfo;
+                        if (movingInfo?.elementData == null) continue;
+                        if (highestExisting == -1) highestExisting = readIndex;
 
                         int targetY = playableRows[writeIndex];
                         Vector2Int targetPos = new Vector2Int(x, targetY);
                         GridCell targetCell = GetCell(targetPos);
-
-                        if (targetCell == null)
-                        {
-                            continue;
-                        }
+                        if (targetCell == null) continue;
 
                         if (targetPos != readPos)
                         {
@@ -1767,33 +764,28 @@ namespace Game
                                 generatedTiles.TryGetValue(targetPos, out GridCellController toTile) &&
                                 fromTile != null && toTile != null)
                             {
-                                GridElement movingElement = fromTile.GetComponentInChildren<GridElement>();
-                                if (movingElement != null)
+                                GridElement movingEl = fromTile.GetComponentInChildren<GridElement>();
+                                if (movingEl != null)
                                 {
-                                    movingElement.transform.SetParent(toTile.transform, true);
-                                    float moveDistance = movingElement.transform.localPosition.magnitude;
-                                    float moveDuration = fallSpeed > 0f ? moveDistance / fallSpeed : 0f;
-                                    gravitySequence.Join(movingElement.transform.DOLocalMove(Vector3.zero, moveDuration).SetEase(Ease.OutQuad));
+                                    movingEl.transform.SetParent(toTile.transform, true);
+                                    float dist = movingEl.transform.localPosition.magnitude;
+                                    float dur = fallSpeed > 0f ? dist / fallSpeed : 0f;
+                                    gravitySeq.Join(movingEl.transform.DOLocalMove(Vector3.zero, dur).SetEase(Ease.OutQuad));
                                     hasTween = true;
                                 }
                             }
                         }
-
                         writeIndex--;
                     }
 
-                    int spawnBaseOffset = highestExistingElementIndex != -1 ? (playableRows.Count - highestExistingElementIndex) : 0;
-
-                    for (int emptyIndex = writeIndex; emptyIndex >= 0; emptyIndex--)
+                    // Spawn new elements
+                    int spawnBase = highestExisting != -1 ? (playableRows.Count - highestExisting) : 0;
+                    for (int emptyIdx = writeIndex; emptyIdx >= 0; emptyIdx--)
                     {
-                        int targetY = playableRows[emptyIndex];
+                        int targetY = playableRows[emptyIdx];
                         Vector2Int targetPos = new Vector2Int(x, targetY);
                         GridCell targetCell = GetCell(targetPos);
-
-                        if (targetCell == null)
-                        {
-                            continue;
-                        }
+                        if (targetCell == null) continue;
 
                         ElementData randomData = elementPool[Random.Range(0, elementPool.Count)];
                         bool isSparkling = shouldApplySparkling && Random.value < sparklingChance;
@@ -1807,50 +799,403 @@ namespace Game
 
                         if (generatedTiles.TryGetValue(targetPos, out GridCellController targetTile) && targetTile != null)
                         {
-                            int stackOffset = spawnBaseOffset + (writeIndex - emptyIndex + 1);
+                            int stackOffset = spawnBase + (writeIndex - emptyIdx + 1);
                             Vector3 spawnWorldPos = targetTile.transform.position + Vector3.up * stackOffset;
-                            GridElement newElement = Instantiate(gridElementPrefab, spawnWorldPos, Quaternion.identity);
-                            newElement.transform.SetParent(targetTile.transform, true);
-                            newElement.elementInfo = newInfo;
-                            generatedElements.Add(newElement);
-                            newElement.InitElement(this, newInfo);
-                            ApplyBombSortingPriority(newElement, false);
+                            GridElement newEl = Instantiate(gridElementPrefab, spawnWorldPos, Quaternion.identity);
+                            newEl.transform.SetParent(targetTile.transform, true);
+                            newEl.elementInfo = newInfo;
+                            generatedElements.Add(newEl);
+                            newEl.InitElement(this, newInfo);
+                            powerUpHandler.ApplySortingBoost(newEl, false);
 
-                            float spawnDistance = newElement.transform.localPosition.magnitude;
-                            float spawnDuration = fallSpeed > 0f ? spawnDistance / fallSpeed : 0f;
-                            gravitySequence.Join(newElement.transform.DOLocalMove(Vector3.zero, spawnDuration).SetEase(Ease.Linear));
+                            float dist = newEl.transform.localPosition.magnitude;
+                            float dur = fallSpeed > 0f ? dist / fallSpeed : 0f;
+                            gravitySeq.Join(newEl.transform.DOLocalMove(Vector3.zero, dur).SetEase(Ease.Linear));
                             hasTween = true;
                         }
                     }
                 }
             }
 
-            generatedElements.RemoveAll(element => element == null);
+            generatedElements.RemoveAll(el => el == null);
+            if (hasTween) yield return gravitySeq.WaitForCompletion();
 
-            if (hasTween)
-            {
-                yield return gravitySequence.WaitForCompletion();
-            }
-            
             EventManager.TriggerEvent(GameEvent.GRAVITY_COMPLETED);
 
             int refilledCount = 0;
             for (int x = 0; x < gridSize.x; x++)
-            {
                 for (int y = 0; y < gridSize.y; y++)
                 {
                     GridCell cell = GetCell(new Vector2Int(x, y));
-                    if (cell != null && cell.elementInfo != null && cell.elementInfo.elementData != null)
+                    if (cell?.elementInfo?.elementData != null) refilledCount++;
+                }
+            if (refilledCount > 0)
+                EventManager.TriggerEvent(GameEvent.ELEMENTS_REFILLED, new EventParam(paramInt: refilledCount));
+        }
+
+        // ------------------------------------------------------------------
+        //  Shared internal helpers
+        // ------------------------------------------------------------------
+        private List<ElementData> BuildElementPool()
+        {
+            List<ElementData> pool = new List<ElementData>();
+            for (int x = 0; x < gridSize.x; x++)
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    GridCell cell = GetCell(new Vector2Int(x, y));
+                    ElementData data = cell?.elementInfo?.elementData;
+                    if (data != null && cell.elementInfo.powerUpType == ElementPowerUpType.None && !pool.Contains(data))
+                        pool.Add(data);
+                }
+            return pool;
+        }
+
+        private List<List<int>> BuildColumnSections(int x)
+        {
+            List<List<int>> sections = new List<List<int>>();
+            List<int> current = new List<int>();
+            for (int y = 0; y < gridSize.y; y++)
+            {
+                GridCell cell = GetCell(new Vector2Int(x, y));
+                if (cell != null && cell.cellType == CellType.Normal) current.Add(y);
+                else
+                {
+                    if (current.Count > 0) { sections.Add(new List<int>(current)); current.Clear(); }
+                }
+            }
+            if (current.Count > 0) sections.Add(current);
+            return sections;
+        }
+    }
+
+    /// <summary>
+    /// Centralizes power-up detection, creation, and activation for Match3Grid.
+    /// Keeps Match3Grid focused on core match/swap/gravity logic.
+    /// </summary>
+    public class PowerUpHandler
+    {
+        private readonly Match3Grid grid;
+        private const int SortingOrderBoost = 200;
+
+        public PowerUpHandler(Match3Grid grid)
+        {
+            this.grid = grid;
+        }
+
+        public static bool IsSpecialPowerUp(ElementPowerUpType type)
+        {
+            return type != ElementPowerUpType.None;
+        }
+
+        public static bool IsRocket(ElementPowerUpType type)
+        {
+            return type == ElementPowerUpType.HorizontalRocket || type == ElementPowerUpType.VerticalRocket;
+        }
+
+        public struct SpawnRequest
+        {
+            public Vector2Int position;
+            public ElementData sourceData;
+            public ElementPowerUpType powerUpType;
+        }
+
+        // ------------------------------------------------------------------
+        //  Spawn detection
+        // ------------------------------------------------------------------
+
+        public List<SpawnRequest> FindBombSpawns(List<List<Vector2Int>> matchedGroups, Vector2Int init1, Vector2Int init2)
+        {
+            List<SpawnRequest> spawns = new List<SpawnRequest>();
+            HashSet<Vector2Int> used = new HashSet<Vector2Int>();
+
+            for (int g = 0; g < matchedGroups.Count; g++)
+            {
+                List<Vector2Int> group = matchedGroups[g];
+                HashSet<Vector2Int> groupSet = new HashSet<Vector2Int>(group);
+                bool found = false;
+
+                for (int x = 0; x < grid.GridSize.x - 1 && !found; x++)
+                {
+                    for (int y = 0; y < grid.GridSize.y - 1 && !found; y++)
                     {
-                        refilledCount++;
+                        Vector2Int p1 = new Vector2Int(x, y);
+                        Vector2Int p2 = new Vector2Int(x + 1, y);
+                        Vector2Int p3 = new Vector2Int(x, y + 1);
+                        Vector2Int p4 = new Vector2Int(x + 1, y + 1);
+
+                        if (!groupSet.Contains(p1) || !groupSet.Contains(p2) ||
+                            !groupSet.Contains(p3) || !groupSet.Contains(p4))
+                            continue;
+
+                        ElementData src = grid.GetCellPublic(p1)?.elementInfo?.elementData;
+                        if (src == null) continue;
+                        if (grid.GetCellPublic(p2)?.elementInfo?.elementData != src ||
+                            grid.GetCellPublic(p3)?.elementInfo?.elementData != src ||
+                            grid.GetCellPublic(p4)?.elementInfo?.elementData != src)
+                            continue;
+
+                        Vector2Int spawnPos = PickPreferred(groupSet, new[] { p1, p2, p3, p4 }, init1, init2);
+                        if (used.Add(spawnPos))
+                            spawns.Add(new SpawnRequest { position = spawnPos, sourceData = src, powerUpType = ElementPowerUpType.Bomb });
+                        found = true;
                     }
                 }
             }
-            
-            if (refilledCount > 0)
+            return spawns;
+        }
+
+        public List<SpawnRequest> FindRocketSpawns(List<List<Vector2Int>> matchedGroups, Vector2Int init1, Vector2Int init2)
+        {
+            List<SpawnRequest> spawns = new List<SpawnRequest>();
+            HashSet<Vector2Int> used = new HashSet<Vector2Int>();
+
+            for (int g = 0; g < matchedGroups.Count; g++)
             {
-                EventManager.TriggerEvent(GameEvent.ELEMENTS_REFILLED, new EventParam(paramInt: refilledCount));
+                List<Vector2Int> group = matchedGroups[g];
+                if (group == null || group.Count < 4) continue;
+
+                HashSet<Vector2Int> groupSet = new HashSet<Vector2Int>(group);
+                ElementData src = grid.GetCellPublic(group[0])?.elementInfo?.elementData;
+                if (src == null) continue;
+                bool found = false;
+
+                // Horizontal runs
+                for (int y = 0; y < grid.GridSize.y && !found; y++)
+                {
+                    int run = 0;
+                    HashSet<Vector2Int> runPos = new HashSet<Vector2Int>();
+                    for (int x = 0; x <= grid.GridSize.x; x++)
+                    {
+                        Vector2Int pos = new Vector2Int(x, y);
+                        if (x < grid.GridSize.x && groupSet.Contains(pos)) { run++; runPos.Add(pos); }
+                        else
+                        {
+                            if (run >= 4)
+                            {
+                                Vector2Int sp = PickPreferredFromSet(runPos, init1, init2);
+                                if (used.Add(sp))
+                                    spawns.Add(new SpawnRequest { position = sp, sourceData = src, powerUpType = ElementPowerUpType.HorizontalRocket });
+                                found = true; break;
+                            }
+                            run = 0; runPos.Clear();
+                        }
+                    }
+                }
+
+                // Vertical runs
+                for (int x = 0; x < grid.GridSize.x && !found; x++)
+                {
+                    int run = 0;
+                    HashSet<Vector2Int> runPos = new HashSet<Vector2Int>();
+                    for (int y = 0; y <= grid.GridSize.y; y++)
+                    {
+                        Vector2Int pos = new Vector2Int(x, y);
+                        if (y < grid.GridSize.y && groupSet.Contains(pos)) { run++; runPos.Add(pos); }
+                        else
+                        {
+                            if (run >= 4)
+                            {
+                                Vector2Int sp = PickPreferredFromSet(runPos, init1, init2);
+                                if (used.Add(sp))
+                                    spawns.Add(new SpawnRequest { position = sp, sourceData = src, powerUpType = ElementPowerUpType.VerticalRocket });
+                                found = true; break;
+                            }
+                            run = 0; runPos.Clear();
+                        }
+                    }
+                }
             }
+            return spawns;
+        }
+
+        // ------------------------------------------------------------------
+        //  Creation
+        // ------------------------------------------------------------------
+
+        public void CreatePowerUpAt(Vector2Int pos, ElementData sourceData, ElementPowerUpType type)
+        {
+            Grid3D.GridCell cell = grid.GetCellPublic(pos);
+            if (cell == null || cell.cellType != Grid3D.CellType.Normal) return;
+
+            ElementData visualData = ResolveVisualData(sourceData, type);
+
+            if (cell.elementInfo == null)
+                cell.elementInfo = new GridElementInfo();
+
+            cell.elementInfo.elementData = visualData;
+            cell.elementInfo.powerUpType = type;
+            cell.elementInfo.isSparkling = false;
+            cell.elementInfo.isHidden = false;
+
+            GridElement element = grid.GetElementAt(pos);
+            if (element != null)
+            {
+                element.elementInfo = cell.elementInfo;
+                element.InitElement(grid, cell.elementInfo);
+                GridHelper.SetEmission(element, 0f);
+                ApplySortingBoost(element, type == ElementPowerUpType.Bomb);
+            }
+        }
+
+        // ------------------------------------------------------------------
+        //  Activation
+        // ------------------------------------------------------------------
+
+        public IEnumerator ActivateAt(Vector2Int pos)
+        {
+            Grid3D.GridCell cell = grid.GetCellPublic(pos);
+            ElementPowerUpType type = cell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
+            if (type == ElementPowerUpType.Bomb)
+                yield return grid.StartCoroutine(ActivateBomb(pos));
+            else if (IsRocket(type))
+                yield return grid.StartCoroutine(ActivateRocket(pos, type));
+        }
+
+        private IEnumerator ActivateBomb(Vector2Int bombPos)
+        {
+            Grid3D.GridCell bombCell = grid.GetCellPublic(bombPos);
+            if (bombCell?.elementInfo == null || bombCell.elementInfo.powerUpType != ElementPowerUpType.Bomb)
+                yield break;
+
+            Vector2Int targetPos = grid.GetBombTargetPosition();
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+
+            GridElement bombElement = grid.GetElementAt(bombPos);
+            if (bombElement != null)
+            {
+                Transform tempParent = grid.GridParent != null ? grid.GridParent : grid.transform;
+                bombElement.transform.SetParent(tempParent, true);
+
+                Vector3 impactWorldPos = grid.GetWorldPosition(targetPos);
+                yield return grid.StartCoroutine(AnimateBombFlight(bombElement, impactWorldPos));
+
+                PlayBombImpactEffects(impactWorldPos);
+                grid.StartCoroutine(bombElement.DestroyElement());
+            }
+
+            bombCell.elementInfo = null;
+            yield return grid.StartCoroutine(grid.ClearAreaAt(targetPos, 1));
+            yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
+        }
+
+        private IEnumerator ActivateRocket(Vector2Int rocketPos, ElementPowerUpType rocketType)
+        {
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+
+            GridElement rocketElement = grid.GetElementAt(rocketPos);
+            if (rocketElement != null)
+                grid.StartCoroutine(rocketElement.DestroyElement());
+
+            grid.GetCellPublic(rocketPos).elementInfo = null;
+
+            yield return grid.StartCoroutine(ClearLine(rocketPos, rocketType));
+            yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
+        }
+
+        // ------------------------------------------------------------------
+        //  Line clear
+        // ------------------------------------------------------------------
+
+        private IEnumerator ClearLine(Vector2Int origin, ElementPowerUpType rocketType)
+        {
+            HashSet<Vector2Int> walls = new HashSet<Vector2Int>();
+            if (rocketType == ElementPowerUpType.HorizontalRocket)
+                for (int x = 0; x < grid.GridSize.x; x++)
+                    ClearLineCell(new Vector2Int(x, origin.y), origin, walls);
+            else if (rocketType == ElementPowerUpType.VerticalRocket)
+                for (int y = 0; y < grid.GridSize.y; y++)
+                    ClearLineCell(new Vector2Int(origin.x, y), origin, walls);
+
+            yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
+            foreach (Vector2Int wallPos in walls)
+                yield return grid.StartCoroutine(grid.BreakWallAt(wallPos));
+        }
+
+        private void ClearLineCell(Vector2Int pos, Vector2Int origin, HashSet<Vector2Int> walls)
+        {
+            if (pos == origin) return;
+            Grid3D.GridCell cell = grid.GetCellPublic(pos);
+            if (cell == null) return;
+            if (cell.cellType == Grid3D.CellType.BreakableWall) { walls.Add(pos); return; }
+            if (cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null) return;
+
+            cell.elementInfo = null;
+            GridElement element = grid.GetElementAt(pos);
+            if (element != null) grid.StartCoroutine(element.DestroyElement());
+        }
+
+        // ------------------------------------------------------------------
+        //  Bomb flight & effects
+        // ------------------------------------------------------------------
+
+        private IEnumerator AnimateBombFlight(GridElement bombElement, Vector3 target)
+        {
+            if (bombElement == null) yield break;
+            Transform t = bombElement.transform;
+            Vector3 start = t.position;
+            float duration = Mathf.Max(0.25f, GameManager.Instance.constantManager.elementSwapMoveDuration * 2f);
+
+            Vector3 mid = Vector3.Lerp(start, target, 0.5f) + Vector3.up * 1.1f;
+            Vector3[] path = { start, mid, target };
+
+            Sequence seq = DOTween.Sequence();
+            seq.Join(t.DOPath(path, duration, PathType.CatmullRom).SetEase(Ease.OutQuad).SetOptions(false));
+            seq.Join(t.DORotate(new Vector3(0f, 0f, 540f), duration, RotateMode.FastBeyond360).SetEase(Ease.Linear).SetRelative());
+            seq.Join(t.DOScale(1.18f, duration * 0.45f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutSine));
+            yield return seq.WaitForCompletion();
+        }
+
+        private void PlayBombImpactEffects(Vector3 impactPos)
+        {
+            ConstantManager cm = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
+            if (cm == null) return;
+            if (cm.bombImpactParticlePrefab != null)
+            {
+                ParticleSystem p = Object.Instantiate(cm.bombImpactParticlePrefab, impactPos, Quaternion.identity);
+                p.Play();
+                Object.Destroy(p.gameObject, p.main.duration + p.main.startLifetime.constantMax + 0.2f);
+            }
+            GridHelper.ShakeCamera(cm.bombImpactShakeDuration, cm.bombImpactShakeMagnitude, cm.bombImpactShakeVibrato, cm.bombImpactShakeRandomness);
+        }
+
+        // ------------------------------------------------------------------
+        //  Sorting & visual data
+        // ------------------------------------------------------------------
+
+        public void ApplySortingBoost(GridElement element, bool boost)
+        {
+            if (element == null) return;
+            Renderer[] renderers = element.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (boost) renderers[i].sortingOrder += SortingOrderBoost;
+                else if (renderers[i].sortingOrder >= SortingOrderBoost) renderers[i].sortingOrder -= SortingOrderBoost;
+            }
+        }
+
+        private ElementData ResolveVisualData(ElementData sourceData, ElementPowerUpType type)
+        {
+            if (!(GameManager.Instance.CurrentLevel is LevelScene_Match3Game lvl)) return sourceData;
+            if (type == ElementPowerUpType.Bomb && lvl.bombElementData != null) return lvl.bombElementData;
+            if (IsRocket(type) && lvl.rocketElementData != null) return lvl.rocketElementData;
+            return sourceData;
+        }
+
+        private static Vector2Int PickPreferred(HashSet<Vector2Int> groupSet, Vector2Int[] candidates, Vector2Int init1, Vector2Int init2)
+        {
+            foreach (Vector2Int c in candidates)
+                if (groupSet.Contains(init2) && c == init2) return init2;
+            foreach (Vector2Int c in candidates)
+                if (groupSet.Contains(init1) && c == init1) return init1;
+            return candidates[0];
+        }
+
+        private static Vector2Int PickPreferredFromSet(HashSet<Vector2Int> candidates, Vector2Int init1, Vector2Int init2)
+        {
+            if (candidates.Contains(init2)) return init2;
+            if (candidates.Contains(init1)) return init1;
+            foreach (Vector2Int p in candidates) return p;
+            return init1;
         }
     }
 }
