@@ -23,6 +23,10 @@ MonoBehaviour:
   elementDestroyScaleDuration: 0.2
   elementDestroyRotateZ: 120
   elementDestroyRotateDuration: 0.2
+  elementDestroyPunchScale: {x: 0.25, y: 0.25, z: 0}
+  elementDestroyPunchDuration: 0.2
+  elementDestroyPunchVibrato: 8
+  elementDestroyPunchElasticity: 0.8
   elementDestroyParticlePrefab: {fileID: 6553830495741696104, guid: c66bb7ca972ded84692b09698947ca71, type: 3}
   sparklingTrailPrefab: {fileID: 7547541700686798408, guid: b54214516bc3cd145a31ccd5639beb98, type: 3}
   sparklingTrailDuration: 0.3
@@ -43,3 +47,9 @@ MonoBehaviour:
   bombImpactShakeMagnitude: 0.35
   bombImpactShakeVibrato: 12
   bombImpactShakeRandomness: 90
+  rocketTrailParticlePrefab: {fileID: 6553830495741696104, guid: 6004a563187092a48932c66eba0f64a8, type: 3}
+  rocketTravelSpeed: 12
+  rocketShakeDuration: 0.3
+  rocketShakeMagnitude: 0.25
+  rocketShakeVibrato: 12
+  rocketShakeRandomness: 90

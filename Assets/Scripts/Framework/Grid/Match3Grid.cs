@@ -1144,11 +1144,9 @@ namespace Game
             Coroutine travelB = grid.StartCoroutine(TravelRocketCopy(rocketCopyB, originWorld, negativeEnd, negativeCells, cm));
 
             yield return travelA;
+            Object.Destroy(rocketCopyA);
             yield return travelB;
-
-            // Cleanup rocket copies
-            if (rocketCopyA != null) Object.Destroy(rocketCopyA);
-            if (rocketCopyB != null) Object.Destroy(rocketCopyB);
+            Object.Destroy(rocketCopyB);
 
             // Break walls adjacent to the line
             HashSet<Vector2Int> walls = new HashSet<Vector2Int>();
