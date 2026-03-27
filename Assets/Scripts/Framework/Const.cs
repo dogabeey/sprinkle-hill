@@ -60,6 +60,14 @@ namespace Game
         public int bombImpactShakeVibrato = 12;
         public float bombImpactShakeRandomness = 90f;
 
+        [Header("Rocket")]
+        public ParticleSystem rocketTrailParticlePrefab;
+        public float rocketTravelSpeed = 12f;
+        public float rocketShakeDuration = 0.3f;
+        public float rocketShakeMagnitude = 0.25f;
+        public int rocketShakeVibrato = 10;
+        public float rocketShakeRandomness = 90f;
+
         public struct TAGS
         {
             public const string PLAYER = "Player";

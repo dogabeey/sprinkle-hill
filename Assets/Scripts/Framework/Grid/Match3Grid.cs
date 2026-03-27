@@ -224,8 +224,7 @@ namespace Game
 
             yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
 
-            foreach (Vector2Int wallPos in wallsToBreak)
-                yield return StartCoroutine(BreakWallAt(wallPos));
+            yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
 
         // ------------------------------------------------------------------
@@ -621,7 +620,7 @@ namespace Game
             }
 
             foreach (Vector2Int rp in hiddenToReveal) RevealHiddenElement(rp);
-            foreach (Vector2Int wp in wallsToBreak) yield return StartCoroutine(BreakWallAt(wp));
+            yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
 
         private Vector2Int? FindMergeTarget(List<Vector2Int> group, HashSet<Vector2Int> protectedPositions)
@@ -695,6 +694,22 @@ namespace Game
             }
 
             cell.cellType = CellType.Normal;
+        }
+
+        public IEnumerator BreakWallsSimultaneous(HashSet<Vector2Int> wallPositions)
+        {
+            if (wallPositions == null || wallPositions.Count == 0) yield break;
+
+            List<Coroutine> breakCoroutines = new List<Coroutine>();
+            foreach (Vector2Int wallPos in wallPositions)
+            {
+                breakCoroutines.Add(StartCoroutine(BreakWallAt(wallPos)));
+            }
+
+            for (int i = 0; i < breakCoroutines.Count; i++)
+            {
+                yield return breakCoroutines[i];
+            }
         }
 
         // ------------------------------------------------------------------
@@ -1083,40 +1098,179 @@ namespace Game
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
 
             GridElement rocketElement = grid.GetElementAt(rocketPos);
-            if (rocketElement != null)
-                grid.StartCoroutine(rocketElement.DestroyElement());
-
             grid.GetCellPublic(rocketPos).elementInfo = null;
 
-            yield return grid.StartCoroutine(ClearLine(rocketPos, rocketType));
+            // Determine travel direction
+            bool isHorizontal = rocketType == ElementPowerUpType.HorizontalRocket;
+            Vector2Int dirPositive = isHorizontal ? Vector2Int.right : Vector2Int.up;
+            Vector2Int dirNegative = isHorizontal ? Vector2Int.left : Vector2Int.down;
+
+            // Get world origin from the rocket tile
+            Vector3 originWorld = grid.GetWorldPosition(rocketPos);
+            ConstantManager cm = GameManager.Instance.constantManager;
+
+            // Collect cells in each direction (excluding origin)
+            List<Vector2Int> positiveCells = CollectLineCells(rocketPos, dirPositive);
+            List<Vector2Int> negativeCells = CollectLineCells(rocketPos, dirNegative);
+
+            // Calculate end-world positions (one cell beyond last valid cell for overshoot)
+            Vector3 positiveEnd = positiveCells.Count > 0
+                ? grid.GetWorldPosition(positiveCells[positiveCells.Count - 1]) + (Vector3)(Vector2)dirPositive * 0.5f
+                : originWorld + (Vector3)(Vector2)dirPositive * 0.5f;
+            Vector3 negativeEnd = negativeCells.Count > 0
+                ? grid.GetWorldPosition(negativeCells[negativeCells.Count - 1]) + (Vector3)(Vector2)dirNegative * 0.5f
+                : originWorld + (Vector3)(Vector2)dirNegative * 0.5f;
+
+            // Destroy original rocket element visual
+            if (rocketElement != null)
+            {
+                rocketElement.transform.DOKill();
+                Collider[] cols = rocketElement.GetComponentsInChildren<Collider>(true);
+                for (int i = 0; i < cols.Length; i++) cols[i].enabled = false;
+            }
+
+            // Create two travelling rocket copies
+            GameObject rocketCopyA = CreateRocketCopy(rocketElement, originWorld, cm, isHorizontal, 1f);
+            GameObject rocketCopyB = CreateRocketCopy(rocketElement, originWorld, cm, isHorizontal, -1f);
+
+            // Destroy original
+            if (rocketElement != null) Object.Destroy(rocketElement.gameObject);
+
+            // Shake camera
+            GridHelper.ShakeCamera(cm.rocketShakeDuration, cm.rocketShakeMagnitude, cm.rocketShakeVibrato, cm.rocketShakeRandomness);
+
+            // Travel both copies simultaneously, destroying elements as they pass
+            Coroutine travelA = grid.StartCoroutine(TravelRocketCopy(rocketCopyA, originWorld, positiveEnd, positiveCells, cm));
+            Coroutine travelB = grid.StartCoroutine(TravelRocketCopy(rocketCopyB, originWorld, negativeEnd, negativeCells, cm));
+
+            yield return travelA;
+            yield return travelB;
+
+            // Cleanup rocket copies
+            if (rocketCopyA != null) Object.Destroy(rocketCopyA);
+            if (rocketCopyB != null) Object.Destroy(rocketCopyB);
+
+            // Break walls adjacent to the line
+            HashSet<Vector2Int> walls = new HashSet<Vector2Int>();
+            CollectAdjacentWalls(rocketPos, walls);
+            foreach (Vector2Int cell in positiveCells) CollectAdjacentWalls(cell, walls);
+            foreach (Vector2Int cell in negativeCells) CollectAdjacentWalls(cell, walls);
+
+            foreach (Vector2Int wallPos in walls)
+                yield return grid.StartCoroutine(grid.BreakWallAt(wallPos));
+
             yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
         }
 
-        // ------------------------------------------------------------------
-        //  Line clear
-        // ------------------------------------------------------------------
-
-        private IEnumerator ClearLine(Vector2Int origin, ElementPowerUpType rocketType)
+        private List<Vector2Int> CollectLineCells(Vector2Int origin, Vector2Int direction)
         {
-            HashSet<Vector2Int> walls = new HashSet<Vector2Int>();
-            if (rocketType == ElementPowerUpType.HorizontalRocket)
-                for (int x = 0; x < grid.GridSize.x; x++)
-                    ClearLineCell(new Vector2Int(x, origin.y), origin, walls);
-            else if (rocketType == ElementPowerUpType.VerticalRocket)
-                for (int y = 0; y < grid.GridSize.y; y++)
-                    ClearLineCell(new Vector2Int(origin.x, y), origin, walls);
-
-            yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
-            foreach (Vector2Int wallPos in walls)
-                yield return grid.StartCoroutine(grid.BreakWallAt(wallPos));
+            List<Vector2Int> cells = new List<Vector2Int>();
+            Vector2Int current = origin + direction;
+            while (true)
+            {
+                Grid3D.GridCell cell = grid.GetCellPublic(current);
+                if (cell == null) break;
+                cells.Add(current);
+                current += direction;
+            }
+            return cells;
         }
 
-        private void ClearLineCell(Vector2Int pos, Vector2Int origin, HashSet<Vector2Int> walls)
+        private void CollectAdjacentWalls(Vector2Int pos, HashSet<Vector2Int> walls)
         {
-            if (pos == origin) return;
+            Vector2Int[] offsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            for (int i = 0; i < offsets.Length; i++)
+            {
+                Vector2Int adj = pos + offsets[i];
+                Grid3D.GridCell cell = grid.GetCellPublic(adj);
+                if (cell != null && cell.cellType == Grid3D.CellType.BreakableWall)
+                    walls.Add(adj);
+            }
+        }
+
+        private GameObject CreateRocketCopy(GridElement sourceElement, Vector3 origin, ConstantManager cm, bool isHorizontal, float directionSign)
+        {
+            GameObject copy = new GameObject("RocketCopy");
+            copy.transform.position = origin;
+
+            // Duplicate sprite visual
+            if (sourceElement != null && sourceElement.elementRenderer is SpriteRenderer srcSR)
+            {
+                SpriteRenderer sr = copy.AddComponent<SpriteRenderer>();
+                sr.sprite = srcSR.sprite;
+                sr.material = srcSR.material;
+                sr.sortingLayerID = srcSR.sortingLayerID;
+                sr.sortingOrder = srcSR.sortingOrder + SortingOrderBoost;
+                sr.color = srcSR.color;
+
+                // Flip to face travel direction
+                if (isHorizontal)
+                    sr.flipX = directionSign < 0f;
+                else
+                    copy.transform.rotation = Quaternion.Euler(0f, 0f, directionSign > 0f ? 90f : -90f);
+            }
+
+            // Attach particle trail
+            if (cm.rocketTrailParticlePrefab != null)
+            {
+                ParticleSystem trail = Object.Instantiate(cm.rocketTrailParticlePrefab, copy.transform);
+                trail.transform.localPosition = Vector3.zero;
+                trail.Play();
+            }
+
+            return copy;
+        }
+
+        private IEnumerator TravelRocketCopy(GameObject rocketCopy, Vector3 start, Vector3 end, List<Vector2Int> cellsInOrder, ConstantManager cm)
+        {
+            if (rocketCopy == null) yield break;
+
+            float totalDist = Vector3.Distance(start, end);
+            float speed = cm.rocketTravelSpeed > 0f ? cm.rocketTravelSpeed : 12f;
+            float duration = totalDist / speed;
+
+            // Pre-calculate world positions for each cell to know when we pass them
+            List<float> cellDistances = new List<float>();
+            for (int i = 0; i < cellsInOrder.Count; i++)
+            {
+                Vector3 cellWorld = grid.GetWorldPosition(cellsInOrder[i]);
+                cellDistances.Add(Vector3.Distance(start, cellWorld));
+            }
+
+            int nextCellIndex = 0;
+            float elapsed = 0f;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / duration);
+                if (rocketCopy != null)
+                    rocketCopy.transform.position = Vector3.Lerp(start, end, t);
+
+                float currentDist = t * totalDist;
+
+                // Destroy cells the rocket has passed
+                while (nextCellIndex < cellsInOrder.Count && currentDist >= cellDistances[nextCellIndex])
+                {
+                    ClearLineCellImmediate(cellsInOrder[nextCellIndex]);
+                    nextCellIndex++;
+                }
+
+                yield return null;
+            }
+
+            // Clear any remaining cells
+            while (nextCellIndex < cellsInOrder.Count)
+            {
+                ClearLineCellImmediate(cellsInOrder[nextCellIndex]);
+                nextCellIndex++;
+            }
+        }
+
+        private void ClearLineCellImmediate(Vector2Int pos)
+        {
             Grid3D.GridCell cell = grid.GetCellPublic(pos);
             if (cell == null) return;
-            if (cell.cellType == Grid3D.CellType.BreakableWall) { walls.Add(pos); return; }
             if (cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null) return;
 
             cell.elementInfo = null;
