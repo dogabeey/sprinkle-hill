@@ -1156,8 +1156,7 @@ namespace Game
             foreach (Vector2Int cell in positiveCells) CollectAdjacentWalls(cell, walls);
             foreach (Vector2Int cell in negativeCells) CollectAdjacentWalls(cell, walls);
 
-            foreach (Vector2Int wallPos in walls)
-                yield return grid.StartCoroutine(grid.BreakWallAt(wallPos));
+            yield return grid.StartCoroutine(grid.BreakWallsSimultaneous(walls));
 
             yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
         }
