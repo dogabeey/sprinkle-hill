@@ -63,6 +63,13 @@ namespace Game
                     }
                 }
             }
+
+            if (elementRenderer != null)
+            {
+                elementRenderer.transform.localRotation = elementInfo.powerUpType == ElementPowerUpType.HorizontalRocket
+                    ? Quaternion.Euler(0f, 0f, 90f)
+                    : Quaternion.identity;
+            }
         }
 
         protected virtual IEnumerator HueAnim()

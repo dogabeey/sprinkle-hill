@@ -1203,11 +1203,16 @@ namespace Game
                 sr.sortingOrder = srcSR.sortingOrder + SortingOrderBoost;
                 sr.color = srcSR.color;
 
-                // Flip to face travel direction
+                // Orient copy to face its travel direction
                 if (isHorizontal)
-                    sr.flipX = directionSign < 0f;
+                {
+                    copy.transform.rotation = Quaternion.Euler(0f, 0f, 90f);
+                    sr.flipY = directionSign < 0f;
+                }
                 else
-                    copy.transform.rotation = Quaternion.Euler(0f, 0f, directionSign > 0f ? 90f : -90f);
+                {
+                    copy.transform.rotation = Quaternion.Euler(0f, 0f, directionSign > 0f ? 0f : 180f);
+                }
             }
 
             // Attach particle trail
