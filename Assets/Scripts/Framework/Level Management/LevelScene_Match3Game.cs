@@ -33,6 +33,8 @@ namespace Game
         public float sparklingAppearChance = 0.3f;
         [FoldoutGroup("Power Up Settings")]
         public ElementData bombElementData;
+        [FoldoutGroup("Power Up Settings")]
+        public ElementData rocketElementData;
 
         protected override void Awake()
         {

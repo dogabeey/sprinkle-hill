@@ -79,6 +79,16 @@ namespace Game
         public ElementData elementData;
         public bool isSparkling;
         public bool isHidden;
-        public bool isBomb;
+        public ElementPowerUpType powerUpType;
+    }
+
+    public enum ElementPowerUpType
+    {
+        None,
+        Bomb,
+        VerticalRocket,
+        HorizontalRocket,
+        BigBomb,
+        Scatter
     }
 }

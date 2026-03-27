@@ -65,7 +65,7 @@ namespace Game
                             elementData = sourceCell.elementInfo.elementData,
                             isSparkling = sourceCell.elementInfo.isSparkling,
                             isHidden = sourceCell.elementInfo.isHidden,
-                            isBomb = sourceCell.elementInfo.isBomb
+                            powerUpType = sourceCell.elementInfo.powerUpType
                         }
                         : null;
 

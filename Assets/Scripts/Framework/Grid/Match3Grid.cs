@@ -58,14 +58,26 @@ namespace Game
             GridCell firstCell = GetCell(first);
             GridCell secondCell = GetCell(second);
 
-            if (firstCell?.elementInfo?.isBomb == true)
+            if (firstCell?.elementInfo?.powerUpType == ElementPowerUpType.Bomb)
             {
                 yield return StartCoroutine(ActivateBombAt(first));
                 yield break;
             }
-            else if (secondCell?.elementInfo?.isBomb == true)
+            else if (secondCell?.elementInfo?.powerUpType == ElementPowerUpType.Bomb)
             {
                 yield return StartCoroutine(ActivateBombAt(second));
+                yield break;
+            }
+            else if (firstCell?.elementInfo?.powerUpType == ElementPowerUpType.HorizontalRocket ||
+                     firstCell?.elementInfo?.powerUpType == ElementPowerUpType.VerticalRocket)
+            {
+                yield return StartCoroutine(ActivateRocketAt(first));
+                yield break;
+            }
+            else if (secondCell?.elementInfo?.powerUpType == ElementPowerUpType.HorizontalRocket ||
+                     secondCell?.elementInfo?.powerUpType == ElementPowerUpType.VerticalRocket)
+            {
+                yield return StartCoroutine(ActivateRocketAt(second));
                 yield break;
             }
             
@@ -99,10 +111,15 @@ namespace Game
                 currentComboCount++;
 
                 List<BombSpawnRequest> bombSpawns = FindBombSpawnsFromSquareMatches(matchedGroups, initialElement1, initialElement2);
+                List<RocketSpawnRequest> rocketSpawns = FindRocketSpawnsFromLineMatches(matchedGroups, initialElement1, initialElement2);
                 HashSet<Vector2Int> protectedPositions = new HashSet<Vector2Int>();
                 for (int i = 0; i < bombSpawns.Count; i++)
                 {
                     protectedPositions.Add(bombSpawns[i].position);
+                }
+                for (int i = 0; i < rocketSpawns.Count; i++)
+                {
+                    protectedPositions.Add(rocketSpawns[i].position);
                 }
                 
                 // Trigger match detected event
@@ -134,6 +151,11 @@ namespace Game
                 for (int i = 0; i < bombSpawns.Count; i++)
                 {
                     CreateBombAt(bombSpawns[i].position, bombSpawns[i].sourceData);
+                }
+
+                for (int i = 0; i < rocketSpawns.Count; i++)
+                {
+                    CreateRocketAt(rocketSpawns[i].position, rocketSpawns[i].sourceData, rocketSpawns[i].powerUpType);
                 }
 
                 // 3. Apply gravity and refill
@@ -195,7 +217,7 @@ namespace Game
                     
                     if (cell?.elementInfo?.elementData == targetElementData)
                     {
-                        if (cell.elementInfo.isBomb)
+                        if (cell.elementInfo.powerUpType != ElementPowerUpType.None)
                         {
                             continue;
                         }
@@ -326,7 +348,7 @@ namespace Game
             {
                 cell.elementInfo.elementData = sparklingElementData;
                 cell.elementInfo.isSparkling = false;
-                cell.elementInfo.isBomb = false;
+                cell.elementInfo.powerUpType = ElementPowerUpType.None;
                 
                 // Update visual representation
                 if (generatedTiles.TryGetValue(targetPos, out GridCellController tile))
@@ -337,7 +359,7 @@ namespace Game
                         element.StopAllCoroutines();
                         element.elementInfo.elementData = sparklingElementData;
                         element.elementInfo.isSparkling = false;
-                        element.elementInfo.isBomb = false;
+                        element.elementInfo.powerUpType = ElementPowerUpType.None;
                         element.InitElement(this, element.elementInfo);
                     }
                 }
@@ -356,16 +378,181 @@ namespace Game
             public ElementData sourceData;
         }
 
+        private struct RocketSpawnRequest
+        {
+            public Vector2Int position;
+            public ElementData sourceData;
+            public ElementPowerUpType powerUpType;
+        }
+
+        private static bool IsRocketPowerUp(ElementPowerUpType powerUpType)
+        {
+            return powerUpType == ElementPowerUpType.HorizontalRocket ||
+                   powerUpType == ElementPowerUpType.VerticalRocket;
+        }
+
+        private Vector2Int SelectPreferredSpawnPosition(HashSet<Vector2Int> candidatePositions, Vector2Int initialElement1, Vector2Int initialElement2)
+        {
+            if (candidatePositions.Contains(initialElement2))
+            {
+                return initialElement2;
+            }
+
+            if (candidatePositions.Contains(initialElement1))
+            {
+                return initialElement1;
+            }
+
+            foreach (Vector2Int pos in candidatePositions)
+            {
+                return pos;
+            }
+
+            return initialElement1;
+        }
+
+        private List<RocketSpawnRequest> FindRocketSpawnsFromLineMatches(List<List<Vector2Int>> matchedGroups, Vector2Int initialElement1, Vector2Int initialElement2)
+        {
+            List<RocketSpawnRequest> spawns = new List<RocketSpawnRequest>();
+            HashSet<Vector2Int> usedPositions = new HashSet<Vector2Int>();
+
+            for (int groupIndex = 0; groupIndex < matchedGroups.Count; groupIndex++)
+            {
+                List<Vector2Int> group = matchedGroups[groupIndex];
+                if (group == null || group.Count < 4)
+                {
+                    continue;
+                }
+
+                HashSet<Vector2Int> groupSet = new HashSet<Vector2Int>(group);
+                ElementData sourceData = GetCell(group[0])?.elementInfo?.elementData;
+                if (sourceData == null)
+                {
+                    continue;
+                }
+
+                bool found = false;
+
+                for (int y = 0; y < gridSize.y && !found; y++)
+                {
+                    int runLength = 0;
+                    HashSet<Vector2Int> runPositions = new HashSet<Vector2Int>();
+                    for (int x = 0; x < gridSize.x; x++)
+                    {
+                        Vector2Int pos = new Vector2Int(x, y);
+                        if (groupSet.Contains(pos))
+                        {
+                            runLength++;
+                            runPositions.Add(pos);
+                        }
+                        else
+                        {
+                            if (runLength >= 4)
+                            {
+                                Vector2Int spawnPos = SelectPreferredSpawnPosition(runPositions, initialElement1, initialElement2);
+                                if (usedPositions.Add(spawnPos))
+                                {
+                                    spawns.Add(new RocketSpawnRequest
+                                    {
+                                        position = spawnPos,
+                                        sourceData = sourceData,
+                                        powerUpType = ElementPowerUpType.HorizontalRocket
+                                    });
+                                }
+
+                                found = true;
+                                break;
+                            }
+
+                            runLength = 0;
+                            runPositions.Clear();
+                        }
+                    }
+
+                    if (!found && runLength >= 4)
+                    {
+                        Vector2Int spawnPos = SelectPreferredSpawnPosition(runPositions, initialElement1, initialElement2);
+                        if (usedPositions.Add(spawnPos))
+                        {
+                            spawns.Add(new RocketSpawnRequest
+                            {
+                                position = spawnPos,
+                                sourceData = sourceData,
+                                powerUpType = ElementPowerUpType.HorizontalRocket
+                            });
+                        }
+
+                        found = true;
+                    }
+                }
+
+                for (int x = 0; x < gridSize.x && !found; x++)
+                {
+                    int runLength = 0;
+                    HashSet<Vector2Int> runPositions = new HashSet<Vector2Int>();
+                    for (int y = 0; y < gridSize.y; y++)
+                    {
+                        Vector2Int pos = new Vector2Int(x, y);
+                        if (groupSet.Contains(pos))
+                        {
+                            runLength++;
+                            runPositions.Add(pos);
+                        }
+                        else
+                        {
+                            if (runLength >= 4)
+                            {
+                                Vector2Int spawnPos = SelectPreferredSpawnPosition(runPositions, initialElement1, initialElement2);
+                                if (usedPositions.Add(spawnPos))
+                                {
+                                    spawns.Add(new RocketSpawnRequest
+                                    {
+                                        position = spawnPos,
+                                        sourceData = sourceData,
+                                        powerUpType = ElementPowerUpType.VerticalRocket
+                                    });
+                                }
+
+                                found = true;
+                                break;
+                            }
+
+                            runLength = 0;
+                            runPositions.Clear();
+                        }
+                    }
+
+                    if (!found && runLength >= 4)
+                    {
+                        Vector2Int spawnPos = SelectPreferredSpawnPosition(runPositions, initialElement1, initialElement2);
+                        if (usedPositions.Add(spawnPos))
+                        {
+                            spawns.Add(new RocketSpawnRequest
+                            {
+                                position = spawnPos,
+                                sourceData = sourceData,
+                                powerUpType = ElementPowerUpType.VerticalRocket
+                            });
+                        }
+
+                        found = true;
+                    }
+                }
+            }
+
+            return spawns;
+        }
+
         public bool IsBombAt(Vector2Int pos)
         {
             GridCell cell = GetCell(pos);
-            return cell?.elementInfo?.isBomb == true;
+            return cell?.elementInfo?.powerUpType == ElementPowerUpType.Bomb;
         }
 
         public IEnumerator ActivateBombAt(Vector2Int bombPos)
         {
             GridCell bombCell = GetCell(bombPos);
-            if (bombCell?.elementInfo == null || !bombCell.elementInfo.isBomb)
+            if (bombCell?.elementInfo == null || bombCell.elementInfo.powerUpType != ElementPowerUpType.Bomb)
             {
                 yield break;
             }
@@ -401,6 +588,97 @@ namespace Game
             yield return StartCoroutine(ResolveBoardAfterSpecialClear());
         }
 
+        public IEnumerator ActivateRocketAt(Vector2Int rocketPos)
+        {
+            GridCell rocketCell = GetCell(rocketPos);
+            ElementPowerUpType rocketType = rocketCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
+            if (!IsRocketPowerUp(rocketType))
+            {
+                yield break;
+            }
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+
+            if (generatedTiles.TryGetValue(rocketPos, out GridCellController rocketTile) && rocketTile != null)
+            {
+                GridElement rocketElement = rocketTile.GetComponentInChildren<GridElement>();
+                if (rocketElement != null)
+                {
+                    StartCoroutine(rocketElement.DestroyElement());
+                }
+            }
+
+            rocketCell.elementInfo = null;
+
+            yield return StartCoroutine(ClearLineAt(rocketPos, rocketType));
+            yield return StartCoroutine(ResolveBoardAfterSpecialClear());
+        }
+
+        private IEnumerator ClearLineAt(Vector2Int origin, ElementPowerUpType rocketType)
+        {
+            HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
+
+            if (rocketType == ElementPowerUpType.HorizontalRocket)
+            {
+                for (int x = 0; x < gridSize.x; x++)
+                {
+                    Vector2Int pos = new Vector2Int(x, origin.y);
+                    ClearLineCell(pos, origin, wallsToBreak);
+                }
+            }
+            else if (rocketType == ElementPowerUpType.VerticalRocket)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    Vector2Int pos = new Vector2Int(origin.x, y);
+                    ClearLineCell(pos, origin, wallsToBreak);
+                }
+            }
+
+            yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
+
+            foreach (Vector2Int wallPos in wallsToBreak)
+            {
+                yield return StartCoroutine(BreakWall(wallPos));
+            }
+        }
+
+        private void ClearLineCell(Vector2Int pos, Vector2Int origin, HashSet<Vector2Int> wallsToBreak)
+        {
+            if (pos == origin)
+            {
+                return;
+            }
+
+            GridCell cell = GetCell(pos);
+            if (cell == null)
+            {
+                return;
+            }
+
+            if (cell.cellType == CellType.BreakableWall)
+            {
+                wallsToBreak.Add(pos);
+                return;
+            }
+
+            if (cell.cellType != CellType.Normal || cell.elementInfo == null)
+            {
+                return;
+            }
+
+            cell.elementInfo = null;
+
+            if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)
+            {
+                GridElement element = tile.GetComponentInChildren<GridElement>();
+                if (element != null)
+                {
+                    StartCoroutine(element.DestroyElement());
+                }
+            }
+        }
+
         private void PlayBombImpactEffects(Vector3 impactWorldPos)
         {
             ConstantManager constantManager = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
@@ -426,6 +704,10 @@ namespace Game
                     constantManager.bombImpactShakeRandomness
                 );
             }
+        }
+
+        private void PlayRocketLaunchEffects(Vector2Int rocketPos, Vector2Int targetPos)
+        {
         }
 
         private IEnumerator AnimateBombFlight(GridElement bombElement, Vector3 targetWorldPosition)
@@ -455,6 +737,11 @@ namespace Game
                 .SetEase(Ease.InOutSine));
 
             yield return flightSequence.WaitForCompletion();
+        }
+
+        private IEnumerator AnimateRocketFlight(GridElement rocketElement, Vector3 targetWorldPosition)
+        {
+            yield break;
         }
 
         private IEnumerator ResolveBoardAfterSpecialClear()
@@ -683,6 +970,11 @@ namespace Game
             return spawns;
         }
 
+        private List<RocketSpawnRequest> FindRocketSpawnsFromLineMatches_Legacy(List<List<Vector2Int>> matchedGroups, Vector2Int initialElement1, Vector2Int initialElement2)
+        {
+            return new List<RocketSpawnRequest>();
+        }
+
         private void CreateBombAt(Vector2Int pos, ElementData sourceData)
         {
             GridCell cell = GetCell(pos);
@@ -703,7 +995,7 @@ namespace Game
             }
 
             cell.elementInfo.elementData = bombData;
-            cell.elementInfo.isBomb = true;
+            cell.elementInfo.powerUpType = ElementPowerUpType.Bomb;
             cell.elementInfo.isSparkling = false;
             cell.elementInfo.isHidden = false;
 
@@ -716,6 +1008,48 @@ namespace Game
                     element.InitElement(this, cell.elementInfo);
                     SetElementEmission(element, 0f);
                     ApplyBombSortingPriority(element, true);
+                }
+            }
+        }
+
+        private void CreateRocketAt(Vector2Int pos, ElementData sourceData, ElementPowerUpType rocketType)
+        {
+            if (!IsRocketPowerUp(rocketType))
+            {
+                return;
+            }
+
+            GridCell cell = GetCell(pos);
+            if (cell == null || cell.cellType != CellType.Normal)
+            {
+                return;
+            }
+
+            ElementData rocketData = sourceData;
+            if (GameManager.Instance.CurrentLevel is LevelScene_Match3Game match3Level && match3Level.rocketElementData != null)
+            {
+                rocketData = match3Level.rocketElementData;
+            }
+
+            if (cell.elementInfo == null)
+            {
+                cell.elementInfo = new GridElementInfo();
+            }
+
+            cell.elementInfo.elementData = rocketData;
+            cell.elementInfo.powerUpType = rocketType;
+            cell.elementInfo.isSparkling = false;
+            cell.elementInfo.isHidden = false;
+
+            if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)
+            {
+                GridElement element = tile.GetComponentInChildren<GridElement>();
+                if (element != null)
+                {
+                    element.elementInfo = cell.elementInfo;
+                    element.InitElement(this, cell.elementInfo);
+                    SetElementEmission(element, 0f);
+                    ApplyBombSortingPriority(element, false);
                 }
             }
         }
@@ -807,7 +1141,7 @@ namespace Game
                 {
                     GridCell cell = gridCells[x, y];
                     ElementData data = cell != null ? cell.elementInfo?.elementData : null;
-                    if (data != null && (cell.elementInfo == null || !cell.elementInfo.isBomb) && !elementPool.Contains(data))
+                    if (data != null && (cell.elementInfo == null || cell.elementInfo.powerUpType == ElementPowerUpType.None) && !elementPool.Contains(data))
                     {
                         elementPool.Add(data);
                     }
@@ -850,7 +1184,7 @@ namespace Game
                     element.elementInfo = cell.elementInfo;
                     generatedElements.Add(element);
                     element.InitElement(this, element.elementInfo);
-                    ApplyBombSortingPriority(element, cell.elementInfo != null && cell.elementInfo.isBomb);
+                    ApplyBombSortingPriority(element, cell.elementInfo != null && cell.elementInfo.powerUpType == ElementPowerUpType.Bomb);
                 }
             }
         }
@@ -868,7 +1202,7 @@ namespace Game
                    cell.cellType == CellType.Normal &&
                    cell.elementInfo != null &&
                    !cell.elementInfo.isHidden &&
-                   !cell.elementInfo.isBomb &&
+                   cell.elementInfo.powerUpType == ElementPowerUpType.None &&
                    cell.elementInfo.elementData == data;
         }
 
@@ -883,7 +1217,7 @@ namespace Game
                     cell.cellType != CellType.Normal ||
                     cell.elementInfo == null ||
                     cell.elementInfo.isHidden ||
-                    cell.elementInfo.isBomb)
+                    cell.elementInfo.powerUpType == ElementPowerUpType.Bomb)
                 {
                     return null;
                 }
@@ -1324,7 +1658,7 @@ namespace Game
                 {
                     GridCell cell = GetCell(new Vector2Int(x, y));
                     ElementData data = cell != null ? cell.elementInfo?.elementData : null;
-                    if (data != null && (cell.elementInfo == null || !cell.elementInfo.isBomb) && !elementPool.Contains(data))
+                    if (data != null && (cell.elementInfo == null || cell.elementInfo.powerUpType == ElementPowerUpType.None) && !elementPool.Contains(data))
                     {
                         elementPool.Add(data);
                     }
@@ -1335,7 +1669,7 @@ namespace Game
             {
                 foreach (GridElement element in generatedElements)
                 {
-                    if (element != null && element.elementInfo != null && element.elementInfo.elementData != null && !element.elementInfo.isBomb && !elementPool.Contains(element.elementInfo.elementData))
+                    if (element != null && element.elementInfo != null && element.elementInfo.elementData != null && element.elementInfo.powerUpType == ElementPowerUpType.None && !elementPool.Contains(element.elementInfo.elementData))
                     {
                         elementPool.Add(element.elementInfo.elementData);
                     }
@@ -1467,7 +1801,7 @@ namespace Game
                         {
                             elementData = randomData,
                             isSparkling = isSparkling,
-                            isBomb = false
+                            powerUpType = ElementPowerUpType.None
                         };
                         targetCell.elementInfo = newInfo;
 
