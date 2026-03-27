@@ -88,14 +88,34 @@ namespace Game
             ElementPowerUpType firstType = firstCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
             ElementPowerUpType secondType = secondCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
 
-            if (PowerUpHandler.IsSpecialPowerUp(firstType))
+            // Click activation (no drag, same position)
+            if (first == second)
             {
-                yield return StartCoroutine(powerUpHandler.ActivateAt(first));
+                if (PowerUpHandler.IsSpecialPowerUp(firstType))
+                {
+                    yield return StartCoroutine(powerUpHandler.ActivateAt(first));
+                    yield break;
+                }
                 yield break;
             }
-            if (PowerUpHandler.IsSpecialPowerUp(secondType))
+
+            // Swap-based power-up activation: swap first, then activate at new position
+            if (PowerUpHandler.IsSpecialPowerUp(firstType) || PowerUpHandler.IsSpecialPowerUp(secondType))
             {
-                yield return StartCoroutine(powerUpHandler.ActivateAt(second));
+                yield return StartCoroutine(SwapElements(first, second));
+                EventManager.TriggerEvent(GameEvent.ELEMENTS_SWAPPED, new EventParam(
+                    vectorList: new Vector3[] { new Vector3(first.x, first.y, 0), new Vector3(second.x, second.y, 0) }
+                ));
+
+                // After swap, the power-up that was at 'first' is now at 'second' and vice versa
+                if (PowerUpHandler.IsSpecialPowerUp(firstType))
+                {
+                    yield return StartCoroutine(powerUpHandler.ActivateAt(second));
+                }
+                else if (PowerUpHandler.IsSpecialPowerUp(secondType))
+                {
+                    yield return StartCoroutine(powerUpHandler.ActivateAt(first));
+                }
                 yield break;
             }
 
