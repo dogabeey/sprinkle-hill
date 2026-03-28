@@ -38,6 +38,8 @@ namespace Game
         public float discoBallTrailSpawnDelay = 0.02f;
         public float discoBallEmissionPeak = 3f;
         public float discoBallEmissionResetDelay = 0.08f;
+        public float discoBallSpinLoopDuration = 0.12f;
+        public float discoBallSpinDegreesPerLoop = 540f;
 
         [Header("Sparkling Trail Animation")]
         public GameObject sparklingTrailPrefab;
@@ -102,6 +104,12 @@ namespace Game
                 public const string PICKUP = "Pickup";
                 public const string LEVEL_COMPLETE = "LevelComplete";
                 public const string LEVEL_FAILED = "LevelFailed";
+                public const string ELEMENT_SWAP = "ElementSwap";
+                public const string MATCH = "Match";
+                public const string BOMB = "Bomb";
+                public const string ROCKET = "Rocket";
+                public const string DISCO_BALL_ACTIVATE = "DiscoBallActivate";
+                public const string DISCO_BALL_TRAIL = "DiscoBallTrail";
             }
         }
     }

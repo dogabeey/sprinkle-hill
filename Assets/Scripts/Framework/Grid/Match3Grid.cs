@@ -35,6 +35,8 @@ namespace Game
             if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)
                 return tile.transform.position;
             return Vector3.zero;
+
+
         }
 
         // ------------------------------------------------------------------
@@ -109,6 +111,7 @@ namespace Game
                 EventManager.TriggerEvent(GameEvent.ELEMENTS_SWAPPED, new EventParam(
                     vectorList: new Vector3[] { new Vector3(first.x, first.y, 0), new Vector3(second.x, second.y, 0) }
                 ));
+                GameManager.Instance.soundManager.Play(ConstantManager.SOUNDS.EFFECTS.ELEMENT_SWAP);
 
                 // After swap, the power-up that was at 'first' is now at 'second' and vice versa
                 if (PowerUpHandler.IsSpecialPowerUp(firstType))
@@ -141,6 +144,7 @@ namespace Game
             EventManager.TriggerEvent(GameEvent.ELEMENTS_SWAPPED, new EventParam(
                 vectorList: new Vector3[] { new Vector3(first.x, first.y, 0), new Vector3(second.x, second.y, 0) }
             ));
+            GameManager.Instance.soundManager.Play(ConstantManager.SOUNDS.EFFECTS.ELEMENT_SWAP);
             yield return StartCoroutine(MatchProcess(first, second));
         }
 
@@ -155,6 +159,7 @@ namespace Game
             while ((matchedGroups = CheckMatchOf(3)).Count > 0)
             {
                 currentComboCount++;
+                GameManager.Instance.soundManager.Play(ConstantManager.SOUNDS.EFFECTS.MATCH);
 
                 // Detect power-up spawns
                 List<PowerUpHandler.SpawnRequest> discoBallSpawns = powerUpHandler.FindDiscoBallSpawns(matchedGroups, init1, init2);
@@ -406,6 +411,25 @@ namespace Game
             Gradient gradient = new Gradient();
             gradient.SetKeys(
                 new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0f, 1f) });
+            trail.colorGradient = gradient;
+            trail.material = new Material(Shader.Find("Sprites/Default"));
+            return obj;
+        }
+
+        private GameObject CreateDefaultDiscoTrail(Vector3 pos, Vector2Int targetPos, float lifeTime)
+        {
+            GameObject obj = new GameObject($"DiscoTrail_{targetPos.x}_{targetPos.y}");
+            obj.transform.position = pos;
+            TrailRenderer trail = obj.AddComponent<TrailRenderer>();
+            trail.time = Mathf.Max(0.05f, lifeTime);
+            trail.startWidth = 0.08f;
+            trail.endWidth = 0f;
+            trail.numCapVertices = 6;
+            trail.numCornerVertices = 6;
+            Gradient gradient = new Gradient();
+            gradient.SetKeys(
+                new[] { new GradientColorKey(Color.cyan, 0f), new GradientColorKey(Color.magenta, 1f) },
                 new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0f, 1f) });
             trail.colorGradient = gradient;
             trail.material = new Material(Shader.Find("Sprites/Default"));
@@ -1168,12 +1192,25 @@ namespace Game
             if (targetElementData == null) yield break;
 
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.DISCO_BALL_ACTIVATE);
 
-            // Destroy disco ball visual
-            discoBallCell.elementInfo = null;
             GridElement discoBallElement = grid.GetElementAt(discoBallPos);
+            Tween spinTween = null;
+
             if (discoBallElement != null)
-                grid.StartCoroutine(discoBallElement.DestroyElement());
+            {
+                discoBallElement.transform.DOKill();
+                float spinDuration = Mathf.Max(0.02f, GameManager.Instance.constantManager.discoBallSpinLoopDuration);
+                float spinDegrees = GameManager.Instance.constantManager.discoBallSpinDegreesPerLoop;
+                spinTween = discoBallElement.transform
+                    .DORotate(new Vector3(0f, 0f, spinDegrees), spinDuration, RotateMode.FastBeyond360)
+                    .SetEase(Ease.Linear)
+                    .SetRelative()
+                    .SetLoops(-1, LoopType.Restart);
+            }
+
+            // Remove logical occupancy, keep visual until trail animation finishes.
+            discoBallCell.elementInfo = null;
 
             // Collect all eligible normal cells (excluding disco ball's old position)
             List<Vector2Int> candidates = new List<Vector2Int>();
@@ -1204,6 +1241,12 @@ namespace Game
 
             if (selectedCells.Count > 0)
                 yield return grid.StartCoroutine(AnimateDiscoBallTrails(discoBallPos, selectedCells, targetElementData));
+
+            if (spinTween != null)
+                spinTween.Kill();
+
+            if (discoBallElement != null)
+                grid.StartCoroutine(discoBallElement.DestroyElement());
 
             GridHelper.ShakeCamera(
                 GameManager.Instance.constantManager.matchShakeDuration,
@@ -1236,9 +1279,9 @@ namespace Game
             ConstantManager cm = GameManager.Instance.constantManager;
             Vector3 targetWorldPos = grid.GetWorldPosition(targetPos);
 
-            GameObject trailObj = cm.sparklingTrailPrefab != null
-                ? Object.Instantiate(cm.sparklingTrailPrefab, sourcePos, Quaternion.identity)
-                : CreateDefaultDiscoTrail(sourcePos, targetPos, cm.discoBallTrailDuration);
+            GameObject trailObj = Object.Instantiate(cm.sparklingTrailPrefab, sourcePos, Quaternion.identity);
+
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.DISCO_BALL_TRAIL, volumeMultiplier: 0.75f, pitchOffset: Mathf.Clamp(trailIndex * 0.01f, 0f, 0.12f));
 
             yield return trailObj.transform.DOMove(targetWorldPos, cm.discoBallTrailDuration).SetEase(Ease.OutQuad).WaitForCompletion();
 
@@ -1277,25 +1320,6 @@ namespace Game
                 GridHelper.SetEmission(element, 0f);
         }
 
-        private GameObject CreateDefaultDiscoTrail(Vector3 pos, Vector2Int targetPos, float lifeTime)
-        {
-            GameObject obj = new GameObject($"DiscoTrail_{targetPos.x}_{targetPos.y}");
-            obj.transform.position = pos;
-            TrailRenderer trail = obj.AddComponent<TrailRenderer>();
-            trail.time = Mathf.Max(0.05f, lifeTime);
-            trail.startWidth = 0.08f;
-            trail.endWidth = 0f;
-            trail.numCapVertices = 6;
-            trail.numCornerVertices = 6;
-            Gradient gradient = new Gradient();
-            gradient.SetKeys(
-                new[] { new GradientColorKey(Color.cyan, 0f), new GradientColorKey(Color.magenta, 1f) },
-                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0f, 1f) });
-            trail.colorGradient = gradient;
-            trail.material = new Material(Shader.Find("Sprites/Default"));
-            return obj;
-        }
-
         private IEnumerator ActivateBomb(Vector2Int bombPos)
         {
             Grid3D.GridCell bombCell = grid.GetCellPublic(bombPos);
@@ -1304,6 +1328,7 @@ namespace Game
 
             Vector2Int targetPos = grid.GetBombTargetPosition();
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.BOMB);
 
             GridElement bombElement = grid.GetElementAt(bombPos);
             if (bombElement != null)
@@ -1326,6 +1351,7 @@ namespace Game
         private IEnumerator ActivateRocket(Vector2Int rocketPos, ElementPowerUpType rocketType)
         {
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.ROCKET);
 
             GridElement rocketElement = grid.GetElementAt(rocketPos);
             grid.GetCellPublic(rocketPos).elementInfo = null;
@@ -1541,6 +1567,14 @@ namespace Game
             if (IsRocket(type) && lvl.rocketElementData != null) return lvl.rocketElementData;
             if (IsDiscoBall(type) && lvl.discoBallElementData != null) return lvl.discoBallElementData;
             return sourceData;
+        }
+
+        private void PlayEffect(string effectId, float volumeMultiplier = 1f, float pitchOffset = 0f)
+        {
+            if (GameManager.Instance == null || GameManager.Instance.soundManager == null)
+                return;
+
+            GameManager.Instance.soundManager.Play(effectId, false, 0f, volumeMultiplier, pitchOffset);
         }
 
         private static Vector2Int PickPreferred(HashSet<Vector2Int> groupSet, Vector2Int[] candidates, Vector2Int init1, Vector2Int init2)

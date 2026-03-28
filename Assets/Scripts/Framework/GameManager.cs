@@ -71,12 +71,14 @@ namespace Game
         }
         void OnLevelCompleted(EventParam param)
         {
+            SoundManager.Instance.Play(ConstantManager.SOUNDS.EFFECTS.LEVEL_COMPLETE);
             winParticle.Play();
             DOVirtual.DelayedCall(1, () =>
             ScreenManager.Instance.Show(Screens.WinScreen));
         }
         void OnLevelFailed(EventParam param)
         {
+            SoundManager.Instance.Play(ConstantManager.SOUNDS.EFFECTS.LEVEL_FAILED);
             DOVirtual.DelayedCall(1, () =>
             ScreenManager.Instance.Show(Screens.LoseScreen));
         }
