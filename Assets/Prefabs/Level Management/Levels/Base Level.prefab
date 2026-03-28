@@ -301,11 +301,13 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 1e4613ba78c8827438d09790fc8fce3c, type: 2}
     - {fileID: 11400000, guid: 0aff893b628e16b449d95f9a8befead9, type: 2}
     - {fileID: 11400000, guid: fcba4310cd5fca344aad5d26ad52423f, type: 2}
-    - {fileID: 11400000, guid: 0beb8f42119a75c4c8fff95fb8eb913b, type: 2}
+    - {fileID: 11400000, guid: 2510de87ceafdd74d8a26e0d7c3e435d, type: 2}
+    - {fileID: 11400000, guid: b5e047feb0cad314a894341b7d997b76, type: 2}
   sparklingPowerAfterXCombo: 1
   sparklingAppearChance: 0
   bombElementData: {fileID: 11400000, guid: 2f83e159c6b368646a1f9d8e7ec081e9, type: 2}
   rocketElementData: {fileID: 11400000, guid: 56c62304f3d4a6c428379f3845a428a7, type: 2}
+  discoBallElementData: {fileID: 11400000, guid: 24c241fb46e7d3447b4a3d140a9cda60, type: 2}
 --- !u!1 &5642222179130585919
 GameObject:
   m_ObjectHideFlags: 0

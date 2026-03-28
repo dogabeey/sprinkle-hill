@@ -35,6 +35,8 @@ namespace Game
         public ElementData bombElementData;
         [FoldoutGroup("Power Up Settings")]
         public ElementData rocketElementData;
+        [FoldoutGroup("Power Up Settings")]
+        public ElementData discoBallElementData;
 
         protected override void Awake()
         {

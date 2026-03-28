@@ -96,7 +96,8 @@ namespace Game
         VerticalRocket,
         HorizontalRocket,
         BigBomb,
-        Scatter
+        Scatter,
+        DiscoBall
     }
 
     /// <summary>

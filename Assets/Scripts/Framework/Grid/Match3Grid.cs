@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Rendering.PostProcessing;
 
 namespace Game
 {
@@ -93,7 +92,7 @@ namespace Game
             {
                 if (PowerUpHandler.IsSpecialPowerUp(firstType))
                 {
-                    yield return StartCoroutine(powerUpHandler.ActivateAt(first));
+                    yield return StartCoroutine(powerUpHandler.ActivateAt(first, null));
                     yield break;
                 }
                 yield break;
@@ -102,6 +101,10 @@ namespace Game
             // Swap-based power-up activation: swap first, then activate at new position
             if (PowerUpHandler.IsSpecialPowerUp(firstType) || PowerUpHandler.IsSpecialPowerUp(secondType))
             {
+                // Capture the non-power-up element's data before the swap for disco ball
+                ElementData firstSwapData = firstCell?.elementInfo?.elementData;
+                ElementData secondSwapData = secondCell?.elementInfo?.elementData;
+
                 yield return StartCoroutine(SwapElements(first, second));
                 EventManager.TriggerEvent(GameEvent.ELEMENTS_SWAPPED, new EventParam(
                     vectorList: new Vector3[] { new Vector3(first.x, first.y, 0), new Vector3(second.x, second.y, 0) }
@@ -110,11 +113,13 @@ namespace Game
                 // After swap, the power-up that was at 'first' is now at 'second' and vice versa
                 if (PowerUpHandler.IsSpecialPowerUp(firstType))
                 {
-                    yield return StartCoroutine(powerUpHandler.ActivateAt(second));
+                    // power-up moved to 'second', the swapped element was at 'second' (now at 'first')
+                    yield return StartCoroutine(powerUpHandler.ActivateAt(second, secondSwapData));
                 }
                 else if (PowerUpHandler.IsSpecialPowerUp(secondType))
                 {
-                    yield return StartCoroutine(powerUpHandler.ActivateAt(first));
+                    // power-up moved to 'first', the swapped element was at 'first' (now at 'second')
+                    yield return StartCoroutine(powerUpHandler.ActivateAt(first, firstSwapData));
                 }
                 yield break;
             }
@@ -152,10 +157,15 @@ namespace Game
                 currentComboCount++;
 
                 // Detect power-up spawns
+                List<PowerUpHandler.SpawnRequest> discoBallSpawns = powerUpHandler.FindDiscoBallSpawns(matchedGroups, init1, init2);
                 List<PowerUpHandler.SpawnRequest> bombSpawns = powerUpHandler.FindBombSpawns(matchedGroups, init1, init2);
-                List<PowerUpHandler.SpawnRequest> rocketSpawns = powerUpHandler.FindRocketSpawns(matchedGroups, init1, init2);
 
-                HashSet<Vector2Int> protectedPositions = new HashSet<Vector2Int>();
+                HashSet<Vector2Int> discoBallPositions = new HashSet<Vector2Int>();
+                for (int i = 0; i < discoBallSpawns.Count; i++) discoBallPositions.Add(discoBallSpawns[i].position);
+
+                List<PowerUpHandler.SpawnRequest> rocketSpawns = powerUpHandler.FindRocketSpawns(matchedGroups, init1, init2, discoBallPositions);
+
+                HashSet<Vector2Int> protectedPositions = new HashSet<Vector2Int>(discoBallPositions);
                 for (int i = 0; i < bombSpawns.Count; i++) protectedPositions.Add(bombSpawns[i].position);
                 for (int i = 0; i < rocketSpawns.Count; i++) protectedPositions.Add(rocketSpawns[i].position);
 
@@ -170,7 +180,9 @@ namespace Game
                 // Clear
                 yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions));
 
-                // Create power-ups
+                // Create power-ups (disco ball has highest priority)
+                for (int i = 0; i < discoBallSpawns.Count; i++)
+                    powerUpHandler.CreatePowerUpAt(discoBallSpawns[i].position, discoBallSpawns[i].sourceData, discoBallSpawns[i].powerUpType);
                 for (int i = 0; i < bombSpawns.Count; i++)
                     powerUpHandler.CreatePowerUpAt(bombSpawns[i].position, bombSpawns[i].sourceData, bombSpawns[i].powerUpType);
                 for (int i = 0; i < rocketSpawns.Count; i++)
@@ -927,6 +939,11 @@ namespace Game
             return type == ElementPowerUpType.HorizontalRocket || type == ElementPowerUpType.VerticalRocket;
         }
 
+        public static bool IsDiscoBall(ElementPowerUpType type)
+        {
+            return type == ElementPowerUpType.DiscoBall;
+        }
+
         public struct SpawnRequest
         {
             public Vector2Int position;
@@ -979,7 +996,7 @@ namespace Game
             return spawns;
         }
 
-        public List<SpawnRequest> FindRocketSpawns(List<List<Vector2Int>> matchedGroups, Vector2Int init1, Vector2Int init2)
+        public List<SpawnRequest> FindRocketSpawns(List<List<Vector2Int>> matchedGroups, Vector2Int init1, Vector2Int init2, HashSet<Vector2Int> claimedPositions = null)
         {
             List<SpawnRequest> spawns = new List<SpawnRequest>();
             HashSet<Vector2Int> used = new HashSet<Vector2Int>();
@@ -988,6 +1005,9 @@ namespace Game
             {
                 List<Vector2Int> group = matchedGroups[g];
                 if (group == null || group.Count < 4) continue;
+
+                // Groups of 5+ are reserved for Disco Ball — skip entirely
+                if (group.Count >= 5) continue;
 
                 HashSet<Vector2Int> groupSet = new HashSet<Vector2Int>(group);
                 ElementData src = grid.GetCellPublic(group[0])?.elementInfo?.elementData;
@@ -1008,6 +1028,8 @@ namespace Game
                             if (run >= 4)
                             {
                                 Vector2Int sp = PickPreferredFromSet(runPos, init1, init2);
+                                // Skip if this position was already claimed by a higher-priority power-up
+                                if (claimedPositions != null && claimedPositions.Contains(sp)) { found = true; break; }
                                 if (used.Add(sp))
                                     spawns.Add(new SpawnRequest { position = sp, sourceData = src, powerUpType = ElementPowerUpType.HorizontalRocket });
                                 found = true; break;
@@ -1031,6 +1053,8 @@ namespace Game
                             if (run >= 4)
                             {
                                 Vector2Int sp = PickPreferredFromSet(runPos, init1, init2);
+                                // Skip if this position was already claimed by a higher-priority power-up
+                                if (claimedPositions != null && claimedPositions.Contains(sp)) { found = true; break; }
                                 if (used.Add(sp))
                                     spawns.Add(new SpawnRequest { position = sp, sourceData = src, powerUpType = ElementPowerUpType.VerticalRocket });
                                 found = true; break;
@@ -1039,6 +1063,27 @@ namespace Game
                         }
                     }
                 }
+            }
+            return spawns;
+        }
+
+        public List<SpawnRequest> FindDiscoBallSpawns(List<List<Vector2Int>> matchedGroups, Vector2Int init1, Vector2Int init2)
+        {
+            List<SpawnRequest> spawns = new List<SpawnRequest>();
+            HashSet<Vector2Int> used = new HashSet<Vector2Int>();
+
+            for (int g = 0; g < matchedGroups.Count; g++)
+            {
+                List<Vector2Int> group = matchedGroups[g];
+                if (group == null || group.Count < 5) continue;
+
+                ElementData src = grid.GetCellPublic(group[0])?.elementInfo?.elementData;
+                if (src == null) continue;
+
+                HashSet<Vector2Int> groupSet = new HashSet<Vector2Int>(group);
+                Vector2Int sp = PickPreferredFromSet(groupSet, init1, init2);
+                if (used.Add(sp))
+                    spawns.Add(new SpawnRequest { position = sp, sourceData = src, powerUpType = ElementPowerUpType.DiscoBall });
             }
             return spawns;
         }
@@ -1076,7 +1121,7 @@ namespace Game
         //  Activation
         // ------------------------------------------------------------------
 
-        public IEnumerator ActivateAt(Vector2Int pos)
+        public IEnumerator ActivateAt(Vector2Int pos, ElementData swappedElementData)
         {
             Grid3D.GridCell cell = grid.GetCellPublic(pos);
             ElementPowerUpType type = cell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
@@ -1084,6 +1129,171 @@ namespace Game
                 yield return grid.StartCoroutine(ActivateBomb(pos));
             else if (IsRocket(type))
                 yield return grid.StartCoroutine(ActivateRocket(pos, type));
+            else if (IsDiscoBall(type))
+            {
+                // Disco Ball requires swap context to know target element type.
+                if (swappedElementData == null)
+                    yield break;
+
+                yield return grid.StartCoroutine(ActivateDiscoBall(pos, swappedElementData));
+            }
+        }
+
+        private IEnumerator ActivateDiscoBall(Vector2Int discoBallPos, ElementData targetElementData)
+        {
+            Grid3D.GridCell discoBallCell = grid.GetCellPublic(discoBallPos);
+            if (discoBallCell?.elementInfo == null || discoBallCell.elementInfo.powerUpType != ElementPowerUpType.DiscoBall)
+                yield break;
+
+            // Fall back to any normal element on the grid if no swapped element data was provided
+            if (targetElementData == null)
+            {
+                for (int x = 0; x < grid.GridSize.x; x++)
+                {
+                    for (int y = 0; y < grid.GridSize.y; y++)
+                    {
+                        Grid3D.GridCell c = grid.GetCellPublic(new Vector2Int(x, y));
+                        if (c != null && c.cellType == Grid3D.CellType.Normal &&
+                            c.elementInfo != null && c.elementInfo.powerUpType == ElementPowerUpType.None &&
+                            c.elementInfo.elementData != null)
+                        {
+                            targetElementData = c.elementInfo.elementData;
+                            break;
+                        }
+                    }
+                    if (targetElementData != null) break;
+                }
+            }
+
+            if (targetElementData == null) yield break;
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+
+            // Destroy disco ball visual
+            discoBallCell.elementInfo = null;
+            GridElement discoBallElement = grid.GetElementAt(discoBallPos);
+            if (discoBallElement != null)
+                grid.StartCoroutine(discoBallElement.DestroyElement());
+
+            // Collect all eligible normal cells (excluding disco ball's old position)
+            List<Vector2Int> candidates = new List<Vector2Int>();
+            for (int x = 0; x < grid.GridSize.x; x++)
+            {
+                for (int y = 0; y < grid.GridSize.y; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    if (pos == discoBallPos) continue;
+                    Grid3D.GridCell cell = grid.GetCellPublic(pos);
+                    if (cell == null || cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null) continue;
+                    if (IsSpecialPowerUp(cell.elementInfo.powerUpType)) continue;
+                    candidates.Add(pos);
+                }
+            }
+
+            // Pick up to 10 random unique cells
+            int replaceCount = Mathf.Min(10, candidates.Count);
+            List<Vector2Int> selectedCells = new List<Vector2Int>(replaceCount);
+            for (int i = 0; i < replaceCount; i++)
+            {
+                int randIdx = Random.Range(i, candidates.Count);
+                Vector2Int tmp = candidates[randIdx];
+                candidates[randIdx] = candidates[i];
+                candidates[i] = tmp;
+                selectedCells.Add(candidates[i]);
+            }
+
+            if (selectedCells.Count > 0)
+                yield return grid.StartCoroutine(AnimateDiscoBallTrails(discoBallPos, selectedCells, targetElementData));
+
+            GridHelper.ShakeCamera(
+                GameManager.Instance.constantManager.matchShakeDuration,
+                GameManager.Instance.constantManager.matchShakeBaseMagnitude * 1.5f,
+                GameManager.Instance.constantManager.matchShakeVibrato,
+                GameManager.Instance.constantManager.matchShakeRandomness);
+
+            yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
+        }
+
+        private IEnumerator AnimateDiscoBallTrails(Vector2Int sourcePos, List<Vector2Int> targets, ElementData targetElementData)
+        {
+            ConstantManager cm = GameManager.Instance.constantManager;
+            Vector3 sourceWorldPos = grid.GetWorldPosition(sourcePos);
+
+            int trailIndex = 0;
+            for (int i = 0; i < targets.Count; i++)
+            {
+                grid.StartCoroutine(AnimateSingleDiscoTrail(sourceWorldPos, targets[i], targetElementData, trailIndex));
+                trailIndex++;
+                yield return new WaitForSeconds(cm.discoBallTrailSpawnDelay);
+            }
+
+            float totalWait = cm.discoBallTrailDuration + cm.discoBallTrailSpawnDelay * Mathf.Max(0, targets.Count - 1);
+            yield return new WaitForSeconds(totalWait);
+        }
+
+        private IEnumerator AnimateSingleDiscoTrail(Vector3 sourcePos, Vector2Int targetPos, ElementData targetElementData, int trailIndex)
+        {
+            ConstantManager cm = GameManager.Instance.constantManager;
+            Vector3 targetWorldPos = grid.GetWorldPosition(targetPos);
+
+            GameObject trailObj = cm.sparklingTrailPrefab != null
+                ? Object.Instantiate(cm.sparklingTrailPrefab, sourcePos, Quaternion.identity)
+                : CreateDefaultDiscoTrail(sourcePos, targetPos, cm.discoBallTrailDuration);
+
+            yield return trailObj.transform.DOMove(targetWorldPos, cm.discoBallTrailDuration).SetEase(Ease.OutQuad).WaitForCompletion();
+
+            Grid3D.GridCell cell = grid.GetCellPublic(targetPos);
+            if (cell?.elementInfo != null)
+            {
+                cell.elementInfo.elementData = targetElementData;
+                cell.elementInfo.powerUpType = ElementPowerUpType.None;
+                cell.elementInfo.isSparkling = false;
+
+                GridElement element = grid.GetElementAt(targetPos);
+                if (element != null)
+                {
+                    element.elementInfo = cell.elementInfo;
+                    element.InitElement(grid, cell.elementInfo);
+                    GridHelper.SetEmission(element, cm.discoBallEmissionPeak);
+                    grid.StartCoroutine(ResetElementEmission(element, cm.discoBallEmissionResetDelay));
+                }
+            }
+
+            float shakeMag = GameManager.Instance.constantManager.sparklingShakeBaseMagnitude + (trailIndex * 0.01f);
+            GridHelper.ShakeCamera(
+                GameManager.Instance.constantManager.sparklingShakeDuration,
+                shakeMag,
+                GameManager.Instance.constantManager.sparklingShakeVibrato,
+                GameManager.Instance.constantManager.sparklingShakeRandomness);
+
+            if (trailObj != null) Object.Destroy(trailObj);
+        }
+
+        private IEnumerator ResetElementEmission(GridElement element, float delay)
+        {
+            if (element == null) yield break;
+            yield return new WaitForSeconds(delay);
+            if (element != null)
+                GridHelper.SetEmission(element, 0f);
+        }
+
+        private GameObject CreateDefaultDiscoTrail(Vector3 pos, Vector2Int targetPos, float lifeTime)
+        {
+            GameObject obj = new GameObject($"DiscoTrail_{targetPos.x}_{targetPos.y}");
+            obj.transform.position = pos;
+            TrailRenderer trail = obj.AddComponent<TrailRenderer>();
+            trail.time = Mathf.Max(0.05f, lifeTime);
+            trail.startWidth = 0.08f;
+            trail.endWidth = 0f;
+            trail.numCapVertices = 6;
+            trail.numCornerVertices = 6;
+            Gradient gradient = new Gradient();
+            gradient.SetKeys(
+                new[] { new GradientColorKey(Color.cyan, 0f), new GradientColorKey(Color.magenta, 1f) },
+                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0f, 1f) });
+            trail.colorGradient = gradient;
+            trail.material = new Material(Shader.Find("Sprites/Default"));
+            return obj;
         }
 
         private IEnumerator ActivateBomb(Vector2Int bombPos)
@@ -1120,20 +1330,16 @@ namespace Game
             GridElement rocketElement = grid.GetElementAt(rocketPos);
             grid.GetCellPublic(rocketPos).elementInfo = null;
 
-            // Determine travel direction
             bool isHorizontal = rocketType == ElementPowerUpType.HorizontalRocket;
             Vector2Int dirPositive = isHorizontal ? Vector2Int.right : Vector2Int.up;
             Vector2Int dirNegative = isHorizontal ? Vector2Int.left : Vector2Int.down;
 
-            // Get world origin from the rocket tile
             Vector3 originWorld = grid.GetWorldPosition(rocketPos);
             ConstantManager cm = GameManager.Instance.constantManager;
 
-            // Collect cells in each direction (excluding origin)
             List<Vector2Int> positiveCells = CollectLineCells(rocketPos, dirPositive);
             List<Vector2Int> negativeCells = CollectLineCells(rocketPos, dirNegative);
 
-            // Calculate end-world positions (one cell beyond last valid cell for overshoot)
             Vector3 positiveEnd = positiveCells.Count > 0
                 ? grid.GetWorldPosition(positiveCells[positiveCells.Count - 1]) + (Vector3)(Vector2)dirPositive * 0.5f
                 : originWorld + (Vector3)(Vector2)dirPositive * 0.5f;
@@ -1141,7 +1347,6 @@ namespace Game
                 ? grid.GetWorldPosition(negativeCells[negativeCells.Count - 1]) + (Vector3)(Vector2)dirNegative * 0.5f
                 : originWorld + (Vector3)(Vector2)dirNegative * 0.5f;
 
-            // Destroy original rocket element visual
             if (rocketElement != null)
             {
                 rocketElement.transform.DOKill();
@@ -1149,17 +1354,13 @@ namespace Game
                 for (int i = 0; i < cols.Length; i++) cols[i].enabled = false;
             }
 
-            // Create two travelling rocket copies
             GameObject rocketCopyA = CreateRocketCopy(rocketElement, originWorld, cm, isHorizontal, 1f);
             GameObject rocketCopyB = CreateRocketCopy(rocketElement, originWorld, cm, isHorizontal, -1f);
 
-            // Destroy original
             if (rocketElement != null) Object.Destroy(rocketElement.gameObject);
 
-            // Shake camera
             GridHelper.ShakeCamera(cm.rocketShakeDuration, cm.rocketShakeMagnitude, cm.rocketShakeVibrato, cm.rocketShakeRandomness);
 
-            // Travel both copies simultaneously, destroying elements as they pass
             Coroutine travelA = grid.StartCoroutine(TravelRocketCopy(rocketCopyA, originWorld, positiveEnd, positiveCells, cm));
             Coroutine travelB = grid.StartCoroutine(TravelRocketCopy(rocketCopyB, originWorld, negativeEnd, negativeCells, cm));
 
@@ -1168,14 +1369,12 @@ namespace Game
             yield return travelB;
             Object.Destroy(rocketCopyB);
 
-            // Break walls adjacent to the line
             HashSet<Vector2Int> walls = new HashSet<Vector2Int>();
             CollectAdjacentWalls(rocketPos, walls);
             foreach (Vector2Int cell in positiveCells) CollectAdjacentWalls(cell, walls);
             foreach (Vector2Int cell in negativeCells) CollectAdjacentWalls(cell, walls);
 
             yield return grid.StartCoroutine(grid.BreakWallsSimultaneous(walls));
-
             yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
         }
 
@@ -1210,7 +1409,6 @@ namespace Game
             GameObject copy = new GameObject("RocketCopy");
             copy.transform.position = origin;
 
-            // Duplicate sprite visual
             if (sourceElement != null && sourceElement.elementRenderer is SpriteRenderer srcSR)
             {
                 SpriteRenderer sr = copy.AddComponent<SpriteRenderer>();
@@ -1220,7 +1418,6 @@ namespace Game
                 sr.sortingOrder = srcSR.sortingOrder + SortingOrderBoost;
                 sr.color = srcSR.color;
 
-                // Orient copy to face its travel direction
                 if (isHorizontal)
                 {
                     copy.transform.rotation = Quaternion.Euler(0f, 0f, 90f);
@@ -1232,7 +1429,6 @@ namespace Game
                 }
             }
 
-            // Attach particle trail
             if (cm.rocketTrailParticlePrefab != null)
             {
                 ParticleSystem trail = Object.Instantiate(cm.rocketTrailParticlePrefab, copy.transform);
@@ -1251,7 +1447,6 @@ namespace Game
             float speed = cm.rocketTravelSpeed > 0f ? cm.rocketTravelSpeed : 12f;
             float duration = totalDist / speed;
 
-            // Pre-calculate world positions for each cell to know when we pass them
             List<float> cellDistances = new List<float>();
             for (int i = 0; i < cellsInOrder.Count; i++)
             {
@@ -1271,7 +1466,6 @@ namespace Game
 
                 float currentDist = t * totalDist;
 
-                // Destroy cells the rocket has passed
                 while (nextCellIndex < cellsInOrder.Count && currentDist >= cellDistances[nextCellIndex])
                 {
                     ClearLineCellImmediate(cellsInOrder[nextCellIndex]);
@@ -1281,7 +1475,6 @@ namespace Game
                 yield return null;
             }
 
-            // Clear any remaining cells
             while (nextCellIndex < cellsInOrder.Count)
             {
                 ClearLineCellImmediate(cellsInOrder[nextCellIndex]);
@@ -1299,10 +1492,6 @@ namespace Game
             GridElement element = grid.GetElementAt(pos);
             if (element != null) grid.StartCoroutine(element.DestroyElement());
         }
-
-        // ------------------------------------------------------------------
-        //  Bomb flight & effects
-        // ------------------------------------------------------------------
 
         private IEnumerator AnimateBombFlight(GridElement bombElement, Vector3 target)
         {
@@ -1334,10 +1523,6 @@ namespace Game
             GridHelper.ShakeCamera(cm.bombImpactShakeDuration, cm.bombImpactShakeMagnitude, cm.bombImpactShakeVibrato, cm.bombImpactShakeRandomness);
         }
 
-        // ------------------------------------------------------------------
-        //  Sorting & visual data
-        // ------------------------------------------------------------------
-
         public void ApplySortingBoost(GridElement element, bool boost)
         {
             if (element == null) return;
@@ -1354,6 +1539,7 @@ namespace Game
             if (!(GameManager.Instance.CurrentLevel is LevelScene_Match3Game lvl)) return sourceData;
             if (type == ElementPowerUpType.Bomb && lvl.bombElementData != null) return lvl.bombElementData;
             if (IsRocket(type) && lvl.rocketElementData != null) return lvl.rocketElementData;
+            if (IsDiscoBall(type) && lvl.discoBallElementData != null) return lvl.discoBallElementData;
             return sourceData;
         }
 

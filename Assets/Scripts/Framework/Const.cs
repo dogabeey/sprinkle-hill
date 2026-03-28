@@ -32,20 +32,26 @@ namespace Game
         public int elementDestroyPunchVibrato = 8;
         public float elementDestroyPunchElasticity = 0.8f;
         public ParticleSystem elementDestroyParticlePrefab;
-        
+
+        [Header("Disco Ball")]
+        public float discoBallTrailDuration = 0.12f;
+        public float discoBallTrailSpawnDelay = 0.02f;
+        public float discoBallEmissionPeak = 3f;
+        public float discoBallEmissionResetDelay = 0.08f;
+
         [Header("Sparkling Trail Animation")]
         public GameObject sparklingTrailPrefab;
         public float sparklingTrailDuration = 0.5f;
         public float sparklingTrailSpawnDelay = 0.05f;
         public float sparklingTrailFadeDelay = 0.5f;
-        
+
         [Header("Sparkling Camera Shake")]
         public float sparklingShakeBaseMagnitude = 0.1f;
         public float sparklingShakeMagnitudeIncrement = 0.05f;
         public float sparklingShakeDuration = 0.2f;
         public int sparklingShakeVibrato = 10;
         public float sparklingShakeRandomness = 90f;
-        
+
         [Header("Match Camera Shake")]
         public float matchShakeBaseMagnitude = 0.15f;
         public float matchShakeComboMultiplier = 0.1f;
