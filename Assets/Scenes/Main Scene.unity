@@ -1524,6 +1524,7 @@ MonoBehaviour:
   padding: 10
   fadeInDuration: 0.25
   fadeOutDuration: 0.2
+  highlightDelay: 0.15
 --- !u!114 &900864209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3681,7 +3682,7 @@ MonoBehaviour:
   tutorialSteps:
   - Id: 1
     highlightSelector:
-      rid: -2
+      rid: 943281595348680779
     startEvent: 18
     startEventExpectedParams: 0
     startEventExpectedParamValues:
@@ -3707,8 +3708,9 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    - rid: 943281595348680779
+      type: {class: FirstMatchableElement_Highlight, ns: Game, asm: Assembly-CSharp}
+      data: 
 --- !u!1 &1723669257
 GameObject:
   m_ObjectHideFlags: 0
