@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -66,6 +67,9 @@ namespace Game
         public float fadeInDuration  = 0.25f;
         public float fadeOutDuration = 0.20f;
 
+        [Tooltip("Seconds to wait before computing screen rects. Set this above the camera's initDelay (default 0.1 s) to ensure the camera has settled before the highlight is placed.")]
+        public float highlightDelay = 0.15f;
+
         // -----------------------------------------------------------------
         //  Private state
         // -----------------------------------------------------------------
@@ -118,7 +122,6 @@ namespace Game
             if (_mat == null) return;
 
             gameObject.SetActive(true);
-            SetRects(targets);
 
             DOTween.Kill(this);
             DOTween.To(
@@ -129,6 +132,21 @@ namespace Game
             ).SetId(this);
 
             _shown = true;
+
+            // Delay rect computation until the camera has finished adjusting.
+            if (_showRectsCoroutine != null) StopCoroutine(_showRectsCoroutine);
+            _showRectsCoroutine = StartCoroutine(SetRectsAfterDelay(targets));
+        }
+
+        private Coroutine _showRectsCoroutine;
+
+        private IEnumerator SetRectsAfterDelay(IList<GameObject> targets)
+        {
+            if (highlightDelay > 0f)
+                yield return new WaitForSeconds(highlightDelay);
+
+            SetRects(targets);
+            _showRectsCoroutine = null;
         }
 
         /// <summary>Fades the overlay out and deactivates the GameObject.</summary>
@@ -161,27 +179,37 @@ namespace Game
         // -----------------------------------------------------------------
         private void SetRects(IList<GameObject> targets)
         {
-            Camera cam  = worldCamera != null ? worldCamera : Camera.main;
+            Camera cam   = worldCamera != null ? worldCamera : Camera.main;
             int    count = Mathf.Min(targets != null ? targets.Count : 0, MaxSpotlights);
 
             _mat.SetFloat(ID_RectCount,    count);
             _mat.SetFloat(ID_CornerRadius, cornerRadius);
             _mat.SetFloat(ID_EdgeSoftness, edgeSoftness);
 
+            Debug.Log($"[TutorialHighlightOverlay] SetRects — target count: {count} | screen: {Screen.width}x{Screen.height} | camera: {(cam != null ? cam.name : "NULL")}");
+
             for (int i = 0; i < MaxSpotlights; i++)
             {
                 if (i < count && targets[i] != null)
                 {
                     Rect sr = ScreenRectFor(targets[i], cam);
-                    _mat.SetVector(ID_Rects[i], new Vector4(
+
+                    Vector4 rectVec = new Vector4(
                         sr.xMin - padding,
                         sr.yMin - padding,
                         sr.xMax + padding,
-                        sr.yMax + padding));
+                        sr.yMax + padding);
+
+                    _mat.SetVector(ID_Rects[i], rectVec);
+
+                    Debug.Log(
+                        $"[TutorialHighlightOverlay] Slot {i} | GameObject: \"{targets[i].name}\" | " +
+                        $"raw screen rect: xMin={sr.xMin:F1} yMin={sr.yMin:F1} xMax={sr.xMax:F1} yMax={sr.yMax:F1} | " +
+                        $"padded shader rect: ({rectVec.x:F1}, {rectVec.y:F1}, {rectVec.z:F1}, {rectVec.w:F1})",
+                        targets[i]);
                 }
                 else
                 {
-                    // Degenerate rect that the shader will never match
                     _mat.SetVector(ID_Rects[i], Vector4.zero);
                 }
             }
@@ -191,14 +219,8 @@ namespace Game
         //  Screen-rect helpers
         // -----------------------------------------------------------------
 
-        /// <summary>
-        /// Returns the axis-aligned screen-pixel bounding rect for <paramref name="go"/>.
-        /// Works for Screen-Space Overlay RectTransforms, world-space objects (uses
-        /// renderer / collider bounds), and camera-space canvases.
-        /// </summary>
         private static Rect ScreenRectFor(GameObject go, Camera cam)
         {
-            // ?? Screen-Space Overlay RectTransform ??????????????????????
             RectTransform rt = go.GetComponent<RectTransform>();
             if (rt != null)
             {
@@ -207,31 +229,55 @@ namespace Game
                 {
                     Vector3[] corners = new Vector3[4];
                     rt.GetWorldCorners(corners);
-                    // In SS-Overlay mode world corners ARE screen pixels.
-                    return CornersToRect(corners);
+                    Rect result = CornersToRect(corners);
+                    Debug.Log(
+                        $"[TutorialHighlightOverlay] \"{go.name}\" ? RectTransform (SS-Overlay) | " +
+                        $"corners BL={corners[0]} TL={corners[1]} TR={corners[2]} BR={corners[3]} | " +
+                        $"rect: xMin={result.xMin:F1} yMin={result.yMin:F1} xMax={result.xMax:F1} yMax={result.yMax:F1}",
+                        go);
+                    return result;
                 }
 
-                // Camera-space or world-space canvas: project through cam
                 if (cam != null)
                 {
                     Vector3[] corners = new Vector3[4];
                     rt.GetWorldCorners(corners);
-                    return ProjectedCornersToRect(corners, cam);
+                    Rect result = ProjectedCornersToRect(corners, cam);
+                    Debug.Log(
+                        $"[TutorialHighlightOverlay] \"{go.name}\" ? RectTransform (Camera/World canvas) | " +
+                        $"world corners BL={corners[0]} TL={corners[1]} TR={corners[2]} BR={corners[3]} | " +
+                        $"projected rect: xMin={result.xMin:F1} yMin={result.yMin:F1} xMax={result.xMax:F1} yMax={result.yMax:F1}",
+                        go);
+                    return result;
                 }
             }
 
-            // ?? World-space object (renderer or collider bounds) ?????????
             if (cam != null)
             {
                 Bounds b = WorldBoundsOf(go);
                 if (b.size != Vector3.zero)
-                    return BoundsToScreenRect(b, cam);
+                {
+                    Rect result = BoundsToScreenRect(b, cam);
+                    Debug.Log(
+                        $"[TutorialHighlightOverlay] \"{go.name}\" ? world-space bounds | " +
+                        $"bounds center={b.center} size={b.size} | " +
+                        $"screen rect: xMin={result.xMin:F1} yMin={result.yMin:F1} xMax={result.xMax:F1} yMax={result.yMax:F1}",
+                        go);
+                    return result;
+                }
 
-                // Last resort: single centre point
-                Vector2 sp = cam.WorldToScreenPoint(go.transform.position);
-                return new Rect(sp.x - 32f, sp.y - 32f, 64f, 64f);
+                Vector3 worldPos  = go.transform.position;
+                Vector3 screenPos = cam.WorldToScreenPoint(worldPos);
+                Rect fallback = new Rect(screenPos.x - 32f, screenPos.y - 32f, 64f, 64f);
+                Debug.Log(
+                    $"[TutorialHighlightOverlay] \"{go.name}\" ? fallback single point | " +
+                    $"world pos={worldPos} ? screen pos={screenPos} | " +
+                    $"rect: xMin={fallback.xMin:F1} yMin={fallback.yMin:F1} xMax={fallback.xMax:F1} yMax={fallback.yMax:F1}",
+                    go);
+                return fallback;
             }
 
+            Debug.LogWarning($"[TutorialHighlightOverlay] \"{go.name}\" ? no camera available, returning Rect.zero.", go);
             return Rect.zero;
         }
 

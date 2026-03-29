@@ -3669,7 +3669,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 073f2e7c68f0d2243987fc020d905a76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  tutorialSteps:
+  - Id: 1
+    highlightSelector:
+      rid: -2
+    startEvent: 18
+    startEventExpectedParams: 0
+    startEventExpectedParamValues:
+      paramObj: {fileID: 0}
+      paramScriptable: {fileID: 0}
+      paramInt: 0
+      paramFloat: 0
+      paramStr: 
+      vectorList: []
+      paramBool: 0
+    completionEvent: 9
+    completionEventExpectedParams: 0
+    completionEventExpectedParamValues:
+      paramObj: {fileID: 0}
+      paramScriptable: {fileID: 0}
+      paramInt: 0
+      paramFloat: 0
+      paramStr: 
+      vectorList: []
+      paramBool: 0
+    isCompleted: 0
   highlightOverlay: {fileID: 900864208}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
 --- !u!1 &1723669257
 GameObject:
   m_ObjectHideFlags: 0
