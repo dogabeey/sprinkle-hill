@@ -134,6 +134,18 @@ PrefabInstance:
       propertyPath: proceduralGeneration.triangleDecrement
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: proceduralGeneration.elementPool.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: 'proceduralGeneration.elementPool.Array.data[5]'
+      value: 
+      objectReference: {fileID: 11400000, guid: ce870fd5d06ef2244952ffd6faf955b6, type: 2}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: 'proceduralGeneration.elementPool.Array.data[6]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 5f772a775fbc8914ea43012dba006383, type: 2}
     - target: {fileID: 6111944330127197299, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: serializationData.Prefab
       value: 
