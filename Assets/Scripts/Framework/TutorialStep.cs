@@ -71,8 +71,15 @@ namespace Game
 
             if (dataA == dataB) return false;
 
-            return HasRunAfterSwap(grid, a, dataB, b) ||
-                   HasRunAfterSwap(grid, b, dataA, a);
+            cellA.elementInfo.elementData = dataB;
+            cellB.elementInfo.elementData = dataA;
+
+            bool matches = CreatesLineMatchAt(grid, a) || CreatesLineMatchAt(grid, b);
+
+            cellA.elementInfo.elementData = dataA;
+            cellB.elementInfo.elementData = dataB;
+
+            return matches;
         }
 
         /// <summary>
@@ -84,7 +91,7 @@ namespace Game
         private static bool TryGetOrderedSwap(Match3Grid grid, Vector2Int a, Vector2Int b,
                                               out Vector2Int mover, out Vector2Int target)
         {
-            mover  = a;
+            mover = a;
             target = b;
 
             Grid3D.GridCell cellA = grid.GetCellPublic(a);
@@ -97,18 +104,30 @@ namespace Game
 
             if (dataA == dataB) return false;
 
-            // A lands at B's position — A is the mover.
-            if (HasRunAfterSwap(grid, b, dataA, a))
+            // Simulate swap once.
+            cellA.elementInfo.elementData = dataB;
+            cellB.elementInfo.elementData = dataA;
+
+            // A lands at B's position -> A is mover when B position forms a line.
+            bool aIsMover = CreatesLineMatchAt(grid, b);
+
+            // B lands at A's position -> B is mover when A position forms a line.
+            bool bIsMover = CreatesLineMatchAt(grid, a);
+
+            // Restore board.
+            cellA.elementInfo.elementData = dataA;
+            cellB.elementInfo.elementData = dataB;
+
+            if (aIsMover)
             {
-                mover  = a;
+                mover = a;
                 target = b;
                 return true;
             }
 
-            // B lands at A's position — B is the mover.
-            if (HasRunAfterSwap(grid, a, dataB, b))
+            if (bIsMover)
             {
-                mover  = b;
+                mover = b;
                 target = a;
                 return true;
             }
@@ -116,45 +135,36 @@ namespace Game
             return false;
         }
 
-        /// <summary>
-        /// Returns true when placing <paramref name="newData"/> at <paramref name="pos"/>
-        /// (treating <paramref name="swappedOut"/> as holding <paramref name="newData"/>)
-        /// creates a horizontal or vertical run of 3+.
-        /// </summary>
-        private static bool HasRunAfterSwap(Match3Grid grid, Vector2Int pos,
-                                            ElementData newData, Vector2Int swappedOut)
+        private static bool CreatesLineMatchAt(Match3Grid grid, Vector2Int pos)
         {
-            int h = CountLine(grid, pos, Vector2Int.right, newData, swappedOut)
-                  + CountLine(grid, pos, Vector2Int.left,  newData, swappedOut) + 1;
+            Grid3D.GridCell center = grid.GetCellPublic(pos);
+            if (!IsMatchable(center)) return false;
 
-            int v = CountLine(grid, pos, Vector2Int.up,   newData, swappedOut)
-                  + CountLine(grid, pos, Vector2Int.down,  newData, swappedOut) + 1;
+            ElementData data = center.elementInfo.elementData;
 
-            return h >= 3 || v >= 3;
+            int h = 1 + CountDirection(grid, pos, Vector2Int.left, data)
+                      + CountDirection(grid, pos, Vector2Int.right, data);
+            if (h >= 3) return true;
+
+            int v = 1 + CountDirection(grid, pos, Vector2Int.down, data)
+                      + CountDirection(grid, pos, Vector2Int.up, data);
+            return v >= 3;
         }
 
-        private static int CountLine(Match3Grid grid, Vector2Int origin, Vector2Int dir,
-                                     ElementData data, Vector2Int swappedOut)
+        private static int CountDirection(Match3Grid grid, Vector2Int origin, Vector2Int dir, ElementData data)
         {
             int count = 0;
             Vector2Int cur = origin + dir;
+
             while (true)
             {
-                ElementData d = GetEffectiveData(grid, cur, swappedOut, data);
-                if (d != data) break;
+                Grid3D.GridCell cell = grid.GetCellPublic(cur);
+                if (!IsMatchable(cell) || cell.elementInfo.elementData != data) break;
                 count++;
                 cur += dir;
             }
-            return count;
-        }
 
-        private static ElementData GetEffectiveData(Match3Grid grid, Vector2Int pos,
-                                                    Vector2Int substitutePos,
-                                                    ElementData substituteData)
-        {
-            if (pos == substitutePos) return substituteData;
-            Grid3D.GridCell cell = grid.GetCellPublic(pos);
-            return IsMatchable(cell) ? cell.elementInfo.elementData : null;
+            return count;
         }
 
         private static bool IsMatchable(Grid3D.GridCell cell)
