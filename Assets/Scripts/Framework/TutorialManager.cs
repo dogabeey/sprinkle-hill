@@ -1,12 +1,32 @@
-using UnityEngine;
+using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
 
 namespace Game
 {
-    public class TutorialManager : MonoBehaviour
+    public class TutorialManager : SerializedMonoBehaviour
     {
+        [System.Serializable]
+        public class TutorialStep
+        {
+            public string Id;
+            [SerializeReference]
+            public HighlightSelector highlightSelector;
+            public GameEvent startEvent;
+            public EventParams startEventExpectedParams;
+            public EventParam startEventExpectedParamValues;
+            public GameEvent completionEvent;
+            public EventParams completionEventExpectedParams;
+            public EventParam completionEventExpectedParamValues;
+            public UnityAction onStart;
+            public UnityAction onComplete;
+            public bool isCompleted;
+        }
+
         public List<TutorialStep> tutorialSteps = new List<TutorialStep>();
 
         [Header("Highlight Overlay")]
