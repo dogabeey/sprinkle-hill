@@ -1,57 +1,131 @@
 using UnityEngine;
-using UnityEngine.Events;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+
 namespace Game
 {
     public class TutorialManager : MonoBehaviour
     {
         public List<TutorialStep> tutorialSteps = new List<TutorialStep>();
+
+        [Header("Highlight Overlay")]
+        [Tooltip("Assign the TutorialHighlightOverlay component. Leave null to skip highlighting.")]
+        public TutorialHighlightOverlay highlightOverlay;
+
+        // Stored delegates so StopListening receives the same instance as StartListening.
+        private readonly Dictionary<TutorialStep, Action<EventParam>> _startListeners      = new Dictionary<TutorialStep, Action<EventParam>>();
+        private readonly Dictionary<TutorialStep, Action<EventParam>> _completionListeners  = new Dictionary<TutorialStep, Action<EventParam>>();
+
         private void OnEnable()
         {
-            foreach (var step in tutorialSteps)
+            foreach (TutorialStep step in tutorialSteps)
             {
-                EventManager.StartListening(step.StartEvent, (EventParam e) => StartTutorialStep(step));
-                EventManager.StartListening(step.CompletionEvent, (EventParam e) => CompleteTutorialStep(step));
+                TutorialStep captured = step;
+
+                Action<EventParam> onStart = e =>
+                {
+                    if (ParamMatches(e, captured.startEventExpectedParams, captured.startEventExpectedParamValues))
+                        StartTutorialStep(captured);
+                };
+
+                Action<EventParam> onComplete = e =>
+                {
+                    if (ParamMatches(e, captured.completionEventExpectedParams, captured.completionEventExpectedParamValues))
+                        CompleteTutorialStep(captured);
+                };
+
+                _startListeners[step]     = onStart;
+                _completionListeners[step] = onComplete;
+
+                EventManager.StartListening(step.startEvent,      onStart);
+                EventManager.StartListening(step.completionEvent, onComplete);
             }
         }
+
         private void OnDisable()
         {
-            foreach (var step in tutorialSteps)
+            foreach (TutorialStep step in tutorialSteps)
             {
-                EventManager.StopListening(step.StartEvent, (EventParam e) => StartTutorialStep(step));
-                EventManager.StopListening(step.CompletionEvent, (EventParam e) => CompleteTutorialStep(step));
+                if (_startListeners.TryGetValue(step, out Action<EventParam> onStart))
+                    EventManager.StopListening(step.startEvent, onStart);
+
+                if (_completionListeners.TryGetValue(step, out Action<EventParam> onComplete))
+                    EventManager.StopListening(step.completionEvent, onComplete);
             }
+
+            _startListeners.Clear();
+            _completionListeners.Clear();
         }
+
         private void StartTutorialStep(TutorialStep step)
         {
-            if (!step.isCompleted)
-            {
-                step.OnStart?.Invoke();
-            }
+            if (step.isCompleted) return;
+
+            step.onStart?.Invoke();
+            ShowOverlay(step);
         }
+
         private void CompleteTutorialStep(TutorialStep step)
         {
-            if (!step.isCompleted)
+            if (step.isCompleted) return;
+
+            step.isCompleted = true;
+            step.onComplete?.Invoke();
+            highlightOverlay?.Hide();
+        }
+
+        private void ShowOverlay(TutorialStep step)
+        {
+            if (highlightOverlay == null) return;
+
+            GameObject[] targets = step.highlightSelector.HighlightedObjects;
+            if (targets == null || targets.Length == 0)
             {
-                step.isCompleted = true;
-                step.OnComplete?.Invoke();
+                highlightOverlay.Hide();
+                return;
             }
+
+            highlightOverlay.Show(targets);
+        }
+
+        // ------------------------------------------------------------------
+        //  Param matching
+        // ------------------------------------------------------------------
+
+        /// <summary>
+        /// Returns true when every flag set in <paramref name="mask"/> has a matching
+        /// value in the incoming <paramref name="incoming"/> param.
+        /// If <paramref name="mask"/> is zero (no flags), always returns true.
+        /// </summary>
+        private static bool ParamMatches(EventParam incoming, EventParams mask, EventParam expected)
+        {
+            if (mask == 0 || expected == null) return true;
+
+            if ((mask & EventParams.IntValue) != 0 && incoming.paramInt != expected.paramInt)
+                return false;
+
+            if ((mask & EventParams.FloatValue) != 0 && !Mathf.Approximately(incoming.paramFloat, expected.paramFloat))
+                return false;
+
+            if ((mask & EventParams.StringValue) != 0 && incoming.paramStr != expected.paramStr)
+                return false;
+
+            if ((mask & EventParams.BoolValue) != 0 && incoming.paramBool != expected.paramBool)
+                return false;
+
+            return true;
         }
     }
 
-    [System.Serializable]
-    public abstract class TutorialStep
+    [System.Flags]
+    public enum EventParams
     {
-        public string Id;
-        public abstract GameEvent StartEvent { get; }
-        public abstract GameEvent CompletionEvent { get; }
-        public abstract UnityAction OnStart { get; }
-        public abstract UnityAction OnComplete { get; }
-
-        public bool isCompleted;
-
-        public abstract GameObject[] HighlightedObjects { get; }
+        None = 0,
+        IntValue    = 1 << 1,
+        FloatValue  = 1 << 2,
+        StringValue = 1 << 3,
+        BoolValue   = 1 << 4,
     }
 }
 

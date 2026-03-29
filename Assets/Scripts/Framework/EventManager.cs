@@ -188,7 +188,7 @@ public class EventManager : ScriptableObject, IManager
 
 }
 
-
+[System.Serializable]
 public class EventParam
 {
     public GameObject paramObj;
