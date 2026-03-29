@@ -33,8 +33,8 @@ namespace Game
                             Vector2Int posB = posA + dir;
                             if (posB.x >= size.x || posB.y >= size.y) continue;
 
-                            if (SwapWouldMatch(grid, posA, posB))
-                                return CollectGameObjects(grid, posA, posB);
+                            if (TryGetOrderedSwap(grid, posA, posB, out Vector2Int mover, out Vector2Int target))
+                                return CollectGameObjects(grid, mover, target);
                         }
                     }
                 }
@@ -69,12 +69,51 @@ namespace Game
             ElementData dataA = cellA.elementInfo.elementData;
             ElementData dataB = cellB.elementInfo.elementData;
 
-            // No point swapping identical elements.
             if (dataA == dataB) return false;
 
-            // Temporarily apply the swap and check for a run of 3.
             return HasRunAfterSwap(grid, a, dataB, b) ||
                    HasRunAfterSwap(grid, b, dataA, a);
+        }
+
+        /// <summary>
+        /// Returns the two positions ordered so that index 0 is the element that
+        /// <b>moves into</b> the match (the one the player should drag), and index 1
+        /// is the element it should be swapped with.
+        /// Returns false when the swap produces no match.
+        /// </summary>
+        private static bool TryGetOrderedSwap(Match3Grid grid, Vector2Int a, Vector2Int b,
+                                              out Vector2Int mover, out Vector2Int target)
+        {
+            mover  = a;
+            target = b;
+
+            Grid3D.GridCell cellA = grid.GetCellPublic(a);
+            Grid3D.GridCell cellB = grid.GetCellPublic(b);
+
+            if (!IsMatchable(cellA) || !IsMatchable(cellB)) return false;
+
+            ElementData dataA = cellA.elementInfo.elementData;
+            ElementData dataB = cellB.elementInfo.elementData;
+
+            if (dataA == dataB) return false;
+
+            // A lands at B's position — A is the mover.
+            if (HasRunAfterSwap(grid, b, dataA, a))
+            {
+                mover  = a;
+                target = b;
+                return true;
+            }
+
+            // B lands at A's position — B is the mover.
+            if (HasRunAfterSwap(grid, a, dataB, b))
+            {
+                mover  = b;
+                target = a;
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
