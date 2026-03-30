@@ -15,16 +15,25 @@ namespace Game
         {
             public string Id;
             [SerializeReference]
+            public TutorialStep nextStep;
+            [SerializeReference]
             public HighlightSelector highlightSelector;
             public GameEvent startEvent;
+            [ShowIf(nameof(IsAdvancedMode))]
             public EventParams startEventExpectedParams;
+            [ShowIf(nameof(IsAdvancedMode))]
             public EventParam startEventExpectedParamValues;
             public GameEvent completionEvent;
+            [ShowIf(nameof(IsAdvancedMode))]
             public EventParams completionEventExpectedParams;
+            [ShowIf(nameof(IsAdvancedMode))]
             public EventParam completionEventExpectedParamValues;
             public UnityAction onStart;
             public UnityAction onComplete;
             public bool isCompleted;
+            public bool advancedMode;
+
+            public bool IsAdvancedMode() => advancedMode;
         }
 
         public List<TutorialStep> tutorialSteps = new List<TutorialStep>();
@@ -93,6 +102,11 @@ namespace Game
             step.isCompleted = true;
             step.onComplete?.Invoke();
             highlightOverlay?.Hide();
+
+            if (step.nextStep != null)
+            {
+                StartTutorialStep(step.nextStep);
+            }
         }
 
         private void ShowOverlay(TutorialStep step)

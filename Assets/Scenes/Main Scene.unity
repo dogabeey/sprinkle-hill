@@ -3682,7 +3682,7 @@ MonoBehaviour:
   tutorialSteps:
   - Id: 1
     highlightSelector:
-      rid: 943281595348680779
+      rid: 943281595348680799
     startEvent: 18
     startEventExpectedParams: 0
     startEventExpectedParamValues:
@@ -3708,8 +3708,8 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 943281595348680779
-      type: {class: FirstMatchableElement_Highlight, ns: Game, asm: Assembly-CSharp}
+    - rid: 943281595348680799
+      type: {class: TwoRandomMatchableElements_Highlight, ns: Game, asm: Assembly-CSharp}
       data: 
 --- !u!1 &1723669257
 GameObject:
@@ -5064,6 +5064,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 492599855}
     m_Modifications:
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[0]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: e5128bc36d805684ebc33c78e679743c, type: 3}
     - target: {fileID: 7722314759461277705, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: m_Name
       value: Game Manager

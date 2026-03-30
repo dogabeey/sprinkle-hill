@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace Game
 {
@@ -9,7 +10,7 @@ namespace Game
         public abstract GameObject[] HighlightedObjects { get; }
     }
 
-    public class FirstMatchableElement_Highlight : HighlightSelector
+    public class TwoRandomMatchableElements_Highlight : HighlightSelector
     {
         // Adjacent directions — right and up only so each pair is visited once.
         private static readonly Vector2Int[] Dirs = { Vector2Int.right, Vector2Int.up };
