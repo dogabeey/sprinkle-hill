@@ -3683,9 +3683,11 @@ MonoBehaviour:
   - Id: level_1_matchelements_1
     nextStep:
       rid: -2
+    tutorialAnimation:
+      rid: 943281595348680867
     highlightSelector:
       rid: 943281595348680799
-    startEvent: 18
+    startEvent: 411
     startEventExpectedParams: 0
     startEventExpectedParamValues:
       paramObj: {fileID: 0}
@@ -3695,7 +3697,7 @@ MonoBehaviour:
       paramStr: 
       vectorList: []
       paramBool: 0
-    completionEvent: 9
+    completionEvent: 402
     completionEventExpectedParams: 0
     completionEventExpectedParamValues:
       paramObj: {fileID: 0}
@@ -3707,6 +3709,7 @@ MonoBehaviour:
       paramBool: 0
     isCompleted: 0
     advancedMode: 0
+    animationObjectParent: {fileID: 4133448082132307929}
   highlightOverlay: {fileID: 900864208}
   references:
     version: 2
@@ -3716,6 +3719,12 @@ MonoBehaviour:
     - rid: 943281595348680799
       type: {class: TwoRandomMatchableElements_Highlight, ns: Game, asm: Assembly-CSharp}
       data: 
+    - rid: 943281595348680867
+      type: {class: MoveBetweenTwoPoint, ns: Game, asm: Assembly-CSharp}
+      data:
+        tutorialObject: {fileID: 1399129251957722908, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
+        duration: 2
+        isLoop: 1
 --- !u!1 &1723669257
 GameObject:
   m_ObjectHideFlags: 0
@@ -4407,8 +4416,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7246cebcae98404aacbd6d217a01bd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initDelay: 0.1
-  boundsOffset: {x: 1, y: 1, z: 1, w: 4}
+  initDelay: 0.04
+  boundsOffset: {x: 1, y: 1, z: 1, w: 2}
 --- !u!4 &2095311502 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8054950767382582105, guid: 33ffe7376da104e4da346a82d1243245, type: 3}
@@ -5327,30 +5336,6 @@ PrefabInstance:
       propertyPath: objectiveManager
       value: 
       objectReference: {fileID: 1759594110}
-    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
-      propertyPath: fireEvents.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
-      propertyPath: initEvents.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
-      propertyPath: 'fireEvents.Array.data[0]'
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
-      propertyPath: 'fireEvents.Array.data[1]'
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
-      propertyPath: 'fireEvents.Array.data[2]'
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
-      propertyPath: 'initEvents.Array.data[0]'
-      value: 18
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

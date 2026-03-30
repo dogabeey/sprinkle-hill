@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace Game
 {
@@ -16,6 +17,8 @@ namespace Game
             public string Id;
             [SerializeReference]
             public TutorialStep nextStep;
+            [SerializeReference]
+            public TutorialAnimation tutorialAnimation;
             [SerializeReference]
             public HighlightSelector highlightSelector;
             public GameEvent startEvent;
@@ -32,6 +35,8 @@ namespace Game
             public UnityAction onComplete;
             public bool isCompleted;
             public bool advancedMode;
+            [Header("Scene References")]
+            public Transform animationObjectParent; // Parent for tutorial animation objects that is set at tutorialAnimation.tutorialObject. If null, animations will be parented to the first canvas in the scene.
 
             public bool IsAdvancedMode() => advancedMode;
         }
@@ -81,6 +86,8 @@ namespace Game
 
                 if (_completionListeners.TryGetValue(step, out Action<EventParam> onComplete))
                     EventManager.StopListening(step.completionEvent, onComplete);
+
+                ClearTutorialAnimation(step);
             }
 
             _startListeners.Clear();
@@ -93,6 +100,7 @@ namespace Game
 
             step.onStart?.Invoke();
             ShowOverlay(step);
+            PlayTutorialAnimation(step);
         }
 
         private void CompleteTutorialStep(TutorialStep step)
@@ -102,6 +110,7 @@ namespace Game
             step.isCompleted = true;
             step.onComplete?.Invoke();
             highlightOverlay?.Hide();
+            ClearTutorialAnimation(step);
 
             if (step.nextStep != null)
             {
@@ -121,6 +130,35 @@ namespace Game
             }
 
             highlightOverlay.Show(targets);
+        }
+
+        private void PlayTutorialAnimation(TutorialStep step)
+        {
+            if (step?.tutorialAnimation == null || step.tutorialAnimation.tutorialObject == null)
+                return;
+
+            ClearTutorialAnimation(step);
+
+            GameObject animationInstance;
+            if (step.animationObjectParent != null)
+            {
+                animationInstance = Instantiate(step.tutorialAnimation.tutorialObject, step.animationObjectParent);
+            }
+            else
+            {
+                Canvas firstCanvas = FindObjectOfType<Canvas>();
+                animationInstance = firstCanvas != null
+                    ? Instantiate(step.tutorialAnimation.tutorialObject, firstCanvas.transform)
+                    : Instantiate(step.tutorialAnimation.tutorialObject);
+            }
+
+            step.tutorialAnimation.Initialize(step, animationInstance);
+            step.tutorialAnimation.PlayAnim();
+        }
+
+        private void ClearTutorialAnimation(TutorialStep step)
+        {
+            step?.tutorialAnimation?.ClearAnim();
         }
 
         // ------------------------------------------------------------------

@@ -764,6 +764,8 @@ namespace Game
             }
 
             cell.cellType = CellType.Normal;
+            EventManager.TriggerEvent(GameEvent.BREAKABLE_WALL_DESTROYED,
+                new EventParam(vectorList: new Vector3[] { new Vector3(wallPos.x, wallPos.y, 0f) }));
         }
 
         public IEnumerator BreakWallsSimultaneous(HashSet<Vector2Int> wallPositions)
