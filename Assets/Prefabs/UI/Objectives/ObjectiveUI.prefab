@@ -230,8 +230,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 785ca85761767c740ad90f6e14d52671, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initEvent: 1
-  fireEvent: 10
+  initEvents: 12000000
+  fireEvents: 0b000000090000000a0000001a000000
+  triggerLatency: 0.2
   objectiveManager: {fileID: 0}
   objectiveNodePrefab: {fileID: 6249795917659776395, guid: b98a0bd0978144f409eccd31c6d39e06, type: 3}
   targetIcon: {fileID: 5522425111778820872}

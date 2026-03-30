@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectiveTypeName: Match Count
   description: Match %c Times.
-  completionEvent: 9
+  completionEvent: 402
   objectiveTypeSprite: {fileID: 868108904, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
