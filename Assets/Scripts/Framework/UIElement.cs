@@ -8,19 +8,19 @@ using UnityEngine;
 
 public abstract class UIElement : MonoBehaviour
 {
-    public GameEvent initEvent;
-    public GameEvent fireEvent;
+    public List<GameEvent> initEvents;
+    public List<GameEvent> fireEvents;
     public float triggerLatency = 0.2f;
 
     private void OnEnable()
     {
-        EventManager.StartListening(initEvent, OnInitEvent);
-        EventManager.StartListening(fireEvent, OnFireEvent);
+        initEvents.ForEach(initEvent => EventManager.StartListening(initEvent, OnInitEvent));
+        fireEvents.ForEach(fireEvent => EventManager.StartListening(fireEvent, OnFireEvent));
     }
     private void OnDisable()
     {
-        EventManager.StopListening(initEvent, OnInitEvent);
-        EventManager.StopListening(fireEvent, OnFireEvent);
+        initEvents.ForEach(initEvent => EventManager.StopListening(initEvent, OnInitEvent));
+        fireEvents.ForEach(fireEvent => EventManager.StopListening(fireEvent, OnFireEvent));
     }
 
     public void OnInitEvent(EventParam e)
