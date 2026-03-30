@@ -26,7 +26,13 @@ namespace Game
         public Vector2Int proceduralGridSize = new Vector2Int(8, 8);
         [FoldoutGroup("Level Settings"), ShowIf(nameof(UseProcedural))]
         public Grid3D.ProceduralGenerationSettings proceduralGeneration = new Grid3D.ProceduralGenerationSettings();
-        
+        [FoldoutGroup("Power Up Settings")]
+        [SerializeField] private bool allowDiscoBallCreation = true;
+        [FoldoutGroup("Power Up Settings")]
+        [SerializeField] private bool allowRocketCreation = true;
+        [FoldoutGroup("Power Up Settings")]
+        [SerializeField] private bool allowBombCreation = true;
+
         [FoldoutGroup("Power Up Settings")]
         public int sparklingPowerAfterXCombo = 3;
         [FoldoutGroup("Power Up Settings"), Range(0f, 1f)]
@@ -37,6 +43,11 @@ namespace Game
         public ElementData rocketElementData;
         [FoldoutGroup("Power Up Settings")]
         public ElementData discoBallElementData;
+
+
+        public bool AllowDiscoBallCreation => allowDiscoBallCreation;
+        public bool AllowRocketCreation => allowRocketCreation;
+        public bool AllowBombCreation => allowBombCreation;
 
         protected override void Awake()
         {

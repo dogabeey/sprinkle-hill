@@ -42,7 +42,10 @@ public enum GameEvent
     // Special Elements
     BOX_DESTROYED,
     SPECIAL_ELEMENT_ACTIVATED,
-    
+    BOMB_CREATED,
+    ROCKET_CREATED,
+    DISCO_BALL_CREATED,
+
     // Ad Events
     AD_SHOWN,
     AD_CLOSED,

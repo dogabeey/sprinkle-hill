@@ -205,6 +205,19 @@ namespace Game
                 GridHelper.SetEmission(element, 0f);
                 ApplySortingBoost(element, type == ElementPowerUpType.Bomb);
             }
+
+            TriggerPowerUpCreatedEvent(type, visualData);
+        }
+
+        private void TriggerPowerUpCreatedEvent(ElementPowerUpType type, ElementData data)
+        {
+            GameEvent evt;
+            if (type == ElementPowerUpType.Bomb) evt = GameEvent.BOMB_CREATED;
+            else if (IsRocket(type)) evt = GameEvent.ROCKET_CREATED;
+            else if (IsDiscoBall(type)) evt = GameEvent.DISCO_BALL_CREATED;
+            else return;
+
+            EventManager.TriggerEvent(evt, new EventParam(paramScriptable: data));
         }
 
         // ------------------------------------------------------------------
@@ -266,7 +279,7 @@ namespace Game
             if (discoBallElement != null)
             {
                 discoBallElement.transform.DOKill();
-                float spinDuration = Mathf.Max(0.02f, GameManager.Instance.constantManager.discoBallSpinLoopDuration);
+                float spinDuration = GameManager.Instance.constantManager.discoBallSpinLoopDuration;
                 float spinDegrees = GameManager.Instance.constantManager.discoBallSpinDegreesPerLoop;
                 spinTween = discoBallElement.transform
                     .DORotate(new Vector3(0f, 0f, spinDegrees), spinDuration, RotateMode.FastBeyond360)

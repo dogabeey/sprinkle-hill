@@ -161,14 +161,25 @@ namespace Game
                 currentComboCount++;
                 GameManager.Instance.soundManager.Play(ConstantManager.SOUNDS.EFFECTS.MATCH);
 
+                LevelScene_Match3Game level = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
+                bool allowDiscoBall = level.AllowDiscoBallCreation;
+                bool allowBomb = level.AllowBombCreation;
+                bool allowRocket = level.AllowRocketCreation;
+
                 // Detect power-up spawns
-                List<PowerUpHandler.SpawnRequest> discoBallSpawns = powerUpHandler.FindDiscoBallSpawns(matchedGroups, init1, init2);
-                List<PowerUpHandler.SpawnRequest> bombSpawns = powerUpHandler.FindBombSpawns(matchedGroups, init1, init2);
+                List<PowerUpHandler.SpawnRequest> discoBallSpawns = allowDiscoBall
+                    ? powerUpHandler.FindDiscoBallSpawns(matchedGroups, init1, init2)
+                    : new List<PowerUpHandler.SpawnRequest>();
+                List<PowerUpHandler.SpawnRequest> bombSpawns = allowBomb
+                    ? powerUpHandler.FindBombSpawns(matchedGroups, init1, init2)
+                    : new List<PowerUpHandler.SpawnRequest>();
 
                 HashSet<Vector2Int> discoBallPositions = new HashSet<Vector2Int>();
                 for (int i = 0; i < discoBallSpawns.Count; i++) discoBallPositions.Add(discoBallSpawns[i].position);
 
-                List<PowerUpHandler.SpawnRequest> rocketSpawns = powerUpHandler.FindRocketSpawns(matchedGroups, init1, init2, discoBallPositions);
+                List<PowerUpHandler.SpawnRequest> rocketSpawns = allowRocket
+                    ? powerUpHandler.FindRocketSpawns(matchedGroups, init1, init2, discoBallPositions)
+                    : new List<PowerUpHandler.SpawnRequest>();
 
                 HashSet<Vector2Int> protectedPositions = new HashSet<Vector2Int>(discoBallPositions);
                 for (int i = 0; i < bombSpawns.Count; i++) protectedPositions.Add(bombSpawns[i].position);

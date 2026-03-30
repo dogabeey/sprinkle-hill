@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace Game
         [HideInInspector] public bool isLose;
         [HideInInspector] public bool isEnded;
         [HideInInspector] public bool isPaused;
+
 
         public static LevelScene Instance;
 
