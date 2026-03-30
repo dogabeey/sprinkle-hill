@@ -12,7 +12,12 @@ public class ObjectiveUINode : MonoBehaviour
     public void Initialize(Objective objective)
     {
         referenceObjective = objective;
-        objectiveIcon.sprite = objective.scriptableObjectParameter.displayIcon;
+
+        Sprite icon = objective != null && objective.objectiveType != null
+            ? objective.objectiveType.ResolveObjectiveSprite(objective.scriptableObjectParameter)
+            : null;
+
+        objectiveIcon.sprite = icon;
         checkmarkIcon.gameObject.SetActive(false);
         countText.text = objective.requiredCount.ToString();
     }

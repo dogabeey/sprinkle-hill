@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bb71fb4368c2fb44b904d415a7229f6e, type: 3}
-  m_Name: Element Collection
+  m_Name: Match Count
   m_EditorClassIdentifier: 
   objectiveTypeName: Element Collection
   description: Collect %c %o.
   completionEvent: 10
+  objectiveTypeSprite: {fileID: 868108904, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}

@@ -1311,7 +1311,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: element_sprites_36
+      name: element_sprites_any
       rect:
         serializedVersion: 2
         x: 1792
@@ -1546,7 +1546,7 @@ TextureImporter:
     nameFileIdTable:
       element_sprites_0: 2018056570
       element_sprites_2: 849979424
-      element_sprites_36: 868108904
+      element_sprites_any: 868108904
       element_sprites_apple: 1866718676
       element_sprites_avocado: 563058259
       element_sprites_banana: -899814415

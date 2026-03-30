@@ -3680,7 +3680,9 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   tutorialSteps:
-  - Id: 1
+  - Id: level_1_matchelements_1
+    nextStep:
+      rid: -2
     highlightSelector:
       rid: 943281595348680799
     startEvent: 18
@@ -3704,10 +3706,13 @@ MonoBehaviour:
       vectorList: []
       paramBool: 0
     isCompleted: 0
+    advancedMode: 0
   highlightOverlay: {fileID: 900864208}
   references:
     version: 2
     RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 943281595348680799
       type: {class: TwoRandomMatchableElements_Highlight, ns: Game, asm: Assembly-CSharp}
       data: 
@@ -5234,18 +5239,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1068210311}
     m_Modifications:
-    - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
-      propertyPath: m_fontSize
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
-      propertyPath: m_fontSizeBase
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
-      propertyPath: m_TextWrappingMode
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2734847600849076859, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
       propertyPath: m_Name
       value: ObjectiveUI
@@ -5331,18 +5324,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
-      propertyPath: initEvent
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
-      propertyPath: timerText
-      value: 
-      objectReference: {fileID: 9132301250057630279}
-    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
-      propertyPath: targetIcon
-      value: 
-      objectReference: {fileID: 9132301250057630280}
-    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
       propertyPath: objectiveManager
       value: 
       objectReference: {fileID: 1759594110}
@@ -5356,28 +5337,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3336541892523426042, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
   m_PrefabInstance: {fileID: 9132301250057630277}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &9132301250057630279 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
-  m_PrefabInstance: {fileID: 9132301250057630277}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &9132301250057630280 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5522425111778820872, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
-  m_PrefabInstance: {fileID: 9132301250057630277}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

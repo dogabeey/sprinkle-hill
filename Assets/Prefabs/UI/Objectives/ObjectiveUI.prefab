@@ -234,6 +234,8 @@ MonoBehaviour:
   fireEvent: 10
   objectiveManager: {fileID: 0}
   objectiveNodePrefab: {fileID: 6249795917659776395, guid: b98a0bd0978144f409eccd31c6d39e06, type: 3}
+  targetIcon: {fileID: 5522425111778820872}
+  timerText: {fileID: 2210623753114222868}
 --- !u!114 &2514203487333984939
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -984,8 +986,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 60
-  m_fontSizeBase: 60
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1000,7 +1002,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}

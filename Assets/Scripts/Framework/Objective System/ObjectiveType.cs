@@ -21,10 +21,23 @@ public class ObjectiveType : ScriptableObject
     [TextArea]
     public string description;
     public GameEvent completionEvent;
+    public Sprite objectiveTypeSprite; // This is fallback sprite used when the objective's scriptable object parameter doesn't exist or doesn't have a sprite.
 
     public string FormattedDescription(VisualizableScriptableObject visualizableScriptableObject, int count)
     {
-        return description.Replace("%o", visualizableScriptableObject.displayName)
+        string displayName = visualizableScriptableObject != null && !string.IsNullOrEmpty(visualizableScriptableObject.displayName)
+            ? visualizableScriptableObject.displayName
+            : objectiveTypeName;
+
+        return description.Replace("%o", displayName)
                           .Replace("%c", count.ToString());
+    }
+
+    public Sprite ResolveObjectiveSprite(VisualizableScriptableObject visualizableScriptableObject)
+    {
+        if (visualizableScriptableObject != null && visualizableScriptableObject.displayIcon != null)
+            return visualizableScriptableObject.displayIcon;
+
+        return objectiveTypeSprite;
     }
 }
