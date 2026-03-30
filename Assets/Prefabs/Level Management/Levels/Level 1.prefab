@@ -135,6 +135,10 @@ PrefabInstance:
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: objectives.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: allowDiscoBallCreation
       value: 0
       objectReference: {fileID: 0}
@@ -151,6 +155,22 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: objectives.Array.data[0].objectiveType
+      value: 
+      objectReference: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: objectives.Array.data[0].requiredCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: objectives.Array.data[1].objectiveType
+      value: 
+      objectReference: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: objectives.Array.data[1].requiredCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: proceduralGeneration.triangleDecrement
       value: 0
       objectReference: {fileID: 0}
@@ -158,6 +178,10 @@ PrefabInstance:
       propertyPath: proceduralGeneration.elementPool.Array.size
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: 'proceduralGeneration.elementPool.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: d35d7301f52f6504a8cc2a157fc9a0b8, type: 2}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: 'proceduralGeneration.elementPool.Array.data[5]'
       value: 
@@ -169,11 +193,15 @@ PrefabInstance:
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: objectives.Array.data[0].scriptableObjectParameter
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 11400000, guid: d35d7301f52f6504a8cc2a157fc9a0b8, type: 2}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: objectives.Array.data[1].scriptableObjectParameter
+      value: 
+      objectReference: {fileID: 11400000, guid: fcba4310cd5fca344aad5d26ad52423f, type: 2}
     - target: {fileID: 6111944330127197299, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: serializationData.Prefab
       value: 
-      objectReference: {fileID: 6111944330127197299, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 6806889991896997094, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}

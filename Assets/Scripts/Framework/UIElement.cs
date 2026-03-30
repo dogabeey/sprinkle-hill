@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Game;
 using Sirenix.OdinInspector;
 using System.Collections;
@@ -9,6 +10,7 @@ public abstract class UIElement : MonoBehaviour
 {
     public GameEvent initEvent;
     public GameEvent fireEvent;
+    public float triggerLatency = 0.2f;
 
     private void OnEnable()
     {
@@ -23,11 +25,17 @@ public abstract class UIElement : MonoBehaviour
 
     public void OnInitEvent(EventParam e)
     {
-        InitUI();
+        DOVirtual.DelayedCall(triggerLatency, () =>
+        {
+            InitUI();
+        });
     }
     public void OnFireEvent(EventParam e)
     {
-        DrawUI();
+        DOVirtual.DelayedCall(triggerLatency, () =>
+        {
+            DrawUI();
+        });
     }
 
     public abstract void InitUI();
