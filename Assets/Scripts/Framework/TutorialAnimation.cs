@@ -51,7 +51,7 @@ namespace Game
             {
                 tutorialManager.directiveText.transform.DOKill();
                 tutorialManager.directiveText.transform.localScale = Vector3.one;
-                tutorialManager.directiveText.transform.DOScale(Vector3.one, duration / 2f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Yoyo);
+                tutorialManager.directiveText.transform.DOScale(Vector3.one * 1.2f, duration / 2f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Yoyo);
             }
         }
 

@@ -5311,6 +5311,10 @@ PrefabInstance:
       propertyPath: levelContainer
       value: 
       objectReference: {fileID: 254586920}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: tutorialManager
+      value: 
+      objectReference: {fileID: 1716899157}
     - target: {fileID: 7722314759461277707, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
