@@ -1524,7 +1524,7 @@ MonoBehaviour:
   padding: 10
   fadeInDuration: 0.25
   fadeOutDuration: 0.2
-  highlightDelay: 0.15
+  highlightDelay: 0.1
 --- !u!114 &900864209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3725,6 +3725,7 @@ MonoBehaviour:
         tutorialObject: {fileID: 1399129251957722908, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
         duration: 2
         isLoop: 1
+        screenPositionOffset: {x: 100, y: -100}
 --- !u!1 &1723669257
 GameObject:
   m_ObjectHideFlags: 0
@@ -4416,7 +4417,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7246cebcae98404aacbd6d217a01bd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initDelay: 0.04
+  initDelay: 0.02
   boundsOffset: {x: 1, y: 1, z: 1, w: 2}
 --- !u!4 &2095311502 stripped
 Transform:
