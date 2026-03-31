@@ -81,7 +81,7 @@ namespace Game
 
         public override bool IsAvailable()
         {
-            return true;
+            return World.Instance.lastPlayedLevelIndex >= unlockedLevel;
         }
 
         public override void OnClick()
