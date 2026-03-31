@@ -12,18 +12,25 @@ namespace Game
     public class ActionBarView : MonoBehaviour
     {
         public ActionBarItem actionBarItem;
-        public Image actionBarIcon;
+        public Image actionIcon;
         public TMP_Text actionText;
         public TMP_Text levelText;
         public TMP_Text costText;
+        public TMP_Text countText;
         public Button onClickButton;
         public CanvasGroup canvasGroup;
 
-        private void Start()
+        public void Init(ActionBarItem actionBarItem)
         {
-            
+            this.actionBarItem = actionBarItem;
+            onClickButton.onClick.AddListener(() => {
+                EventManager.TriggerEvent(GameEvent.ACTION_CLICKED, new EventParam(
+                    paramStr: actionBarItem.actionName
+                ));
+                actionBarItem.OnClick();
+            });
+            DrawUI();
         }
-
         private void Update()
         {
             DrawUI();
@@ -33,8 +40,8 @@ namespace Game
         {
             if (actionBarItem != null)
             {
-                if(actionBarIcon) 
-                    actionBarIcon.sprite = actionBarItem.actionBarIcon;
+                if(actionIcon) 
+                    actionIcon.sprite = actionBarItem.actionBarIcon;
                 if(actionText) 
                     actionText.text = actionBarItem.actionName;
                 if(levelText) 

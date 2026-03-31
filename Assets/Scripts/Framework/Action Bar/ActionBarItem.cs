@@ -1,3 +1,4 @@
+using Game;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,58 +10,38 @@ namespace Game
     /// This is an action bar item which the player can click to perform an action. It can cost any currency. New action bar items can be created by extending this class. 
     /// You can configure conditions which decides when the button will be visible or clickable. 
     /// </summary>
-    public abstract class ActionBarItem : MonoBehaviour
+    public abstract class ActionBarItem
     {
+        private const float visibilityCheckInterval = 0.1f;
+        private const float clickabilityCheckInterval = 0.1f;
+
         public string actionName;
         [Header("References")]
         public Sprite actionBarIcon;
         public Button onClickButton;
         [Header("Cost Settings")]
         public CurrencyModel costCurrency;
-        public float baseCost = 100;
-        public float costIncrement = 50;
-        public float costAcceleration = 10;
-        [Header("Technical Settings")]
-        public float visibilityCheckInterval = 0.1f;
-        public float clickabilityCheckInterval = 0.1f;
+        public abstract float BaseCost { get; }
+        public abstract float CostIncrement { get; }
+        public abstract float CostAcceleration { get; }
 
         internal bool isVisible, isClickable;
 
-        public int CurrentLevel
+        public int CurrentLevel // TODO: change this to Isaveable when implementing save system
         {
             get => PlayerPrefs.GetInt(actionName + "_level", 1);
             set => PlayerPrefs.SetInt(actionName + "_level", value);
         }
-
-        /// <summary>
-        /// Multiplier for the cost curve. This can be used to adjust the cost curve to fit the game's economy or other elements like bonuses and such.
-        /// </summary>
-        public abstract float CostMultiplier { get; }
-
-        // Start is called before the first frame update
-        void Start()
+        public int CurrentCount // TODO: change this to Isaveable when implementing save system
         {
-            InvokeRepeating("SetVisibility", 0, visibilityCheckInterval);
-            InvokeRepeating("SetClickability", 0, clickabilityCheckInterval);
-
-            onClickButton.onClick.AddListener(() => {
-                EventManager.TriggerEvent(GameEvent.ACTION_CLICKED, new EventParam(
-                    paramStr: actionName
-                ));
-                OnClick();
-            });
+            get => PlayerPrefs.GetInt(actionName + "_count", 0);
+            set => PlayerPrefs.SetInt(actionName + "_count", value);
         }
 
-        // Update is called once per frame
-        void Update()
+        public virtual int GetCost()
         {
-
-        }
-
-        public int GetCost()
-        {
-            float costIncrement = this.costIncrement + (CurrentLevel - 2) * costAcceleration;
-            return Mathf.RoundToInt(baseCost + (CurrentLevel - 1) * costIncrement);
+            float costIncrement = this.CostIncrement + (CurrentLevel - 2) * CostAcceleration;
+            return Mathf.RoundToInt(BaseCost + (CurrentLevel - 1) * costIncrement);
         }
 
         private void SetVisibility()
@@ -75,5 +56,27 @@ namespace Game
         abstract public void OnClick();
         abstract public bool IsVisible();
         abstract public bool IsClickable();
+    }
+    public class IncrementalBonus : ActionBarItem
+    {
+        public override float BaseCost => 100;
+        public override float CostIncrement => 0;
+        public override float CostAcceleration => 0;
+
+        public override bool IsClickable()
+        {
+            return CurrencyManager.Instance.GetCurrencyAmount(costCurrency) >= GetCost();
+        }
+
+        public override bool IsVisible()
+        {
+            return true;
+        }
+
+        public override void OnClick()
+        {
+            CurrencyManager.Instance.AddCurrency(costCurrency.currencyID, -GetCost());
+            CurrentLevel++;
+        }
     }
 }

@@ -11,6 +11,7 @@ namespace Game
     /// </summary>
     public class ActionBarManager : MonoBehaviour
     {
+        public ActionBarView actionBarViewPrefab;
         public List<ActionBarItem> actionBarItemList;
         public Transform actionBarParent;
 
@@ -23,7 +24,7 @@ namespace Game
         {
             foreach (ActionBarItem actionBarItem in actionBarItemList)
             {
-                Instantiate(actionBarItem.gameObject, actionBarParent);
+                Instantiate(actionBarViewPrefab, actionBarParent);
             }
         }
     }
