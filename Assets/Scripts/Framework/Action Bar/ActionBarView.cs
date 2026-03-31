@@ -13,12 +13,14 @@ namespace Game
     {
         public ActionBarItem actionBarItem;
         public Image actionIcon;
+        public GameObject lockedPanel;
         public TMP_Text actionText;
         public TMP_Text levelText;
         public TMP_Text costText;
         public TMP_Text countText;
         public Button onClickButton;
         public CanvasGroup canvasGroup;
+        public LayoutElement layoutElement;
 
         public void Init(ActionBarItem actionBarItem)
         {
@@ -36,22 +38,26 @@ namespace Game
             DrawUI();
         }
 
-        public void DrawUI()
+        public virtual void DrawUI()
         {
             if (actionBarItem != null)
             {
                 if(actionIcon) 
                     actionIcon.sprite = actionBarItem.actionBarIcon;
-                if(actionText) 
+                if(lockedPanel) 
+                    lockedPanel.SetActive(!actionBarItem.IsAvailable());
+                if (actionText) 
                     actionText.text = actionBarItem.actionName;
                 if(levelText) 
                     levelText.text = "LEVEL " + actionBarItem.CurrentLevel.ToString();
                 if (costText)
                     costText.text = actionBarItem.GetCost().ConvertToKMB();
                 if (onClickButton)
-                    onClickButton.interactable = actionBarItem.isClickable;
+                    onClickButton.interactable = actionBarItem.IsClickable();
                 if (canvasGroup)
-                    canvasGroup.alpha = actionBarItem.isVisible ? 1 : 0;
+                    canvasGroup.alpha = actionBarItem.IsVisible() ? 1 : 0;
+                if (layoutElement)
+                    layoutElement.ignoreLayout = !actionBarItem.IsVisible();
             }
         }
     }

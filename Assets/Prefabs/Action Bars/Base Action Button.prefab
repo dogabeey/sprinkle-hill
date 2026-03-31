@@ -560,7 +560,6 @@ GameObject:
   - component: {fileID: 5235771891358879633}
   - component: {fileID: 230861821462889445}
   - component: {fileID: 7236742246683191088}
-  - component: {fileID: 2843775958999886120}
   m_Layer: 5
   m_Name: Base Action Button
   m_TagString: Untagged
@@ -638,11 +637,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaf359b0962ee054e89e835e4536fe24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  actionBarItem: {fileID: 2843775958999886120}
   actionIcon: {fileID: 0}
   actionText: {fileID: 0}
   levelText: {fileID: 0}
   costText: {fileID: 5628338304248941517}
+  countText: {fileID: 4987379494632014166}
   onClickButton: {fileID: 4319887855089888787}
   canvasGroup: {fileID: 7236742246683191088}
 --- !u!225 &7236742246683191088
@@ -657,27 +656,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &2843775958999886120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5235771891358879647}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c3f2074321ae829458e3f4851c0035ca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  actionName: 
-  actionBarIcon: {fileID: 21300000, guid: 86ac6f413bd544030b03ff0880b0aa86, type: 3}
-  onClickButton: {fileID: 4319887855089888787}
-  costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
-  baseCost: 100
-  costIncrement: 50
-  costAcceleration: 10
-  visibilityCheckInterval: 0.1
-  clickabilityCheckInterval: 0.1
 --- !u!1 &6290996391568222554
 GameObject:
   m_ObjectHideFlags: 0

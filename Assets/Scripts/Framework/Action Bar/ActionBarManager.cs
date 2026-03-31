@@ -12,6 +12,7 @@ namespace Game
     public class ActionBarManager : MonoBehaviour
     {
         public ActionBarView actionBarViewPrefab;
+        [SerializeReference]
         public List<ActionBarItem> actionBarItemList;
         public Transform actionBarParent;
 

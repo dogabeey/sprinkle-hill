@@ -25,7 +25,7 @@ namespace Game
         public abstract float CostIncrement { get; }
         public abstract float CostAcceleration { get; }
 
-        internal bool isVisible, isClickable;
+        internal bool isVisible, isClickable, isAvailable;
 
         public int CurrentLevel // TODO: change this to Isaveable when implementing save system
         {
@@ -44,31 +44,42 @@ namespace Game
             return Mathf.RoundToInt(BaseCost + (CurrentLevel - 1) * costIncrement);
         }
 
-        private void SetVisibility()
-        {
-            isVisible = IsVisible();
-        }
-        private void SetClickability()
-        {
-            isClickable = IsClickable();
-        }
-
         abstract public void OnClick();
+        /// <summary>
+        /// Determines whether the object is visible in the list at all. This is used to hide or show the object in the list. If the object is not visible, it will not take up any space in the list.
+        /// </summary>
+        /// <returns>true if the object is visible; otherwise, false.</returns>
         abstract public bool IsVisible();
+        /// <summary>
+        /// Determines whether the object is clickable. This is used to enable or disable the button but the object will still take up space in the list. This is useful when you want to show the player that there is an action they can perform but they don't have enough resources to perform it yet.
+        /// </summary>
+        /// <returns>true if the object is clickable; otherwise, false.</returns>
         abstract public bool IsClickable();
+        /// <summary>
+        /// Determines whether the object is available. This is used to show or hide the locked panel.
+        /// </summary>
+        /// <returns>true if the object is available; otherwise, false.</returns>
+        abstract public bool IsAvailable();
     }
-    public class IncrementalBonus : ActionBarItem
+    public class BonusPremiumAction : ActionBarItem
     {
         public override float BaseCost => 100;
         public override float CostIncrement => 0;
         public override float CostAcceleration => 0;
 
+        public int unlockedLevel = 1;
+
         public override bool IsClickable()
         {
-            return CurrencyManager.Instance.GetCurrencyAmount(costCurrency) >= GetCost();
+            return CurrencyManager.Instance.GetCurrencyAmount(costCurrency) >= GetCost() && IsAvailable();
         }
 
         public override bool IsVisible()
+        {
+            return true;
+        }
+
+        public override bool IsAvailable()
         {
             return true;
         }
