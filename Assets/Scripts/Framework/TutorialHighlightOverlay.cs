@@ -146,6 +146,7 @@ namespace Game
                 yield return new WaitForSeconds(highlightDelay);
 
             SetRects(targets);
+            EventManager.TriggerEvent(GameEvent.HIGHLIGHT_UPDATED);
             _showRectsCoroutine = null;
         }
 
@@ -163,17 +164,6 @@ namespace Game
                 fadeOutDuration
             ).SetId(this).OnComplete(() => gameObject.SetActive(false));
         }
-
-        /// <summary>
-        /// Recomputes spotlight rects from the current world/screen positions of
-        /// <paramref name="targets"/>.  Call every frame if targets move.
-        /// </summary>
-        public void UpdateTargets(IList<GameObject> targets)
-        {
-            if (_mat == null) return;
-            SetRects(targets);
-        }
-
         // -----------------------------------------------------------------
         //  Rect calculation
         // -----------------------------------------------------------------
@@ -213,6 +203,7 @@ namespace Game
                     _mat.SetVector(ID_Rects[i], Vector4.zero);
                 }
             }
+
         }
 
         // -----------------------------------------------------------------

@@ -11,7 +11,6 @@ public enum GameEvent
     CURRENT_WORLD_CHANGED = 300,
 
     CAMERA_BOUNDS_UPDATED = 400,
-    // Element and Grid Events
     ELEMENT_SELECTED = 401,
     ELEMENT_MATCHED = 402,
     ELEMENT_DESTROYED = 403,
@@ -24,7 +23,8 @@ public enum GameEvent
     ELEMENTS_REFILLED = 410,
     GRID_INITIALIZED = 411,
     GRID_STABLE = 412,
-    
+    HIGHLIGHT_UPDATED = 413,
+
     // Currency Events
     CURRENCY_EARNED = 500,
     CURRENCY_SPENT = 501,

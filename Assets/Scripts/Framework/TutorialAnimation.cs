@@ -33,6 +33,8 @@ namespace Game
 
     public class MoveBetweenTwoPoint : TutorialAnimation
     {
+        public Vector2 screenPositionOffset;
+
         public override void PlayAnim()
         {
             if (tutorialObjectInstance == null || referenceStep?.highlightSelector?.HighlightedObjects == null || referenceStep.highlightSelector.HighlightedObjects.Length < 2)
@@ -42,8 +44,8 @@ namespace Game
             Transform endPointTransform = referenceStep.highlightSelector.HighlightedObjects[1].transform;
 
             // Detect the screen position of the start and end points to determine where the animation should be played
-            Vector3 startScreenPos = Camera.main.WorldToScreenPoint(startPointTransform.position);
-            Vector3 endScreenPos = Camera.main.WorldToScreenPoint(endPointTransform.position);
+            Vector3 startScreenPos = Camera.main.WorldToScreenPoint(startPointTransform.position) + (Vector3)screenPositionOffset;
+            Vector3 endScreenPos = Camera.main.WorldToScreenPoint(endPointTransform.position) + (Vector3)screenPositionOffset;
 
             tutorialObjectInstance.transform.DOKill();
             tutorialObjectInstance.transform.position = startScreenPos;

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using System;
@@ -50,6 +51,7 @@ namespace Game
         // Stored delegates so StopListening receives the same instance as StartListening.
         private readonly Dictionary<TutorialStep, Action<EventParam>> _startListeners      = new Dictionary<TutorialStep, Action<EventParam>>();
         private readonly Dictionary<TutorialStep, Action<EventParam>> _completionListeners  = new Dictionary<TutorialStep, Action<EventParam>>();
+        private TutorialStep _activeStep;
 
         private void OnEnable()
         {
@@ -75,6 +77,8 @@ namespace Game
                 EventManager.StartListening(step.startEvent,      onStart);
                 EventManager.StartListening(step.completionEvent, onComplete);
             }
+
+            EventManager.StartListening(GameEvent.HIGHLIGHT_UPDATED, OnHighlightUpdated);
         }
 
         private void OnDisable()
@@ -90,6 +94,9 @@ namespace Game
                 ClearTutorialAnimation(step);
             }
 
+            _activeStep = null;
+            EventManager.StopListening(GameEvent.HIGHLIGHT_UPDATED, OnHighlightUpdated);
+
             _startListeners.Clear();
             _completionListeners.Clear();
         }
@@ -98,9 +105,17 @@ namespace Game
         {
             if (step.isCompleted) return;
 
+            _activeStep = step;
             step.onStart?.Invoke();
             ShowOverlay(step);
-            PlayTutorialAnimation(step);
+        }
+
+        private void OnHighlightUpdated(EventParam param)
+        {
+            if (_activeStep == null || _activeStep.isCompleted)
+                return;
+
+            PlayTutorialAnimation(_activeStep);
         }
 
         private void CompleteTutorialStep(TutorialStep step)
@@ -112,6 +127,9 @@ namespace Game
             highlightOverlay?.Hide();
             ClearTutorialAnimation(step);
 
+            if (_activeStep == step)
+                _activeStep = null;
+
             if (step.nextStep != null)
             {
                 StartTutorialStep(step.nextStep);
@@ -120,16 +138,25 @@ namespace Game
 
         private void ShowOverlay(TutorialStep step)
         {
-            if (highlightOverlay == null) return;
+            GameObject[] targets = step?.highlightSelector?.HighlightedObjects;
+            bool hasTargets = targets != null && targets.Length > 0;
 
-            GameObject[] targets = step.highlightSelector.HighlightedObjects;
-            if (targets == null || targets.Length == 0)
+            if (highlightOverlay != null)
             {
-                highlightOverlay.Hide();
-                return;
+                if (!hasTargets)
+                {
+                    highlightOverlay.Hide();
+                }
+                else
+                {
+                    highlightOverlay.Show(targets);
+                }
             }
 
-            highlightOverlay.Show(targets);
+            if (!hasTargets)
+            {
+                ClearTutorialAnimation(step);
+            }
         }
 
         private void PlayTutorialAnimation(TutorialStep step)
