@@ -4,6 +4,7 @@ using Sirenix.Serialization;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -16,6 +17,7 @@ namespace Game
         public class TutorialStep
         {
             public string Id;
+            public string directive;
             [SerializeReference]
             public TutorialStep nextStep;
             [SerializeReference]
@@ -44,7 +46,8 @@ namespace Game
 
         public List<TutorialStep> tutorialSteps = new List<TutorialStep>();
 
-        [Header("Highlight Overlay")]
+        public TMP_Text directiveText;
+        public Transform directiveParent;
         [Tooltip("Assign the TutorialHighlightOverlay component. Leave null to skip highlighting.")]
         public TutorialHighlightOverlay highlightOverlay;
 
@@ -108,6 +111,7 @@ namespace Game
             _activeStep = step;
             step.onStart?.Invoke();
             ShowOverlay(step);
+            ShowDirective(step);
         }
 
         private void OnHighlightUpdated(EventParam param)
@@ -126,6 +130,7 @@ namespace Game
             step.onComplete?.Invoke();
             highlightOverlay?.Hide();
             ClearTutorialAnimation(step);
+            ClearDirective();
 
             if (_activeStep == step)
                 _activeStep = null;
@@ -133,6 +138,23 @@ namespace Game
             if (step.nextStep != null)
             {
                 StartTutorialStep(step.nextStep);
+            }
+        }
+
+        public void ShowDirective(TutorialStep step)
+        {
+            if (directiveText != null)
+            {
+                directiveText.text = step.directive;
+                directiveParent.gameObject.SetActive(true);
+            }
+        }
+        public void ClearDirective()
+        {
+            if (directiveText != null)
+            {
+                directiveText.text = "";
+                directiveParent.gameObject.SetActive(false);
             }
         }
 

@@ -40,6 +40,23 @@ namespace Game
             if (tutorialObjectInstance == null || referenceStep?.highlightSelector?.HighlightedObjects == null || referenceStep.highlightSelector.HighlightedObjects.Length < 2)
                 return;
 
+            DirectiveTextAnim();
+            TutorialObjectsAnim();
+        }
+
+        private void DirectiveTextAnim()
+        {
+            var tutorialManager = GameManager.Instance.tutorialManager;
+            if (tutorialManager != null && tutorialManager.directiveText != null)
+            {
+                tutorialManager.directiveText.transform.DOKill();
+                tutorialManager.directiveText.transform.localScale = Vector3.one;
+                tutorialManager.directiveText.transform.DOScale(Vector3.one, duration / 2f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Yoyo);
+            }
+        }
+
+        private void TutorialObjectsAnim()
+        {
             Transform startPointTransform = referenceStep.highlightSelector.HighlightedObjects[0].transform;
             Transform endPointTransform = referenceStep.highlightSelector.HighlightedObjects[1].transform;
 
@@ -50,6 +67,11 @@ namespace Game
             tutorialObjectInstance.transform.DOKill();
             tutorialObjectInstance.transform.position = startScreenPos;
 
+            AnimateBetweenPoints(startScreenPos, endScreenPos);
+        }
+
+        private void AnimateBetweenPoints(Vector3 startScreenPos, Vector3 endScreenPos)
+        {
             if (isLoop)
             {
                 tutorialObjectInstance.transform.DOMove(endScreenPos, duration / 2f).SetLoops(-1, LoopType.Yoyo);
