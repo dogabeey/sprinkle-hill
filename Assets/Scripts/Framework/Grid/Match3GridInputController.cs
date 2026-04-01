@@ -229,8 +229,10 @@ namespace Game
 
         private IEnumerator BombPlacementRoutine(Vector2Int center)
         {
-            isProcessing = true; 
-            GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is BombPlacementAction).CurrentCount--;
+            isProcessing = true;
+            BombPlacementAction bombAction = GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is BombPlacementAction) as BombPlacementAction;
+            bombAction.CurrentCount--;
+            yield return StartCoroutine(bombAction.BombThrowAnim(match3Grid.GetCellPositionInGrid(center)));
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: "Bomb Placement"));
             yield return StartCoroutine(match3Grid.ClearAreaAt(center, 1));
             yield return StartCoroutine(match3Grid.ApplyGravityPublic());

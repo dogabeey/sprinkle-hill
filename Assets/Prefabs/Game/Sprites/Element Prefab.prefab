@@ -222,14 +222,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
-    SerializedBytes: 2d01090000006700720069006400430065006c006c007300
+    SerializedFormat: 2
+    SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: gridCells
+      Entry: 6
+      Data: 
   gridElementPrefab: {fileID: 0}
   tileGenerationData: {fileID: 0}
   parent: {fileID: 0}
@@ -240,12 +243,11 @@ MonoBehaviour:
     elementData: {fileID: 0}
     isSparkling: 0
     isHidden: 0
-    isBomb: 0
+    powerUpType: 0
   elementRenderer: {fileID: 482629601680886882}
   hiddenSprite: {fileID: -136137942, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
   ownerGrid: {fileID: 0}
   highlightSprite: {fileID: 961667231535525662}
-  maxAnimationEmission: 1
 --- !u!61 &43135049299317513
 BoxCollider2D:
   m_ObjectHideFlags: 0

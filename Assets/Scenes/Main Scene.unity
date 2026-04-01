@@ -1355,6 +1355,7 @@ MonoBehaviour:
       data:
         actionBarIcon: {fileID: -238066524, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
         costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
+        actionSuccessParticle: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
         startingCount: 10
         unlockedLevel: 0
         addedTime: 30
@@ -1364,6 +1365,7 @@ MonoBehaviour:
       data:
         actionBarIcon: {fileID: -1949253524, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
         costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
+        actionSuccessParticle: {fileID: 6553830495741696104, guid: 1ea5b88013b271144a852e3fdd2cc75b, type: 3}
         startingCount: 10
         unlockedLevel: 0
     - rid: 3084495758061469769
@@ -1371,9 +1373,9 @@ MonoBehaviour:
       data:
         actionBarIcon: {fileID: 1175953842, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
         costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
+        actionSuccessParticle: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
         startingCount: 10
         unlockedLevel: 0
-        actionSuccessParticle: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
 --- !u!1 &715192649
 GameObject:
   m_ObjectHideFlags: 0

@@ -22,7 +22,8 @@ namespace Game
         public abstract string ActionName { get; }
         public Sprite actionBarIcon;
         public CurrencyModel costCurrency;
-        [ReadOnly] public int startingCount = 10; // This is only used for the first time the player gets this action. After that, the count will be saved in PlayerPrefs and this value will not be used anymore. This is useful for testing and debugging.
+        public ParticleSystem actionSuccessParticle;
+        public int startingCount = 10; // This is only used for the first time the player gets this action. After that, the count will be saved in PlayerPrefs and this value will not be used anymore. This is useful for testing and debugging.
 
         internal bool isVisible, isClickable, isAvailable;
 
@@ -133,7 +134,6 @@ namespace Game
     [Serializable]
     public class ShuffleAction : BonusPremiumAction
     {
-        public ParticleSystem actionSuccessParticle;
 
         public override string ActionName => "Shuffle";
         public override float BaseCost => 0;
@@ -220,6 +220,15 @@ namespace Game
 
             //CurrentCount--;
             inputController.BeginBombPlacement();
+        }
+
+        public IEnumerator BombThrowAnim(Vector3 targetCellLocation)
+        {
+            Vector3 bombThrowActionPos = GameManager.Instance.actionBarManager.GetActionBarView(this).transform.position;
+            bombThrowActionPos.z = targetCellLocation.z; // Ensure the particle is on the same plane as the target cell
+            ParticleSystem particle = GameObject.Instantiate(actionSuccessParticle, bombThrowActionPos, Quaternion.identity);
+            yield return particle.transform.DOMove(targetCellLocation, 0.5f).SetEase(Ease.Linear).WaitForCompletion();
+            GameObject.Destroy(particle.gameObject);
         }
 
         private Match3GridInputController GetInputController()

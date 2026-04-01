@@ -1217,5 +1217,12 @@ namespace Game
             element.elementInfo = cell.elementInfo;
             element.InitElement(this, element.elementInfo);
         }
+
+        internal Vector3 GetCellPositionInGrid(Vector2Int center)
+        {
+            if (generatedTiles.TryGetValue(center, out GridCellController tile) && tile != null)
+                return tile.transform.position;
+            return Vector3.zero;
+        }
     }
 }
