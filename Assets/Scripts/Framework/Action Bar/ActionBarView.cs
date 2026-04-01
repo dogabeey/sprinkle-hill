@@ -15,6 +15,7 @@ namespace Game
         public ActionBarItem actionBarItem;
         public Image actionIcon;
         public GameObject lockedPanel;
+        public TMP_Text unlockConditionText;
         public TMP_Text actionText;
         public TMP_Text costText;
         public GameObject countTextPanel;
@@ -27,11 +28,7 @@ namespace Game
         public void Init(ActionBarItem actionBarItem)
         {
             this.actionBarItem = actionBarItem;
-            Quaternion originalQuaternion = lockedPanel.transform.rotation;
             useButton.onClick.AddListener(() => {
-                EventManager.TriggerEvent(GameEvent.ACTION_BAR_ITEM_CLICKED, new EventParam(
-                    paramStr: actionBarItem.ActionName
-                ));
 
                 if(actionBarItem.IsAvailable())
                 {
@@ -44,13 +41,30 @@ namespace Game
                     // Shake lockedpanel
                     if (lockedPanel)
                     {
-                        lockedPanel.transform.DOShakeRotation(0.5f, new Vector3(0, 0, 10), 10, 90).SetEase(Ease.OutQuad).OnComplete(() => {
-                            lockedPanel.transform.rotation = originalQuaternion;
-                        });
+                        ShakeLockedPanel();
                     }
                 }
+
+                EventManager.TriggerEvent(GameEvent.ACTION_BAR_ITEM_CLICKED, new EventParam(
+                    paramStr: actionBarItem.ActionName
+                ));
             });
             DrawUI();
+        }
+
+        private void ShakeLockedPanel()
+        {
+            Tween lockedPanelShake = null;
+            Quaternion originalQuaternion = lockedPanel.transform.rotation;
+            if (lockedPanelShake != null && lockedPanelShake.IsPlaying())
+            {
+                lockedPanel.transform.rotation = originalQuaternion;
+                lockedPanelShake.Restart();
+            }
+            else
+            {
+                lockedPanelShake = lockedPanel.transform.DOShakeRotation(0.5f, new Vector3(0, 0, 10), 10, 90).SetEase(Ease.OutQuad);
+            }
         }
 
         public override void InitUI()
@@ -70,6 +84,8 @@ namespace Game
                     actionText.text = actionBarItem.ActionName;
                 if (costText)
                     costText.text = actionBarItem.GetCost().ConvertToKMB();
+                if (unlockConditionText)
+                    unlockConditionText.text = actionBarItem.AvailabilityExplanation;
                 if (countTextPanel)
                     countTextPanel.SetActive(actionBarItem.CurrentCount > 0 && actionBarItem.IsAvailable());
                 if (countText)

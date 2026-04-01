@@ -1342,18 +1342,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionBarViewPrefab: {fileID: 230861821462889445, guid: 9e234be0c7761a34aaf9d63c420f9995, type: 3}
   actionBarItemList:
-  - rid: 943281644091474010
+  - rid: 943281644091474012
   actionBarParent: {fileID: 854708863}
+  lockedSprite: {fileID: -320327708, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
   references:
     version: 2
     RefIds:
-    - rid: 943281644091474010
-      type: {class: BonusPremiumAction, ns: Game, asm: Assembly-CSharp}
+    - rid: 943281644091474012
+      type: {class: AddTimeAction, ns: Game, asm: Assembly-CSharp}
       data:
-        actionName: 
-        actionBarIcon: {fileID: 0}
-        costCurrency: {fileID: 0}
+        actionBarIcon: {fileID: -238066524, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+        costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
+        startingCount: 10
         unlockedLevel: 0
+        addedTime: 30
+        actionSuccessParticle: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
 --- !u!1 &715192649
 GameObject:
   m_ObjectHideFlags: 0
@@ -2135,8 +2138,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 380.42346}
-  m_SizeDelta: {x: 0, y: 348.8}
+  m_AnchoredPosition: {x: 0, y: 170.16327}
+  m_SizeDelta: {x: 0, y: 340.3266}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1068210310
 GameObject:
@@ -3648,8 +3651,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 695.02344}
-  m_SizeDelta: {x: 0, y: 280.4087}
+  m_AnchoredPosition: {x: 0, y: 492.76}
+  m_SizeDelta: {x: 0, y: 304.87}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1602025053
 MonoBehaviour:
@@ -3664,7 +3667,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.38431373}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.3254902}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -5504,6 +5507,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 128536242}
     - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: upperPanelUI
+      value: 
+      objectReference: {fileID: 9132301250057630282}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: levelContainer
       value: 
       objectReference: {fileID: 254586920}
@@ -5511,6 +5518,10 @@ PrefabInstance:
       propertyPath: tutorialManager
       value: 
       objectReference: {fileID: 1716899157}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: actionBarManager
+      value: 
+      objectReference: {fileID: 698709064}
     - target: {fileID: 7722314759461277707, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5750,9 +5761,33 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: triggerLatency
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
       propertyPath: objectiveManager
       value: 
       objectReference: {fileID: 1759594110}
+    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: fireEvents.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: 'fireEvents.Array.data[0]'
+      value: 402
+      objectReference: {fileID: 0}
+    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: 'fireEvents.Array.data[1]'
+      value: 403
+      objectReference: {fileID: 0}
+    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: 'fireEvents.Array.data[2]'
+      value: 26
+      objectReference: {fileID: 0}
+    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: 'initEvents.Array.data[0]'
+      value: 411
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5763,6 +5798,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3336541892523426042, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
   m_PrefabInstance: {fileID: 9132301250057630277}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &9132301250057630282 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+  m_PrefabInstance: {fileID: 9132301250057630277}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 785ca85761767c740ad90f6e14d52671, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

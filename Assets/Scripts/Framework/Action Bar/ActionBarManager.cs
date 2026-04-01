@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +19,8 @@ namespace Game
         public Transform actionBarParent;
         public Sprite lockedSprite; // Used for not available actions.
 
+        internal List<ActionBarView> actionBarViews = new List<ActionBarView>();
+
         private void Start()
         {
             DrawUI();
@@ -28,7 +32,13 @@ namespace Game
             {
                 var actionBar = Instantiate(actionBarViewPrefab, actionBarParent);
                 actionBar.Init(actionBarItem);
+                actionBarViews.Add(actionBar);
             }
+        }
+
+        internal ActionBarView GetActionBarView(ActionBarItem addTimeAction)
+        {
+            return actionBarViews.FirstOrDefault(actionBarView => actionBarView.actionBarItem == addTimeAction);
         }
     }
 }

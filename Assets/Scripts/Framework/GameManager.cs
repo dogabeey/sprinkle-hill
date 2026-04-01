@@ -23,26 +23,38 @@ namespace Game
 
     public class GameManager : SingletonComponent<GameManager>
     {
-        [Header("Managers")]
+        [FoldoutGroup("Managers")]
         [InlineEditor]
+        [FoldoutGroup("Managers")]
         public EventManager eventManager;
+        [FoldoutGroup("Managers")]
         [InlineEditor]
+        [FoldoutGroup("Managers")]
         public SoundManager soundManager;
         [InlineEditor]
+        [FoldoutGroup("Managers")]
         public SaveManager saveManager;
         [InlineEditor]
+        [FoldoutGroup("Managers")]
         public ConstantManager constantManager;
         [InlineEditor]
+        [FoldoutGroup("Managers")]
         public TutorialManager tutorialManager;
         [InlineEditor]
+        [FoldoutGroup("Managers")]
         public ActionBarManager actionBarManager;
 
+        [FoldoutGroup("Settings")]
         public List<ElementData> elementDatas;
-        [Header("References")]
+        [FoldoutGroup("References")]
         public List<World> worlds;
+        [FoldoutGroup("References")]
         public Transform levelContainer;
+        [FoldoutGroup("References")]
         public ParticleSystem winParticle;
-        [Header("Settings")]
+        [FoldoutGroup("UI References")]
+        public UpperPanelUI upperPanelUI;
+        [FoldoutGroup("Settings")]
         public bool isSequentalLevels = true;
 
         private World currentWorld;

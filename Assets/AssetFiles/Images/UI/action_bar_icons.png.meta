@@ -118,7 +118,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -140,7 +140,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -154,7 +154,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: action_bar_icons_0
+      name: action_bar_shuffle
       rect:
         serializedVersion: 2
         x: 768
@@ -162,7 +162,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -184,7 +184,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -206,7 +206,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -228,7 +228,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -250,7 +250,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -272,7 +272,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -294,7 +294,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -316,7 +316,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -338,7 +338,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -360,7 +360,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -382,7 +382,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -404,7 +404,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -426,7 +426,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -448,7 +448,7 @@ TextureImporter:
         width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -476,7 +476,6 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       action_bar_add_timer: -238066524
-      action_bar_icons_0: 1175953842
       action_bar_icons_1: -512723934
       action_bar_icons_10: 6746950
       action_bar_icons_11: 990293928
@@ -491,6 +490,7 @@ TextureImporter:
       action_bar_icons_9: 939561891
       action_bar_mystery: 662968826
       action_bar_padlock: -320327708
+      action_bar_shuffle: 1175953842
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

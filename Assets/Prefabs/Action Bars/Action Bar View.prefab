@@ -595,12 +595,11 @@ GameObject:
   m_Component:
   - component: {fileID: 5235771891358879632}
   - component: {fileID: 5235771891358879634}
-  - component: {fileID: 5235771891358879633}
   - component: {fileID: 230861821462889445}
   - component: {fileID: 7236742246683191088}
   - component: {fileID: 3738863835436522269}
   m_Layer: 5
-  m_Name: Base Action Button
+  m_Name: Action Bar View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -634,36 +633,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5235771891358879647}
   m_CullTransparentMesh: 1
---- !u!114 &5235771891358879633
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5235771891358879647}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!114 &230861821462889445
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -677,10 +646,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initEvents: 
-  fireEvents: 
-  triggerLatency: 0.2
+  fireEvents: 58020000
+  triggerLatency: 0.01
   actionIcon: {fileID: 7983932361730116957}
-  lockedPanel: {fileID: 2163889776967402849}
+  lockedPanel: {fileID: 476088577606229616}
+  unlockConditionText: {fileID: 4168005737972236862}
   actionText: {fileID: 0}
   costText: {fileID: 0}
   countTextPanel: {fileID: 6290996391568222554}

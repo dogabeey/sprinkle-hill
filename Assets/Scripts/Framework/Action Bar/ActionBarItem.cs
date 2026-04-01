@@ -1,4 +1,6 @@
+using DG.Tweening;
 using Game;
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,10 +20,12 @@ namespace Game
         private const float clickabilityCheckInterval = 0.1f;
 
         public abstract string ActionName { get; }
-        [Header("References")]
         public Sprite actionBarIcon;
-        [Header("Cost Settings")]
         public CurrencyModel costCurrency;
+        [ReadOnly] public int startingCount = 10; // This is only used for the first time the player gets this action. After that, the count will be saved in PlayerPrefs and this value will not be used anymore. This is useful for testing and debugging.
+
+        internal bool isVisible, isClickable, isAvailable;
+
         public abstract float BaseCost { get; }
         public abstract float CostIncrement { get; }
         public abstract float CostAcceleration { get; }
@@ -29,11 +33,11 @@ namespace Game
         public abstract string ClickabilityExplanation { get; } // Explanation for why the action is not clickable when it is not clickable.
         public abstract string AvailabilityExplanation { get; } // Explanation for why the action is not available when it is not available.
 
-        internal bool isVisible, isClickable, isAvailable;
+        
 
         public int CurrentCount // TODO: change this to Isaveable when implementing save system
         {
-            get => PlayerPrefs.GetInt(ActionName + "_count", 0);
+            get => PlayerPrefs.GetInt(ActionName + "_count", startingCount);
             set => PlayerPrefs.SetInt(ActionName + "_count", value);
         }
 
@@ -59,24 +63,26 @@ namespace Game
     [Serializable]
     public abstract class BonusPremiumAction : ActionBarItem
     {
-        public abstract int UnlockedLevel { get;  }
+        public int unlockedLevel;
     }
 
     [Serializable]
     public class AddTimeAction : BonusPremiumAction
     {
+        public int addedTime = 30;
+        public ParticleSystem actionSuccessParticle;
+
         public override string ActionName => "Add Time";
         public override float BaseCost => 0;
         public override float CostIncrement => 0;
         public override float CostAcceleration => 0;
-        public override int UnlockedLevel => 5;
         public override string VisibilityExplanation => "";
         public override string ClickabilityExplanation => "";
-        public override string AvailabilityExplanation => $"Reach level {UnlockedLevel}.";
+        public override string AvailabilityExplanation => $"Reach Level {unlockedLevel}";
 
         public override bool IsClickable()
         {
-            return true;
+            return CurrentCount > 0;
         }
 
         public override int GetCost()
@@ -91,11 +97,23 @@ namespace Game
 
         public override bool IsAvailable()
         {
-            return World.Instance.lastPlayedLevelIndex >= UnlockedLevel;
+            return World.Instance.lastPlayedLevelIndex >= unlockedLevel;
         }
 
         public override void OnClick()
         {
+            CurrentCount--;
+            (GameManager.Instance.CurrentLevel as LevelScene_Match3Game).timer += addedTime;
+
+            Transform addTimeActionTransform = GameManager.Instance.actionBarManager.GetActionBarView(this).transform;
+            Transform timerTextTransform = GameManager.Instance.upperPanelUI.timerText.transform;
+
+            // Send a particle from the action button to the timer text
+            if (actionSuccessParticle != null)
+            {
+                ParticleSystem particle = GameObject.Instantiate(actionSuccessParticle, addTimeActionTransform.position, Quaternion.identity);
+                particle.transform.DOMove(timerTextTransform.position, 1f).OnComplete(() => GameObject.Destroy(particle.gameObject));
+            }
 
         }
     }

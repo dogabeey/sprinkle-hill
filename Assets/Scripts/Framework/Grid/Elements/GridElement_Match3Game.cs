@@ -9,7 +9,6 @@ namespace Game
     {
         [FoldoutGroup("Match3")]
         public SpriteRenderer highlightSprite;
-        public float maxAnimationEmission = 1f;
 
         public override void PostInit()
         {
@@ -48,7 +47,7 @@ namespace Game
                 colliders[i].enabled = false;
             }
 
-            GridHelper.AnimateEmission(this, maxAnimationEmission, 0.2f);
+            GridHelper.AnimateEmission(this, 1, 0.2f);
 
             ConstantManager constantManager = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
             Vector3 punchScale = constantManager != null ? constantManager.elementDestroyPunchScale : new Vector3(0.25f, 0.25f, 0f);
