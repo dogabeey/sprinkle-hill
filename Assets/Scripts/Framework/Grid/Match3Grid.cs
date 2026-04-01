@@ -448,6 +448,96 @@ namespace Game
         }
 
         // ------------------------------------------------------------------
+        //  Shuffle
+        // ------------------------------------------------------------------
+        public IEnumerator ShuffleBoardAndResolve()
+        {
+            yield return StartCoroutine(ShuffleBoardAnimated());
+            yield return StartCoroutine(ResolveBoardAfterSpecialClear());
+        }
+
+        private IEnumerator ShuffleBoardAnimated()
+        {
+            List<Vector2Int> positions = new List<Vector2Int>();
+            List<GridElementInfo> originalInfos = new List<GridElementInfo>();
+            Dictionary<Vector2Int, GridElement> originalElements = new Dictionary<Vector2Int, GridElement>();
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    GridCell cell = GetCell(pos);
+                    if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null) continue;
+
+                    positions.Add(pos);
+                    originalInfos.Add(cell.elementInfo);
+                    originalElements[pos] = GetElementAt(pos);
+                }
+            }
+
+            if (positions.Count < 2) yield break;
+
+            List<int> shuffled = new List<int>(positions.Count);
+            for (int i = 0; i < positions.Count; i++) shuffled.Add(i);
+
+            bool changed = false;
+            for (int attempt = 0; attempt < 6 && !changed; attempt++)
+            {
+                shuffled.Shuffle();
+                changed = false;
+                for (int i = 0; i < shuffled.Count; i++)
+                {
+                    if (shuffled[i] != i)
+                    {
+                        changed = true;
+                        break;
+                    }
+                }
+            }
+
+            for (int i = 0; i < positions.Count; i++)
+            {
+                GridCell targetCell = GetCell(positions[i]);
+                if (targetCell != null) targetCell.elementInfo = originalInfos[shuffled[i]];
+            }
+
+            float duration = Mathf.Max(0.2f, GameManager.Instance.constantManager.elementSwapMoveDuration * 1.35f);
+            Sequence shuffleSeq = DOTween.Sequence();
+            bool hasTween = false;
+
+            for (int i = 0; i < positions.Count; i++)
+            {
+                Vector2Int targetPos = positions[i];
+                Vector2Int sourcePos = positions[shuffled[i]];
+
+                if (!originalElements.TryGetValue(sourcePos, out GridElement element) || element == null) continue;
+                if (!generatedTiles.TryGetValue(targetPos, out GridCellController targetTile) || targetTile == null) continue;
+
+                element.transform.DOKill();
+                element.transform.SetParent(targetTile.transform, true);
+
+                GridCell targetCell = GetCell(targetPos);
+                if (targetCell?.elementInfo != null)
+                {
+                    element.elementInfo = targetCell.elementInfo;
+                    element.InitElement(this, targetCell.elementInfo);
+                }
+
+                shuffleSeq.Join(element.transform.DOLocalMove(Vector3.zero, duration).SetEase(Ease.InOutQuad));
+                shuffleSeq.Join(element.transform.DOLocalRotate(new Vector3(0f, 0f, 360f), duration, RotateMode.FastBeyond360)
+                    .SetEase(Ease.OutQuad).SetRelative());
+                shuffleSeq.Join(element.transform.DOScale(0.88f, duration * 0.5f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutSine));
+                hasTween = true;
+            }
+
+            GridHelper.ShakeCamera(duration * 0.7f, 0.08f, 8, 20f);
+
+            if (hasTween)
+                yield return shuffleSeq.WaitForCompletion();
+        }
+
+        // ------------------------------------------------------------------
         //  Swap animation
         // ------------------------------------------------------------------
         public IEnumerator SwapElements(Vector2Int first, Vector2Int second)

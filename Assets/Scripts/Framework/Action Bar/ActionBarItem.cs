@@ -121,5 +121,79 @@ namespace Game
                 particle.transform.DOMove(timerTextTransform.position, 1f).OnComplete(() => GameObject.Destroy(particle.gameObject));
             }
         }
+
+    [Serializable]
+    public class ShuffleAction : BonusPremiumAction
+    {
+        public ParticleSystem actionSuccessParticle;
+
+        public override string ActionName => "Shuffle";
+        public override float BaseCost => 0;
+        public override float CostIncrement => 0;
+        public override float CostAcceleration => 0;
+        public override string VisibilityExplanation => "";
+        public override string ClickabilityExplanation => "";
+        public override string AvailabilityExplanation => $"Reach Level {unlockedLevel}";
+
+        public override int GetCost()
+        {
+            return 0;
+        }
+
+        public override bool IsVisible()
+        {
+            return true;
+        }
+
+        public override bool IsAvailable()
+        {
+            return World.Instance.lastPlayedLevelIndex >= unlockedLevel;
+        }
+
+        public override bool IsClickable()
+        {
+            return CurrentCount > 0 && GetMatch3Grid() != null;
+        }
+
+        public override void OnClick()
+        {
+            Match3Grid grid = GetMatch3Grid();
+            if (grid == null) return;
+
+            CurrentCount--;
+            EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: ActionName));
+            SendParticleAnimation(grid.transform.position);
+
+            if (GameManager.Instance != null)
+                GameManager.Instance.StartCoroutine(ShuffleRoutine(grid));
+        }
+
+        private IEnumerator ShuffleRoutine(Match3Grid grid)
+        {
+            if (grid == null) yield break;
+            yield return grid.StartCoroutine(grid.ShuffleBoardAndResolve());
+        }
+
+        private Match3Grid GetMatch3Grid()
+        {
+            if (!(GameManager.Instance != null && GameManager.Instance.CurrentLevel is LevelScene_Match3Game level))
+                return null;
+
+            return level.grid as Match3Grid;
+        }
+
+        private void SendParticleAnimation(Vector3 targetPosition)
+        {
+            if (actionSuccessParticle == null || GameManager.Instance == null || GameManager.Instance.actionBarManager == null)
+                return;
+
+            ActionBarView view = GameManager.Instance.actionBarManager.GetActionBarView(this);
+            if (view == null) return;
+
+            ParticleSystem particle = GameObject.Instantiate(actionSuccessParticle, view.transform.position, Quaternion.identity);
+            particle.transform.DOMove(targetPosition, 0.75f).SetEase(Ease.InOutQuad)
+                .OnComplete(() => GameObject.Destroy(particle.gameObject));
+        }
+    }
     }
 }

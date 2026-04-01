@@ -1343,6 +1343,7 @@ MonoBehaviour:
   actionBarViewPrefab: {fileID: 230861821462889445, guid: 9e234be0c7761a34aaf9d63c420f9995, type: 3}
   actionBarItemList:
   - rid: 943281644091474012
+  - rid: 943281644091474110
   actionBarParent: {fileID: 854708863}
   lockedSprite: {fileID: -320327708, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
   references:
@@ -1356,6 +1357,14 @@ MonoBehaviour:
         startingCount: 10
         unlockedLevel: 0
         addedTime: 30
+        actionSuccessParticle: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
+    - rid: 943281644091474110
+      type: {class: AddTimeAction/ShuffleAction, ns: Game, asm: Assembly-CSharp}
+      data:
+        actionBarIcon: {fileID: 1175953842, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+        costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
+        startingCount: 10
+        unlockedLevel: 0
         actionSuccessParticle: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
 --- !u!1 &715192649
 GameObject:
@@ -1587,7 +1596,7 @@ MonoBehaviour:
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 100, y: 100}
-  m_Spacing: {x: 0, y: 0}
+  m_Spacing: {x: 200, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
 --- !u!114 &854708865
