@@ -15,6 +15,7 @@ namespace Game
         [SerializeReference]
         public List<ActionBarItem> actionBarItemList;
         public Transform actionBarParent;
+        public Sprite lockedSprite; // Used for not available actions.
 
         private void Start()
         {
@@ -25,7 +26,8 @@ namespace Game
         {
             foreach (ActionBarItem actionBarItem in actionBarItemList)
             {
-                Instantiate(actionBarViewPrefab, actionBarParent);
+                var actionBar = Instantiate(actionBarViewPrefab, actionBarParent);
+                actionBar.Init(actionBarItem);
             }
         }
     }

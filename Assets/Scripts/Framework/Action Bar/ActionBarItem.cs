@@ -1,4 +1,5 @@
 using Game;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,39 +11,33 @@ namespace Game
     /// This is an action bar item which the player can click to perform an action. It can cost any currency. New action bar items can be created by extending this class. 
     /// You can configure conditions which decides when the button will be visible or clickable. 
     /// </summary>
+    [Serializable]
     public abstract class ActionBarItem
     {
         private const float visibilityCheckInterval = 0.1f;
         private const float clickabilityCheckInterval = 0.1f;
 
-        public string actionName;
+        public abstract string ActionName { get; }
         [Header("References")]
         public Sprite actionBarIcon;
-        public Button onClickButton;
         [Header("Cost Settings")]
         public CurrencyModel costCurrency;
         public abstract float BaseCost { get; }
         public abstract float CostIncrement { get; }
         public abstract float CostAcceleration { get; }
+        public abstract string VisibilityExplanation { get; } // Explanation for why the action is not visible when it is not visible.
+        public abstract string ClickabilityExplanation { get; } // Explanation for why the action is not clickable when it is not clickable.
+        public abstract string AvailabilityExplanation { get; } // Explanation for why the action is not available when it is not available.
 
         internal bool isVisible, isClickable, isAvailable;
 
-        public int CurrentLevel // TODO: change this to Isaveable when implementing save system
-        {
-            get => PlayerPrefs.GetInt(actionName + "_level", 1);
-            set => PlayerPrefs.SetInt(actionName + "_level", value);
-        }
         public int CurrentCount // TODO: change this to Isaveable when implementing save system
         {
-            get => PlayerPrefs.GetInt(actionName + "_count", 0);
-            set => PlayerPrefs.SetInt(actionName + "_count", value);
+            get => PlayerPrefs.GetInt(ActionName + "_count", 0);
+            set => PlayerPrefs.SetInt(ActionName + "_count", value);
         }
 
-        public virtual int GetCost()
-        {
-            float costIncrement = this.CostIncrement + (CurrentLevel - 2) * CostAcceleration;
-            return Mathf.RoundToInt(BaseCost + (CurrentLevel - 1) * costIncrement);
-        }
+        abstract public int GetCost();
 
         abstract public void OnClick();
         /// <summary>
@@ -61,17 +56,32 @@ namespace Game
         /// <returns>true if the object is available; otherwise, false.</returns>
         abstract public bool IsAvailable();
     }
-    public class BonusPremiumAction : ActionBarItem
+    [Serializable]
+    public abstract class BonusPremiumAction : ActionBarItem
     {
-        public override float BaseCost => 100;
+        public abstract int UnlockedLevel { get;  }
+    }
+
+    [Serializable]
+    public class AddTimeAction : BonusPremiumAction
+    {
+        public override string ActionName => "Add Time";
+        public override float BaseCost => 0;
         public override float CostIncrement => 0;
         public override float CostAcceleration => 0;
-
-        public int unlockedLevel = 1;
+        public override int UnlockedLevel => 5;
+        public override string VisibilityExplanation => "";
+        public override string ClickabilityExplanation => "";
+        public override string AvailabilityExplanation => $"Reach level {UnlockedLevel}.";
 
         public override bool IsClickable()
         {
-            return CurrencyManager.Instance.GetCurrencyAmount(costCurrency) >= GetCost() && IsAvailable();
+            return true;
+        }
+
+        public override int GetCost()
+        {
+            return 0;
         }
 
         public override bool IsVisible()
@@ -81,13 +91,12 @@ namespace Game
 
         public override bool IsAvailable()
         {
-            return World.Instance.lastPlayedLevelIndex >= unlockedLevel;
+            return World.Instance.lastPlayedLevelIndex >= UnlockedLevel;
         }
 
         public override void OnClick()
         {
-            CurrencyManager.Instance.AddCurrency(costCurrency.currencyID, -GetCost());
-            CurrentLevel++;
+
         }
     }
 }

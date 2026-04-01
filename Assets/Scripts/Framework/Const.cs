@@ -110,6 +110,8 @@ namespace Game
                 public const string ROCKET = "Rocket";
                 public const string DISCO_BALL_ACTIVATE = "DiscoBallActivate";
                 public const string DISCO_BALL_TRAIL = "DiscoBallTrail";
+                public const string BUTTON_CLICK_FAIL = "ButtonClickFail";
+                public const string BUTTON_CLICK_SUCCESS = "ButtonClickSuccess";
             }
         }
     }

@@ -30,9 +30,10 @@ public enum GameEvent
     CURRENCY_SPENT = 501,
     
     // Action Bar Events
-    ACTION_USED = 600,
-    ACTION_CLICKED = 601,
-    
+    ACTION_BAR_ITEM_CLICKED = 600,
+    ACTION_SUCCESSFUL = 601,
+    ACTION_FAILED = 602,
+
     // UI Events
     SCREEN_OPENED = 700,
     SCREEN_CLOSED = 701,

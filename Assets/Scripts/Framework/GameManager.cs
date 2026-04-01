@@ -34,6 +34,8 @@ namespace Game
         public ConstantManager constantManager;
         [InlineEditor]
         public TutorialManager tutorialManager;
+        [InlineEditor]
+        public ActionBarManager actionBarManager;
 
         public List<ElementData> elementDatas;
         [Header("References")]

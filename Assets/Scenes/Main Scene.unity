@@ -1341,7 +1341,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionBarViewPrefab: {fileID: 230861821462889445, guid: 9e234be0c7761a34aaf9d63c420f9995, type: 3}
+  actionBarItemList:
+  - rid: 943281644091474010
   actionBarParent: {fileID: 854708863}
+  references:
+    version: 2
+    RefIds:
+    - rid: 943281644091474010
+      type: {class: BonusPremiumAction, ns: Game, asm: Assembly-CSharp}
+      data:
+        actionName: 
+        actionBarIcon: {fileID: 0}
+        costCurrency: {fileID: 0}
+        unlockedLevel: 0
 --- !u!1 &715192649
 GameObject:
   m_ObjectHideFlags: 0
