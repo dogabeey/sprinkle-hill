@@ -102,26 +102,34 @@ namespace Game
 
         public override void OnClick()
         {
-            CurrentCount--;
-            (GameManager.Instance.CurrentLevel as LevelScene_Match3Game).timer += addedTime;
 
 
             // Send a particle from the action button to the timer text
-            SendParticleAnimation();
+            GameManager.Instance.StartCoroutine(AddTimeEffect());
 
         }
 
-        private void SendParticleAnimation()
+        private IEnumerator AddTimeEffect()
         {
+            CurrentCount--;
             if (actionSuccessParticle != null)
             {
                 Transform addTimeActionTransform = GameManager.Instance.actionBarManager.GetActionBarView(this).transform;
                 Transform timerTextTransform = GameManager.Instance.upperPanelUI.timerText.transform;
                 ParticleSystem particle = GameObject.Instantiate(actionSuccessParticle, addTimeActionTransform.position, Quaternion.identity);
-                particle.transform.DOMove(timerTextTransform.position, 1f).OnComplete(() => GameObject.Destroy(particle.gameObject));
+                particle.transform.DOMove(timerTextTransform.position, 1f).OnComplete(() => {
+                    GameManager.Instance.upperPanelUI.timerText.transform.DOScale(1.22f, 0.2f).SetEase(Ease.Linear).OnComplete(() =>
+                    {
+                        GameManager.Instance.upperPanelUI.timerText.transform.DOScale(1f, 0.2f).SetEase(Ease.Linear);
+                    });
+                    GameObject.Destroy(particle.gameObject); 
+                });
+                yield return new WaitForSeconds(1f);
             }
+            (GameManager.Instance.CurrentLevel as LevelScene_Match3Game).timer += addedTime;
         }
 
+    }
     [Serializable]
     public class ShuffleAction : BonusPremiumAction
     {
@@ -162,7 +170,6 @@ namespace Game
 
             CurrentCount--;
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: ActionName));
-            SendParticleAnimation(grid.transform.position);
 
             if (GameManager.Instance != null)
                 GameManager.Instance.StartCoroutine(ShuffleRoutine(grid));
@@ -182,18 +189,5 @@ namespace Game
             return level.grid as Match3Grid;
         }
 
-        private void SendParticleAnimation(Vector3 targetPosition)
-        {
-            if (actionSuccessParticle == null || GameManager.Instance == null || GameManager.Instance.actionBarManager == null)
-                return;
-
-            ActionBarView view = GameManager.Instance.actionBarManager.GetActionBarView(this);
-            if (view == null) return;
-
-            ParticleSystem particle = GameObject.Instantiate(actionSuccessParticle, view.transform.position, Quaternion.identity);
-            particle.transform.DOMove(targetPosition, 0.75f).SetEase(Ease.InOutQuad)
-                .OnComplete(() => GameObject.Destroy(particle.gameObject));
-        }
-    }
     }
 }
