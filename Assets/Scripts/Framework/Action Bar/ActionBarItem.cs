@@ -190,4 +190,41 @@ namespace Game
         }
 
     }
+
+    [Serializable]
+    public class BombPlacementAction : BonusPremiumAction
+    {
+        public override string ActionName => "Bomb Placement";
+        public override float BaseCost => 0;
+        public override float CostIncrement => 0;
+        public override float CostAcceleration => 0;
+        public override string VisibilityExplanation => "";
+        public override string ClickabilityExplanation => "";
+        public override string AvailabilityExplanation => $"Reach Level {unlockedLevel}";
+
+        public override int GetCost() => 0;
+
+        public override bool IsVisible() => true;
+
+        public override bool IsAvailable() => World.Instance.lastPlayedLevelIndex >= unlockedLevel;
+
+        public override bool IsClickable()
+        {
+            return CurrentCount > 0 && GetInputController() != null;
+        }
+
+        public override void OnClick()
+        {
+            Match3GridInputController inputController = GetInputController();
+            if (inputController == null) return;
+
+            //CurrentCount--;
+            inputController.BeginBombPlacement();
+        }
+
+        private Match3GridInputController GetInputController()
+        {
+            return UnityEngine.Object.FindObjectOfType<Match3GridInputController>();
+        }
+    }
 }

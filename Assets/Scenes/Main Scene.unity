@@ -1343,14 +1343,13 @@ MonoBehaviour:
   actionBarViewPrefab: {fileID: 230861821462889445, guid: 9e234be0c7761a34aaf9d63c420f9995, type: 3}
   actionBarItemList:
   - rid: 943281644091474012
-  - rid: -2
+  - rid: 3084495758061469768
+  - rid: 3084495758061469769
   actionBarParent: {fileID: 854708863}
   lockedSprite: {fileID: -320327708, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
     - rid: 943281644091474012
       type: {class: AddTimeAction, ns: Game, asm: Assembly-CSharp}
       data:
@@ -1359,6 +1358,21 @@ MonoBehaviour:
         startingCount: 10
         unlockedLevel: 0
         addedTime: 30
+        actionSuccessParticle: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
+    - rid: 3084495758061469768
+      type: {class: BombPlacementAction, ns: Game, asm: Assembly-CSharp}
+      data:
+        actionBarIcon: {fileID: -1949253524, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
+        costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
+        startingCount: 10
+        unlockedLevel: 0
+    - rid: 3084495758061469769
+      type: {class: ShuffleAction, ns: Game, asm: Assembly-CSharp}
+      data:
+        actionBarIcon: {fileID: 1175953842, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+        costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
+        startingCount: 10
+        unlockedLevel: 0
         actionSuccessParticle: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
 --- !u!1 &715192649
 GameObject:

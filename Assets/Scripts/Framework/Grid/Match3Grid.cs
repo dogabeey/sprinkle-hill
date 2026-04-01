@@ -23,6 +23,8 @@ namespace Game
 
         public GridCell GetCellPublic(Vector2Int pos) => GetCell(pos);
 
+        public IEnumerator ApplyGravityPublic() => ApplyGravity();
+
         public GridElement GetElementAt(Vector2Int pos)
         {
             if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)

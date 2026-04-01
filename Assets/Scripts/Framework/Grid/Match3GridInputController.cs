@@ -14,6 +14,7 @@ namespace Game
         private Vector2 dragStartScreenPos;
         private bool isProcessing;
         private bool dragConsumed;
+        private bool isBombPlacementPending;
 
         private void Awake()
         {
@@ -27,6 +28,15 @@ namespace Game
         {
             if (isProcessing)
             {
+                return;
+            }
+
+            if (isBombPlacementPending)
+            {
+                if (Input.GetMouseButtonUp(0))
+                {
+                    TryPlaceBomb();
+                }
                 return;
             }
 
@@ -177,6 +187,67 @@ namespace Game
             yield return StartCoroutine(match3Grid.SwapAndMatch(firstPos, secondPos));
 
             isProcessing = false;
+        }
+
+        /// <summary>
+        /// Puts the input controller into bomb placement mode.
+        /// The next cell the player taps will be the bomb's target.
+        /// </summary>
+        public void BeginBombPlacement()
+        {
+            isBombPlacementPending = true;
+        }
+
+        private void TryPlaceBomb()
+        {
+            Camera cam = inputCamera != null ? inputCamera : Camera.main;
+            if (cam == null || match3Grid == null)
+            {
+                isBombPlacementPending = false;
+                Debug.LogWarning("Cannot place bomb: No input camera or grid reference.");
+                return;
+            }
+
+            GridCellController cell = GetCellAtScreenPos(cam, Input.mousePosition);
+            if (cell == null)
+            {
+                isBombPlacementPending = false;
+                Debug.LogWarning("Cannot place bomb: No cell found at the screen position.");
+                return;
+            }
+
+            isBombPlacementPending = false;
+            ActionBarManager actionBarManager = GameManager.Instance.actionBarManager;
+            actionBarManager.actionBarItemList.Find(item => item is BombPlacementAction).CurrentCount--;
+            StartCoroutine(BombPlacementRoutine(cell.Coordinates));
+        }
+
+        private IEnumerator BombPlacementRoutine(Vector2Int center)
+        {
+            isProcessing = true;
+            EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: "Bomb Placement"));
+            yield return StartCoroutine(match3Grid.ClearAreaAt(center, 1));
+            yield return StartCoroutine(match3Grid.ApplyGravityPublic());
+            isProcessing = false;
+        }
+
+        private GridCellController GetCellAtScreenPos(Camera cam, Vector3 screenPos)
+        {
+            Ray ray = cam.ScreenPointToRay(screenPos);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                GridCellController cell = hit.collider.GetComponentInParent<GridCellController>();
+                if (cell != null) return cell;
+            }
+
+            RaycastHit2D hit2D = Physics2D.GetRayIntersection(ray);
+            if (hit2D.collider != null)
+            {
+                GridCellController cell = hit2D.collider.GetComponentInParent<GridCellController>();
+                if (cell != null) return cell;
+            }
+
+            return null;
         }
     }
 }
