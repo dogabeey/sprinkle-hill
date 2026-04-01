@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game
 {
     public class GridCellController : MonoBehaviour, ICameraBoundSetter
     {
+        public Image selectionImage;
         public Vector2Int Coordinates { get; private set; }
         public Vector2 CameraBound => new Vector2(transform.position.x, transform.position.y);
 
