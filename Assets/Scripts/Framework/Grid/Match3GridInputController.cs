@@ -15,6 +15,7 @@ namespace Game
         private bool isProcessing;
         private bool dragConsumed;
         private bool isBombPlacementPending;
+        private bool isBombPlacementReady;
 
         private void Awake()
         {
@@ -33,7 +34,11 @@ namespace Game
 
             if (isBombPlacementPending)
             {
-                if (Input.GetMouseButtonUp(0))
+                if (Input.GetMouseButtonDown(0))
+                {
+                    isBombPlacementReady = true;
+                }
+                else if (isBombPlacementReady && Input.GetMouseButtonUp(0))
                 {
                     TryPlaceBomb();
                 }
@@ -196,6 +201,7 @@ namespace Game
         public void BeginBombPlacement()
         {
             isBombPlacementPending = true;
+            isBombPlacementReady = false;
         }
 
         private void TryPlaceBomb()
