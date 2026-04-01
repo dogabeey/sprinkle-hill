@@ -105,16 +105,21 @@ namespace Game
             CurrentCount--;
             (GameManager.Instance.CurrentLevel as LevelScene_Match3Game).timer += addedTime;
 
-            Transform addTimeActionTransform = GameManager.Instance.actionBarManager.GetActionBarView(this).transform;
-            Transform timerTextTransform = GameManager.Instance.upperPanelUI.timerText.transform;
 
             // Send a particle from the action button to the timer text
+            SendParticleAnimation();
+
+        }
+
+        private void SendParticleAnimation()
+        {
             if (actionSuccessParticle != null)
             {
+                Transform addTimeActionTransform = GameManager.Instance.actionBarManager.GetActionBarView(this).transform;
+                Transform timerTextTransform = GameManager.Instance.upperPanelUI.timerText.transform;
                 ParticleSystem particle = GameObject.Instantiate(actionSuccessParticle, addTimeActionTransform.position, Quaternion.identity);
                 particle.transform.DOMove(timerTextTransform.position, 1f).OnComplete(() => GameObject.Destroy(particle.gameObject));
             }
-
         }
     }
 }
