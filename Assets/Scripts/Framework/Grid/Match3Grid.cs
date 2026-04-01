@@ -272,6 +272,7 @@ namespace Game
                 }
             }
 
+            //GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is BombPlacementAction).CurrentCount--;
             yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
 
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));

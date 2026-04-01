@@ -224,13 +224,13 @@ namespace Game
 
             isBombPlacementPending = false;
             ActionBarManager actionBarManager = GameManager.Instance.actionBarManager;
-            actionBarManager.actionBarItemList.Find(item => item is BombPlacementAction).CurrentCount--;
             StartCoroutine(BombPlacementRoutine(cell.Coordinates));
         }
 
         private IEnumerator BombPlacementRoutine(Vector2Int center)
         {
-            isProcessing = true;
+            isProcessing = true; 
+            GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is BombPlacementAction).CurrentCount--;
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: "Bomb Placement"));
             yield return StartCoroutine(match3Grid.ClearAreaAt(center, 1));
             yield return StartCoroutine(match3Grid.ApplyGravityPublic());
