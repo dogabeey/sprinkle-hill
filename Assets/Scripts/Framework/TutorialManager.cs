@@ -157,7 +157,7 @@ namespace Game
 
             if (step.nextStep != null)
             {
-                DOVirtual.DelayedCall(2f, () => StartTutorialStep(step.nextStep));
+                DOVirtual.DelayedCall(0.02f, () => StartTutorialStep(step.nextStep));
             }
         }
 
