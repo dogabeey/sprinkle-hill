@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -15,10 +16,15 @@ namespace Game
         [SerializeField] private Vector2Int gridSize = new Vector2Int(8, 8);
 
         [FoldoutGroup("Level")]
+        [Tooltip("Pool used for randomly generated refill elements during gameplay.")]
+        [SerializeField] private List<ElementData> elementPool = new List<ElementData>();
+
+        [FoldoutGroup("Level")]
         [TableMatrix(DrawElementMethod = nameof(DrawGridCells), SquareCells = true)]
         [SerializeField] private Grid3D.GridCell[,] gridCells;
 
         public Vector2Int GridSize => gridSize;
+        public List<ElementData> ElementPool => elementPool;
 
 #if UNITY_EDITOR
         [Button]

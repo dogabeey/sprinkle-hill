@@ -1018,6 +1018,23 @@ namespace Game
         // ------------------------------------------------------------------
         private List<ElementData> BuildElementPool()
         {
+            if (UseLevelEditor && ActiveLevelEditor != null && ActiveLevelEditor.ElementPool != null && ActiveLevelEditor.ElementPool.Count > 0)
+            {
+                List<ElementData> editorPool = new List<ElementData>();
+                for (int i = 0; i < ActiveLevelEditor.ElementPool.Count; i++)
+                {
+                    ElementData data = ActiveLevelEditor.ElementPool[i];
+                    if (data != null && !editorPool.Contains(data))
+                    {
+                        editorPool.Add(data);
+                    }
+                }
+                if (editorPool.Count > 0)
+                {
+                    return editorPool;
+                }
+            }
+
             List<ElementData> pool = new List<ElementData>();
             for (int x = 0; x < gridSize.x; x++)
                 for (int y = 0; y < gridSize.y; y++)

@@ -318,6 +318,7 @@ namespace Game
 
         protected bool UseLevelEditor => levelCreationMode == LevelCreationMode.LevelEditor;
         protected bool UseProcedural => levelCreationMode == LevelCreationMode.Procedural;
+        protected LevelEditor ActiveLevelEditor => levelEditor;
 
         [System.Serializable]
         public class ProceduralGenerationSettings
