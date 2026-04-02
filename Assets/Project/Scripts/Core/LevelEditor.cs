@@ -174,16 +174,17 @@ namespace Game
 
             if (value.elementInfo != null && value.elementInfo.elementData != null)
             {
-                Rect currentSpriteRect = value.elementInfo.elementData.displayIcon.rect;
-                Texture2D elementTexture = new Texture2D((int)currentSpriteRect.width, (int)currentSpriteRect.height);
-                elementTexture.SetPixels(value.elementInfo.elementData.displayIcon.texture.GetPixels(
-                    (int)currentSpriteRect.x,
-                    (int)currentSpriteRect.y,
-                    (int)currentSpriteRect.width,
-                    (int)currentSpriteRect.height
-                ));
-                elementTexture.Apply();
-                GUI.DrawTexture(elementRect, elementTexture, ScaleMode.ScaleToFit);
+                Sprite icon = value.elementInfo.elementData.displayIcon;
+                if (icon != null && icon.texture != null)
+                {
+                    Rect spriteRect = icon.textureRect;
+                    Rect uv = new Rect(
+                        spriteRect.x / icon.texture.width,
+                        spriteRect.y / icon.texture.height,
+                        spriteRect.width / icon.texture.width,
+                        spriteRect.height / icon.texture.height);
+                    GUI.DrawTextureWithTexCoords(elementRect, icon.texture, uv, true);
+                }
             }
 
             if (rect.Contains(Event.current.mousePosition))
