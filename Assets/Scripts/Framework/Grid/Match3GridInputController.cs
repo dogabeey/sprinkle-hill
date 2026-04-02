@@ -36,6 +36,7 @@ namespace Game
             {
                 if (Input.GetMouseButtonDown(0))
                 {
+                    EventManager.TriggerEvent(GameEvent.INPUT_RECEIVED);
                     isBombPlacementReady = true;
                 }
                 else if (isBombPlacementReady && Input.GetMouseButtonUp(0))
@@ -47,6 +48,7 @@ namespace Game
 
             if (Input.GetMouseButtonDown(0))
             {
+                EventManager.TriggerEvent(GameEvent.INPUT_RECEIVED);
                 TryBeginDrag();
             }
             else if (Input.GetMouseButton(0) && draggedElement != null && !dragConsumed)

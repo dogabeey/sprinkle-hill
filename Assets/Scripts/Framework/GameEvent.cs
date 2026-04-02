@@ -64,4 +64,7 @@ public enum GameEvent
     TIMER_STARTED = 1100,
     TIMER_EXPIRED = 1101,
     TIMER_PASSED = 1102,   
+
+    // Input events
+    INPUT_RECEIVED = 1200,
 }

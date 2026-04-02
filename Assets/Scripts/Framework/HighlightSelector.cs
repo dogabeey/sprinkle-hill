@@ -1,10 +1,7 @@
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.Serialization;
 
 namespace Game
 {
-
     public abstract class HighlightSelector
     {
         public abstract GameObject[] HighlightedObjects { get; }
@@ -12,7 +9,6 @@ namespace Game
 
     public class TwoRandomMatchableElements_Highlight : HighlightSelector
     {
-        // Adjacent directions — right and up only so each pair is visited once.
         private static readonly Vector2Int[] Dirs = { Vector2Int.right, Vector2Int.up };
 
         public override GameObject[] HighlightedObjects
@@ -23,7 +19,6 @@ namespace Game
                 if (grid == null) return new GameObject[0];
 
                 Vector2Int size = grid.GridSize;
-
                 for (int x = 0; x < size.x; x++)
                 {
                     for (int y = 0; y < size.y; y++)
@@ -44,51 +39,12 @@ namespace Game
             }
         }
 
-        // ------------------------------------------------------------------
-        //  Grid access
-        // ------------------------------------------------------------------
-
         private static Match3Grid GetGrid()
         {
             if (GameManager.Instance == null) return null;
-            return GameManager.Instance.CurrentLevel is LevelScene_Match3Game lvl
-                ? lvl.grid as Match3Grid
-                : null;
+            return GameManager.Instance.CurrentLevel is LevelScene_Match3Game lvl ? lvl.grid as Match3Grid : null;
         }
 
-        // ------------------------------------------------------------------
-        //  Possible-match detection
-        // ------------------------------------------------------------------
-
-        private static bool SwapWouldMatch(Match3Grid grid, Vector2Int a, Vector2Int b)
-        {
-            Grid3D.GridCell cellA = grid.GetCellPublic(a);
-            Grid3D.GridCell cellB = grid.GetCellPublic(b);
-
-            if (!IsMatchable(cellA) || !IsMatchable(cellB)) return false;
-
-            ElementData dataA = cellA.elementInfo.elementData;
-            ElementData dataB = cellB.elementInfo.elementData;
-
-            if (dataA == dataB) return false;
-
-            cellA.elementInfo.elementData = dataB;
-            cellB.elementInfo.elementData = dataA;
-
-            bool matches = CreatesLineMatchAt(grid, a) || CreatesLineMatchAt(grid, b);
-
-            cellA.elementInfo.elementData = dataA;
-            cellB.elementInfo.elementData = dataB;
-
-            return matches;
-        }
-
-        /// <summary>
-        /// Returns the two positions ordered so that index 0 is the element that
-        /// <b>moves into</b> the match (the one the player should drag), and index 1
-        /// is the element it should be swapped with.
-        /// Returns false when the swap produces no match.
-        /// </summary>
         private static bool TryGetOrderedSwap(Match3Grid grid, Vector2Int a, Vector2Int b,
                                               out Vector2Int mover, out Vector2Int target)
         {
@@ -102,20 +58,14 @@ namespace Game
 
             ElementData dataA = cellA.elementInfo.elementData;
             ElementData dataB = cellB.elementInfo.elementData;
-
             if (dataA == dataB) return false;
 
-            // Simulate swap once.
             cellA.elementInfo.elementData = dataB;
             cellB.elementInfo.elementData = dataA;
 
-            // A lands at B's position -> A is mover when B position forms a line.
             bool aIsMover = CreatesLineMatchAt(grid, b);
-
-            // B lands at A's position -> B is mover when A position forms a line.
             bool bIsMover = CreatesLineMatchAt(grid, a);
 
-            // Restore board.
             cellA.elementInfo.elementData = dataA;
             cellB.elementInfo.elementData = dataB;
 
@@ -178,12 +128,147 @@ namespace Game
                 && cell.elementInfo.elementData != null;
         }
 
-        // ------------------------------------------------------------------
-        //  Result collection
-        // ------------------------------------------------------------------
+        private static GameObject[] CollectGameObjects(Match3Grid grid, Vector2Int a, Vector2Int b)
+        {
+            GridElement elA = grid.GetElementAt(a);
+            GridElement elB = grid.GetElementAt(b);
 
-        private static GameObject[] CollectGameObjects(Match3Grid grid,
-                                                       Vector2Int a, Vector2Int b)
+            if (elA != null && elB != null)
+                return new[] { elA.gameObject, elB.gameObject };
+            if (elA != null)
+                return new[] { elA.gameObject };
+            if (elB != null)
+                return new[] { elB.gameObject };
+
+            return new GameObject[0];
+        }
+    }
+
+    public class TwoRandomSquareMatchableElement_Highlight : HighlightSelector
+    {
+        private static readonly Vector2Int[] Dirs = { Vector2Int.right, Vector2Int.up };
+
+        public override GameObject[] HighlightedObjects
+        {
+            get
+            {
+                Match3Grid grid = GetGrid();
+                if (grid == null) return new GameObject[0];
+
+                Vector2Int size = grid.GridSize;
+                for (int x = 0; x < size.x; x++)
+                {
+                    for (int y = 0; y < size.y; y++)
+                    {
+                        Vector2Int posA = new Vector2Int(x, y);
+                        foreach (Vector2Int dir in Dirs)
+                        {
+                            Vector2Int posB = posA + dir;
+                            if (posB.x >= size.x || posB.y >= size.y) continue;
+
+                            if (TryGetOrderedSquareSwap(grid, posA, posB, out Vector2Int mover, out Vector2Int target))
+                                return CollectGameObjects(grid, mover, target);
+                        }
+                    }
+                }
+
+                return new GameObject[0];
+            }
+        }
+
+        private static Match3Grid GetGrid()
+        {
+            if (GameManager.Instance == null) return null;
+            return GameManager.Instance.CurrentLevel is LevelScene_Match3Game lvl ? lvl.grid as Match3Grid : null;
+        }
+
+        private static bool TryGetOrderedSquareSwap(Match3Grid grid, Vector2Int a, Vector2Int b,
+                                                    out Vector2Int mover, out Vector2Int target)
+        {
+            mover = a;
+            target = b;
+
+            Grid3D.GridCell cellA = grid.GetCellPublic(a);
+            Grid3D.GridCell cellB = grid.GetCellPublic(b);
+
+            if (!IsMatchable(cellA) || !IsMatchable(cellB)) return false;
+
+            ElementData dataA = cellA.elementInfo.elementData;
+            ElementData dataB = cellB.elementInfo.elementData;
+            if (dataA == dataB) return false;
+
+            cellA.elementInfo.elementData = dataB;
+            cellB.elementInfo.elementData = dataA;
+
+            bool aIsMover = CreatesSquareAt(grid, b);
+            bool bIsMover = CreatesSquareAt(grid, a);
+
+            cellA.elementInfo.elementData = dataA;
+            cellB.elementInfo.elementData = dataB;
+
+            if (aIsMover)
+            {
+                mover = a;
+                target = b;
+                return true;
+            }
+
+            if (bIsMover)
+            {
+                mover = b;
+                target = a;
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool CreatesSquareAt(Match3Grid grid, Vector2Int pos)
+        {
+            Grid3D.GridCell center = grid.GetCellPublic(pos);
+            if (!IsMatchable(center)) return false;
+
+            ElementData data = center.elementInfo.elementData;
+            Vector2Int[] origins =
+            {
+                pos,
+                pos + Vector2Int.left,
+                pos + Vector2Int.down,
+                pos + Vector2Int.left + Vector2Int.down
+            };
+
+            for (int i = 0; i < origins.Length; i++)
+            {
+                if (IsSquareAt(grid, origins[i], data)) return true;
+            }
+
+            return false;
+        }
+
+        private static bool IsSquareAt(Match3Grid grid, Vector2Int origin, ElementData data)
+        {
+            Grid3D.GridCell c00 = grid.GetCellPublic(origin);
+            Grid3D.GridCell c10 = grid.GetCellPublic(origin + Vector2Int.right);
+            Grid3D.GridCell c01 = grid.GetCellPublic(origin + Vector2Int.up);
+            Grid3D.GridCell c11 = grid.GetCellPublic(origin + Vector2Int.right + Vector2Int.up);
+
+            return IsMatchable(c00) && c00.elementInfo.elementData == data
+                && IsMatchable(c10) && c10.elementInfo.elementData == data
+                && IsMatchable(c01) && c01.elementInfo.elementData == data
+                && IsMatchable(c11) && c11.elementInfo.elementData == data;
+        }
+
+        private static bool IsMatchable(Grid3D.GridCell cell)
+        {
+            return cell != null
+                && cell.cellType == Grid3D.CellType.Normal
+                && cell.elementInfo != null
+                && !cell.elementInfo.isHidden
+                && cell.elementInfo.powerUpType == ElementPowerUpType.None
+                && cell.elementInfo.elementData != null;
+        }
+
+        private static GameObject[] CollectGameObjects(Match3Grid grid, Vector2Int a, Vector2Int b)
         {
             GridElement elA = grid.GetElementAt(a);
             GridElement elB = grid.GetElementAt(b);
