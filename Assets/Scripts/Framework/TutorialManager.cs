@@ -36,6 +36,7 @@ namespace Game
             public EventParam completionEventExpectedParamValues;
             public UnityAction onStart;
             public UnityAction onComplete;
+            public bool isStarted;
             public bool isCompleted;
             public bool advancedMode;
             [Header("Scene References")]
@@ -74,6 +75,20 @@ namespace Game
                         CompleteTutorialStep(captured);
                 };
 
+                if(step.nextStep != null) // Also register the next step's completion event as they are not in the list of tutorialSteps.
+                {
+
+                    Action<EventParam> onCompleteNext = e =>
+                    {
+                        if (ParamMatches(e, step.nextStep.completionEventExpectedParams, step.nextStep.completionEventExpectedParamValues))
+                            CompleteTutorialStep(step.nextStep);
+                    };
+
+                    _completionListeners[step.nextStep] = onCompleteNext;
+                    if (step.nextStep != null)
+                        EventManager.StartListening(step.nextStep.completionEvent, onCompleteNext);
+                }
+
                 _startListeners[step]     = onStart;
                 _completionListeners[step] = onComplete;
 
@@ -94,6 +109,9 @@ namespace Game
                 if (_completionListeners.TryGetValue(step, out Action<EventParam> onComplete))
                     EventManager.StopListening(step.completionEvent, onComplete);
 
+                if (step.nextStep != null && _completionListeners.TryGetValue(step.nextStep, out Action<EventParam> onCompleteNext))
+                    EventManager.StopListening(step.nextStep.completionEvent, onCompleteNext);
+
                 ClearTutorialAnimation(step);
             }
 
@@ -106,8 +124,9 @@ namespace Game
 
         private void StartTutorialStep(TutorialStep step)
         {
-            if (step.isCompleted) return;
+            if (step == null || step.isCompleted || step.isStarted) return;
 
+            step.isStarted = true;
             _activeStep = step;
             step.onStart?.Invoke();
             ShowOverlay(step);
@@ -124,9 +143,10 @@ namespace Game
 
         private void CompleteTutorialStep(TutorialStep step)
         {
-            if (step.isCompleted) return;
+            if (step == null || !step.isStarted || step.isCompleted) return;
 
             step.isCompleted = true;
+            step.isStarted = false;
             step.onComplete?.Invoke();
             highlightOverlay?.Hide();
             ClearTutorialAnimation(step);
@@ -137,7 +157,7 @@ namespace Game
 
             if (step.nextStep != null)
             {
-                StartTutorialStep(step.nextStep);
+                DOVirtual.DelayedCall(2f, () => StartTutorialStep(step.nextStep));
             }
         }
 
