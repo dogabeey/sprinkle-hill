@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using Sirenix.Serialization;
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -21,7 +22,7 @@ namespace Game
 
         [FoldoutGroup("Level")]
         [TableMatrix(DrawElementMethod = nameof(DrawGridCells), SquareCells = true)]
-        [SerializeField] private Grid3D.GridCell[,] gridCells;
+        [OdinSerialize] private Grid3D.GridCell[,] gridCells;
 
         public Vector2Int GridSize => gridSize;
         public List<ElementData> ElementPool => elementPool;
@@ -33,6 +34,7 @@ namespace Game
             if (gridSize.x <= 0 || gridSize.y <= 0)
             {
                 gridCells = new Grid3D.GridCell[0, 0];
+                MarkDirty();
                 return;
             }
 
@@ -48,6 +50,13 @@ namespace Game
                     };
                 }
             }
+
+            MarkDirty();
+        }
+
+        private void MarkDirty()
+        {
+            EditorUtility.SetDirty(this);
         }
 #endif
 
@@ -185,17 +194,20 @@ namespace Game
                     {
                         value.cellType = Grid3D.CellType.Empty;
                         value.elementInfo = null;
+                        MarkDirty();
                         Event.current.Use();
                     }
                     else if (Event.current.keyCode == KeyCode.N)
                     {
                         value.cellType = Grid3D.CellType.Normal;
+                        MarkDirty();
                         Event.current.Use();
                     }
                     else if (Event.current.keyCode == KeyCode.B)
                     {
                         value.cellType = Grid3D.CellType.BreakableWall;
                         value.elementInfo = null;
+                        MarkDirty();
                         Event.current.Use();
                     }
                 }
@@ -213,6 +225,7 @@ namespace Game
                             {
                                 value.cellType = Grid3D.CellType.Normal;
                                 value.elementInfo = new GridElementInfo { elementData = elementData };
+                                MarkDirty();
                             });
                         }
                     }
@@ -231,6 +244,7 @@ namespace Game
                         {
                             value.cellType = Grid3D.CellType.Normal;
                             value.elementInfo = new GridElementInfo { elementData = elementData };
+                            MarkDirty();
                         }
                     }
                     Event.current.Use();
