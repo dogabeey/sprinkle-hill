@@ -71,7 +71,6 @@ namespace Game
     public class AddTimeAction : BonusPremiumAction
     {
         public int addedTime = 30;
-        public ParticleSystem actionSuccessParticle;
 
         public override string ActionName => "Add Time";
         public override float BaseCost => 0;

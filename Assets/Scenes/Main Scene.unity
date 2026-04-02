@@ -1359,7 +1359,6 @@ MonoBehaviour:
         startingCount: 10
         unlockedLevel: 0
         addedTime: 30
-        actionSuccessParticle: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
     - rid: 3084495758061469768
       type: {class: BombPlacementAction, ns: Game, asm: Assembly-CSharp}
       data:
