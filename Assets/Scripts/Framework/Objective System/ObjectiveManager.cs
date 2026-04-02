@@ -17,7 +17,7 @@ public class ObjectiveManager : SingletonComponent<ObjectiveManager>
         {
             EventManager.StartListening(objective.objectiveType.completionEvent, (EventParam param) =>
             {
-                if (param.paramScriptable == objective.scriptableObjectParameter)
+                if (objective.scriptableObjectParameter == null || param.paramScriptable == objective.scriptableObjectParameter)
                 {
                     objective.requiredCount--;
                     if (objective.requiredCount <= 0)
