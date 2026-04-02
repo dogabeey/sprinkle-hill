@@ -176,10 +176,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: action_bar_icons_1
+      name: action_bar_settings
       rect:
         serializedVersion: 2
-        x: 0
+        x: 1
         y: 512
         width: 256
         height: 256
@@ -476,7 +476,6 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       action_bar_add_timer: -238066524
-      action_bar_icons_1: -512723934
       action_bar_icons_10: 6746950
       action_bar_icons_11: 990293928
       action_bar_icons_12: -1447246347
@@ -490,6 +489,7 @@ TextureImporter:
       action_bar_icons_9: 939561891
       action_bar_mystery: 662968826
       action_bar_padlock: -320327708
+      action_bar_settings: -512723934
       action_bar_shuffle: 1175953842
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0

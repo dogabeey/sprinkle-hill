@@ -21,8 +21,8 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 0beb8f42119a75c4c8fff95fb8eb913b, type: 2}
     - {fileID: 11400000, guid: fcba4310cd5fca344aad5d26ad52423f, type: 2}
     - {fileID: 11400000, guid: dbcd01a6f969aed4a8156284d01cc4e7, type: 2}
-    - {fileID: 11400000, guid: ce870fd5d06ef2244952ffd6faf955b6, type: 2}
     - {fileID: 11400000, guid: b5e047feb0cad314a894341b7d997b76, type: 2}
+    - {fileID: 11400000, guid: ce870fd5d06ef2244952ffd6faf955b6, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -372,7 +372,7 @@ MonoBehaviour:
       Data: 18|Game.GridElementInfo, Assembly-CSharp
     - Name: elementData
       Entry: 10
-      Data: 3
+      Data: 5
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -450,7 +450,7 @@ MonoBehaviour:
       Data: 22|Game.GridElementInfo, Assembly-CSharp
     - Name: elementData
       Entry: 10
-      Data: 5
+      Data: 6
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -528,7 +528,7 @@ MonoBehaviour:
       Data: 26|Game.GridElementInfo, Assembly-CSharp
     - Name: elementData
       Entry: 10
-      Data: 5
+      Data: 6
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -645,7 +645,7 @@ MonoBehaviour:
       Data: 32|Game.GridElementInfo, Assembly-CSharp
     - Name: elementData
       Entry: 10
-      Data: 6
+      Data: 4
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -801,7 +801,7 @@ MonoBehaviour:
       Data: 40|Game.GridElementInfo, Assembly-CSharp
     - Name: elementData
       Entry: 10
-      Data: 1
+      Data: 5
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -879,7 +879,7 @@ MonoBehaviour:
       Data: 44|Game.GridElementInfo, Assembly-CSharp
     - Name: elementData
       Entry: 10
-      Data: 1
+      Data: 4
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -957,7 +957,7 @@ MonoBehaviour:
       Data: 48|Game.GridElementInfo, Assembly-CSharp
     - Name: elementData
       Entry: 10
-      Data: 5
+      Data: 0
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -996,7 +996,7 @@ MonoBehaviour:
       Data: 50|Game.GridElementInfo, Assembly-CSharp
     - Name: elementData
       Entry: 10
-      Data: 4
+      Data: 5
     - Name: isSparkling
       Entry: 5
       Data: false
