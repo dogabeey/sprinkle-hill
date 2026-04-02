@@ -1074,7 +1074,7 @@ namespace Game
                    cell.elementInfo.powerUpType == ElementPowerUpType.None;
         }
 
-        private bool HasAnyPossibleMove()
+        public bool HasAnyPossibleMove()
         {
             Vector2Int[] dirs = { Vector2Int.right, Vector2Int.up };
 
@@ -1099,7 +1099,7 @@ namespace Game
                         aCell.elementInfo.elementData = bData;
                         bCell.elementInfo.elementData = aData;
 
-                        bool createsMatch = CreatesLineMatchAt(aPos) || CreatesLineMatchAt(bPos);
+                        bool createsMatch = CreatesMatchAt(aPos) || CreatesMatchAt(bPos);
 
                         aCell.elementInfo.elementData = aData;
                         bCell.elementInfo.elementData = bData;
@@ -1110,6 +1110,11 @@ namespace Game
             }
 
             return false;
+        }
+
+        private bool CreatesMatchAt(Vector2Int pos)
+        {
+            return CreatesLineMatchAt(pos) || CreatesSquareMatchAt(pos);
         }
 
         private bool CreatesLineMatchAt(Vector2Int pos)
@@ -1149,6 +1154,41 @@ namespace Game
             }
 
             return vert >= 3;
+        }
+
+        private bool CreatesSquareMatchAt(Vector2Int pos)
+        {
+            GridCell center = GetCell(pos);
+            if (!IsMatchableForMove(center)) return false;
+
+            ElementData data = center.elementInfo.elementData;
+            Vector2Int[] origins =
+            {
+                pos,
+                pos + Vector2Int.left,
+                pos + Vector2Int.down,
+                pos + Vector2Int.left + Vector2Int.down
+            };
+
+            for (int i = 0; i < origins.Length; i++)
+            {
+                if (IsSquareAt(origins[i], data)) return true;
+            }
+
+            return false;
+        }
+
+        private bool IsSquareAt(Vector2Int origin, ElementData data)
+        {
+            GridCell c00 = GetCell(origin);
+            GridCell c10 = GetCell(origin + Vector2Int.right);
+            GridCell c01 = GetCell(origin + Vector2Int.up);
+            GridCell c11 = GetCell(origin + Vector2Int.right + Vector2Int.up);
+
+            return IsMatchableForMove(c00) && c00.elementInfo.elementData == data
+                && IsMatchableForMove(c10) && c10.elementInfo.elementData == data
+                && IsMatchableForMove(c01) && c01.elementInfo.elementData == data
+                && IsMatchableForMove(c11) && c11.elementInfo.elementData == data;
         }
 
         private void EnsureAtLeastOneMoveAvailable(List<ElementData> elementPool)
