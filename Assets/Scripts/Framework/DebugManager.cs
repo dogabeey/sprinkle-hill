@@ -37,13 +37,6 @@ namespace Game
                     UnityAdsManager.Instance.ShowAd();
                 }
             }
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                if (coinSource != null)
-                    CurrencyManager.Instance.AddCoin(100, coinSource);
-                else
-                    CurrencyManager.Instance.AddCoin(100);
-            }
         }
     }
 }

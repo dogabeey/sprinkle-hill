@@ -4,12 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using TMPro;
+using Sirenix.OdinInspector;
 
 namespace Game
 {
     public partial class CurrencyManager : SingletonComponent<CurrencyManager>
     {
         [Serializable]
+        [InlineEditor]
         public class CurrencyInfo
         {
             public CurrencyModel currencyModel;

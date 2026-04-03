@@ -10,8 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51dab175d7bbabd4ba800ef53b34235c, type: 3}
-  m_Name: Diamond
+  m_Name: Cash
   m_EditorClassIdentifier: Assembly-CSharp:Dogabeey:CurrencyModel
-  currencyID: Diamond
+  currencyID: Chef's Token
   startingAmount: 0
-  currencySpritePrefab: {fileID: 6600527556817516632, guid: d12243bc75b32b64d9a4dd0ec103dba9, type: 3}
+  currencyIcon: {fileID: 132396073, guid: e1721e006356ea443baff2090acf6c5d, type: 3}
+  showFormat: 0
+  spriteIndexForUI: 1
