@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51dab175d7bbabd4ba800ef53b34235c, type: 3}
-  m_Name: Cash
+  m_Name: Chef's Token
   m_EditorClassIdentifier: Assembly-CSharp:Dogabeey:CurrencyModel
-  currencyID: Chef's Token
+  currencyID: Token
   startingAmount: 0
-  currencyIcon: {fileID: 132396073, guid: e1721e006356ea443baff2090acf6c5d, type: 3}
+  currencyIcon: {fileID: -1391130105, guid: e1721e006356ea443baff2090acf6c5d, type: 3}
   showFormat: 0
   spriteIndexForUI: 1

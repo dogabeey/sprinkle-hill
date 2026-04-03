@@ -76,19 +76,6 @@ namespace Game
         public int rocketShakeVibrato = 10;
         public float rocketShakeRandomness = 90f;
 
-        public struct TAGS
-        {
-            public const string PLAYER = "Player";
-            public const string ENEMY = "Enemy";
-            public const string COLLECTIBLE = "Collectible";
-            public const string GROUND = "Ground";
-        }
-
-        public struct BindingNames
-        {
-            public const string KEYBOARD = "Keyboard";
-            public const string GAMEPAD = "Gamepad";
-        }
         public struct SOUNDS
         {
             public struct MUSICS
@@ -113,6 +100,13 @@ namespace Game
                 public const string BUTTON_CLICK_FAIL = "ButtonClickFail";
                 public const string BUTTON_CLICK_SUCCESS = "ButtonClickSuccess";
             }
+        }
+
+        public struct CURRENCY
+        {
+            public const string CASH = "Cash";
+            public const string GEM = "Gem";
+            public const string TOKEN = "Token";
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Game
     /// </summary>
     public class Match3Grid : Grid3D
     {
+        private const string MatchRewardCurrencyId = "cash";
         private int currentComboCount = 0;
         private PowerUpHandler powerUpHandler;
 
@@ -175,6 +176,7 @@ namespace Game
             while ((matchedGroups = CheckMatchOf(3)).Count > 0)
             {
                 currentComboCount++;
+                RewardCurrencyForCombo(currentComboCount);
                 GameManager.Instance.soundManager.Play(ConstantManager.SOUNDS.EFFECTS.MATCH);
 
                 LevelScene_Match3Game level = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
@@ -1294,6 +1296,32 @@ namespace Game
             if (generatedTiles.TryGetValue(center, out GridCellController tile) && tile != null)
                 return tile.transform.position;
             return Vector3.zero;
+        }
+
+        private void RewardCurrencyForCombo(int comboCount)
+        {
+            CurrencyManager currencyManager = CurrencyManager.Instance;
+            if (currencyManager == null) return;
+
+            string currencyId = MatchRewardCurrencyId;
+            bool hasExact = currencyManager.currencyInfos.Exists(x => x.currencyModel != null && x.currencyModel.currencyID == currencyId);
+            if (!hasExact)
+            {
+                CurrencyManager.CurrencyInfo cashLike = currencyManager.currencyInfos.Find(x => x.currencyModel != null &&
+                    string.Equals(x.currencyModel.currencyID, currencyId, System.StringComparison.OrdinalIgnoreCase));
+                if (cashLike != null)
+                {
+                    currencyId = cashLike.currencyModel.currencyID;
+                }
+                else
+                {
+                    CurrencyManager.CurrencyInfo fallback = currencyManager.currencyInfos.Find(x => x.currencyModel != null);
+                    if (fallback == null) return;
+                    currencyId = fallback.currencyModel.currencyID;
+                }
+            }
+
+            currencyManager.AddCurrency(currencyId, Mathf.Max(1, comboCount));
         }
     }
 }
