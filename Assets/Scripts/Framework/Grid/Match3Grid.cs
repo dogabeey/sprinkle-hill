@@ -25,6 +25,20 @@ namespace Game
 
         public IEnumerator ApplyGravityPublic() => ApplyGravity();
 
+        public IEnumerator PlaceDiscoBallActionAt(Vector2Int center)
+        {
+            GridCell cell = GetCell(center);
+            if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null)
+                yield break;
+
+            if (cell.elementInfo.powerUpType != ElementPowerUpType.None || cell.elementInfo.elementData == null)
+                yield break;
+
+            ElementData selectedElementData = cell.elementInfo.elementData;
+            powerUpHandler.CreatePowerUpAt(center, selectedElementData, ElementPowerUpType.DiscoBall);
+            yield return StartCoroutine(powerUpHandler.ActivateAt(center, selectedElementData));
+        }
+
         public GridElement GetElementAt(Vector2Int pos)
         {
             if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)

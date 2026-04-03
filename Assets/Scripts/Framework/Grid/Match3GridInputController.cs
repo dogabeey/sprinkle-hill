@@ -14,8 +14,15 @@ namespace Game
         private Vector2 dragStartScreenPos;
         private bool isProcessing;
         private bool dragConsumed;
-        private bool isBombPlacementPending;
-        private bool isBombPlacementReady;
+        private PendingPlacementAction pendingPlacementAction;
+        private bool isPlacementReady;
+
+        private enum PendingPlacementAction
+        {
+            None,
+            Bomb,
+            DiscoBall
+        }
 
         private void Awake()
         {
@@ -32,16 +39,16 @@ namespace Game
                 return;
             }
 
-            if (isBombPlacementPending)
+            if (pendingPlacementAction != PendingPlacementAction.None)
             {
                 if (Input.GetMouseButtonDown(0))
                 {
                     EventManager.TriggerEvent(GameEvent.INPUT_RECEIVED);
-                    isBombPlacementReady = true;
+                    isPlacementReady = true;
                 }
-                else if (isBombPlacementReady && Input.GetMouseButtonUp(0))
+                else if (isPlacementReady && Input.GetMouseButtonUp(0))
                 {
-                    TryPlaceBomb();
+                    TryPlacePendingAction();
                 }
                 return;
             }
@@ -202,42 +209,89 @@ namespace Game
         /// </summary>
         public void BeginBombPlacement()
         {
-            isBombPlacementPending = true;
-            isBombPlacementReady = false;
+            pendingPlacementAction = PendingPlacementAction.Bomb;
+            isPlacementReady = false;
         }
 
-        private void TryPlaceBomb()
+        public void BeginDiscoBallPlacement()
+        {
+            pendingPlacementAction = PendingPlacementAction.DiscoBall;
+            isPlacementReady = false;
+        }
+
+        private void TryPlacePendingAction()
         {
             Camera cam = inputCamera != null ? inputCamera : Camera.main;
             if (cam == null || match3Grid == null)
             {
-                isBombPlacementPending = false;
-                Debug.LogWarning("Cannot place bomb: No input camera or grid reference.");
+                pendingPlacementAction = PendingPlacementAction.None;
+                Debug.LogWarning("Cannot place action: No input camera or grid reference.");
                 return;
             }
 
             GridCellController cell = GetCellAtScreenPos(cam, Input.mousePosition);
             if (cell == null)
             {
-                isBombPlacementPending = false;
-                Debug.LogWarning("Cannot place bomb: No cell found at the screen position.");
+                pendingPlacementAction = PendingPlacementAction.None;
+                Debug.LogWarning("Cannot place action: No cell found at the screen position.");
                 return;
             }
 
-            isBombPlacementPending = false;
-            ActionBarManager actionBarManager = GameManager.Instance.actionBarManager;
-            StartCoroutine(BombPlacementRoutine(cell.Coordinates));
+            PendingPlacementAction actionToPlace = pendingPlacementAction;
+            pendingPlacementAction = PendingPlacementAction.None;
+
+            if (actionToPlace == PendingPlacementAction.Bomb)
+            {
+                StartCoroutine(BombPlacementRoutine(cell.Coordinates));
+            }
+            else if (actionToPlace == PendingPlacementAction.DiscoBall)
+            {
+                StartCoroutine(DiscoBallPlacementRoutine(cell.Coordinates));
+            }
         }
 
         private IEnumerator BombPlacementRoutine(Vector2Int center)
         {
             isProcessing = true;
             BombPlacementAction bombAction = GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is BombPlacementAction) as BombPlacementAction;
+            if (bombAction == null)
+            {
+                isProcessing = false;
+                yield break;
+            }
+
             bombAction.CurrentCount--;
             yield return StartCoroutine(bombAction.BombThrowAnim(match3Grid.GetCellPositionInGrid(center)));
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: "Bomb Placement"));
             yield return StartCoroutine(match3Grid.ClearAreaAt(center, 1));
             yield return StartCoroutine(match3Grid.ApplyGravityPublic());
+            isProcessing = false;
+        }
+
+        private IEnumerator DiscoBallPlacementRoutine(Vector2Int center)
+        {
+            isProcessing = true;
+
+            PlaceDiscoBallAction discoBallAction = GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is PlaceDiscoBallAction) as PlaceDiscoBallAction;
+            if (discoBallAction == null)
+            {
+                isProcessing = false;
+                yield break;
+            }
+
+            GridCell selectedCell = match3Grid.GetCellPublic(center);
+            if (selectedCell == null || selectedCell.cellType != CellType.Normal || selectedCell.elementInfo == null ||
+                selectedCell.elementInfo.powerUpType != ElementPowerUpType.None || selectedCell.elementInfo.elementData == null)
+            {
+                isProcessing = false;
+                yield break;
+            }
+
+            discoBallAction.CurrentCount--;
+            yield return StartCoroutine(discoBallAction.DiscoBallThrowAnim(match3Grid.GetCellPositionInGrid(center)));
+            EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: discoBallAction.ActionName));
+            yield return StartCoroutine(match3Grid.PlaceDiscoBallActionAt(center));
+
             isProcessing = false;
         }
 

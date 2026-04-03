@@ -1013,6 +1013,7 @@ MonoBehaviour:
   actionBarItemList:
   - rid: 943281644091474012
   - rid: 3084495758061469768
+  - rid: 943281644091474204
   - rid: 3084495758061469769
   actionBarParent: {fileID: 854708863}
   lockedSprite: {fileID: -320327708, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
@@ -1028,6 +1029,14 @@ MonoBehaviour:
         startingCount: 10
         unlockedLevel: 0
         addedTime: 30
+    - rid: 943281644091474204
+      type: {class: PlaceDiscoBallAction, ns: Game, asm: Assembly-CSharp}
+      data:
+        actionBarIcon: {fileID: 524596139, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
+        costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
+        actionSuccessParticle: {fileID: 6553830495741696104, guid: f0c3336913e261f479ba003744aaa6ec, type: 3}
+        startingCount: 10
+        unlockedLevel: 0
     - rid: 3084495758061469768
       type: {class: BombPlacementAction, ns: Game, asm: Assembly-CSharp}
       data:
@@ -1874,7 +1883,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -131.98}
+  m_AnchoredPosition: {x: 0, y: -131.97998}
   m_SizeDelta: {x: 0, y: 263.97}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1068210312
@@ -2849,7 +2858,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: -165}
+  m_AnchoredPosition: {x: 0, y: -164.99998}
   m_SizeDelta: {x: 236.1, y: 164.2558}
   m_Pivot: {x: 0, y: 0}
 --- !u!1 &1429330675
@@ -3628,7 +3637,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -0.00024414062, y: -165}
+  m_AnchoredPosition: {x: -0.00024414062, y: -164.99998}
   m_SizeDelta: {x: 236.1, y: 165}
   m_Pivot: {x: 1, y: 0}
 --- !u!224 &1734199717 stripped

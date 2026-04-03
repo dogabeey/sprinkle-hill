@@ -28,10 +28,12 @@ MonoBehaviour:
   elementDestroyPunchVibrato: 8
   elementDestroyPunchElasticity: 0.8
   elementDestroyParticlePrefab: {fileID: 6553830495741696104, guid: c66bb7ca972ded84692b09698947ca71, type: 3}
-  discoBallTrailDuration: 0.25
-  discoBallTrailSpawnDelay: 0.15
+  discoBallTrailDuration: 0.15
+  discoBallTrailSpawnDelay: 0.1
   discoBallEmissionPeak: 1
   discoBallEmissionResetDelay: 0.15
+  discoBallSpinLoopDuration: 0.12
+  discoBallSpinDegreesPerLoop: 540
   sparklingTrailPrefab: {fileID: 7547541700686798408, guid: b54214516bc3cd145a31ccd5639beb98, type: 3}
   sparklingTrailDuration: 0.3
   sparklingTrailSpawnDelay: 0.2
