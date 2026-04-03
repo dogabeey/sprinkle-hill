@@ -28,6 +28,7 @@ public enum GameEvent
     // Currency Events
     CURRENCY_EARNED = 500,
     CURRENCY_SPENT = 501,
+    CURRENCY_CHANGED = 502,
     
     // Action Bar Events
     ACTION_BAR_ITEM_CLICKED = 600,

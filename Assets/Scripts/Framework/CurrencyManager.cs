@@ -13,134 +13,94 @@ namespace Game
         public class CurrencyInfo
         {
             public CurrencyModel currencyModel;
-            public Transform currencyTransform;
-            public TMP_Text currencyText;
-            public float Amount { get => PlayerPrefs.GetFloat("Currency_" + currencyModel.currencyID, currencyModel.startingAmount); set => PlayerPrefs.SetFloat("Currency_" + currencyModel.currencyID, value); }
-        }
-
-        [Header("Coin")]
-        public TMP_Text coinText;
-        public Transform coinTransform;
-        public SpriteRenderer coinSpritePrefab;
-        public List<CurrencyInfo> currencyInfos;
-        [Header("Animation Settings")]
-        public float flightDuration = 0.1f;
-        public float coinSpriteMultiplier = 10;
-
-        public float Coin { 
-            get => PlayerPrefs.GetFloat("Coin", 0);
-            set
+            public float Amount
             {
-                PlayerPrefs.SetFloat("Coin", value);
-                UpdateCoinText();
+                get => PlayerPrefs.GetFloat("Currency_" + currencyModel.currencyID, currencyModel.startingAmount);
+                set => PlayerPrefs.SetFloat("Currency_" + currencyModel.currencyID, value);
             }
         }
+
+        [Header("References")]
+        public Transform currencyContainer;
+        public CurrencyElement currencyElementPrefab;
+        public List<CurrencyInfo> currencyInfos;
+
+        [Header("Animation Settings")]
+        public Transform currencyAnimationContainer;
+        public SpriteRenderer currencySpritePrefab;
+        public float flightDuration = 0.1f;
+        public float currencySpriteMultiplier = 10f;
+
+        private readonly List<CurrencyElement> currencyElements = new List<CurrencyElement>();
 
         private void Start()
         {
-            UpdateCoinText();
-            UpdateCurrencyText();
-        }
-        private void Update()
-        {
-            UpdateCurrencyText();
+            currencyElements.Clear();
+
+            foreach (var currencyInfo in currencyInfos)
+            {
+                CurrencyElement instantiatedElement = Instantiate(currencyElementPrefab, currencyContainer);
+                instantiatedElement.currencyTransform = instantiatedElement.transform;
+                instantiatedElement.currencyText = instantiatedElement.GetComponentInChildren<TMP_Text>();
+                instantiatedElement.UpdateCurrencyUI(currencyInfo.currencyModel);
+                currencyElements.Add(instantiatedElement);
+            }
         }
 
-
-        public void AddCoin(float coinAmount, GameObject source = null)
+        public void AddCurrency(string currencyID, float amount, GameObject source = null)
         {
-            if(source != null)
+            CurrencyInfo currencyInfo = currencyInfos.Find(x => x.currencyModel != null && x.currencyModel.currencyID == currencyID);
+            if (currencyInfo == null)
             {
-                AddCoinAnimation(source.transform.position, coinTransform.position, coinAmount);
-            }
-            
-            EventManager.TriggerEvent(GameEvent.CURRENCY_EARNED, new EventParam(
-                paramStr: "Coin",
-                paramFloat: coinAmount,
-                paramObj: source
-            ));
-        }
-        public void AddCurrency(string currencyID, float premiumCurrencyAmount, GameObject source = null)
-        {
-            CurrencyInfo currencyModel = currencyInfos.Find(x => x.currencyModel.currencyID == currencyID);
-            if (source != null)
-            {
-                AddCoinAnimation(source.transform.position, currencyModel.currencyTransform.position, premiumCurrencyAmount);
+                Debug.LogWarning($"Currency with id '{currencyID}' not found.");
+                return;
             }
 
-            currencyModel.Amount += premiumCurrencyAmount;
-            
-            EventManager.TriggerEvent(GameEvent.CURRENCY_EARNED, new EventParam(
-                paramStr: currencyID,
-                paramFloat: premiumCurrencyAmount,
-                paramObj: source
-            ));
-        }
-        
-        private void AddCoinAnimation(Vector3 sourcePosition, Vector3  targetPosition, float coinAmount)
-        {
-            StartCoroutine(AddCoinAnimationCoroutine(sourcePosition, targetPosition, coinAmount));
-        }
-        private IEnumerator AddCoinAnimationCoroutine(Vector3 sourcePosition, Vector3 targetPosition, float coinAmount)
-        {
-            int coinSpriteAmount = Coin == 0 ? Mathf.CeilToInt((Coin + coinAmount * coinSpriteMultiplier) / 100) : Mathf.CeilToInt((Coin + coinAmount * coinSpriteMultiplier) / Coin);
-            for (int i = 0; i < coinSpriteAmount; i++)
+            CurrencyElement element = currencyElements.Find(x => x.refCurrency != null && x.refCurrency.currencyID == currencyID);
+
+            if (source != null && element != null)
             {
-                SpriteRenderer coinSprite = Instantiate(coinSpritePrefab, sourcePosition, Quaternion.identity);
-                coinSprite.transform.SetParent(coinTransform);
-                yield return coinSprite.transform.DOMove(targetPosition, flightDuration).SetEase(Ease.InOutQuad).WaitForCompletion();
-                Coin += coinAmount / (float) coinSpriteAmount;
-                Destroy(coinSprite.gameObject);
+                AddCurrencyAnimation(currencyInfo, source.transform.position, element.currencyTransform.position, amount);
+                return;
             }
+
+            currencyInfo.Amount += amount;
+            NotifyCurrencyChanged(currencyInfo.currencyModel);
+        }
+
+        private void AddCurrencyAnimation(CurrencyInfo currencyInfo, Vector3 sourcePosition, Vector3 targetPosition, float amount)
+        {
+            StartCoroutine(AddCurrencyAnimationCoroutine(currencyInfo, sourcePosition, targetPosition, amount));
+        }
+
+        private IEnumerator AddCurrencyAnimationCoroutine(CurrencyInfo currencyInfo, Vector3 sourcePosition, Vector3 targetPosition, float amount)
+        {
+            int spriteAmount = Mathf.Max(1, Mathf.CeilToInt(Mathf.Abs(amount) * currencySpriteMultiplier));
+            float startAmount = currencyInfo.Amount;
+
+            currencyInfo.Amount = startAmount + amount;
+            NotifyCurrencyChanged(currencyInfo.currencyModel);
 
             yield break;
         }
 
-        void UpdateCoinText()
+        private static void NotifyCurrencyChanged(CurrencyModel currencyModel)
         {
-            coinText.text = Mathf.FloorToInt(Coin).ToString();
-
-        }
-        private void UpdateCurrencyText()
-        {
-            foreach (var currencyModel in currencyInfos)
+            EventManager.TriggerEvent(GameEvent.CURRENCY_CHANGED, new EventParam
             {
-                currencyModel.currencyText.text = Mathf.FloorToInt(currencyModel.Amount).ToString();
-            }
+                paramScriptable = currencyModel
+            });
         }
 
         internal float GetCurrencyAmount(CurrencyModel costCurrency)
         {
-            return currencyInfos.Find(x => x.currencyModel == costCurrency).Amount;
+            CurrencyInfo info = currencyInfos.Find(x => x.currencyModel == costCurrency);
+            return info != null ? info.Amount : 0f;
         }
-        
-        public bool SpendCoin(float coinAmount)
+
+        internal Sprite GetCurrencySprite(CurrencyModel costCurrency)
         {
-            if (Coin >= coinAmount)
-            {
-                Coin -= coinAmount;
-                EventManager.TriggerEvent(GameEvent.CURRENCY_SPENT, new EventParam(
-                    paramStr: "Coin",
-                    paramFloat: coinAmount
-                ));
-                return true;
-            }
-            return false;
-        }
-        
-        public bool SpendCurrency(string currencyID, float amount)
-        {
-            CurrencyInfo currencyInfo = currencyInfos.Find(x => x.currencyModel.currencyID == currencyID);
-            if (currencyInfo != null && currencyInfo.Amount >= amount)
-            {
-                currencyInfo.Amount -= amount;
-                EventManager.TriggerEvent(GameEvent.CURRENCY_SPENT, new EventParam(
-                    paramStr: currencyID,
-                    paramFloat: amount
-                ));
-                return true;
-            }
-            return false;
+            return costCurrency.currencyIcon;
         }
     }
 }
