@@ -49,21 +49,20 @@ namespace Game
             }
         }
 
-        public void AddCurrency(string currencyID, float amount, GameObject source = null)
+        public IEnumerator AddCurrency(string currencyID, float amount, GameObject source = null)
         {
             CurrencyInfo currencyInfo = currencyInfos.Find(x => x.currencyModel != null && x.currencyModel.currencyID == currencyID);
             if (currencyInfo == null)
             {
                 Debug.LogWarning($"Currency with id '{currencyID}' not found.");
-                return;
+                yield break;
             }
 
             CurrencyElement element = currencyElements.Find(x => x.refCurrency != null && x.refCurrency.currencyID == currencyID);
 
             if (source != null && element != null)
             {
-                AddCurrencyAnimation(currencyInfo, source.transform.position, element.currencyTransform.position, amount);
-                return;
+                yield return StartCoroutine(AddCurrencyAnimationCoroutine(currencyInfo, source.transform.position, element.currencyTransform.position, amount));
             }
 
             currencyInfo.Amount += amount;
@@ -78,7 +77,44 @@ namespace Game
         private IEnumerator AddCurrencyAnimationCoroutine(CurrencyInfo currencyInfo, Vector3 sourcePosition, Vector3 targetPosition, float amount)
         {
             int spriteAmount = Mathf.Max(1, Mathf.CeilToInt(Mathf.Abs(amount) * currencySpriteMultiplier));
+            spriteAmount = Mathf.Min(spriteAmount, 30);
             float startAmount = currencyInfo.Amount;
+
+            if (currencySpritePrefab != null && currencyAnimationContainer != null)
+            {
+                float spawnStep = 0.02f;
+                float totalAnimDuration = flightDuration;
+
+                for (int i = 0; i < spriteAmount; i++)
+                {
+                    SpriteRenderer spriteInstance = Instantiate(currencySpritePrefab, currencyAnimationContainer);
+                    if (currencyInfo.currencyModel != null && currencyInfo.currencyModel.currencyIcon != null)
+                    {
+                        spriteInstance.sprite = currencyInfo.currencyModel.currencyIcon;
+                    }
+
+                    Vector3 randomOffset = new Vector3(UnityEngine.Random.Range(-0.2f, 0.2f), UnityEngine.Random.Range(-0.2f, 0.2f), 0f);
+                    spriteInstance.transform.position = sourcePosition + randomOffset;
+
+                    float delay = i * spawnStep;
+                    float duration = Mathf.Max(0.05f, flightDuration);
+                    totalAnimDuration = Mathf.Max(totalAnimDuration, delay + duration);
+
+                    spriteInstance.transform
+                        .DOMove(targetPosition, duration)
+                        .SetDelay(delay)
+                        .SetEase(Ease.InOutQuad)
+                        .OnComplete(() =>
+                        {
+                            if (spriteInstance != null)
+                            {
+                                Destroy(spriteInstance.gameObject);
+                            }
+                        });
+                }
+
+                yield return new WaitForSeconds(totalAnimDuration);
+            }
 
             currencyInfo.Amount = startAmount + amount;
             NotifyCurrencyChanged(currencyInfo.currencyModel);

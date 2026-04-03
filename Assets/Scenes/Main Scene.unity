@@ -4036,9 +4036,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
+      propertyPath: flightDuration
+      value: 0.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
       propertyPath: currencyContainer
       value: 
       objectReference: {fileID: 1393474369}
+    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
+      propertyPath: currencySpritePrefab
+      value: 
+      objectReference: {fileID: 6522668367705246200, guid: 0bb994df5a34fab418c2b7cd753ad551, type: 3}
     - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
       propertyPath: currencyElementPrefab
       value: 
@@ -4048,6 +4056,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
+      propertyPath: currencySpriteMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
       propertyPath: premiumCurrencyTransform
       value: 
       objectReference: {fileID: 0}
@@ -4055,6 +4067,10 @@ PrefabInstance:
       propertyPath: currencyModels.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
+      propertyPath: currencyAnimationContainer
+      value: 
+      objectReference: {fileID: 191646935}
     - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
       propertyPath: currencyModels.Array.data[0].currencyID
       value: Diamond

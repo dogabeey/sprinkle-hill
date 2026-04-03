@@ -176,7 +176,8 @@ namespace Game
             while ((matchedGroups = CheckMatchOf(3)).Count > 0)
             {
                 currentComboCount++;
-                RewardCurrencyForCombo(currentComboCount);
+                GameObject matchOrigin = GetMatchOriginObject(matchedGroups);
+                RewardCurrencyForCombo(currentComboCount, matchOrigin);
                 GameManager.Instance.soundManager.Play(ConstantManager.SOUNDS.EFFECTS.MATCH);
 
                 LevelScene_Match3Game level = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
@@ -1298,7 +1299,19 @@ namespace Game
             return Vector3.zero;
         }
 
-        private void RewardCurrencyForCombo(int comboCount)
+        private GameObject GetMatchOriginObject(List<List<Vector2Int>> matchedGroups)
+        {
+            if (matchedGroups == null || matchedGroups.Count == 0 || matchedGroups[0] == null || matchedGroups[0].Count == 0)
+                return null;
+
+            Vector2Int originPos = matchedGroups[0][0];
+            if (generatedTiles.TryGetValue(originPos, out GridCellController tile) && tile != null)
+                return tile.gameObject;
+
+            return null;
+        }
+
+        private void RewardCurrencyForCombo(int comboCount, GameObject source)
         {
             CurrencyManager currencyManager = CurrencyManager.Instance;
             if (currencyManager == null) return;
@@ -1321,7 +1334,7 @@ namespace Game
                 }
             }
 
-            currencyManager.AddCurrency(currencyId, Mathf.Max(1, comboCount));
+            StartCoroutine(currencyManager.AddCurrency(currencyId, Mathf.Max(1, comboCount), source));
         }
     }
 }
