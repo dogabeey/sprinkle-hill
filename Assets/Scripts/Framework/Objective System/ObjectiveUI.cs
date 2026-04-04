@@ -55,18 +55,24 @@ public class UpperPanelUI : UIElement
     {
         yield return new WaitUntil(() => GameManager.Instance.CurrentLevel != null);
         LevelScene_Match3Game levelScene = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
-        while (!levelScene.isEnded)
+
+        while (true)
         {
             int timer = levelScene.timer;
-            if(timer <= -1)
+            if (timer <= -1)
             {
                 timerText.text = "∞";
                 timerText.enableAutoSizing = true;
             }
             else
             {
-                timerText.text = timer > 0 ? FormatTime(timer) : "0:00";
+                timerText.enableAutoSizing = false;
+                timerText.text = timer > 0 ? FormatTime(timer) : "00:00";
             }
+
+            if (levelScene.isEnded)
+                yield break;
+
             yield return null;
         }
     }
