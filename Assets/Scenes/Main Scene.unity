@@ -1130,8 +1130,8 @@ MonoBehaviour:
   worldCamera: {fileID: 1886584752}
   overlayColor: {r: 0, g: 0, b: 0, a: 0.75}
   cornerRadius: 16
-  edgeSoftness: 4
-  padding: 10
+  edgeSoftness: 2
+  padding: 5
   fadeInDuration: 0.25
   fadeOutDuration: 0.2
   highlightDelay: 0.1
@@ -3378,6 +3378,7 @@ MonoBehaviour:
   tutorialSteps:
   - Id: level_1_matchelements_1
     directive: DRAG ELEMENTS TO SWAP!
+    requiredLevelIndex: 0
     nextStep:
       rid: 3084495758061469770
     tutorialAnimation:
@@ -3431,6 +3432,7 @@ MonoBehaviour:
       data:
         Id: level_1_matchelements_2
         directive: You can also match 4 elements for square!
+        requiredLevelIndex: 0
         nextStep:
           rid: -2
         tutorialAnimation:
@@ -5178,9 +5180,69 @@ PrefabInstance:
     m_TransformParent: {fileID: 492599855}
     m_Modifications:
     - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: levelScenes.Array.size
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: 'levelScenes.Array.data[0]'
       value: 
+      objectReference: {fileID: 6648657062745475262, guid: e5128bc36d805684ebc33c78e679743c, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[1]'
+      value: 
       objectReference: {fileID: 6648657062745475262, guid: b0d03fb720f2df84ea11450fc29b8d7a, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[2]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[3]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[4]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[5]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[6]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[7]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[8]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[9]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[10]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[11]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[12]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[13]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[14]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
     - target: {fileID: 7722314759461277705, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: m_Name
       value: Game Manager
