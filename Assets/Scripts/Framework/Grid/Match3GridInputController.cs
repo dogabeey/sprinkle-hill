@@ -87,6 +87,11 @@ namespace Game
                 return;
             }
 
+            if (!IsTutorialInputAllowed(element.gameObject))
+            {
+                return;
+            }
+
             draggedElement = element;
             dragStartScreenPos = Input.mousePosition;
             dragConsumed = false;
@@ -237,6 +242,13 @@ namespace Game
                 return;
             }
 
+            GridElement selectedElement = match3Grid.GetElementAt(cell.Coordinates);
+            if (selectedElement == null || !IsTutorialInputAllowed(selectedElement.gameObject))
+            {
+                pendingPlacementAction = PendingPlacementAction.None;
+                return;
+            }
+
             PendingPlacementAction actionToPlace = pendingPlacementAction;
             pendingPlacementAction = PendingPlacementAction.None;
 
@@ -312,6 +324,14 @@ namespace Game
             }
 
             return null;
+        }
+
+        private bool IsTutorialInputAllowed(GameObject targetObject)
+        {
+            if (GameManager.Instance == null || GameManager.Instance.tutorialManager == null)
+                return true;
+
+            return GameManager.Instance.tutorialManager.IsElementInteractionAllowed(targetObject);
         }
     }
 }

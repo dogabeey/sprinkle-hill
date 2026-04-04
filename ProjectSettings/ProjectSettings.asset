@@ -168,6 +168,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.1
   androidMinAspectRatio: 1
   applicationIdentifier:
+    Android: com.doga.sprinklehill
     Standalone: com.lionsfall.hypercasualtemplate
   buildNumber:
     Standalone: 1

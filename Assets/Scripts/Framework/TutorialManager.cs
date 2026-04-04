@@ -230,6 +230,53 @@ namespace Game
             step?.tutorialAnimation?.ClearAnim();
         }
 
+        public bool IsElementInteractionAllowed(GameObject candidate)
+        {
+            if (candidate == null)
+                return false;
+
+            TutorialStep step = _activeStep;
+            if (step == null || !step.isStarted || step.isCompleted)
+                return true;
+
+            GameObject[] highlighted = step.highlightSelector != null ? step.highlightSelector.HighlightedObjects : null;
+            if (highlighted == null || highlighted.Length == 0)
+                return true;
+
+            List<GameObject> highlightedElements = new List<GameObject>();
+            for (int i = 0; i < highlighted.Length; i++)
+            {
+                GameObject target = highlighted[i];
+                if (target == null)
+                    continue;
+
+                if (target.GetComponentInParent<GridElement_Match3Game>() != null)
+                    highlightedElements.Add(target);
+            }
+
+            if (highlightedElements.Count == 0)
+                return true;
+
+            GridElement_Match3Game candidateElement = candidate.GetComponentInParent<GridElement_Match3Game>();
+            if (candidateElement == null)
+                return false;
+
+            for (int i = 0; i < highlightedElements.Count; i++)
+            {
+                GridElement_Match3Game highlightedElement = highlightedElements[i] != null
+                    ? highlightedElements[i].GetComponentInParent<GridElement_Match3Game>()
+                    : null;
+
+                if (highlightedElement == null)
+                    continue;
+
+                if (highlightedElement == candidateElement)
+                    return true;
+            }
+
+            return false;
+        }
+
         // ------------------------------------------------------------------
         //  Param matching
         // ------------------------------------------------------------------
