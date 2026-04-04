@@ -75,7 +75,7 @@ namespace Game
             EventManager.TriggerEvent(GameEvent.TIMER_PASSED);
             if (timer == -1) yield break; // No timer for this level
 
-            while (!isEnded && timer > 0)
+            while (!isEnded && timer >= 0)
             {
                 yield return new WaitForSeconds(1f);
                 if (!isPaused)
