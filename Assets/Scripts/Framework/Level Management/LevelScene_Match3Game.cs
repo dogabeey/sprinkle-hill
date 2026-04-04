@@ -72,6 +72,8 @@ namespace Game
         }
         public IEnumerator TimerCoroutine()
         {
+            if(timer == -1) yield break; // No timer for this level
+
             while (!isEnded && timer > 0)
             {
                 yield return new WaitForSeconds(1f);
@@ -84,6 +86,7 @@ namespace Game
                 if (timer <= 0)
                 {
                     timer = 0;
+                    EventManager.TriggerEvent(GameEvent.TIMER_PASSED);
                     EventManager.TriggerEvent(GameEvent.TIMER_EXPIRED);
                     FailLevel();
                 }

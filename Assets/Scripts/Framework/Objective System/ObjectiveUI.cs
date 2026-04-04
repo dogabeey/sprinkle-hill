@@ -1,4 +1,4 @@
-using Game;
+﻿using Game;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
@@ -14,8 +14,8 @@ public class UpperPanelUI : UIElement
     public ObjectiveManager objectiveManager;
     [AssetsOnly]
     public ObjectiveUINode objectiveNodePrefab;
-    public GameObject targetIconContainer;
     public Image targetIcon;
+    public Image targetIconPlaceholder;
     public TMP_Text timerText;
 
     private List<ObjectiveUINode> objectiveNodes = new List<ObjectiveUINode>();
@@ -58,7 +58,15 @@ public class UpperPanelUI : UIElement
         while (!levelScene.isEnded)
         {
             int timer = levelScene.timer;
-            timerText.text = timer > 0 ? FormatTime(timer) : "0:00";
+            if(timer < -1)
+            {
+                timerText.text = "∞";
+                timerText.enableAutoSizing = true;
+            }
+            else
+            {
+                timerText.text = timer > 0 ? FormatTime(timer) : "0:00";
+            }
             yield return null;
         }
     }
@@ -70,13 +78,16 @@ public class UpperPanelUI : UIElement
         
         while (!levelScene.isEnded)
         {
-            if(targetIcon != null)
+            if(targetIcon != null && levelScene.targetElement != null)
             {
+                targetIconPlaceholder.enabled = false;
+                targetIcon.enabled = true;
                 targetIcon.sprite = levelScene.targetElement.displayIcon;
             }
             else
             {
-                targetIconContainer.SetActive(false);
+                targetIconPlaceholder.enabled = true;
+                targetIcon.enabled = false;
             }
                 yield return null;
         }
