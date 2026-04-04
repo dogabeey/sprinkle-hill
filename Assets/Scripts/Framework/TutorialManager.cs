@@ -18,6 +18,8 @@ namespace Game
         {
             public string Id;
             public string directive;
+            [Tooltip("-1 means any level. Otherwise this step only runs when lastPlayedLevelIndex equals this value.")]
+            public int requiredLevelIndex = -1;
             [SerializeReference]
             public TutorialStep nextStep;
             [SerializeReference]
@@ -127,6 +129,7 @@ namespace Game
         private void StartTutorialStep(TutorialStep step)
         {
             if (step == null || step.isCompleted || step.isStarted) return;
+            if (!IsStepEligibleForCurrentLevel(step)) return;
 
             step.isStarted = true;
             _activeStep = step;
@@ -161,6 +164,17 @@ namespace Game
             {
                 DOVirtual.DelayedCall(0.02f, () => StartTutorialStep(step.nextStep));
             }
+        }
+
+        private static bool IsStepEligibleForCurrentLevel(TutorialStep step)
+        {
+            if (step == null || step.requiredLevelIndex < 0)
+                return true;
+
+            if (World.Instance == null)
+                return false;
+
+            return World.Instance.lastPlayedLevelIndex == step.requiredLevelIndex;
         }
 
         public void ShowDirective(TutorialStep step)
