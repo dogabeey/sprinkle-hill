@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Game.SimpleJSON;
+using Sirenix.Utilities;
 
 namespace Game
 {
@@ -142,7 +143,8 @@ namespace Game
             }
 
             if ((soundInfo.type == SoundType.Music && !IsMusicOn) ||
-                (soundInfo.type == SoundType.SoundEffect && !IsSoundEffectsOn))
+                (soundInfo.type == SoundType.SoundEffect && !IsSoundEffectsOn) ||
+                soundInfo.audioClips.IsNullOrEmpty())
             {
                 return;
             }

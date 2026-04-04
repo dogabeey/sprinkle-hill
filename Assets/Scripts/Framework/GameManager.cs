@@ -112,8 +112,13 @@ namespace Game
             if (isSequentalLevels)
             {
                 CurrentWorld = worlds[0];
-                if (!FindAnyObjectByType<LevelScene>())
+                LevelScene foundLevel = FindAnyObjectByType<LevelScene>();
+                if (!foundLevel)
                     LoadCurrentLevel();
+                else
+                {
+                    World.Instance.CurrentLevel = foundLevel;
+                }
             }
         }
         private void Update()
