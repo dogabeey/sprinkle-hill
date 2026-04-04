@@ -14,6 +14,7 @@ public class UpperPanelUI : UIElement
     public ObjectiveManager objectiveManager;
     [AssetsOnly]
     public ObjectiveUINode objectiveNodePrefab;
+    public GameObject targetIconContainer;
     public Image targetIcon;
     public TMP_Text timerText;
 
@@ -69,8 +70,15 @@ public class UpperPanelUI : UIElement
         
         while (!levelScene.isEnded)
         {
-            targetIcon.sprite = levelScene.targetElement.displayIcon;
-            yield return null;
+            if(targetIcon != null)
+            {
+                targetIcon.sprite = levelScene.targetElement.displayIcon;
+            }
+            else
+            {
+                targetIconContainer.SetActive(false);
+            }
+                yield return null;
         }
     }
 

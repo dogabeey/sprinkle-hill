@@ -78,7 +78,7 @@ namespace Game
         public override float CostAcceleration => 0;
         public override string VisibilityExplanation => "";
         public override string ClickabilityExplanation => "";
-        public override string AvailabilityExplanation => $"Reach Level {unlockedLevel}";
+        public override string AvailabilityExplanation => $"Level {unlockedLevel}";
 
         public override bool IsClickable()
         {
@@ -140,7 +140,7 @@ namespace Game
         public override float CostAcceleration => 0;
         public override string VisibilityExplanation => "";
         public override string ClickabilityExplanation => "";
-        public override string AvailabilityExplanation => $"Reach Level {unlockedLevel}";
+        public override string AvailabilityExplanation => $"Level {unlockedLevel}";
 
         public override int GetCost()
         {
@@ -199,7 +199,7 @@ namespace Game
         public override float CostAcceleration => 0;
         public override string VisibilityExplanation => "";
         public override string ClickabilityExplanation => "";
-        public override string AvailabilityExplanation => $"Reach Level {unlockedLevel}";
+        public override string AvailabilityExplanation => $"Level {unlockedLevel}";
 
         public override int GetCost() => 0;
 
@@ -245,7 +245,7 @@ namespace Game
         public override float CostAcceleration => 0;
         public override string VisibilityExplanation => "";
         public override string ClickabilityExplanation => "";
-        public override string AvailabilityExplanation => $"Reach Level {unlockedLevel}";
+        public override string AvailabilityExplanation => $"Level {unlockedLevel}";
 
         public override int GetCost() => 0;
 

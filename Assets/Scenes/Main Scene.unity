@@ -800,9 +800,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionBarViewPrefab: {fileID: 230861821462889445, guid: 9e234be0c7761a34aaf9d63c420f9995, type: 3}
   actionBarItemList:
-  - rid: 943281644091474012
-  - rid: 3084495758061469768
   - rid: 943281644091474204
+  - rid: 3084495758061469768
+  - rid: 943281644091474012
   - rid: 3084495758061469769
   actionBarParent: {fileID: 854708863}
   lockedSprite: {fileID: -320327708, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
@@ -816,7 +816,7 @@ MonoBehaviour:
         costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
         actionSuccessParticle: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
         startingCount: 10
-        unlockedLevel: 0
+        unlockedLevel: 5
         addedTime: 30
     - rid: 943281644091474204
       type: {class: PlaceDiscoBallAction, ns: Game, asm: Assembly-CSharp}
@@ -825,7 +825,7 @@ MonoBehaviour:
         costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
         actionSuccessParticle: {fileID: 6553830495741696104, guid: f0c3336913e261f479ba003744aaa6ec, type: 3}
         startingCount: 10
-        unlockedLevel: 0
+        unlockedLevel: 15
     - rid: 3084495758061469768
       type: {class: BombPlacementAction, ns: Game, asm: Assembly-CSharp}
       data:
@@ -833,7 +833,7 @@ MonoBehaviour:
         costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
         actionSuccessParticle: {fileID: 6553830495741696104, guid: 1ea5b88013b271144a852e3fdd2cc75b, type: 3}
         startingCount: 10
-        unlockedLevel: 0
+        unlockedLevel: 10
     - rid: 3084495758061469769
       type: {class: ShuffleAction, ns: Game, asm: Assembly-CSharp}
       data:
@@ -1540,7 +1540,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 170.16333}
+  m_AnchoredPosition: {x: 0, y: 170.16357}
   m_SizeDelta: {x: 0, y: 340.3266}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1068210310
@@ -4969,13 +4969,45 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_text
+      value: 60:00
+      objectReference: {fileID: 0}
+    - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_fontSize
+      value: 55
+      objectReference: {fileID: 0}
+    - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
       propertyPath: m_fontAsset
       value: 
       objectReference: {fileID: 11400000, guid: 1ec3178530b1fe24abdf7547bdd68075, type: 2}
     - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_fontStyle
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_fontColor.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_fontColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_fontColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 55
+      objectReference: {fileID: 0}
+    - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
       propertyPath: m_sharedMaterial
       value: 
       objectReference: {fileID: 5912665387303571717, guid: 1ec3178530b1fe24abdf7547bdd68075, type: 2}
+    - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4278190080
+      objectReference: {fileID: 0}
     - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -5131,6 +5163,10 @@ PrefabInstance:
     - target: {fileID: 6182496661631016932, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8587206809695661893, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_Name
+      value: timer text
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
