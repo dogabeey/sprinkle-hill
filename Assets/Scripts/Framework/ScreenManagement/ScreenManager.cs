@@ -28,7 +28,7 @@ namespace Game
                 {
                     EventManager.TriggerEvent(GameEvent.SCREEN_CLOSED, new EventParam(
                         paramObj: screen.gameObject,
-                        paramInt: (int)screen.screenID
+                        paramInt: (int)screen.ScreenID
                     ));
                 }
                 screen.gameObject.SetActive(false);
@@ -43,12 +43,12 @@ namespace Game
                 {
                     EventManager.TriggerEvent(GameEvent.SCREEN_CLOSED, new EventParam(
                         paramObj: screen.gameObject,
-                        paramInt: (int)screen.screenID
+                        paramInt: (int)screen.ScreenID
                     ));
                 }
                 screen.gameObject.SetActive(false);
             });
-            GameScreen gameScreen = screens.Find(screen => screen.screenID == screenID);
+            GameScreen gameScreen = screens.Find(screen => screen.ScreenID == screenID);
             ShowScreen(gameScreen);
         }
         public void CloseAllScreens()
@@ -63,7 +63,7 @@ namespace Game
             
             EventManager.TriggerEvent(GameEvent.SCREEN_OPENED, new EventParam(
                 paramObj: gameScreen.gameObject,
-                paramInt: (int)gameScreen.screenID
+                paramInt: (int)gameScreen.ScreenID
             ));
         }
     }

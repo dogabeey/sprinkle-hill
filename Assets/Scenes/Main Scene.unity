@@ -855,6 +855,7 @@ GameObject:
   - component: {fileID: 768146334}
   - component: {fileID: 768146333}
   - component: {fileID: 768146332}
+  - component: {fileID: 768146336}
   m_Layer: 5
   m_Name: Win Panel
   m_TagString: Untagged
@@ -919,7 +920,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   serializationData:
     SerializedFormat: 2
-    SerializedBytes: 
+    SerializedBytes: []
     ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
@@ -967,6 +968,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 768146330}
   m_CullTransparentMesh: 1
+--- !u!114 &768146336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 768146330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc91dabe48484e344b1f5cc53af003b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 768146332}
+  playAnimationName: scale_out
 --- !u!1 &854708862
 GameObject:
   m_ObjectHideFlags: 0
@@ -1064,7 +1079,7 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 1
   m_StartAxis: 0
-  m_CellSize: {x: 1019.3602, y: 160}
+  m_CellSize: {x: 1019.29016, y: 160}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 2
   m_ConstraintCount: 1
@@ -1637,7 +1652,6 @@ GameObject:
   - component: {fileID: 1149696648}
   - component: {fileID: 1149696651}
   - component: {fileID: 1149696650}
-  - component: {fileID: 1149696649}
   - component: {fileID: 1149696652}
   m_Layer: 5
   m_Name: Lose Panel
@@ -1667,30 +1681,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1149696649
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1149696647}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0efd31a76cc8714db21820165e7a83b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
-  screenID: 4
-  animator: {fileID: 1149696652}
-  playAnimationName: scale_out
 --- !u!114 &1149696650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3616,9 +3606,9 @@ GameObject:
   - component: {fileID: 1831688221}
   - component: {fileID: 1831688225}
   - component: {fileID: 1831688224}
-  - component: {fileID: 1831688223}
   - component: {fileID: 1831688222}
   - component: {fileID: 1831688226}
+  - component: {fileID: 1831688227}
   m_Layer: 5
   m_Name: Settings Panel
   m_TagString: Untagged
@@ -3668,30 +3658,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &1831688223
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1831688220}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0efd31a76cc8714db21820165e7a83b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
-  screenID: 5
-  animator: {fileID: 1831688222}
-  playAnimationName: scale_out
 --- !u!114 &1831688224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3786,6 +3752,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1831688227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1831688220}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 402e4059a88a3214694bdb352c589bbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 1831688222}
+  playAnimationName: scale_out
 --- !u!20 &1886584752 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 143639485734066057, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
@@ -4261,32 +4241,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8054950767382582105, guid: 33ffe7376da104e4da346a82d1243245, type: 3}
   m_PrefabInstance: {fileID: 1316164405}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &805891903794545111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4661796517153901997}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eaf359b0962ee054e89e835e4536fe24, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initEvents: 
-  fireEvents: 5802000059020000
-  triggerLatency: 0.01
-  actionIcon: {fileID: 0}
-  lockedPanel: {fileID: 0}
-  unlockConditionText: {fileID: 0}
-  actionText: {fileID: 0}
-  costText: {fileID: 0}
-  countTextPanel: {fileID: 0}
-  countText: {fileID: 0}
-  useButton: {fileID: 3740352658647510049}
-  buyButton: {fileID: 0}
-  canvasGroup: {fileID: 7815195933895451906}
-  layoutElement: {fileID: 4321249100810475823}
 --- !u!1001 &1412219884859368642
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4794,7 +4748,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4661796516676966170}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2547576709511450939, guid: 70bd33374545fe1428a509f86d0456fd, type: 3}
+        m_TargetAssemblyTypeName: Game.ScreenManager, Assembly-CSharp
+        m_MethodName: Show
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1831688227}
+          m_ObjectArgumentAssemblyTypeName: Game.GameScreen, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &4133448082132307924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5035,7 +5001,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4661796517153901986}
   - component: {fileID: 4661796517153901984}
-  - component: {fileID: 805891903794545111}
   - component: {fileID: 7815195933895451906}
   - component: {fileID: 4321249100810475823}
   m_Layer: 5

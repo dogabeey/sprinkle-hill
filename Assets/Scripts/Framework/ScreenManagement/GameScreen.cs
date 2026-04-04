@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace Game
 {
-    public class GameScreen : SerializedMonoBehaviour
+    public abstract class GameScreen : MonoBehaviour
     {
-        public Screens screenID;
+        public abstract Screens ScreenID { get; }
         public Animator animator;
         public string playAnimationName;
 
@@ -18,6 +18,18 @@ namespace Game
             }
         }
     }
-
+    public class LevelListScreen : GameScreen
+    {
+        public override Screens ScreenID => Screens.LevelList;
+    }
+    public class MainMenuScreen : GameScreen
+    {
+        public override Screens ScreenID => Screens.MainMenu;
+    }
+    public class WorldListScreen : GameScreen
+    {
+        public override Screens ScreenID => Screens.WorldList;
+    }
+    
 }
 
