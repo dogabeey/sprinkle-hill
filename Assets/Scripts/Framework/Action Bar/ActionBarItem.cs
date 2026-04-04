@@ -54,7 +54,13 @@ namespace Game
         /// Determines whether the object is clickable. This is used to enable or disable the button but the object will still take up space in the list. This is useful when you want to show the player that there is an action they can perform but they don't have enough resources to perform it yet.
         /// </summary>
         /// <returns>true if the object is clickable; otherwise, false.</returns>
-        abstract public bool IsClickable();
+        virtual public bool IsClickable()
+        {
+            if (GameManager.Instance != null && GameManager.Instance.tutorialManager != null && GameManager.Instance.tutorialManager.HasActiveStep)
+                return false;
+
+            return CurrentCount > 0;
+        }
         /// <summary>
         /// Determines whether the object is available. This is used to show or hide the locked panel.
         /// </summary>
@@ -79,11 +85,6 @@ namespace Game
         public override string VisibilityExplanation => "";
         public override string ClickabilityExplanation => "";
         public override string AvailabilityExplanation => $"Level {unlockedLevel}";
-
-        public override bool IsClickable()
-        {
-            return CurrentCount > 0;
-        }
 
         public override int GetCost()
         {
@@ -157,11 +158,6 @@ namespace Game
             return World.Instance.lastPlayedLevelIndex >= unlockedLevel;
         }
 
-        public override bool IsClickable()
-        {
-            return CurrentCount > 0 && GetMatch3Grid() != null;
-        }
-
         public override void OnClick()
         {
             Match3Grid grid = GetMatch3Grid();
@@ -207,11 +203,6 @@ namespace Game
 
         public override bool IsAvailable() => World.Instance.lastPlayedLevelIndex >= unlockedLevel;
 
-        public override bool IsClickable()
-        {
-            return CurrentCount > 0 && GetInputController() != null;
-        }
-
         public override void OnClick()
         {
             Match3GridInputController inputController = GetInputController();
@@ -252,12 +243,7 @@ namespace Game
         public override bool IsVisible() => true;
 
         public override bool IsAvailable() => World.Instance.lastPlayedLevelIndex >= unlockedLevel;
-
-        public override bool IsClickable()
-        {
-            return CurrentCount > 0 && GetInputController() != null;
-        }
-
+        
         public override void OnClick()
         {
             Match3GridInputController inputController = GetInputController();

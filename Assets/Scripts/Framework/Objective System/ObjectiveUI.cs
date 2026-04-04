@@ -58,7 +58,7 @@ public class UpperPanelUI : UIElement
         while (!levelScene.isEnded)
         {
             int timer = levelScene.timer;
-            if(timer < -1)
+            if(timer <= -1)
             {
                 timerText.text = "∞";
                 timerText.enableAutoSizing = true;

@@ -57,6 +57,8 @@ namespace Game
         private readonly Dictionary<TutorialStep, Action<EventParam>> _completionListeners  = new Dictionary<TutorialStep, Action<EventParam>>();
         private TutorialStep _activeStep;
 
+        public bool HasActiveStep => _activeStep != null && _activeStep.isStarted && !_activeStep.isCompleted;
+
         private void OnEnable()
         {
             foreach (TutorialStep step in tutorialSteps)
