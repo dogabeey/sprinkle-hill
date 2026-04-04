@@ -24,6 +24,6 @@ public class ObjectiveUINode : MonoBehaviour
     public void UpdateNode(int currentCount)
     {
         countText.text = currentCount <= 0 ? string.Empty : currentCount.ToString();
-        checkmarkIcon.gameObject.SetActive(currentCount <= 0);
+        checkmarkIcon.enabled = currentCount <= 0;
     }
 }
