@@ -85,10 +85,6 @@ namespace Game
             }
             public struct EFFECTS
             {
-                public const string TYPEWRITER = "Typewriter";
-                public const string JUMP = "Jump";
-                public const string DEATH = "Death";
-                public const string PICKUP = "Pickup";
                 public const string LEVEL_COMPLETE = "LevelComplete";
                 public const string LEVEL_FAILED = "LevelFailed";
                 public const string ELEMENT_SWAP = "ElementSwap";

@@ -2503,7 +2503,7 @@ MonoBehaviour:
   m_StartCorner: 0
   m_StartAxis: 0
   m_CellSize: {x: 100, y: 80}
-  m_Spacing: {x: 0, y: 0}
+  m_Spacing: {x: 0, y: 20}
   m_Constraint: 1
   m_ConstraintCount: 1
 --- !u!1 &1398756603
@@ -5180,7 +5180,7 @@ PrefabInstance:
     - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: 'levelScenes.Array.data[0]'
       value: 
-      objectReference: {fileID: 6648657062745475262, guid: e5128bc36d805684ebc33c78e679743c, type: 3}
+      objectReference: {fileID: 6648657062745475262, guid: b0d03fb720f2df84ea11450fc29b8d7a, type: 3}
     - target: {fileID: 7722314759461277705, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: m_Name
       value: Game Manager

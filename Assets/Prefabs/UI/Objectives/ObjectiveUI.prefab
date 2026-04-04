@@ -236,6 +236,7 @@ MonoBehaviour:
   objectiveManager: {fileID: 0}
   objectiveNodePrefab: {fileID: 6249795917659776395, guid: b98a0bd0978144f409eccd31c6d39e06, type: 3}
   targetIcon: {fileID: 5522425111778820872}
+  targetIconPlaceholder: {fileID: 0}
   timerText: {fileID: 2210623753114222868}
 --- !u!114 &2514203487333984939
 MonoBehaviour:

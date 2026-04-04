@@ -132,11 +132,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: proceduralGridSize.x
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: proceduralGridSize.y
-      value: 5
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: objectives.Array.size
@@ -156,7 +156,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: proceduralGeneration.useRandomSeed
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: objectives.Array.data[0].objectiveType
@@ -164,7 +164,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: ffe972f147b15a3478d78402d760a387, type: 2}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: objectives.Array.data[0].requiredCount
-      value: 10
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: objectives.Array.data[1].objectiveType

@@ -178,7 +178,7 @@ namespace Game
                 currentComboCount++;
                 GameObject matchOrigin = GetMatchOriginObject(matchedGroups);
                 RewardCurrencyForCombo(currentComboCount, matchOrigin);
-                GameManager.Instance.soundManager.Play(ConstantManager.SOUNDS.EFFECTS.MATCH);
+                GameManager.Instance.soundManager.Play(ConstantManager.SOUNDS.EFFECTS.MATCH, pitchOffset: currentComboCount * 0.1f);
 
                 LevelScene_Match3Game level = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
                 bool allowDiscoBall = level.AllowDiscoBallCreation;
