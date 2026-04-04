@@ -16,4 +16,4 @@ MonoBehaviour:
   startingAmount: 0
   currencyIcon: {fileID: -1391130105, guid: e1721e006356ea443baff2090acf6c5d, type: 3}
   showFormat: 0
-  spriteIndexForUI: 1
+  spriteIndexForUI: 3
