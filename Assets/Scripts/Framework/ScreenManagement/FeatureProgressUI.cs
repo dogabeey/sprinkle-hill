@@ -64,7 +64,7 @@ namespace Game
                 if (progressFillImage != null)
                 {
                     continueButton.interactable = false;
-                    progressFillImage.DOFillAmount(progress, 0.5f).SetEase(Ease.OutCubic).OnComplete(() =>
+                    progressFillImage.DOFillAmount(progress, 1f).SetEase(Ease.OutCubic).OnComplete(() =>
                     {
                         continueButton.interactable = true;
                     });
