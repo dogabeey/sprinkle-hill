@@ -17,18 +17,35 @@ namespace Game
                 TryGetComponent(out animator);
             }
         }
+
+        public abstract void InitUI();
     }
     public class LevelListScreen : GameScreen
     {
         public override Screens ScreenID => Screens.LevelList;
+
+        public override void InitUI()
+        {
+            
+        }
     }
     public class MainMenuScreen : GameScreen
     {
         public override Screens ScreenID => Screens.MainMenu;
+
+        public override void InitUI()
+        {
+
+        }
     }
     public class WorldListScreen : GameScreen
     {
         public override Screens ScreenID => Screens.WorldList;
+
+        public override void InitUI()
+        {
+
+        }
     }
     
 }

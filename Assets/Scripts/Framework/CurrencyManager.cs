@@ -49,7 +49,12 @@ namespace Game
             }
         }
 
-        public IEnumerator AddCurrency(string currencyID, float amount, GameObject source = null)
+        public void AddCurrency(string currencyID, float amount, GameObject source = null)
+        {
+            StartCoroutine(AddCurrencyCoroutine(currencyID, amount, source));
+        }
+
+        private IEnumerator AddCurrencyCoroutine(string currencyID, float amount, GameObject source = null)
         {
             CurrencyInfo currencyInfo = currencyInfos.Find(x => x.currencyModel != null && x.currencyModel.currencyID == currencyID);
             if (currencyInfo == null)

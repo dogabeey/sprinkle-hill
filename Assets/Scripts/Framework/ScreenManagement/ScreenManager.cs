@@ -59,6 +59,7 @@ namespace Game
         private static void ShowScreen(GameScreen gameScreen)
         {
             gameScreen.gameObject.SetActive(true);
+            gameScreen.InitUI();
             if (gameScreen.animator) gameScreen.animator.Play(gameScreen.playAnimationName);
             
             EventManager.TriggerEvent(GameEvent.SCREEN_OPENED, new EventParam(

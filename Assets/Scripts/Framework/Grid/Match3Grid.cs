@@ -1334,7 +1334,7 @@ namespace Game
                 }
             }
 
-            StartCoroutine(currencyManager.AddCurrency(currencyId, Mathf.Max(1, comboCount), source));
+            currencyManager.AddCurrency(currencyId, Mathf.Max(1, comboCount), source);
         }
     }
 }

@@ -273,7 +273,21 @@ MonoBehaviour:
   isLose: 0
   isEnded: 0
   isPaused: 0
-  levelName: 
+  levelName: End Results
+  winText: 'WELL DONE!
+
+
+    You''ve completed your order successfully'
+  loseText: 'You didn''t make it in time.
+
+
+    Don''t fret! There is always a next
+    time.'
+  rewards:
+  - type: {fileID: 11400000, guid: 31b1c667ab353af4a80bfe0daaa96451, type: 2}
+    amount: 50
+  - type: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
+    amount: 2
   objectives:
   - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
     scriptableObjectParameter: {fileID: 11400000, guid: f006f435c88374942881e4fd9742c0ca, type: 2}
@@ -303,6 +317,9 @@ MonoBehaviour:
     - {fileID: 11400000, guid: fcba4310cd5fca344aad5d26ad52423f, type: 2}
     - {fileID: 11400000, guid: 2510de87ceafdd74d8a26e0d7c3e435d, type: 2}
     - {fileID: 11400000, guid: b5e047feb0cad314a894341b7d997b76, type: 2}
+  allowDiscoBallCreation: 1
+  allowRocketCreation: 1
+  allowBombCreation: 1
   sparklingPowerAfterXCombo: 1
   sparklingAppearChance: 0
   bombElementData: {fileID: 11400000, guid: 2f83e159c6b368646a1f9d8e7ec081e9, type: 2}

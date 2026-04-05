@@ -8,6 +8,13 @@ using UnityEngine.UIElements;
 
 namespace Game
 {
+    [System.Serializable]
+    public class CurrencyReward
+    {
+        public CurrencyModel type;
+        public int amount;
+    }
+
     public class LevelScene : MonoBehaviour
     {
         [HideInInspector] public bool isWin;
@@ -19,6 +26,11 @@ namespace Game
         public static LevelScene Instance;
 
         public string levelName;
+        [TextArea]
+        public string winText;
+        [TextArea]
+        public string loseText;
+        public List<CurrencyReward> rewards;
 
         protected virtual void Awake()
         {
