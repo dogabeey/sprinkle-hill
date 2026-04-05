@@ -89,7 +89,7 @@ namespace Game
                     timer = 0;
                     EventManager.TriggerEvent(GameEvent.TIMER_PASSED);
                     EventManager.TriggerEvent(GameEvent.TIMER_EXPIRED);
-                    FailLevel();
+                    FailLevel("You are out of time.\n\nDon't worry, you'll get them next time.");
                 }
             }
         }

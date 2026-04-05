@@ -8,12 +8,6 @@ using UnityEngine.UIElements;
 
 namespace Game
 {
-    [System.Serializable]
-    public class CurrencyReward
-    {
-        public CurrencyModel type;
-        public int amount;
-    }
 
     public class LevelScene : MonoBehaviour
     {
@@ -42,8 +36,9 @@ namespace Game
         {
             isWin = true;
         }
-        public void FailLevel()
+        public void FailLevel(string failReason = "")
         {
+            loseText = string.IsNullOrEmpty(failReason) ? loseText : failReason;
             isLose = true;
         }
 
@@ -67,5 +62,11 @@ namespace Game
 
         }
 
+    }
+    [System.Serializable]
+    public class CurrencyReward
+    {
+        public CurrencyModel type;
+        public int amount;
     }
 }
