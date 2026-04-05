@@ -906,10 +906,10 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: 316cbaea-8cbd-4e07-a7ec-cb97bd85cab5
+  cloudProjectId: 50dbf5fe-1610-4292-9548-be8d33c2361e
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: Sprinkle Hill
+  projectName: Hypercasual Template
   organizationId: doga-can-kilic
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0

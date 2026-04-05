@@ -106,11 +106,24 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: mascot_happy
+      name: mascot_win_screen_0
       rect:
         serializedVersion: 2
         x: 0
@@ -125,14 +138,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b3dad43bc1be8074ca31bcbcd05ed28b
-      internalID: 461856930
+      spriteID: 1d17fc3d667ebce47a35e063cf7cf9ab
+      internalID: -1373659196
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: mascot_sad
+      name: mascot_win_screen_1
       rect:
         serializedVersion: 2
         x: 1017
@@ -147,8 +160,52 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 54d0ad4f90a949642a98527718d2792c
-      internalID: -1276074557
+      spriteID: f873383499cb3104f9cd262113bd2227
+      internalID: 418353176
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mascot_win_screen_2
+      rect:
+        serializedVersion: 2
+        x: 2034
+        y: 0
+        width: 1017
+        height: 1536
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fef42d1f63eaa334aa389b804efc9b0c
+      internalID: -21058277
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: mascot_win_screen_3
+      rect:
+        serializedVersion: 2
+        x: 3051
+        y: 0
+        width: 1017
+        height: 1536
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 933c15901f5b0d04987449f8514dec9e
+      internalID: 675176508
       vertices: []
       indices: 
       edges: []
@@ -167,8 +224,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      mascot_happy: 461856930
-      mascot_sad: -1276074557
+      mascot_win_screen_0: -1373659196
+      mascot_win_screen_1: 418353176
+      mascot_win_screen_2: -21058277
+      mascot_win_screen_3: 675176508
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

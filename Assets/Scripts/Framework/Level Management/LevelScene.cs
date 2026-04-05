@@ -69,4 +69,5 @@ namespace Game
         public CurrencyModel type;
         public int amount;
     }
+
 }

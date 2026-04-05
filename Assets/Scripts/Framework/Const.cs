@@ -10,6 +10,7 @@ namespace Game
         WinScreen,
         LoseScreen,
         SettingScreen,
+        FeatureProgress,
     }
 
     [CreateAssetMenu(fileName = "ConstantManager", menuName = "Game/Constant Manager...", order = 1)]
