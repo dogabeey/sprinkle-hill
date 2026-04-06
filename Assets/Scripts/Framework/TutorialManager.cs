@@ -18,6 +18,8 @@ namespace Game
         {
             public string Id;
             public string directive;
+            [LabelText("Disable Action Bar")]
+            public bool disablesActionBar = true;
             [Tooltip("-1 means any level. Otherwise this step only runs when lastPlayedLevelIndex equals this value.")]
             public int requiredLevelIndex = -1;
             [SerializeReference]
@@ -40,6 +42,7 @@ namespace Game
             public UnityAction onComplete;
             public bool isStarted;
             public bool isCompleted;
+            [LabelText("Advanced Mode", IconColor = "blue")]
             public bool advancedMode;
             [Header("Scene References")]
             public Transform animationObjectParent; // Parent for tutorial animation objects that is set at tutorialAnimation.tutorialObject. If null, animations will be parented to the first canvas in the scene.
@@ -60,6 +63,7 @@ namespace Game
         private TutorialStep _activeStep;
 
         public bool HasActiveStep => _activeStep != null && _activeStep.isStarted && !_activeStep.isCompleted;
+        public bool ShouldDisableActionBar => HasActiveStep && _activeStep.disablesActionBar;
 
         private void OnEnable()
         {

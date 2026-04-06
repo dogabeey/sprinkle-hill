@@ -291,6 +291,7 @@ namespace Game
     public class ActionButton_Highlight : HighlightSelector
     {
         [ValueDropdown(nameof(GetAllActions))]
+        [SerializeReference]
         public ActionBarItem action;
 
         public override GameObject[] HighlightedObjects
@@ -305,7 +306,7 @@ namespace Game
                     if (view == null || view.actionBarItem == null)
                         continue;
 
-                    if (view.actionBarItem == action)
+                    if (view.actionBarItem.ActionName == action.ActionName)
                         return new[] { view.useButton.gameObject };
                 }
 

@@ -56,6 +56,7 @@ MonoBehaviour:
   tutorialSteps:
   - Id: level_1_matchelements_1
     directive: DRAG ELEMENTS TO SWAP!
+    disablesActionBar: 1
     requiredLevelIndex: 0
     nextStep:
       rid: 3084495758061469770
@@ -89,6 +90,7 @@ MonoBehaviour:
     animationObjectParent: {fileID: 0}
   - Id: outofmoves_shuffle_tutorial
     directive: You can shuffle the board when out of moves.
+    disablesActionBar: 0
     requiredLevelIndex: -1
     nextStep:
       rid: -2
@@ -143,6 +145,7 @@ MonoBehaviour:
       data:
         Id: level_1_matchelements_2
         directive: You can also match 4 elements for square!
+        disablesActionBar: 1
         requiredLevelIndex: 0
         nextStep:
           rid: -2
@@ -187,10 +190,10 @@ MonoBehaviour:
     - rid: 3084495758061469774
       type: {class: ClickOnFirstHighlightedObject, ns: Game, asm: Assembly-CSharp}
       data:
-        tutorialObject: {fileID: 0}
-        duration: 0
-        isLoop: 0
-        screenPositionOffset: {x: 0, y: 0}
+        tutorialObject: {fileID: 1399129251957722908, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
+        duration: 2
+        isLoop: 1
+        screenPositionOffset: {x: 0.6, y: -0.6}
     - rid: 3084495758061469775
       type: {class: ActionButton_Highlight, ns: Game, asm: Assembly-CSharp}
       data:

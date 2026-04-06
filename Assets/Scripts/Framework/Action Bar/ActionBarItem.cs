@@ -56,7 +56,7 @@ namespace Game
         /// <returns>true if the object is clickable; otherwise, false.</returns>
         virtual public bool IsClickable()
         {
-            if (GameManager.Instance != null && GameManager.Instance.tutorialManager != null && GameManager.Instance.tutorialManager.HasActiveStep)
+            if (GameManager.Instance != null && GameManager.Instance.tutorialManager != null && GameManager.Instance.tutorialManager.ShouldDisableActionBar)
                 return false;
 
             return CurrentCount > 0;
