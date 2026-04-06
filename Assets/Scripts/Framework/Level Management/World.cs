@@ -34,6 +34,8 @@ namespace Game
 
         public string SaveId => "World_" + worldName;
 
+        public SaveDataType SaveDataType => SaveDataType.WorldProgression;
+
         protected void Awake()
         {
             GameManager.Instance.saveManager.Register(this);
@@ -59,17 +61,18 @@ namespace Game
             return saveData;
         }
 
-        public bool Load()
+        public bool Load(Action onLoadSuccess = null, Action onLoadFail = null)
         {
             JSONNode saveData = GameManager.Instance.saveManager.LoadSave(this);
 
             if (saveData == null)
             {
+                onLoadFail?.Invoke();
                 return false;
             }
 
-            lastPlayedLevelIndex = (int) saveData["lastPlayedLevelIndex"];
-
+            lastPlayedLevelIndex = (int)saveData["lastPlayedLevelIndex"];
+            onLoadSuccess?.Invoke();
             return true;
         }
     }

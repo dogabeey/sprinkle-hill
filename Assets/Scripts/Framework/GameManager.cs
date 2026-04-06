@@ -110,6 +110,9 @@ namespace Game
             saveManager.OnInit();
 
             Application.targetFrameRate = 60;
+        }
+        private void Start()
+        {
 
             if (isSequentalLevels)
             {

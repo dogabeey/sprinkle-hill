@@ -1,84 +1,73 @@
-﻿using System.Collections;
-
-using System.Collections.Generic;
-using UnityEngine;
+﻿using Game.SimpleJSON;
 using Newtonsoft.Json;
+using Sirenix.OdinInspector;
 using System;
-using Game.SimpleJSON;
+using System.Collections;
+using System.Collections.Generic;
 // using Firebase.Database;
 using System.Threading;
+using UnityEditor;
+using UnityEngine;
 
 namespace Game
 {
     [CreateAssetMenu(fileName = "SaveManager", menuName = "Game/Managers/SaveManager")]
     public class SaveManager : ScriptableObject, IManager
-	{
-        #region Member Variables
-        public static string userId;
-
-        private List<ISaveable>	saveables;
-		private JSONNode		loadedSave;
-
-        public string saveID = "Save_1";
-        public bool saveOnQuit = true;
-
-		#endregion
-
-		#region Properties
-
-		/// <summary>
-		/// Path to the save file on the device
-		/// </summary>
-		public static string SaveFilePath { get { return Application.persistentDataPath + "/save.json"; } }
-
-		/// <summary>
-		/// List of registered saveables
-		/// </summary>
-		private List<ISaveable> Saveables
-		{
-			get
-			{
-				if (saveables == null)
-				{
-					saveables = new List<ISaveable>();
-				}
-
-				return saveables;
-			}
-		}
-
-		#endregion
-
-		#region Unity Methods
-
-		private void OnDestroy()
-		{
-			if(saveOnQuit)
-			{
-				Save();
-			}
-			
-		}
-
-		public void OnInit()
+    {
+        public static SaveManager Instance
         {
-            Debug.Log("Save file path: " + SaveFilePath);
-        }
-        public void OnUpdate()
-        {
-        }
-        public void OnApplicationPause()
-        {
-        }
-        public void OnApplicationQuit()
-        {
-            if (saveOnQuit)
+            get
             {
-                Save();
+                return GameManager.Instance.saveManager;
             }
         }
 
+        #region Member Variables
+
+        private List<ISaveable> saveables;
+        private JSONNode loadedSave;
+
+        [SerializeField] SaveData[] saveDatas;
+        [SerializeField] string saveProfile = "default";
+        public bool saveOnQuit = true;
+
         #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Path to the save file on the device
+        /// </summary>
+
+        public string GetSaveFilePath(bool isGlobal)
+        {
+            if (isGlobal)
+            {
+                return Application.persistentDataPath + "/Global";
+            }
+            else
+            {
+                return Application.persistentDataPath + "/" + saveProfile;
+            }
+        }
+
+        /// <summary>
+        /// List of registered saveables
+        /// </summary>
+        private List<ISaveable> Saveables
+        {
+            get
+            {
+                if (saveables == null)
+                {
+                    saveables = new List<ISaveable>();
+                }
+
+                return saveables;
+            }
+        }
+        #endregion
+
 
         #region Public Methods
 
@@ -86,102 +75,148 @@ namespace Game
         /// Registers a saveable to be saved
         /// </summary>
         public void Register(ISaveable saveable)
-		{
-			Saveables.Add(saveable);
-		}
+        {
+            Saveables.Add(saveable);
+        }
 
-		/// <summary>
-		/// Loads the save data for the given saveable
-		/// </summary>
-		public JSONNode LoadSave(ISaveable saveable)
-		{
-			return LoadSave(saveID + "_" + saveable.SaveId);
-		}
-
-		/// <summary>
-		/// Loads the save data for the given save id
-		/// </summary>
-		public JSONNode LoadSave(string saveId)
-		{
-			saveId = saveID + "_" + saveId;
+        public JSONNode LoadSave(ISaveable saveable)
+        {
             // Check if the save file has been loaded and if not try and load it
-            if (loadedSave == null && !LoadSave(out loadedSave))
-			{
-				return null;
-			}
+            if (loadedSave == null && !LoadSave(saveable, out loadedSave))
+            {
+                return null;
+            }
 
-			// Check if the loaded save file has the given save id
-			if (!loadedSave.AsObject.HasKey(saveId))
-			{
-				return null;
-			}
+            // Check if the loaded save file has the given save id
+            if (!loadedSave.AsObject.HasKey(saveable.SaveId))
+            {
+                return null;
+            }
 
-			// Return the JSONNode for the save id
-			return loadedSave[saveId];
-		}
+            // Return the JSONNode for the save id
+            return loadedSave[saveable.SaveId];
+        }
 
-		#endregion
+        #endregion
 
-		#region Private Methods
+        #region Private Methods
 
-		/// <summary>
-		/// Saves all registered saveables to the save file
-		/// </summary>
-		public void Save(Action completionHandler = null)
-		{
-			Dictionary<string, object> saveJson = new Dictionary<string, object>();
-			if(saveables != null)
-			{
-				for (int i = 0; i < saveables.Count; i++)
-				{
-					//saveJson.Add(saveables[i].SaveId, saveables[i].Save());
-					if(saveJson.ContainsKey(saveID + "_" + saveables[i].SaveId))
-					{
-						saveJson[saveID + "_" + saveables[i].SaveId] = saveables[i].Save();
-					}else
-					{
-						saveJson.Add(saveID + "_" + saveables[i].SaveId, saveables[i].Save());
-					}
-				}
-				
-				System.IO.File.WriteAllText(SaveFilePath, JsonConvert.SerializeObject(saveJson));
-			}
-			
-			if(completionHandler != null){completionHandler();};
-		}
+        /// <summary>
+        /// Saves all registered saveables to the save file
+        /// </summary>
+        public void Save(Action onSaveComplete = null)
+        {
 
-		/// <summary>
-		/// Tries to load the save file
-		/// </summary>
-		private bool LoadSave(out JSONNode json)
-		{
-			json = null;
+            if (saveables != null)
+            {
+                foreach (SaveData saveData in saveDatas)
+                {
+                    Dictionary<string, object> saveJson = new Dictionary<string, object>();
+                    string saveString = saveData.saveDataType.ToString();
+                    for (int i = 0; i < saveables.Count; i++)
+                    {
+                        if (saveables[i].SaveDataType != saveData.saveDataType)
+                        {
+                            continue;
+                        }
+                        //saveJson.Add(saveables[i].SaveId, saveables[i].Save());
+                        if (saveJson.ContainsKey(saveables[i].SaveId))
+                        {
+                            saveJson[saveables[i].SaveId] = saveables[i].Save();
+                        }
+                        else
+                        {
+                            saveJson.Add(saveables[i].SaveId, saveables[i].Save());
+                        }
+                        System.IO.Directory.CreateDirectory($"{GetSaveFilePath(saveData.isGlobalProfile)}");
 
-			if (!System.IO.File.Exists(SaveFilePath))
-			{
-				return false;
-			}
+                        System.IO.File.WriteAllText($"{GetSaveFilePath(saveData.isGlobalProfile)}/{saveString}.json", JsonConvert.SerializeObject(saveJson));
+                    }
+                }
+            }
+
+            onSaveComplete?.Invoke();
+        }
 
 
-			// if(UserManager.currentUser != null && UserManager.currentUser.gameData != null)
-			// {
-			// 	//Firebase bos stringleri donuste okunamadigi icin yerine dolar koyuyoruz. Simdi donus degerinde replace ediyoruz.
-			// 	json = JSON.Parse(JsonConvert.SerializeObject(UserManager.currentUser.gameData).Replace("$$","\\u0000"));
-			// 	//json = JSON.Parse(JsonUtility.ToJson(UserManager.currentUser.gameData));
-			// 	Debug.Log("--------> read data from user data");
-			// }else
-			// {
-			// 	json = JSON.Parse(System.IO.File.ReadAllText(SaveFilePath));
-			// 	Debug.Log("--------> read data from local");
-			// }
+        /// <summary>
+        /// Tries to load the save file
+        /// </summary>
+        private bool LoadSave(ISaveable saveable, out JSONNode json)
+        {
+            SaveData saveData = Array.Find(saveDatas, data => data.saveDataType == saveable.SaveDataType);
+            string saveString = saveData.saveDataType.ToString();
+            string filePath = $"{GetSaveFilePath(saveData.isGlobalProfile)}/{saveString}.json";
+            if (!System.IO.File.Exists(filePath))
+            {
+                json = null;
+                return false;
+            }
+            string fileContents = System.IO.File.ReadAllText(filePath);
+            json = JSON.Parse(fileContents);
+            return true;
+        }
+#if UNITY_EDITOR
+        [MenuItem("Lionsfall/Save Manager/Clear All Saves")]
+        [Button]
+        private static void ClearAllSaves()
+        {
+            foreach (SaveData saveData in Instance.saveDatas)
+            {
+                string saveString = saveData.saveDataType.ToString();
+                string filePath = $"{Instance.GetSaveFilePath(saveData.isGlobalProfile)}/{saveString}.json";
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+            }
+        }
+        [MenuItem("Lionsfall/Save Manager/Save Now")]
+        [Button]
+        private static void SaveNow()
+        {
+            Instance.Save();
+        }
+        [MenuItem("Lionsfall/Save Manager/Show Save Folder")]
+        [Button]
+        private static void ShowSaveFolder()
+        {
+            EditorUtility.RevealInFinder(Application.persistentDataPath);
+        }
+#endif
 
-			json = JSON.Parse(System.IO.File.ReadAllText(SaveFilePath));
+        public void OnInit()
+        {
+        }
 
-			
+        public void OnUpdate()
+        {
+        }
 
-			return json != null;
-		}
+        public void OnApplicationPause()
+        {
 
-		#endregion
-	}
+        }
+
+        public void OnApplicationQuit()
+        {
+            if (saveOnQuit) Save();
+        }
+    }
+    #endregion
+    public enum SaveDataType
+    {
+        MetaData,
+        Settings,
+        WorldProgression,
+        LevelProgression,
+        Tutorial
+    }
+    [System.Serializable]
+    public class SaveData
+    {
+        public SaveDataType saveDataType;
+        [Tooltip("If true, this save will be a global save that is not tied to a specific profile (i.e. graphics settings)")]
+        public bool isGlobalProfile = false;
+    }
 }

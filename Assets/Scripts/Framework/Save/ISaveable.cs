@@ -5,8 +5,10 @@ using UnityEngine;
 namespace Game
 {
 	public interface ISaveable
-	{
-		string SaveId { get; }
-		Dictionary<string, object> Save();
-	}
+    {
+        string SaveId { get; }
+        SaveDataType SaveDataType { get; }
+        Dictionary<string, object> Save();
+        bool Load(System.Action onLoadSuccess, System.Action onLoadFail);
+    }
 }

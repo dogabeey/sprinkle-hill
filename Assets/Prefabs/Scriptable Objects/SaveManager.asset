@@ -12,4 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 277f4e85b6b014290b72f2c1b279e421, type: 3}
   m_Name: SaveManager
   m_EditorClassIdentifier: 
+  saveDatas:
+  - saveDataType: 0
+    isGlobalProfile: 0
+  - saveDataType: 1
+    isGlobalProfile: 0
+  - saveDataType: 2
+    isGlobalProfile: 0
+  - saveDataType: 3
+    isGlobalProfile: 0
+  - saveDataType: 4
+    isGlobalProfile: 0
+  saveProfile: default
   saveOnQuit: 1

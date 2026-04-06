@@ -66,11 +66,24 @@ namespace Game
         /// </summary>
         /// <returns>true if the object is available; otherwise, false.</returns>
         abstract public bool IsAvailable();
+
     }
     [Serializable]
     public abstract class BonusPremiumAction : ActionBarItem
     {
         public int unlockedLevel;
+        [ValueDropdown("GetAllFeatures")]
+        public UnlockableFeature unlockableFeature; // This is used to determine whether the action is unlocked or not. If the feature is unlocked, the action will be available regardless of the level requirement.
+
+        private IEnumerable GetAllFeatures()
+        {
+            ValueDropdownList<UnlockableFeature> features = new ValueDropdownList<UnlockableFeature>();
+            foreach (UnlockableFeature feature in GameManager.Instance.featureTracker.features)
+            {
+                features.Add(feature.featureName, feature);
+            }
+            return features;
+        }
     }
 
     [Serializable]
@@ -98,7 +111,7 @@ namespace Game
 
         public override bool IsAvailable()
         {
-            return World.Instance.lastPlayedLevelIndex >= unlockedLevel;
+            return World.Instance.lastPlayedLevelIndex >= unlockedLevel || (unlockableFeature != null && unlockableFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex));
         }
 
         public override void OnClick()
@@ -155,7 +168,7 @@ namespace Game
 
         public override bool IsAvailable()
         {
-            return World.Instance.lastPlayedLevelIndex >= unlockedLevel;
+            return World.Instance.lastPlayedLevelIndex >= unlockedLevel || (unlockableFeature != null && unlockableFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex));
         }
 
         public override void OnClick()
@@ -201,7 +214,7 @@ namespace Game
 
         public override bool IsVisible() => true;
 
-        public override bool IsAvailable() => World.Instance.lastPlayedLevelIndex >= unlockedLevel;
+        public override bool IsAvailable() => World.Instance.lastPlayedLevelIndex >= unlockedLevel || (unlockableFeature != null && unlockableFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex));
 
         public override void OnClick()
         {
@@ -242,7 +255,7 @@ namespace Game
 
         public override bool IsVisible() => true;
 
-        public override bool IsAvailable() => World.Instance.lastPlayedLevelIndex >= unlockedLevel;
+        public override bool IsAvailable() => World.Instance.lastPlayedLevelIndex >= unlockedLevel || (unlockableFeature != null && unlockableFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex));
         
         public override void OnClick()
         {

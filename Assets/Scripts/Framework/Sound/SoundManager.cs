@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game.SimpleJSON;
 using Sirenix.Utilities;
+using System;
 
 namespace Game
 {
@@ -65,6 +66,8 @@ namespace Game
 
         public string SaveId { get { return "sound_manager"; } }
 
+        public SaveDataType SaveDataType => SaveDataType.Settings;
+
         #region Unity Methods
 
         public void OnInit()
@@ -77,7 +80,7 @@ namespace Game
 
             soundsParent = new GameObject("Sounds").transform;
 
-            if (!LoadSave())
+            if (!Load())
             {
                 IsMusicOn = true;
                 IsSoundEffectsOn = true;
@@ -371,18 +374,20 @@ namespace Game
             return json;
         }
 
-        public bool LoadSave()
+        public bool Load(Action onLoadSuccess = null, Action onLoadFail = null)
         {
             JSONNode json = GameManager.Instance.saveManager.LoadSave(this);
 
             if (json == null)
             {
+                onLoadFail?.Invoke();
                 return false;
             }
 
             IsMusicOn = json["is_music_on"].AsBool;
             IsSoundEffectsOn = json["is_sound_effects_on"].AsBool;
             IsVibrationOn = json["is_vibration_on"].AsBool;
+            onLoadSuccess?.Invoke();
             return true;
         }
 

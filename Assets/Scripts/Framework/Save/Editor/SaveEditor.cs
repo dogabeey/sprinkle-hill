@@ -22,7 +22,7 @@ namespace Game
         [MenuItem("Tools/Clear Save Games")]
         static void ClearSaves()
         {
-            string savePath = SaveManager.SaveFilePath;
+            string savePath = SaveManager.Instance.GetSaveFilePath(true) ;
             // Remove the save file
             if (System.IO.File.Exists(savePath))
             {

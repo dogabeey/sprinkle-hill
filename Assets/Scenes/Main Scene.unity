@@ -338,6 +338,10 @@ MonoBehaviour:
         actionSuccessParticle: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
         startingCount: 10
         unlockedLevel: 5
+        unlockableFeature:
+          featureName: Add Time
+          unlockedLevelIndex: 5
+          icon: {fileID: -238066524, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
         addedTime: 30
     - rid: 943281644091474204
       type: {class: PlaceDiscoBallAction, ns: Game, asm: Assembly-CSharp}
@@ -347,6 +351,10 @@ MonoBehaviour:
         actionSuccessParticle: {fileID: 6553830495741696104, guid: f0c3336913e261f479ba003744aaa6ec, type: 3}
         startingCount: 10
         unlockedLevel: 15
+        unlockableFeature:
+          featureName: Candy Bar
+          unlockedLevelIndex: 15
+          icon: {fileID: 524596139, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
     - rid: 3084495758061469768
       type: {class: BombPlacementAction, ns: Game, asm: Assembly-CSharp}
       data:
@@ -355,6 +363,10 @@ MonoBehaviour:
         actionSuccessParticle: {fileID: 6553830495741696104, guid: 1ea5b88013b271144a852e3fdd2cc75b, type: 3}
         startingCount: 10
         unlockedLevel: 10
+        unlockableFeature:
+          featureName: Bomb Feature
+          unlockedLevelIndex: 10
+          icon: {fileID: -1949253524, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
     - rid: 3084495758061469769
       type: {class: ShuffleAction, ns: Game, asm: Assembly-CSharp}
       data:
@@ -363,6 +375,10 @@ MonoBehaviour:
         actionSuccessParticle: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
         startingCount: 10
         unlockedLevel: 0
+        unlockableFeature:
+          featureName: 
+          unlockedLevelIndex: 0
+          icon: {fileID: 0}
 --- !u!224 &768146331 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2644979211408110882, guid: 7a5c4060ec73d144bbd658c529e7f638, type: 3}
@@ -2775,6 +2791,10 @@ PrefabInstance:
       propertyPath: upperPanelUI
       value: 
       objectReference: {fileID: 9132301250057630282}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: featureTracker
+      value: 
+      objectReference: {fileID: 1047629136}
     - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: levelContainer
       value: 
