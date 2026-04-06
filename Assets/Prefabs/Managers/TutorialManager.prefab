@@ -144,11 +144,11 @@ MonoBehaviour:
       type: {class: TutorialManager/TutorialStep, ns: Game, asm: Assembly-CSharp}
       data:
         Id: level_1_matchelements_2
-        directive: You can also match 4 elements for square!
+        directive: Matching 4 elements as square creates a bomb!
         disablesActionBar: 1
         requiredLevelIndex: 0
         nextStep:
-          rid: -2
+          rid: 5000171120770941007
         tutorialAnimation:
           rid: 3084495758061469773
         highlightSelector:
@@ -211,3 +211,50 @@ MonoBehaviour:
           featureName: 
           unlockedLevelIndex: 0
           icon: {fileID: 0}
+    - rid: 5000171120770941007
+      type: {class: TutorialManager/TutorialStep, ns: Game, asm: Assembly-CSharp}
+      data:
+        Id: 
+        directive: 
+        disablesActionBar: 1
+        requiredLevelIndex: -1
+        nextStep:
+          rid: -2
+        tutorialAnimation:
+          rid: 5000171120770941008
+        highlightSelector:
+          rid: 5000171120770941009
+        startEvent: 0
+        startEventExpectedParams: 0
+        startEventExpectedParamValues:
+          paramObj: {fileID: 0}
+          paramScriptable: {fileID: 0}
+          paramInt: 0
+          paramFloat: 0
+          paramStr: 
+          vectorList: []
+          paramBool: 0
+        completionEvent: 0
+        completionEventExpectedParams: 0
+        completionEventExpectedParamValues:
+          paramObj: {fileID: 0}
+          paramScriptable: {fileID: 0}
+          paramInt: 0
+          paramFloat: 0
+          paramStr: 
+          vectorList: []
+          paramBool: 0
+        isStarted: 0
+        isCompleted: 0
+        advancedMode: 0
+        animationObjectParent: {fileID: 0}
+    - rid: 5000171120770941008
+      type: {class: ClickOnFirstHighlightedObject, ns: Game, asm: Assembly-CSharp}
+      data:
+        tutorialObject: {fileID: 1399129251957722908, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
+        duration: 0
+        isLoop: 0
+        screenPositionOffset: {x: 0, y: 0}
+    - rid: 5000171120770941009
+      type: {class: Bomb_Highlight, ns: Game, asm: Assembly-CSharp}
+      data: 

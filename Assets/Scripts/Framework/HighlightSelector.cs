@@ -1,6 +1,7 @@
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game
@@ -284,6 +285,78 @@ namespace Game
                 return new[] { elB.gameObject };
 
             return new GameObject[0];
+        }
+    }
+
+    public class Bomb_Highlight : HighlightSelector
+    {
+        public override GameObject[] HighlightedObjects => HighlightSelectorPowerUpUtility.GetRandomPowerUpObjects(ElementPowerUpType.Bomb, ElementPowerUpType.BigBomb);
+    }
+
+    public class Rocket_Highlight : HighlightSelector
+    {
+        public override GameObject[] HighlightedObjects => HighlightSelectorPowerUpUtility.GetRandomPowerUpObjects(ElementPowerUpType.VerticalRocket, ElementPowerUpType.HorizontalRocket);
+    }
+
+    public class DiscoBall_Highlight : HighlightSelector
+    {
+        public override GameObject[] HighlightedObjects => HighlightSelectorPowerUpUtility.GetRandomPowerUpObjects(ElementPowerUpType.DiscoBall);
+    }
+
+    internal static class HighlightSelectorPowerUpUtility
+    {
+        public static GameObject[] GetRandomPowerUpObjects(params ElementPowerUpType[] acceptedTypes)
+        {
+            Match3Grid grid = GetGrid();
+            if (grid == null || acceptedTypes == null || acceptedTypes.Length == 0)
+                return new GameObject[0];
+
+            List<GameObject> candidates = new List<GameObject>();
+            Vector2Int size = grid.GridSize;
+
+            for (int x = 0; x < size.x; x++)
+            {
+                for (int y = 0; y < size.y; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    Grid3D.GridCell cell = grid.GetCellPublic(pos);
+                    if (cell == null || cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null)
+                        continue;
+
+                    if (!ContainsType(acceptedTypes, cell.elementInfo.powerUpType))
+                        continue;
+
+                    GridElement element = grid.GetElementAt(pos);
+                    if (element != null)
+                        candidates.Add(element.gameObject);
+                }
+            }
+
+            if (candidates.Count == 0)
+                return new GameObject[0];
+
+            return new[] { candidates[UnityEngine.Random.Range(0, candidates.Count)] };
+        }
+
+        private static Match3Grid GetGrid()
+        {
+            if (GameManager.Instance == null)
+                return null;
+
+            return GameManager.Instance.CurrentLevel is LevelScene_Match3Game level
+                ? level.grid as Match3Grid
+                : null;
+        }
+
+        private static bool ContainsType(ElementPowerUpType[] acceptedTypes, ElementPowerUpType value)
+        {
+            for (int i = 0; i < acceptedTypes.Length; i++)
+            {
+                if (acceptedTypes[i] == value)
+                    return true;
+            }
+
+            return false;
         }
     }
 

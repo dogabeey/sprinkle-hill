@@ -23,6 +23,7 @@ namespace Game
             [Tooltip("-1 means any level. Otherwise this step only runs when lastPlayedLevelIndex equals this value.")]
             public int requiredLevelIndex = -1;
             [SerializeReference]
+            [GUIColor("green")]
             public TutorialStep nextStep;
             [SerializeReference]
             public TutorialAnimation tutorialAnimation;
@@ -42,7 +43,6 @@ namespace Game
             public UnityAction onComplete;
             public bool isStarted;
             public bool isCompleted;
-            [LabelText("Advanced Mode", IconColor = "blue")]
             public bool advancedMode;
             [Header("Scene References")]
             public Transform animationObjectParent; // Parent for tutorial animation objects that is set at tutorialAnimation.tutorialObject. If null, animations will be parented to the first canvas in the scene.
@@ -61,12 +61,37 @@ namespace Game
         private readonly Dictionary<TutorialStep, Action<EventParam>> _startListeners      = new Dictionary<TutorialStep, Action<EventParam>>();
         private readonly Dictionary<TutorialStep, Action<EventParam>> _completionListeners  = new Dictionary<TutorialStep, Action<EventParam>>();
         private TutorialStep _activeStep;
+        private bool _tutorialListenersRegistered;
+        private bool _isLevelEnded;
 
         public bool HasActiveStep => _activeStep != null && _activeStep.isStarted && !_activeStep.isCompleted;
         public bool ShouldDisableActionBar => HasActiveStep && _activeStep.disablesActionBar;
 
         private void OnEnable()
         {
+            EventManager.StartListening(GameEvent.LEVEL_COMPLETED, OnLevelEnded);
+            EventManager.StartListening(GameEvent.LEVEL_FAILED, OnLevelEnded);
+            EventManager.StartListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
+
+            RegisterTutorialListeners();
+        }
+
+        private void OnDisable()
+        {
+            EventManager.StopListening(GameEvent.LEVEL_COMPLETED, OnLevelEnded);
+            EventManager.StopListening(GameEvent.LEVEL_FAILED, OnLevelEnded);
+            EventManager.StopListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
+
+            UnregisterTutorialListeners();
+            EndAllTutorialSteps();
+            _isLevelEnded = false;
+        }
+
+        private void RegisterTutorialListeners()
+        {
+            if (_tutorialListenersRegistered)
+                return;
+
             foreach (TutorialStep step in tutorialSteps)
             {
                 TutorialStep captured = step;
@@ -105,10 +130,14 @@ namespace Game
             }
 
             EventManager.StartListening(GameEvent.HIGHLIGHT_UPDATED, OnHighlightUpdated);
+            _tutorialListenersRegistered = true;
         }
 
-        private void OnDisable()
+        private void UnregisterTutorialListeners()
         {
+            if (!_tutorialListenersRegistered)
+                return;
+
             foreach (TutorialStep step in tutorialSteps)
             {
                 if (_startListeners.TryGetValue(step, out Action<EventParam> onStart))
@@ -119,19 +148,79 @@ namespace Game
 
                 if (step.nextStep != null && _completionListeners.TryGetValue(step.nextStep, out Action<EventParam> onCompleteNext))
                     EventManager.StopListening(step.nextStep.completionEvent, onCompleteNext);
-
-                ClearTutorialAnimation(step);
             }
 
-            _activeStep = null;
             EventManager.StopListening(GameEvent.HIGHLIGHT_UPDATED, OnHighlightUpdated);
 
             _startListeners.Clear();
             _completionListeners.Clear();
+            _tutorialListenersRegistered = false;
+        }
+
+        private void OnLevelEnded(EventParam param)
+        {
+            _isLevelEnded = true;
+            UnregisterTutorialListeners();
+            EndAllTutorialSteps();
+        }
+
+        private void OnLevelStarted(EventParam param)
+        {
+            _isLevelEnded = false;
+            ResetTutorialSteps();
+            RegisterTutorialListeners();
+        }
+
+        private void EndAllTutorialSteps()
+        {
+            foreach (TutorialStep step in GetAllConfiguredSteps())
+            {
+                step.isStarted = false;
+                step.isCompleted = true;
+                ClearTutorialAnimation(step);
+            }
+
+            _activeStep = null;
+            highlightOverlay?.Hide();
+            ClearDirective();
+        }
+
+        private void ResetTutorialSteps()
+        {
+            foreach (TutorialStep step in GetAllConfiguredSteps())
+            {
+                step.isStarted = false;
+                step.isCompleted = false;
+                ClearTutorialAnimation(step);
+            }
+
+            _activeStep = null;
+            highlightOverlay?.Hide();
+            ClearDirective();
+        }
+
+        private IEnumerable<TutorialStep> GetAllConfiguredSteps()
+        {
+            HashSet<TutorialStep> visitedSteps = new HashSet<TutorialStep>();
+            Stack<TutorialStep> pendingSteps = new Stack<TutorialStep>(tutorialSteps);
+
+            while (pendingSteps.Count > 0)
+            {
+                TutorialStep step = pendingSteps.Pop();
+
+                if (step == null || !visitedSteps.Add(step))
+                    continue;
+
+                yield return step;
+
+                if (step.nextStep != null)
+                    pendingSteps.Push(step.nextStep);
+            }
         }
 
         private void StartTutorialStep(TutorialStep step)
         {
+            if (_isLevelEnded) return;
             if (step == null || step.isCompleted || step.isStarted) return;
             if (!IsStepEligibleForCurrentLevel(step)) return;
 
@@ -144,6 +233,9 @@ namespace Game
 
         private void OnHighlightUpdated(EventParam param)
         {
+            if (_isLevelEnded)
+                return;
+
             if (_activeStep == null || _activeStep.isCompleted)
                 return;
 
@@ -152,6 +244,7 @@ namespace Game
 
         private void CompleteTutorialStep(TutorialStep step)
         {
+            if (_isLevelEnded) return;
             if (step == null || !step.isStarted || step.isCompleted) return;
 
             step.isCompleted = true;
@@ -166,7 +259,13 @@ namespace Game
 
             if (step.nextStep != null)
             {
-                DOVirtual.DelayedCall(0.02f, () => StartTutorialStep(step.nextStep));
+                DOVirtual.DelayedCall(0.02f, () =>
+                {
+                    if (_isLevelEnded)
+                        return;
+
+                    StartTutorialStep(step.nextStep);
+                });
             }
         }
 
