@@ -18,7 +18,7 @@ public class ObjectiveUINode : MonoBehaviour
             : null;
 
         objectiveIcon.sprite = icon;
-        checkmarkIcon.gameObject.SetActive(false);
+        checkmarkIcon.enabled = false;
         countText.text = objective.requiredCount.ToString();
     }
     public void UpdateNode(int currentCount)
