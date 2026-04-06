@@ -86,4 +86,46 @@ namespace Game
             }
         }
     }
+    public class ClickOnFirstHighlightedObject : TutorialAnimation
+    {
+        public Vector2 screenPositionOffset;
+
+        public override void PlayAnim()
+        {
+            if (tutorialObjectInstance == null || referenceStep?.highlightSelector?.HighlightedObjects == null || referenceStep.highlightSelector.HighlightedObjects.Length < 2)
+                return;
+
+            DirectiveTextAnim();
+            TutorialObjectsAnim();
+        }
+
+        private void DirectiveTextAnim()
+        {
+            var tutorialManager = GameManager.Instance.tutorialManager;
+            if (tutorialManager != null && tutorialManager.directiveText != null)
+            {
+                tutorialManager.directiveText.transform.DOKill();
+                tutorialManager.directiveText.transform.localScale = Vector3.one;
+                tutorialManager.directiveText.transform.DOScale(Vector3.one * 1.2f, duration / 2f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Yoyo);
+            }
+        }
+
+        private void TutorialObjectsAnim()
+        {
+            Transform startPointTransform = referenceStep.highlightSelector.HighlightedObjects[0].transform;
+
+            // Detect the screen position of the start and end points to determine where the animation should be played
+            Vector3 startScreenPos = Camera.main.WorldToScreenPoint(startPointTransform.position) + (Vector3)screenPositionOffset;
+
+            tutorialObjectInstance.transform.DOKill();
+            tutorialObjectInstance.transform.position = startScreenPos;
+
+            ScaleAnimation();
+        }
+
+        private void ScaleAnimation()
+        {
+            tutorialObjectInstance.transform.DOScale(Vector3.one * 1.1f, duration / 2f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Yoyo);
+        }
+    }
 }

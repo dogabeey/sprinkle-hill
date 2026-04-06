@@ -236,7 +236,7 @@ namespace Game
             }
             else
             {
-                EventManager.TriggerEvent(GameEvent.GRID_STABLE);
+                TriggerGridSettledEvents();
             }
         }
 
@@ -263,7 +263,17 @@ namespace Game
                 yield return StartCoroutine(ApplyGravity());
             }
 
+            TriggerGridSettledEvents();
+        }
+
+        private void TriggerGridSettledEvents()
+        {
             EventManager.TriggerEvent(GameEvent.GRID_STABLE);
+
+            if (!HasAnyPossibleMove())
+            {
+                EventManager.TriggerEvent(GameEvent.NO_POSSIBLE_MOVES);
+            }
         }
 
         // ------------------------------------------------------------------

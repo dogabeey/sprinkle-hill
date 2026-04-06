@@ -24,6 +24,7 @@ public enum GameEvent
     GRID_INITIALIZED = 411,
     GRID_STABLE = 412,
     HIGHLIGHT_UPDATED = 413,
+    NO_POSSIBLE_MOVES = 414,
 
     // Currency Events
     CURRENCY_EARNED = 500,

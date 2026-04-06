@@ -1,3 +1,6 @@
+using Sirenix.OdinInspector;
+using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Game
@@ -281,6 +284,52 @@ namespace Game
                 return new[] { elB.gameObject };
 
             return new GameObject[0];
+        }
+    }
+
+    [Serializable]
+    public class ActionButton_Highlight : HighlightSelector
+    {
+        [ValueDropdown(nameof(GetAllActions))]
+        public ActionBarItem action;
+
+        public override GameObject[] HighlightedObjects
+        {
+            get
+            {
+                ActionBarManager actionBarManager = GetActionBarManager();
+
+                for (int i = 0; i < actionBarManager.actionBarViews.Count; i++)
+                {
+                    ActionBarView view = actionBarManager.actionBarViews[i];
+                    if (view == null || view.actionBarItem == null)
+                        continue;
+
+                    if (view.actionBarItem == action)
+                        return new[] { view.useButton.gameObject };
+                }
+
+                return new GameObject[0];
+            }
+        }
+
+        private static ActionBarManager GetActionBarManager()
+        {
+            if (GameManager.Instance == null)
+                return null;
+
+            return GameManager.Instance.actionBarManager;
+        }
+
+        private IEnumerable GetAllActions()
+        {
+            ActionBarManager actionBarManager = GetActionBarManager();
+            ValueDropdownList<ActionBarItem> valueDropdownItems = new();
+            foreach (ActionBarItem item in actionBarManager.actionBarItemList)
+            {
+                valueDropdownItems.Add(item.ActionName, item);
+            }
+            return valueDropdownItems;
         }
     }
 }
