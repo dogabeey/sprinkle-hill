@@ -23,7 +23,7 @@ namespace Game
             [Tooltip("-1 means any level. Otherwise this step only runs when lastPlayedLevelIndex equals this value.")]
             public int requiredLevelIndex = -1;
             [SerializeReference]
-            [GUIColor("green")]
+            [GUIColor(nameof(GetNextStepColor))]
             public TutorialStep nextStep;
             [SerializeReference]
             public TutorialAnimation tutorialAnimation;
@@ -44,10 +44,29 @@ namespace Game
             public bool isStarted;
             public bool isCompleted;
             public bool advancedMode;
+            [HideInInspector]
+            public int serializationDepth;
             [Header("Scene References")]
             public Transform animationObjectParent; // Parent for tutorial animation objects that is set at tutorialAnimation.tutorialObject. If null, animations will be parented to the first canvas in the scene.
 
             public bool IsAdvancedMode() => advancedMode;
+
+            private static readonly Color[] DepthColors =
+            {
+                Color.red,
+                new Color(1f, 0.5f, 0f),
+                Color.yellow,
+                Color.green,
+                Color.cyan,
+                Color.blue,
+                Color.magenta,
+            };
+
+            private Color GetNextStepColor()
+            {
+                int depth = Mathf.Max(0, serializationDepth + 1);
+                return DepthColors[depth % DepthColors.Length];
+            }
         }
 
         public List<TutorialStep> tutorialSteps = new List<TutorialStep>();
@@ -69,6 +88,8 @@ namespace Game
 
         private void OnEnable()
         {
+            UpdateSerializationDepths();
+
             EventManager.StartListening(GameEvent.LEVEL_COMPLETED, OnLevelEnded);
             EventManager.StartListening(GameEvent.LEVEL_FAILED, OnLevelEnded);
             EventManager.StartListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
@@ -131,6 +152,40 @@ namespace Game
 
             EventManager.StartListening(GameEvent.HIGHLIGHT_UPDATED, OnHighlightUpdated);
             _tutorialListenersRegistered = true;
+        }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            UpdateSerializationDepths();
+        }
+#endif
+
+        private void UpdateSerializationDepths()
+        {
+            foreach (TutorialStep step in GetAllConfiguredSteps())
+            {
+                step.serializationDepth = -1;
+            }
+
+            for (int i = 0; i < tutorialSteps.Count; i++)
+            {
+                AssignSerializationDepth(tutorialSteps[i], 0, new HashSet<TutorialStep>());
+            }
+        }
+
+        private void AssignSerializationDepth(TutorialStep step, int depth, HashSet<TutorialStep> currentPath)
+        {
+            if (step == null || !currentPath.Add(step))
+                return;
+
+            if (step.serializationDepth < 0 || depth < step.serializationDepth)
+            {
+                step.serializationDepth = depth;
+            }
+
+            AssignSerializationDepth(step.nextStep, depth + 1, currentPath);
+            currentPath.Remove(step);
         }
 
         private void UnregisterTutorialListeners()
