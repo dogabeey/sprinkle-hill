@@ -22,16 +22,9 @@ namespace Game
         public string progressFormat = "Unlock at level {0} • {1} level left";
         public string progressFormatPlural = "Unlock at level {0} • {1} levels left";
 
-        [Header("References")]
-        public FeatureTracker featureTracker;
-
         public override void InitUI()
         {
-            if (featureTracker == null)
-            {
-                featureTracker = FindAnyObjectByType<FeatureTracker>();
-            }
-
+            FeatureTracker featureTracker = GameManager.Instance.featureTracker;
             int currentLevelIndex = Mathf.Max(0, World.Instance.lastPlayedLevelIndex);
             UnlockableFeature nextFeature = featureTracker != null ? featureTracker.GetNextLockedFeature(currentLevelIndex) : null;
 
@@ -41,7 +34,7 @@ namespace Game
                 if (featureNameText != null) featureNameText.text = allFeaturesUnlockedMessage;
                 if (progressText != null) progressText.text = string.Empty;
                 if (featureIconImage != null) featureIconImage.enabled = false;
-                if (progressFillImage != null) progressFillImage.fillAmount = 1f;
+                if (progressFillImage != null) progressFillImage.fillAmount = 0f;
             }
             else
             {
@@ -54,7 +47,14 @@ namespace Game
                 if (featureNameText != null) featureNameText.text = nextFeature.featureName;
                 if (progressText != null)
                 {
-                    progressText.text = (progress * 100).ToString("F0") + "%";
+                    float progressTextValue = progress; // Capture the progress value for use in the lambda
+                    DOVirtual.Float(0, progressTextValue, 2f, value =>
+                    {
+                        if (progressText != null)
+                        {
+                            progressText.text = (value * 100).ToString("F0") + "%";
+                        }
+                    });
                 }
                 if (featureIconImage != null)
                 {
@@ -64,9 +64,10 @@ namespace Game
                 if (progressFillImage != null)
                 {
                     continueButton.interactable = false;
-                    progressFillImage.DOFillAmount(progress, 1f).SetEase(Ease.OutCubic).OnComplete(() =>
+                    float progressFillValue = 1 - progress; // Capture the progress value for use in the lambda
+                    DOVirtual.Float(1, progressFillValue, 2f, value =>
                     {
-                        continueButton.interactable = true;
+                        progressFillImage.fillAmount = value;
                     });
                 }
             }

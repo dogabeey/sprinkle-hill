@@ -5,7 +5,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Game;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -43,9 +42,12 @@ namespace Game
         [InlineEditor]
         [FoldoutGroup("Managers")]
         public ActionBarManager actionBarManager;
+        [InlineEditor]
+        [FoldoutGroup("Managers")]
+        public FeatureTracker featureTracker;
 
         [FoldoutGroup("Settings")]
-        public List<ElementData> elementDatas;
+        public bool showFeatureProgressScreen;
         [FoldoutGroup("References")]
         public List<World> worlds;
         [FoldoutGroup("References")]

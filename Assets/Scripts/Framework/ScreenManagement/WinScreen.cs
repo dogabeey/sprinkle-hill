@@ -40,9 +40,17 @@ namespace Game
             nextLevelButton.onClick.RemoveAllListeners();
             nextLevelButton.onClick.AddListener(() =>
             {
+                ScreenManager.Instance.CloseAllScreens();
                 levelScene.rewards.ForEach(r => CurrencyManager.Instance.AddCurrency(r.type.currencyID, r.amount));
 
-                ScreenManager.Instance.Show(Screens.FeatureProgress);
+                if(GameManager.Instance.showFeatureProgressScreen)
+                {
+                    ScreenManager.Instance.Show(Screens.FeatureProgress);
+                }
+                else
+                {
+                    GameManager.Instance.LoadNextLevel();
+                }
             });
         }
     }

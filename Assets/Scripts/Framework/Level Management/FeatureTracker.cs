@@ -45,10 +45,16 @@ namespace Game
             return Mathf.Max(0, nextFeature.unlockedLevelIndex - currentLevelIndex);
         }
 
-        public void UnlockFeature(string featureName)
+        public bool IsFeatureUnlocked(string featureName)
         {
-            // Implement your unlocking logic here, such as adding the feature to a player's profile or enabling it in the game.
-            Debug.Log($"Feature Unlocked: {featureName}");
+            int currentLevelIndex = Mathf.Max(0, World.Instance.lastPlayedLevelIndex);
+            UnlockableFeature feature = features.Find(f => f.featureName == featureName);
+            if (feature == null)
+            {
+                Debug.LogWarning($"Feature '{featureName}' not found in FeatureTracker.");
+                return false;
+            }
+            return feature.IsUnlocked(currentLevelIndex);
         }
     }
     [System.Serializable]
