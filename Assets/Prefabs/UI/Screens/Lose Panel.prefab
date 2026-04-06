@@ -487,9 +487,7 @@ MonoBehaviour:
   playAnimationName: 
   levelHeaderText: {fileID: 0}
   levelLostText: {fileID: 0}
-  levelRewardContainer: {fileID: 0}
-  rewardTextPrefab: {fileID: 0}
-  nextLevelButton: {fileID: 0}
+  repeatLevelButton: {fileID: 0}
 --- !u!1 &5118662530866750882
 GameObject:
   m_ObjectHideFlags: 0
@@ -812,7 +810,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 461856930, guid: 9a0365a8c3cbf7342897008d90d75612, type: 3}
+  m_Sprite: {fileID: 418353176, guid: 9a0365a8c3cbf7342897008d90d75612, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
