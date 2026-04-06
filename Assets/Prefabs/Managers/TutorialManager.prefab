@@ -1,0 +1,210 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7027007216058421712
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5195539440205897226}
+  - component: {fileID: 4093018097172270814}
+  m_Layer: 0
+  m_Name: TutorialManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5195539440205897226
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7027007216058421712}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4093018097172270814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7027007216058421712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 073f2e7c68f0d2243987fc020d905a76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  tutorialSteps:
+  - Id: level_1_matchelements_1
+    directive: DRAG ELEMENTS TO SWAP!
+    requiredLevelIndex: 0
+    nextStep:
+      rid: 3084495758061469770
+    tutorialAnimation:
+      rid: 943281595348680867
+    highlightSelector:
+      rid: 943281595348680799
+    startEvent: 411
+    startEventExpectedParams: 0
+    startEventExpectedParamValues:
+      paramObj: {fileID: 0}
+      paramScriptable: {fileID: 0}
+      paramInt: 0
+      paramFloat: 0
+      paramStr: 
+      vectorList: []
+      paramBool: 0
+    completionEvent: 402
+    completionEventExpectedParams: 0
+    completionEventExpectedParamValues:
+      paramObj: {fileID: 0}
+      paramScriptable: {fileID: 0}
+      paramInt: 0
+      paramFloat: 0
+      paramStr: 
+      vectorList: []
+      paramBool: 0
+    isStarted: 0
+    isCompleted: 0
+    advancedMode: 0
+    animationObjectParent: {fileID: 0}
+  - Id: outofmoves_shuffle_tutorial
+    directive: You can shuffle the board when out of moves.
+    requiredLevelIndex: -1
+    nextStep:
+      rid: -2
+    tutorialAnimation:
+      rid: 3084495758061469774
+    highlightSelector:
+      rid: 3084495758061469775
+    startEvent: 414
+    startEventExpectedParams: 0
+    startEventExpectedParamValues:
+      paramObj: {fileID: 0}
+      paramScriptable: {fileID: 0}
+      paramInt: 0
+      paramFloat: 0
+      paramStr: 
+      vectorList: []
+      paramBool: 0
+    completionEvent: 600
+    completionEventExpectedParams: 0
+    completionEventExpectedParamValues:
+      paramObj: {fileID: 0}
+      paramScriptable: {fileID: 0}
+      paramInt: 0
+      paramFloat: 0
+      paramStr: 
+      vectorList: []
+      paramBool: 0
+    isStarted: 0
+    isCompleted: 0
+    advancedMode: 0
+    animationObjectParent: {fileID: 0}
+  directiveText: {fileID: 0}
+  directiveParent: {fileID: 0}
+  highlightOverlay: {fileID: 0}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 943281595348680799
+      type: {class: TwoRandomMatchableElements_Highlight, ns: Game, asm: Assembly-CSharp}
+      data: 
+    - rid: 943281595348680867
+      type: {class: MoveBetweenTwoPoint, ns: Game, asm: Assembly-CSharp}
+      data:
+        tutorialObject: {fileID: 1399129251957722908, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
+        duration: 2
+        isLoop: 1
+        screenPositionOffset: {x: 100, y: -100}
+    - rid: 3084495758061469770
+      type: {class: TutorialManager/TutorialStep, ns: Game, asm: Assembly-CSharp}
+      data:
+        Id: level_1_matchelements_2
+        directive: You can also match 4 elements for square!
+        requiredLevelIndex: 0
+        nextStep:
+          rid: -2
+        tutorialAnimation:
+          rid: 3084495758061469773
+        highlightSelector:
+          rid: 3084495758061469771
+        startEvent: 800
+        startEventExpectedParams: 0
+        startEventExpectedParamValues:
+          paramObj: {fileID: 0}
+          paramScriptable: {fileID: 0}
+          paramInt: 0
+          paramFloat: 0
+          paramStr: 
+          vectorList: []
+          paramBool: 0
+        completionEvent: 402
+        completionEventExpectedParams: 0
+        completionEventExpectedParamValues:
+          paramObj: {fileID: 0}
+          paramScriptable: {fileID: 0}
+          paramInt: 0
+          paramFloat: 0
+          paramStr: 
+          vectorList: []
+          paramBool: 0
+        isStarted: 0
+        isCompleted: 0
+        advancedMode: 0
+        animationObjectParent: {fileID: 0}
+    - rid: 3084495758061469771
+      type: {class: TwoRandomSquareMatchableElement_Highlight, ns: Game, asm: Assembly-CSharp}
+      data: 
+    - rid: 3084495758061469773
+      type: {class: MoveBetweenTwoPoint, ns: Game, asm: Assembly-CSharp}
+      data:
+        tutorialObject: {fileID: 1399129251957722908, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
+        duration: 2
+        isLoop: 1
+        screenPositionOffset: {x: 100, y: -100}
+    - rid: 3084495758061469774
+      type: {class: ClickOnFirstHighlightedObject, ns: Game, asm: Assembly-CSharp}
+      data:
+        tutorialObject: {fileID: 0}
+        duration: 0
+        isLoop: 0
+        screenPositionOffset: {x: 0, y: 0}
+    - rid: 3084495758061469775
+      type: {class: ActionButton_Highlight, ns: Game, asm: Assembly-CSharp}
+      data:
+        action:
+          rid: 3084495758061469776
+    - rid: 3084495758061469776
+      type: {class: ShuffleAction, ns: Game, asm: Assembly-CSharp}
+      data:
+        actionBarIcon: {fileID: 1175953842, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+        costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
+        actionSuccessParticle: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
+        startingCount: 10
+        unlockedLevel: 0
+        unlockableFeature:
+          featureName: 
+          unlockedLevelIndex: 0
+          icon: {fileID: 0}
