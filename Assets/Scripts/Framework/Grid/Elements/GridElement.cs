@@ -8,6 +8,8 @@ namespace Game
 {
     public abstract class GridElement : Grid3D
     {
+        private static Material _defaultSpriteMaterial;
+
         [System.Serializable]
         public class MeshData
         {
@@ -49,6 +51,11 @@ namespace Game
                     {
                         meshFilter.mesh = visualInfo.elementMesh;
                     }
+
+                    if (visualInfo.elementMaterial != null)
+                    {
+                        meshRenderer.sharedMaterial = visualInfo.elementMaterial;
+                    }
                 }
 
                 if (elementRenderer is SpriteRenderer spriteRenderer)
@@ -60,6 +67,17 @@ namespace Game
                     else
                     {
                         spriteRenderer.sprite = visualInfo.displayIcon;
+                    }
+
+                    if (elementInfo != null && elementInfo.powerUpType != ElementPowerUpType.None)
+                    {
+                        Material defaultSpriteMat = GetDefaultSpriteMaterial();
+                        if (defaultSpriteMat != null)
+                            spriteRenderer.sharedMaterial = defaultSpriteMat;
+                    }
+                    else if (visualInfo.elementMaterial != null)
+                    {
+                        spriteRenderer.sharedMaterial = visualInfo.elementMaterial;
                     }
                 }
             }
@@ -75,6 +93,23 @@ namespace Game
         protected virtual IEnumerator HueAnim()
         {
             yield break;
+        }
+
+        private static Material GetDefaultSpriteMaterial()
+        {
+            if (_defaultSpriteMaterial != null)
+                return _defaultSpriteMaterial;
+
+            Shader spriteShader = Shader.Find("Sprites/Default");
+            if (spriteShader == null)
+                return null;
+
+            _defaultSpriteMaterial = new Material(spriteShader)
+            {
+                name = "Runtime_DefaultSpriteMaterial"
+            };
+
+            return _defaultSpriteMaterial;
         }
 
         public abstract IEnumerator DestroyElement();
