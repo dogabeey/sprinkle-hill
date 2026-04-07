@@ -110,13 +110,13 @@ namespace Game
             saveManager.OnInit();
 
             Application.targetFrameRate = 60;
+            CurrentWorld = worlds[0];
         }
         private void Start()
         {
 
             if (isSequentalLevels)
             {
-                CurrentWorld = worlds[0];
                 LevelScene foundLevel = FindAnyObjectByType<LevelScene>();
                 if (!foundLevel)
                     LoadCurrentLevel();

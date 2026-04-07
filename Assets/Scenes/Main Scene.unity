@@ -2236,10 +2236,30 @@ PrefabInstance:
     - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: serializationData.Prefab
       value: 
-      objectReference: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: tutorialSteps.Array.data[0].advancedMode
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: managedReferences[5000171120770941007].Id
+      value: level1_swapbomb
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: managedReferences[5000171120770941008].isLoop
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: tutorialSteps.Array.data[1].requiredLevelIndex
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: managedReferences[5000171120770941008].duration
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: managedReferences[5000171120770941007].directive
+      value: Click or Swap Bomb to Activate It!
       objectReference: {fileID: 0}
     - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: managedReferences[5000171120770941007].startEvent
@@ -2626,6 +2646,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8616632487440646257, guid: 72e5e6c3ed435aa4096da64e16a6aae3, type: 3}
+      propertyPath: features.Array.size
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 9104921528775313611, guid: 72e5e6c3ed435aa4096da64e16a6aae3, type: 3}
       propertyPath: m_Name
       value: Feature Tracker
@@ -2905,6 +2929,18 @@ PrefabInstance:
       propertyPath: actionBarParent
       value: 
       objectReference: {fileID: 854708863}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[3084495758061469769].unlockableFeature.icon
+      value: 
+      objectReference: {fileID: 524596139, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[3084495758061469769].unlockableFeature.featureName
+      value: Candy Bar
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[3084495758061469769].unlockableFeature.unlockedLevelIndex
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 1925703224431792360, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
