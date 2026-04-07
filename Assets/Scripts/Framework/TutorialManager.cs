@@ -23,9 +23,6 @@ namespace Game
             [Tooltip("-1 means any level. Otherwise this step only runs when lastPlayedLevelIndex equals this value.")]
             public int requiredLevelIndex = -1;
             [SerializeReference]
-            [GUIColor(nameof(GetNextStepColor))]
-            public TutorialStep nextStep;
-            [SerializeReference]
             public TutorialAnimation tutorialAnimation;
             [SerializeReference]
             public HighlightSelector highlightSelector;
@@ -41,13 +38,17 @@ namespace Game
             public EventParam completionEventExpectedParamValues;
             public UnityAction onStart;
             public UnityAction onComplete;
-            public bool isStarted;
-            public bool isCompleted;
+            public Transform animationObjectParent; // Parent for tutorial animation objects that is set at tutorialAnimation.tutorialObject. If null, animations will be parented to the first canvas in the scene.
+            [SerializeReference]
+            [GUIColor(nameof(GetNextStepColor))]
+            public TutorialStep nextStep;
             public bool advancedMode;
             [HideInInspector]
             public int serializationDepth;
-            [Header("Scene References")]
-            public Transform animationObjectParent; // Parent for tutorial animation objects that is set at tutorialAnimation.tutorialObject. If null, animations will be parented to the first canvas in the scene.
+            [HideInInspector]
+            public bool isStarted;
+            [HideInInspector]
+            public bool isCompleted;
 
             public bool IsAdvancedMode() => advancedMode;
 

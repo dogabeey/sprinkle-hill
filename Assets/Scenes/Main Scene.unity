@@ -2236,9 +2236,13 @@ PrefabInstance:
     - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: serializationData.Prefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
     - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: tutorialSteps.Array.data[0].advancedMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: managedReferences[5000171120770941007].startEvent
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
@@ -2247,6 +2251,22 @@ PrefabInstance:
       objectReference: {fileID: 4133448082132307929}
     - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: tutorialSteps.Array.data[1].animationObjectParent
+      value: 
+      objectReference: {fileID: 4133448082132307929}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: managedReferences[3084495758061469770].completionEvent
+      value: 803
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: managedReferences[5000171120770941007].completionEvent
+      value: 802
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: managedReferences[3084495758061469770].animationObjectParent
+      value: 
+      objectReference: {fileID: 1716899156}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: managedReferences[5000171120770941007].animationObjectParent
       value: 
       objectReference: {fileID: 4133448082132307929}
     - target: {fileID: 5195539440205897226, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}

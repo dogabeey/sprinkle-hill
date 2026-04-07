@@ -1,5 +1,7 @@
 public enum GameEvent
 {
+    NONE = 0,
+
     OBJECTIVES_INITIALIZED = 100,
     OBJECTIVE_COMPLETED = 101,
     OBJECTIVE_FAILED = 102,

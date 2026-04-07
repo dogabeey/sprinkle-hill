@@ -145,7 +145,7 @@ namespace Game
             Transform startPointTransform = referenceStep.highlightSelector.HighlightedObjects[0].transform;
 
             // Detect the screen position of the start and end points to determine where the animation should be played
-            Vector3 startScreenPos = GetScreenPosition(startPointTransform) + (Vector3)screenPositionOffset;
+            Vector3 startScreenPos = startPointTransform.position + (Vector3)screenPositionOffset;
 
             tutorialObjectInstance.transform.DOKill();
             tutorialObjectInstance.transform.position = startScreenPos;
