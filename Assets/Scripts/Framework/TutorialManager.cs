@@ -114,7 +114,7 @@ namespace Game
             if (_tutorialListenersRegistered)
                 return;
 
-            foreach (TutorialStep step in tutorialSteps)
+            foreach (TutorialStep step in GetAllConfiguredSteps())
             {
                 TutorialStep captured = step;
 
@@ -129,20 +129,6 @@ namespace Game
                     if (ParamMatches(e, captured.completionEventExpectedParams, captured.completionEventExpectedParamValues))
                         CompleteTutorialStep(captured);
                 };
-
-                if(step.nextStep != null) // Also register the next step's completion event as they are not in the list of tutorialSteps.
-                {
-
-                    Action<EventParam> onCompleteNext = e =>
-                    {
-                        if (ParamMatches(e, step.nextStep.completionEventExpectedParams, step.nextStep.completionEventExpectedParamValues))
-                            CompleteTutorialStep(step.nextStep);
-                    };
-
-                    _completionListeners[step.nextStep] = onCompleteNext;
-                    if (step.nextStep != null)
-                        EventManager.StartListening(step.nextStep.completionEvent, onCompleteNext);
-                }
 
                 _startListeners[step]     = onStart;
                 _completionListeners[step] = onComplete;
@@ -194,16 +180,13 @@ namespace Game
             if (!_tutorialListenersRegistered)
                 return;
 
-            foreach (TutorialStep step in tutorialSteps)
+            foreach (TutorialStep step in GetAllConfiguredSteps())
             {
                 if (_startListeners.TryGetValue(step, out Action<EventParam> onStart))
                     EventManager.StopListening(step.startEvent, onStart);
 
                 if (_completionListeners.TryGetValue(step, out Action<EventParam> onComplete))
                     EventManager.StopListening(step.completionEvent, onComplete);
-
-                if (step.nextStep != null && _completionListeners.TryGetValue(step.nextStep, out Action<EventParam> onCompleteNext))
-                    EventManager.StopListening(step.nextStep.completionEvent, onCompleteNext);
             }
 
             EventManager.StopListening(GameEvent.HIGHLIGHT_UPDATED, OnHighlightUpdated);

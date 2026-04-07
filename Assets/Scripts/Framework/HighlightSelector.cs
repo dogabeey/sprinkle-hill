@@ -288,21 +288,34 @@ namespace Game
         }
     }
 
+    /// <summary>
+    /// Highlight selector that randomly selects a Bomb power-up (either regular Bomb or Big Bomb) from the Match-3 grid and highlights it.
+    /// </summary>
     public class Bomb_Highlight : HighlightSelector
     {
         public override GameObject[] HighlightedObjects => HighlightSelectorPowerUpUtility.GetRandomPowerUpObjects(ElementPowerUpType.Bomb, ElementPowerUpType.BigBomb);
     }
 
+    /// <summary>
+    /// Highlight selector that randomly selects a Rocket power-up (either Vertical or Horizontal) from the Match-3 grid and highlights it.
+    /// </summary>
     public class Rocket_Highlight : HighlightSelector
     {
         public override GameObject[] HighlightedObjects => HighlightSelectorPowerUpUtility.GetRandomPowerUpObjects(ElementPowerUpType.VerticalRocket, ElementPowerUpType.HorizontalRocket);
     }
 
+    /// <summary>
+    /// Highlight selector that randomly selects a Disco Ball power-up from the Match-3 grid and highlights it.
+    /// </summary>
     public class DiscoBall_Highlight : HighlightSelector
     {
         public override GameObject[] HighlightedObjects => HighlightSelectorPowerUpUtility.GetRandomPowerUpObjects(ElementPowerUpType.DiscoBall);
     }
 
+    /// <summary>
+    /// Provides utility methods for selecting and retrieving power-up GameObjects from the Match-3 grid based on
+    /// specified criteria.
+    /// </summary>
     internal static class HighlightSelectorPowerUpUtility
     {
         public static GameObject[] GetRandomPowerUpObjects(params ElementPowerUpType[] acceptedTypes)
@@ -360,6 +373,9 @@ namespace Game
         }
     }
 
+    /// <summary>
+    /// Highlight selector that highlights the action button(s) associated with a specific ActionBarItem. This can be used in tutorial steps to guide players towards using certain actions or to indicate which actions are relevant in a given context.
+    /// </summary>
     [Serializable]
     public class ActionButton_Highlight : HighlightSelector
     {
@@ -405,5 +421,14 @@ namespace Game
             }
             return valueDropdownItems;
         }
+    }
+
+    /// <summary>
+    /// Highlight selector that allows manually specifying a list of GameObjects to highlight. This can be used for tutorial steps or specific scenarios where you want to highlight certain objects without relying on game logic.
+    /// </summary>
+    public class SelectedSceneObjects_Highlight : HighlightSelector
+    {
+        public List<GameObject> selectedObjects;
+        public override GameObject[] HighlightedObjects => selectedObjects.ToArray();
     }
 }
