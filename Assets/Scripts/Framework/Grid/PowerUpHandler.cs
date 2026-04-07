@@ -197,11 +197,9 @@ namespace Game
             cell.elementInfo.isSparkling = false;
             cell.elementInfo.isHidden = false;
 
-            GridElement element = grid.GetElementAt(pos);
+            GridElement element = grid.ReplaceElementAt(pos, cell.elementInfo);
             if (element != null)
             {
-                element.elementInfo = cell.elementInfo;
-                element.InitElement(grid, cell.elementInfo);
                 GridHelper.SetEmission(element, 0f);
                 ApplySortingBoost(element, type == ElementPowerUpType.Bomb);
             }

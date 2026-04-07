@@ -47,6 +47,27 @@ namespace Game
             return null;
         }
 
+        public GridElement ReplaceElementAt(Vector2Int pos, GridElementInfo elementInfo)
+        {
+            if (!generatedTiles.TryGetValue(pos, out GridCellController tile) || tile == null)
+                return null;
+
+            GridElement oldElement = tile.GetComponentInChildren<GridElement>();
+            if (oldElement != null)
+            {
+                oldElement.transform.DOKill();
+                oldElement.transform.SetParent(null, true);
+                generatedElements.Remove(oldElement);
+                Destroy(oldElement.gameObject);
+            }
+
+            GridElement newElement = Instantiate(gridElementPrefab, tile.transform.position, Quaternion.identity, tile.transform);
+            newElement.elementInfo = elementInfo;
+            generatedElements.Add(newElement);
+            newElement.InitElement(this, elementInfo);
+            return newElement;
+        }
+
         public Vector3 GetWorldPosition(Vector2Int pos)
         {
             if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)
