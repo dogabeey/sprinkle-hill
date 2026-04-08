@@ -296,27 +296,10 @@ MonoBehaviour:
   targetElement: {fileID: 11400000, guid: d35d7301f52f6504a8cc2a157fc9a0b8, type: 2}
   timer: 120
   grid: {fileID: 6111944330127197299}
-  levelCreationMode: 1
-  levelEditor: {fileID: 11400000, guid: 7a3257018b70ead4a81299d022a11654, type: 2}
-  proceduralGridSize: {x: 9, y: 12}
-  proceduralGeneration:
-    useRandomSeed: 1
-    seed: 0
-    emptyCellChance: 0
-    breakableWallPlacementMode: 1
-    triangleWidth: 7
-    triangleDecrement: 1
-    rectangleStart: {x: 8, y: 11}
-    rectangleEnd: {x: 0, y: 8}
-    hiddenBoxChance: 0
-    elementPool:
-    - {fileID: 11400000, guid: f006f435c88374942881e4fd9742c0ca, type: 2}
-    - {fileID: 11400000, guid: 69d335464f54691419e9101cf98729e0, type: 2}
-    - {fileID: 11400000, guid: 1e4613ba78c8827438d09790fc8fce3c, type: 2}
-    - {fileID: 11400000, guid: 0aff893b628e16b449d95f9a8befead9, type: 2}
-    - {fileID: 11400000, guid: fcba4310cd5fca344aad5d26ad52423f, type: 2}
-    - {fileID: 11400000, guid: 2510de87ceafdd74d8a26e0d7c3e435d, type: 2}
-    - {fileID: 11400000, guid: b5e047feb0cad314a894341b7d997b76, type: 2}
+  levelEditors:
+  - {fileID: 11400000, guid: 7a3257018b70ead4a81299d022a11654, type: 2}
+  - {fileID: 11400000, guid: 7a3257018b70ead4a81299d022a11654, type: 2}
+  - {fileID: 11400000, guid: 7a3257018b70ead4a81299d022a11654, type: 2}
   allowDiscoBallCreation: 1
   allowRocketCreation: 1
   allowBombCreation: 1
@@ -325,6 +308,14 @@ MonoBehaviour:
   bombElementData: {fileID: 11400000, guid: 2f83e159c6b368646a1f9d8e7ec081e9, type: 2}
   rocketElementData: {fileID: 11400000, guid: 56c62304f3d4a6c428379f3845a428a7, type: 2}
   discoBallElementData: {fileID: 11400000, guid: 24c241fb46e7d3447b4a3d140a9cda60, type: 2}
+  stageTransitionAnimation:
+    elementWinAnimDuration: 1
+    elementWinAnimStagger: 0.01
+    elementWinPunchScale: {x: 0.25, y: 0.25, z: 0}
+    elementWinMoveUp: 0.35
+    nextStageOutDuration: 1
+    nextStageInDuration: 0.35
+    nextStageInFromScale: {x: 0.88, y: 0.88, z: 1}
 --- !u!1 &5642222179130585919
 GameObject:
   m_ObjectHideFlags: 0

@@ -40,6 +40,7 @@ namespace Game
 
         protected Dictionary<Vector2Int, GridCellController> generatedTiles = new();
         protected List<GridElement> generatedElements = new();
+        private bool isInitialized;
 
         protected virtual void Start()
         {
@@ -74,6 +75,35 @@ namespace Game
             EventManager.TriggerEvent(GameEvent.GRID_INITIALIZED, new EventParam(
                 paramInt: gridSize.x * gridSize.y
             ));
+
+            isInitialized = true;
+        }
+
+        public void RebuildWithSettings(LevelCreationMode mode, LevelEditor editor, ProceduralGenerationSettings settings, Vector2Int proceduralGridSize)
+        {
+            ConfigureLevelSettings(mode, editor, settings, proceduralGridSize);
+            ClearGeneratedRuntimeObjects();
+
+            Init();
+        }
+
+        private void ClearGeneratedRuntimeObjects()
+        {
+            foreach (var tile in generatedTiles)
+            {
+                if (tile.Value != null)
+                    Destroy(tile.Value.gameObject);
+            }
+
+            for (int i = 0; i < generatedElements.Count; i++)
+            {
+                if (generatedElements[i] != null)
+                    Destroy(generatedElements[i].gameObject);
+            }
+
+            generatedTiles.Clear();
+            generatedElements.Clear();
+            isInitialized = false;
         }
 
         private void InitializeGridCells()

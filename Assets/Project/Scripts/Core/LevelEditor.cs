@@ -13,19 +13,29 @@ namespace Game
     [CreateAssetMenu(fileName = "New Level", menuName = "Game/New Level")]
     public class LevelEditor : SerializedScriptableObject
     {
-        [FoldoutGroup("Level")]
-        [SerializeField] private Vector2Int gridSize = new Vector2Int(8, 8);
+        [ GUIColor("green")]
+        public Grid3D.LevelCreationMode levelCreationMode = Grid3D.LevelCreationMode.LevelEditor;
 
-        [FoldoutGroup("Level")]
+        [ShowIf(nameof(UseProcedural))]
+        public Vector2Int gridSize = new Vector2Int(8, 8);
+        public List<Objective> objectives = new List<Objective>();
+        public GameEvent specialWinEvent;
+        public ElementData targetElement;
+        public int timer = -1;
+        [ShowIf(nameof(UseProcedural))]
+        public Grid3D.ProceduralGenerationSettings proceduralGeneration = new Grid3D.ProceduralGenerationSettings();
+
         [Tooltip("Pool used for randomly generated refill elements during gameplay.")]
         [SerializeField] private List<ElementData> elementPool = new List<ElementData>();
 
-        [FoldoutGroup("Level")]
+        [HideIf(nameof(UseProcedural))]
         [TableMatrix(DrawElementMethod = nameof(DrawGridCells), SquareCells = true)]
         [OdinSerialize] private Grid3D.GridCell[,] gridCells;
 
         public Vector2Int GridSize => gridSize;
         public List<ElementData> ElementPool => elementPool;
+
+        private bool UseProcedural => levelCreationMode == Grid3D.LevelCreationMode.Procedural;
 
 #if UNITY_EDITOR
         [Button]

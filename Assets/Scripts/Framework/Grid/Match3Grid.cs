@@ -68,6 +68,12 @@ namespace Game
             return newElement;
         }
 
+        public List<GridElement> GetAllActiveElements()
+        {
+            generatedElements.RemoveAll(e => e == null);
+            return new List<GridElement>(generatedElements);
+        }
+
         public Vector3 GetWorldPosition(Vector2Int pos)
         {
             if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)

@@ -1,4 +1,5 @@
 using Sirenix.OdinInspector;
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,22 +11,27 @@ namespace Game
 {
     public class LevelScene_Match3Game : LevelScene
     {
-        [FoldoutGroup("Level Settings")]
-        public List<Objective> objectives;
-        [FoldoutGroup("Level Settings")]
-        public ElementData targetElement;
-        [FoldoutGroup("Level Settings")]
-        public int timer;
+        [Serializable]
+        public class StageTransitionAnimationSettings
+        {
+
+            public float elementWinAnimDuration = 0.3f;
+            public float elementWinAnimStagger = 0.01f;
+            public Vector3 elementWinPunchScale = new Vector3(0.25f, 0.25f, 0f);
+            public float elementWinMoveUp = 0.35f;
+
+            public float nextStageOutDuration = 0.2f;
+            public float nextStageInDuration = 0.35f;
+            public Vector3 nextStageInFromScale = new Vector3(0.88f, 0.88f, 1f);
+        }
+
+        [HideInInspector] public List<Objective> objectives = new List<Objective>();
+        [HideInInspector] public ElementData targetElement;
+        [HideInInspector] public int timer;
         [FoldoutGroup("Level Settings")]
         public Grid3D grid;
         [FoldoutGroup("Level Settings")]
-        public Grid3D.LevelCreationMode levelCreationMode = Grid3D.LevelCreationMode.LevelEditor;
-        [FoldoutGroup("Level Settings"), ShowIf(nameof(UseLevelEditor))]
-        public LevelEditor levelEditor;
-        [FoldoutGroup("Level Settings"), ShowIf(nameof(UseProcedural))]
-        public Vector2Int proceduralGridSize = new Vector2Int(8, 8);
-        [FoldoutGroup("Level Settings"), ShowIf(nameof(UseProcedural))]
-        public Grid3D.ProceduralGenerationSettings proceduralGeneration = new Grid3D.ProceduralGenerationSettings();
+        public List<LevelEditor> levelEditors = new List<LevelEditor>();
         [FoldoutGroup("Power Up Settings")]
         [SerializeField] private bool allowDiscoBallCreation = true;
         [FoldoutGroup("Power Up Settings")]
@@ -44,6 +50,10 @@ namespace Game
         [FoldoutGroup("Power Up Settings")]
         public ElementData discoBallElementData;
 
+        public StageTransitionAnimationSettings stageTransitionAnimation = new StageTransitionAnimationSettings();
+
+        private int currentLevelEditorIndex;
+        private bool isSwitchingStage;
 
         public bool AllowDiscoBallCreation => allowDiscoBallCreation;
         public bool AllowRocketCreation => allowRocketCreation;
@@ -51,7 +61,8 @@ namespace Game
 
         protected override void Awake()
         {
-            ApplyLevelSettings();
+            currentLevelEditorIndex = 0;
+            ApplyLevelSettings(false);
             base.Awake();
             StartCoroutine(TimerCoroutine());
         }
@@ -65,20 +76,31 @@ namespace Game
         }
         private void OnObjectiveCompleted(EventParam param)
         {
-            if(ObjectiveManager.Instance.activeObjectives.TrueForAll(o => o.isCompleted))
+            if (isSwitchingStage)
+                return;
+
+            if (ObjectiveManager.Instance.activeObjectives != null && ObjectiveManager.Instance.activeObjectives.Count > 0
+                && ObjectiveManager.Instance.activeObjectives.TrueForAll(o => o.isCompleted))
             {
-                CompleteLevel();
+                StartCoroutine(HandleStageCompleted());
             }
         }
+
         public IEnumerator TimerCoroutine()
         {
             EventManager.TriggerEvent(GameEvent.TIMER_PASSED);
-            if (timer == -1) yield break; // No timer for this level
 
-            while (!isEnded && timer >= 0)
+            while (!isEnded)
             {
                 yield return new WaitForSeconds(1f);
-                if (!isPaused)
+
+                if (timer == -1)
+                {
+                    EventManager.TriggerEvent(GameEvent.TIMER_PASSED);
+                    continue;
+                }
+
+                if (!isPaused && timer >= 0)
                 {
                     timer--;
                     EventManager.TriggerEvent(GameEvent.TIMER_PASSED);
@@ -94,8 +116,112 @@ namespace Game
             }
         }
 
-        private void ApplyLevelSettings()
+        private IEnumerator HandleStageCompleted()
         {
+            isSwitchingStage = true;
+            isPaused = true;
+
+            if (GameManager.Instance != null && GameManager.Instance.winParticle != null)
+                GameManager.Instance.winParticle.Play();
+
+            yield return PlayRemainingElementsWinAnimation();
+
+            if (currentLevelEditorIndex + 1 < levelEditors.Count)
+            {
+                RemoveLevelWinEventListener();
+                currentLevelEditorIndex++;
+                SetLevelWinEventListener();
+                yield return SwitchToCurrentStage();
+                isPaused = false;
+                isSwitchingStage = false;
+                yield break;
+            }
+
+            isPaused = false;
+            isSwitchingStage = false;
+            CompleteLevel();
+        }
+        private void RemoveLevelWinEventListener()
+        {
+            EventManager.StopListening(GetCurrentLevelEditor().specialWinEvent, OnWinEventFire);
+        }
+        private void SetLevelWinEventListener()
+        {
+            if(GetCurrentLevelEditor() == null)
+            {
+                return;
+            }
+            EventManager.StartListening(GetCurrentLevelEditor().specialWinEvent, OnWinEventFire);
+        }
+        private void OnWinEventFire(EventParam param)
+        {
+            CompleteLevel();
+        }
+        private IEnumerator SwitchToCurrentStage()
+        {
+            if (grid != null)
+            {
+                Transform root = grid.transform;
+                root.DOKill();
+                yield return root.DOScale(0.95f, stageTransitionAnimation.nextStageOutDuration).SetEase(Ease.InQuad).WaitForCompletion();
+            }
+
+            ApplyLevelSettings(true);
+
+            if (grid != null)
+            {
+                Transform root = grid.transform;
+                root.DOKill();
+                root.localScale = stageTransitionAnimation.nextStageInFromScale;
+                yield return root.DOScale(Vector3.one, stageTransitionAnimation.nextStageInDuration).SetEase(Ease.OutBack).WaitForCompletion();
+            }
+        }
+
+        private IEnumerator PlayRemainingElementsWinAnimation()
+        {
+            if (!(grid is Match3Grid match3Grid))
+                yield break;
+
+            List<GridElement> elements = match3Grid.GetAllActiveElements();
+            if (elements.Count == 0)
+                yield break;
+
+            Sequence sequence = DOTween.Sequence();
+            float duration = Mathf.Max(0.05f, stageTransitionAnimation.elementWinAnimDuration);
+
+            for (int i = 0; i < elements.Count; i++)
+            {
+                GridElement element = elements[i];
+                if (element == null) continue;
+
+                Transform t = element.transform;
+                t.DOKill();
+
+                Sequence perElement = DOTween.Sequence();
+                perElement.Append(t.DOPunchScale(stageTransitionAnimation.elementWinPunchScale, duration, 8, 0.8f));
+                perElement.Join(t.DOLocalMoveY(t.localPosition.y + stageTransitionAnimation.elementWinMoveUp, duration)
+                    .SetLoops(2, LoopType.Yoyo)
+                    .SetEase(Ease.InOutSine));
+
+                sequence.Insert(i * stageTransitionAnimation.elementWinAnimStagger, perElement);
+            }
+
+            yield return sequence.WaitForCompletion();
+        }
+
+        private void ApplyLevelSettings(bool rebuildGrid)
+        {
+            LevelEditor currentEditor = GetCurrentLevelEditor();
+            if (currentEditor == null)
+            {
+                Debug.LogError("[LevelScene_Match3Game] No valid LevelEditor found in levelEditors list.");
+                return;
+            }
+
+            objectives = CloneObjectives(currentEditor.objectives);
+            targetElement = currentEditor.targetElement;
+            timer = currentEditor.timer;
+
             if (grid == null)
             {
                 return;
@@ -104,10 +230,50 @@ namespace Game
             ObjectiveManager.Instance.activeObjectives = objectives;
             ObjectiveManager.Instance.InitializeObjectives();
             EventManager.TriggerEvent(GameEvent.OBJECTIVES_INITIALIZED);
-            grid.ConfigureLevelSettings(levelCreationMode, levelEditor, proceduralGeneration, proceduralGridSize);
+
+            if (rebuildGrid)
+            {
+                grid.RebuildWithSettings(currentEditor.levelCreationMode, currentEditor, currentEditor.proceduralGeneration, currentEditor.gridSize);
+            }
+            else
+            {
+                grid.ConfigureLevelSettings(currentEditor.levelCreationMode, currentEditor, currentEditor.proceduralGeneration, currentEditor.gridSize);
+            }
         }
 
-        private bool UseLevelEditor => levelCreationMode == Grid3D.LevelCreationMode.LevelEditor;
-        private bool UseProcedural => levelCreationMode == Grid3D.LevelCreationMode.Procedural;
+        private LevelEditor GetCurrentLevelEditor()
+        {
+            if (levelEditors == null || levelEditors.Count == 0)
+                return null;
+
+            if (currentLevelEditorIndex < 0 || currentLevelEditorIndex >= levelEditors.Count)
+                return null;
+
+            return levelEditors[currentLevelEditorIndex];
+        }
+
+        private static List<Objective> CloneObjectives(List<Objective> source)
+        {
+            List<Objective> cloned = new List<Objective>();
+            if (source == null)
+                return cloned;
+
+            for (int i = 0; i < source.Count; i++)
+            {
+                Objective objective = source[i];
+                if (objective == null)
+                    continue;
+
+                cloned.Add(new Objective
+                {
+                    objectiveType = objective.objectiveType,
+                    scriptableObjectParameter = objective.scriptableObjectParameter,
+                    requiredCount = objective.requiredCount,
+                    isCompleted = false,
+                });
+            }
+
+            return cloned;
+        }
     }
 }
