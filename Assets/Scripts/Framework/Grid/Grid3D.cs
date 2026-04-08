@@ -81,10 +81,56 @@ namespace Game
 
         public void RebuildWithSettings(LevelCreationMode mode, LevelEditor editor, ProceduralGenerationSettings settings, Vector2Int proceduralGridSize)
         {
+            bool hadPreviousCenter = TryGetGeneratedTilesCenter(out Vector3 previousCenter);
+
             ConfigureLevelSettings(mode, editor, settings, proceduralGridSize);
             ClearGeneratedRuntimeObjects();
 
             Init();
+
+            if (hadPreviousCenter && parent != null && TryGetGeneratedTilesCenter(out Vector3 newCenter))
+            {
+                Vector3 offset = previousCenter - newCenter;
+                parent.position += offset;
+            }
+        }
+
+        private bool TryGetGeneratedTilesCenter(out Vector3 center)
+        {
+            center = Vector3.zero;
+
+            if (generatedTiles == null || generatedTiles.Count == 0)
+                return false;
+
+            bool hasAny = false;
+            Vector3 min = Vector3.zero;
+            Vector3 max = Vector3.zero;
+
+            foreach (var kvp in generatedTiles)
+            {
+                GridCellController tile = kvp.Value;
+                if (tile == null)
+                    continue;
+
+                Vector3 pos = tile.transform.position;
+                if (!hasAny)
+                {
+                    min = pos;
+                    max = pos;
+                    hasAny = true;
+                }
+                else
+                {
+                    min = Vector3.Min(min, pos);
+                    max = Vector3.Max(max, pos);
+                }
+            }
+
+            if (!hasAny)
+                return false;
+
+            center = (min + max) * 0.5f;
+            return true;
         }
 
         private void ClearGeneratedRuntimeObjects()
