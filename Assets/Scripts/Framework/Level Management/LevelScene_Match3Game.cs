@@ -54,6 +54,9 @@ namespace Game
 
         private int currentLevelEditorIndex;
         private bool isSwitchingStage;
+        private bool stageCompletionPending;
+        private bool stageCompletionGridStable;
+        private bool stageCompletionRoutineRunning;
 
         public bool AllowDiscoBallCreation => allowDiscoBallCreation;
         public bool AllowRocketCreation => allowRocketCreation;
@@ -69,10 +72,12 @@ namespace Game
         private void OnEnable()
         {
             EventManager.StartListening(GameEvent.OBJECTIVE_COMPLETED, OnObjectiveCompleted);
+            EventManager.StartListening(GameEvent.GRID_STABLE, OnGridStable);
         }
         private void OnDisable()
         {
             EventManager.StopListening(GameEvent.OBJECTIVE_COMPLETED, OnObjectiveCompleted);
+            EventManager.StopListening(GameEvent.GRID_STABLE, OnGridStable);
         }
         private void OnObjectiveCompleted(EventParam param)
         {
@@ -82,8 +87,40 @@ namespace Game
             if (ObjectiveManager.Instance.activeObjectives != null && ObjectiveManager.Instance.activeObjectives.Count > 0
                 && ObjectiveManager.Instance.activeObjectives.TrueForAll(o => o.isCompleted))
             {
+                stageCompletionPending = true;
+                stageCompletionGridStable = false;
+
+                if (!stageCompletionRoutineRunning)
+                    StartCoroutine(BeginStageCompletionWhenReady());
+            }
+        }
+
+        private void OnGridStable(EventParam param)
+        {
+            if (!stageCompletionPending)
+                return;
+
+            stageCompletionGridStable = true;
+        }
+
+        private IEnumerator BeginStageCompletionWhenReady()
+        {
+            stageCompletionRoutineRunning = true;
+
+            float waitTimeout = 1f;
+            while (!isEnded && !stageCompletionGridStable && waitTimeout > 0f)
+            {
+                waitTimeout -= Time.deltaTime;
+                yield return null;
+            }
+
+            if (stageCompletionPending && !isSwitchingStage && !isEnded)
+            {
+                stageCompletionPending = false;
                 StartCoroutine(HandleStageCompleted());
             }
+
+            stageCompletionRoutineRunning = false;
         }
 
         public IEnumerator TimerCoroutine()
