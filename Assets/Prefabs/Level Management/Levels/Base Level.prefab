@@ -313,9 +313,13 @@ MonoBehaviour:
     elementWinAnimStagger: 0.01
     elementWinPunchScale: {x: 0.25, y: 0.25, z: 0}
     elementWinMoveUp: 0.35
-    nextStageOutDuration: 1
-    nextStageInDuration: 0.35
-    nextStageInFromScale: {x: 0.88, y: 0.88, z: 1}
+    previousStageElementOutDuration: 0.2
+    previousStageElementOutStagger: 0.004
+    previousStageElementOutRotateZ: 120
+    previousStageElementOutScale: {x: 0, y: 0, z: 0}
+    newStageElementDropFromY: 5
+    newStageElementDropDuration: 0.5
+    newStageElementDropStagger: 0.006
 --- !u!1 &5642222179130585919
 GameObject:
   m_ObjectHideFlags: 0

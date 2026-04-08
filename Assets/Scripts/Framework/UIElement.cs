@@ -12,12 +12,12 @@ public abstract class UIElement : MonoBehaviour
     public List<GameEvent> fireEvents;
     public float triggerLatency = 0.2f;
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
         initEvents.ForEach(initEvent => EventManager.StartListening(initEvent, OnInitEvent));
         fireEvents.ForEach(fireEvent => EventManager.StartListening(fireEvent, OnFireEvent));
     }
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
         initEvents.ForEach(initEvent => EventManager.StopListening(initEvent, OnInitEvent));
         fireEvents.ForEach(fireEvent => EventManager.StopListening(fireEvent, OnFireEvent));

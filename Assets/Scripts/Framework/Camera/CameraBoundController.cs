@@ -12,17 +12,19 @@ namespace Game
         public Vector2 MaxBounds { get; private set; }
 
         private Coroutine refreshRoutine;
+        private bool hasCalibrated;
+        private int lastGridCellCount = -1;
 
         private void OnEnable()
         {
-            EventManager.StartListening(GameEvent.GRID_INITIALIZED, OnGameInitialized);
-            EventManager.StartListening(GameEvent.LEVEL_STARTED, OnGameInitialized);
+            EventManager.StartListening(GameEvent.GRID_INITIALIZED, OnGridInitialized);
+            EventManager.StartListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
         }
 
         private void OnDisable()
         {
-            EventManager.StopListening(GameEvent.GRID_INITIALIZED, OnGameInitialized);
-            EventManager.StopListening(GameEvent.LEVEL_STARTED, OnGameInitialized);
+            EventManager.StopListening(GameEvent.GRID_INITIALIZED, OnGridInitialized);
+            EventManager.StopListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
 
             if (refreshRoutine != null)
             {
@@ -31,7 +33,31 @@ namespace Game
             }
         }
 
-        private void OnGameInitialized(EventParam _)
+        private void OnLevelStarted(EventParam _)
+        {
+            if (!hasCalibrated)
+            {
+                RequestRefresh();
+            }
+        }
+
+        private void OnGridInitialized(EventParam param)
+        {
+            int gridCellCount = param != null ? param.paramInt : -1;
+            if (hasCalibrated && gridCellCount > 0 && gridCellCount == lastGridCellCount)
+            {
+                return;
+            }
+
+            if (gridCellCount > 0)
+            {
+                lastGridCellCount = gridCellCount;
+            }
+
+            RequestRefresh();
+        }
+
+        private void RequestRefresh()
         {
             if (refreshRoutine != null)
             {
@@ -112,6 +138,7 @@ namespace Game
             float sizeFromWidth = (boundsWidth * 0.5f) / aspect;
 
             mainCamera.orthographicSize = Mathf.Max(sizeFromHeight, sizeFromWidth);
+            hasCalibrated = true;
         }
     }
 }

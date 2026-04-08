@@ -20,6 +20,18 @@ public class UpperPanelUI : UIElement
 
     private List<ObjectiveUINode> objectiveNodes = new List<ObjectiveUINode>();
 
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        EventManager.StartListening(GameEvent.OBJECTIVES_INITIALIZED, OnObjectivesInitialized);
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        EventManager.StopListening(GameEvent.OBJECTIVES_INITIALIZED, OnObjectivesInitialized);
+    }
+
     public override void InitUI()
     {
         InstantiateObjectiveNodes();
@@ -35,6 +47,9 @@ public class UpperPanelUI : UIElement
     {
         objectiveNodes.ForEach(node => Destroy(node.gameObject));
         objectiveNodes.Clear();
+
+        if (objectiveManager == null || objectiveManager.activeObjectives == null)
+            return;
 
         objectiveManager.activeObjectives.ForEach(objective => {
             ObjectiveUINode node = Instantiate(objectiveNodePrefab, transform);
@@ -103,6 +118,11 @@ public class UpperPanelUI : UIElement
     {
         TimeSpan timeSpan = TimeSpan.FromSeconds(elapsedTime);
         return string.Format("{0:D2}:{1:D2}", timeSpan.Minutes, timeSpan.Seconds);
+    }
+
+    private void OnObjectivesInitialized(EventParam param)
+    {
+        InstantiateObjectiveNodes();
     }
 
 }

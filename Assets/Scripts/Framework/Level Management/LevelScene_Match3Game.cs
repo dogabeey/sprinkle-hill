@@ -20,9 +20,14 @@ namespace Game
             public Vector3 elementWinPunchScale = new Vector3(0.25f, 0.25f, 0f);
             public float elementWinMoveUp = 0.35f;
 
-            public float nextStageOutDuration = 0.2f;
-            public float nextStageInDuration = 0.35f;
-            public Vector3 nextStageInFromScale = new Vector3(0.88f, 0.88f, 1f);
+            public float previousStageElementOutDuration = 0.2f;
+            public float previousStageElementOutStagger = 0.008f;
+            public float previousStageElementOutRotateZ = 120f;
+            public Vector3 previousStageElementOutScale = new Vector3(0.05f, 0.05f, 0.05f);
+
+            public float newStageElementDropFromY = 2.5f;
+            public float newStageElementDropDuration = 0.28f;
+            public float newStageElementDropStagger = 0.006f;
         }
 
         [HideInInspector] public List<Objective> objectives = new List<Objective>();
@@ -196,22 +201,74 @@ namespace Game
         }
         private IEnumerator SwitchToCurrentStage()
         {
-            if (grid != null)
-            {
-                Transform root = grid.transform;
-                root.DOKill();
-                yield return root.DOScale(0.95f, stageTransitionAnimation.nextStageOutDuration).SetEase(Ease.InQuad).WaitForCompletion();
-            }
+            yield return PlayPreviousStageElementsOutAnimation();
 
             ApplyLevelSettings(true);
 
-            if (grid != null)
+            yield return PlayNewStageElementsDropAnimation();
+        }
+
+        private IEnumerator PlayPreviousStageElementsOutAnimation()
+        {
+            if (!(grid is Match3Grid match3Grid))
+                yield break;
+
+            List<GridElement> elements = match3Grid.GetAllActiveElements();
+            if (elements.Count == 0)
+                yield break;
+
+            float duration = Mathf.Max(0.05f, stageTransitionAnimation.previousStageElementOutDuration);
+            Sequence sequence = DOTween.Sequence();
+
+            for (int i = 0; i < elements.Count; i++)
             {
-                Transform root = grid.transform;
-                root.DOKill();
-                root.localScale = stageTransitionAnimation.nextStageInFromScale;
-                yield return root.DOScale(Vector3.one, stageTransitionAnimation.nextStageInDuration).SetEase(Ease.OutBack).WaitForCompletion();
+                GridElement element = elements[i];
+                if (element == null)
+                    continue;
+
+                Transform t = element.transform;
+                t.DOKill();
+
+                Sequence perElement = DOTween.Sequence();
+                perElement.Join(t.DOScale(stageTransitionAnimation.previousStageElementOutScale, duration).SetEase(Ease.InBack));
+                perElement.Join(t.DOLocalRotate(new Vector3(0f, 0f, stageTransitionAnimation.previousStageElementOutRotateZ), duration, RotateMode.FastBeyond360)
+                    .SetEase(Ease.InQuad)
+                    .SetRelative());
+
+                sequence.Insert(i * stageTransitionAnimation.previousStageElementOutStagger, perElement);
             }
+
+            yield return sequence.WaitForCompletion();
+        }
+
+        private IEnumerator PlayNewStageElementsDropAnimation()
+        {
+            if (!(grid is Match3Grid match3Grid))
+                yield break;
+
+            List<GridElement> elements = match3Grid.GetAllActiveElements();
+            if (elements.Count == 0)
+                yield break;
+
+            float duration = Mathf.Max(0.05f, stageTransitionAnimation.newStageElementDropDuration);
+            Sequence sequence = DOTween.Sequence();
+
+            for (int i = 0; i < elements.Count; i++)
+            {
+                GridElement element = elements[i];
+                if (element == null)
+                    continue;
+
+                Transform t = element.transform;
+                t.DOKill();
+                Vector3 endLocalPos = t.localPosition;
+                t.localPosition = endLocalPos + Vector3.up * stageTransitionAnimation.newStageElementDropFromY;
+
+                sequence.Insert(i * stageTransitionAnimation.newStageElementDropStagger,
+                    t.DOLocalMove(endLocalPos, duration).SetEase(Ease.OutBounce));
+            }
+
+            yield return sequence.WaitForCompletion();
         }
 
         private IEnumerator PlayRemainingElementsWinAnimation()
