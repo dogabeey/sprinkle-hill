@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionBarViewPrefab: {fileID: 230861821462889445, guid: 9e234be0c7761a34aaf9d63c420f9995, type: 3}
   actionBarItemList:
+  - rid: 5000171156985086083
   - rid: 943281644091474204
   - rid: 3084495758061469768
   - rid: 943281644091474012
@@ -63,7 +64,7 @@ MonoBehaviour:
         actionSuccessParticle: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
         startingCount: 10
         unlockedLevel: 5
-        unlockableFeature:
+        tiedFeature:
           featureName: Add Time
           unlockedLevelIndex: 5
           icon: {fileID: -238066524, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
@@ -76,7 +77,7 @@ MonoBehaviour:
         actionSuccessParticle: {fileID: 6553830495741696104, guid: f0c3336913e261f479ba003744aaa6ec, type: 3}
         startingCount: 10
         unlockedLevel: 15
-        unlockableFeature:
+        tiedFeature:
           featureName: Candy Bar
           unlockedLevelIndex: 15
           icon: {fileID: 524596139, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
@@ -88,7 +89,7 @@ MonoBehaviour:
         actionSuccessParticle: {fileID: 6553830495741696104, guid: 1ea5b88013b271144a852e3fdd2cc75b, type: 3}
         startingCount: 10
         unlockedLevel: 10
-        unlockableFeature:
+        tiedFeature:
           featureName: Bomb Feature
           unlockedLevelIndex: 10
           icon: {fileID: -1949253524, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
@@ -100,7 +101,19 @@ MonoBehaviour:
         actionSuccessParticle: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
         startingCount: 10
         unlockedLevel: 0
-        unlockableFeature:
+        tiedFeature:
           featureName: 
           unlockedLevelIndex: 0
           icon: {fileID: 0}
+    - rid: 5000171156985086083
+      type: {class: PlaceRocketAction, ns: Game, asm: Assembly-CSharp}
+      data:
+        actionBarIcon: {fileID: 433923414, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
+        costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
+        actionSuccessParticle: {fileID: 0}
+        startingCount: 10
+        unlockedLevel: 20
+        tiedFeature:
+          featureName: Rocket
+          unlockedLevelIndex: 20
+          icon: {fileID: 433923414, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}

@@ -48,9 +48,12 @@ MonoBehaviour:
   - featureName: Add Time
     unlockedLevelIndex: 5
     icon: {fileID: -238066524, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
-  - featureName: Bomb Feature
+  - featureName: Bomb
     unlockedLevelIndex: 10
     icon: {fileID: -1949253524, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
   - featureName: Candy Bar
     unlockedLevelIndex: 15
     icon: {fileID: 524596139, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
+  - featureName: Rocket
+    unlockedLevelIndex: 20
+    icon: {fileID: 433923414, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
