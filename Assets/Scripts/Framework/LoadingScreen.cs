@@ -18,6 +18,7 @@ namespace Game
         {
             screenContainer.alpha = 1f;
             screenContainer.blocksRaycasts = false;
+            fillBar.fillAmount = 0f;
             fillBar.DOFillAmount(1, GameManager.Instance.constantManager.loadingScreenDuration).OnComplete(() =>
 
             DOVirtual.Float(1, 0, 0.25f, (float value) =>

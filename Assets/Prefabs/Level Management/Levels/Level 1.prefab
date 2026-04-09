@@ -147,6 +147,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: 'levelEditors.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: c7000b6093cdccc489d7d4187b9af489, type: 2}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: 'levelEditors.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: c681c657bfa992d4488aa1a5fe4f23d3, type: 2}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: proceduralGeneration.triangleWidth
       value: 0
       objectReference: {fileID: 0}

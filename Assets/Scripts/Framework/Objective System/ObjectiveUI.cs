@@ -67,17 +67,12 @@ public class UpperPanelUI : UIElement
             node.Initialize(objective);
             objectiveNodes.Add(node);
         });
+
+        UpdateObjectivesContainerVisibility();
     }
     private void UpdateObjectiveNodes()
     {
-        if(objectiveNodes == null || objectiveNodes.Count == 0)
-        {
-            objectivesContainer.alpha = 0f;
-        }
-        else
-        {
-            objectivesContainer.alpha = 1f;
-        }
+        UpdateObjectivesContainerVisibility();
 
         objectiveNodes.ForEach(node =>
         {
@@ -85,6 +80,18 @@ public class UpperPanelUI : UIElement
             int currentCount = objectiveManager.GetCurrentCount(objective);
             node.UpdateNode(currentCount);
         });
+    }
+
+    private void UpdateObjectivesContainerVisibility()
+    {
+        if (objectiveManager.activeObjectives == null || objectiveManager.activeObjectives.Count == 0)
+        {
+            objectivesContainer.alpha = 0f;
+        }
+        else
+        {
+            objectivesContainer.alpha = 1f;
+        }
     }
 
     public IEnumerator UpdateTimerCoroutine()
