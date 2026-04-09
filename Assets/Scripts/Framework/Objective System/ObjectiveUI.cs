@@ -11,12 +11,23 @@ using UnityEngine.UI;
 
 public class UpperPanelUI : UIElement
 {
+    public enum TimerType
+    {
+        Countdown,
+        Stopwatch
+    }
+
+
     public ObjectiveManager objectiveManager;
     [AssetsOnly]
     public ObjectiveUINode objectiveNodePrefab;
+    public CanvasGroup objectivesContainer;
     public Image targetIcon;
     public Image targetIconPlaceholder;
     public TMP_Text timerText;
+    [Header("Timer Settings")]
+    public TimerType timerType = TimerType.Countdown;
+    public string timerFormat = "{0:D2}:{1:D2}";
 
     private List<ObjectiveUINode> objectiveNodes = new List<ObjectiveUINode>();
 
@@ -59,7 +70,17 @@ public class UpperPanelUI : UIElement
     }
     private void UpdateObjectiveNodes()
     {
-        objectiveNodes.ForEach(node => {
+        if(objectiveNodes == null || objectiveNodes.Count == 0)
+        {
+            objectivesContainer.alpha = 0f;
+        }
+        else
+        {
+            objectivesContainer.alpha = 1f;
+        }
+
+        objectiveNodes.ForEach(node =>
+        {
             Objective objective = node.referenceObjective;
             int currentCount = objectiveManager.GetCurrentCount(objective);
             node.UpdateNode(currentCount);
@@ -82,7 +103,7 @@ public class UpperPanelUI : UIElement
             else
             {
                 timerText.enableAutoSizing = false;
-                timerText.text = timer > 0 ? FormatTime(timer) : "00:00";
+                timerText.text = timer > 0 ? FormatTime(timer) : string.Format(timerFormat, 0, 0);
             }
 
             if (levelScene.isEnded)
@@ -117,7 +138,15 @@ public class UpperPanelUI : UIElement
     private string FormatTime(float elapsedTime)
     {
         TimeSpan timeSpan = TimeSpan.FromSeconds(elapsedTime);
-        return string.Format("{0:D2}:{1:D2}", timeSpan.Minutes, timeSpan.Seconds);
+        switch (timerType)
+        {
+            case TimerType.Countdown:
+                return string.Format(timerFormat, elapsedTime);
+            case TimerType.Stopwatch:
+                return string.Format(timerFormat, timeSpan.Minutes, timeSpan.Seconds);
+            default:
+                return string.Format(timerFormat, timeSpan.Minutes, timeSpan.Seconds);
+        }
     }
 
     private void OnObjectivesInitialized(EventParam param)

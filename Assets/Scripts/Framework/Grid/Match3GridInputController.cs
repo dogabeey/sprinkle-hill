@@ -21,7 +21,8 @@ namespace Game
         {
             None,
             Bomb,
-            DiscoBall
+            DiscoBall,
+            Rocket
         }
 
         private void Awake()
@@ -224,6 +225,12 @@ namespace Game
             isPlacementReady = false;
         }
 
+        public void BeginRocketPlacement()
+        {
+            pendingPlacementAction = PendingPlacementAction.Rocket;
+            isPlacementReady = false;
+        }
+
         private void TryPlacePendingAction()
         {
             Camera cam = inputCamera != null ? inputCamera : Camera.main;
@@ -260,6 +267,10 @@ namespace Game
             {
                 StartCoroutine(DiscoBallPlacementRoutine(cell.Coordinates));
             }
+            else if (actionToPlace == PendingPlacementAction.Rocket)
+            {
+                StartCoroutine(RocketPlacementRoutine(cell.Coordinates));
+            }
         }
 
         private IEnumerator BombPlacementRoutine(Vector2Int center)
@@ -277,6 +288,33 @@ namespace Game
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: "Bomb Placement"));
             yield return StartCoroutine(match3Grid.ClearAreaAt(center, 1));
             yield return StartCoroutine(match3Grid.ApplyGravityPublic());
+            isProcessing = false;
+        }
+
+        private IEnumerator RocketPlacementRoutine(Vector2Int center)
+        {
+            isProcessing = true;
+
+            PlaceRocketAction rocketAction = GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is PlaceRocketAction) as PlaceRocketAction;
+            if (rocketAction == null)
+            {
+                isProcessing = false;
+                yield break;
+            }
+
+            GridCell selectedCell = match3Grid.GetCellPublic(center);
+            if (selectedCell == null || selectedCell.cellType != CellType.Normal || selectedCell.elementInfo == null ||
+                selectedCell.elementInfo.powerUpType != ElementPowerUpType.None || selectedCell.elementInfo.elementData == null)
+            {
+                isProcessing = false;
+                yield break;
+            }
+
+            rocketAction.CurrentCount--;
+            yield return StartCoroutine(rocketAction.RocketThrowAnim(match3Grid.GetCellPositionInGrid(center)));
+            EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: rocketAction.ActionName));
+            yield return StartCoroutine(match3Grid.PlaceHorizontalRocketActionAt(center));
+
             isProcessing = false;
         }
 

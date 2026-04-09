@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Game
@@ -73,7 +74,8 @@ namespace Game
     {
         public int unlockedLevel;
         [ValueDropdown("GetAllFeatures")]
-        public UnlockableFeature unlockableFeature; // This is used to determine whether the action is unlocked or not. If the feature is unlocked, the action will be available regardless of the level requirement.
+        [FormerlySerializedAs("unlockableFeature")]
+        public UnlockableFeature tiedFeature; // This is used to determine whether the action is unlocked or not. If the feature is unlocked, the action will be available regardless of the level requirement.
 
         private IEnumerable GetAllFeatures()
         {
@@ -111,7 +113,7 @@ namespace Game
 
         public override bool IsAvailable()
         {
-            return World.Instance.lastPlayedLevelIndex >= unlockedLevel || (unlockableFeature != null && unlockableFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex));
+            return World.Instance.lastPlayedLevelIndex >= unlockedLevel || (tiedFeature != null && tiedFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex));
         }
 
         public override void OnClick()
@@ -168,7 +170,7 @@ namespace Game
 
         public override bool IsAvailable()
         {
-            return World.Instance.lastPlayedLevelIndex >= unlockedLevel || (unlockableFeature != null && unlockableFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex));
+            return World.Instance.lastPlayedLevelIndex >= unlockedLevel || (tiedFeature != null && tiedFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex));
         }
 
         public override void OnClick()
@@ -214,7 +216,7 @@ namespace Game
 
         public override bool IsVisible() => true;
 
-        public override bool IsAvailable() => World.Instance.lastPlayedLevelIndex >= unlockedLevel || (unlockableFeature != null && unlockableFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex));
+        public override bool IsAvailable() => World.Instance.lastPlayedLevelIndex >= unlockedLevel || (tiedFeature != null && tiedFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex));
 
         public override void OnClick()
         {
@@ -255,7 +257,7 @@ namespace Game
 
         public override bool IsVisible() => true;
 
-        public override bool IsAvailable() => World.Instance.lastPlayedLevelIndex >= unlockedLevel || (unlockableFeature != null && unlockableFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex));
+        public override bool IsAvailable() => World.Instance.lastPlayedLevelIndex >= unlockedLevel || (tiedFeature != null && tiedFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex));
         
         public override void OnClick()
         {
@@ -266,6 +268,46 @@ namespace Game
         }
 
         public IEnumerator DiscoBallThrowAnim(Vector3 targetCellLocation)
+        {
+            Vector3 actionPos = GameManager.Instance.actionBarManager.GetActionBarView(this).transform.position;
+            actionPos.z = targetCellLocation.z;
+            ParticleSystem particle = GameObject.Instantiate(actionSuccessParticle, actionPos, Quaternion.identity);
+            yield return particle.transform.DOMove(targetCellLocation, 0.5f).SetEase(Ease.Linear).WaitForCompletion();
+            GameObject.Destroy(particle.gameObject);
+        }
+
+        private Match3GridInputController GetInputController()
+        {
+            return UnityEngine.Object.FindObjectOfType<Match3GridInputController>();
+        }
+    }
+
+    [Serializable]
+    public class PlaceRocketAction : BonusPremiumAction
+    {
+        public override string ActionName => "Place Rocket";
+        public override float BaseCost => 0;
+        public override float CostIncrement => 0;
+        public override float CostAcceleration => 0;
+        public override string VisibilityExplanation => "";
+        public override string ClickabilityExplanation => "";
+        public override string AvailabilityExplanation => $"Level {unlockedLevel}";
+
+        public override int GetCost() => 0;
+
+        public override bool IsVisible() => true;
+
+        public override bool IsAvailable() => World.Instance.lastPlayedLevelIndex >= unlockedLevel || (tiedFeature != null && tiedFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex));
+
+        public override void OnClick()
+        {
+            Match3GridInputController inputController = GetInputController();
+            if (inputController == null) return;
+
+            inputController.BeginRocketPlacement();
+        }
+
+        public IEnumerator RocketThrowAnim(Vector3 targetCellLocation)
         {
             Vector3 actionPos = GameManager.Instance.actionBarManager.GetActionBarView(this).transform.position;
             actionPos.z = targetCellLocation.z;
