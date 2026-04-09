@@ -329,14 +329,48 @@ namespace Game
             ObjectiveManager.Instance.InitializeObjectives();
             EventManager.TriggerEvent(GameEvent.OBJECTIVES_INITIALIZED);
 
+            Grid3D.ProceduralGenerationSettings proceduralSettings = CreateRuntimeProceduralSettings(currentEditor);
+
             if (rebuildGrid)
             {
-                grid.RebuildWithSettings(currentEditor.levelCreationMode, currentEditor, currentEditor.proceduralGeneration, currentEditor.gridSize);
+                grid.RebuildWithSettings(currentEditor.levelCreationMode, currentEditor, proceduralSettings, currentEditor.gridSize);
             }
             else
             {
-                grid.ConfigureLevelSettings(currentEditor.levelCreationMode, currentEditor, currentEditor.proceduralGeneration, currentEditor.gridSize);
+                grid.ConfigureLevelSettings(currentEditor.levelCreationMode, currentEditor, proceduralSettings, currentEditor.gridSize);
             }
+        }
+
+        private static Grid3D.ProceduralGenerationSettings CreateRuntimeProceduralSettings(LevelEditor levelEditor)
+        {
+            Grid3D.ProceduralGenerationSettings source = levelEditor != null ? levelEditor.proceduralGeneration : null;
+            Grid3D.ProceduralGenerationSettings settings = new Grid3D.ProceduralGenerationSettings();
+
+            if (source != null)
+            {
+                settings.useRandomSeed = source.useRandomSeed;
+                settings.seed = source.seed;
+                settings.emptyCellChance = source.emptyCellChance;
+                settings.breakableWallPlacementMode = source.breakableWallPlacementMode;
+                settings.triangleWidth = source.triangleWidth;
+                settings.triangleDecrement = source.triangleDecrement;
+                settings.rectangleStart = source.rectangleStart;
+                settings.rectangleEnd = source.rectangleEnd;
+                settings.hiddenBoxChance = source.hiddenBoxChance;
+            }
+
+            settings.elementPool = new List<ElementData>();
+
+            if (levelEditor != null && levelEditor.ElementPool != null && levelEditor.ElementPool.Count > 0)
+            {
+                settings.elementPool.AddRange(levelEditor.ElementPool);
+            }
+            else if (source != null && source.elementPool != null)
+            {
+                settings.elementPool.AddRange(source.elementPool);
+            }
+
+            return settings;
         }
 
         private LevelEditor GetCurrentLevelEditor()

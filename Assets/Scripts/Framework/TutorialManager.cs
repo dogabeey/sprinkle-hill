@@ -22,6 +22,8 @@ namespace Game
             public bool disablesActionBar = true;
             [Tooltip("-1 means any level. Otherwise this step only runs when lastPlayedLevelIndex equals this value.")]
             public int requiredLevelIndex = -1;
+            [Tooltip("-1 means any stage. Otherwise this step only runs when currentStageIndex equals this value.")]
+            public int requiredStageIndex = -1;
             [SerializeReference]
             public TutorialAnimation tutorialAnimation;
             [SerializeReference]
@@ -36,8 +38,10 @@ namespace Game
             public EventParams completionEventExpectedParams;
             [ShowIf(nameof(IsAdvancedMode))]
             public EventParam completionEventExpectedParamValues;
-            public UnityAction onStart;
-            public UnityAction onComplete;
+            [FoldoutGroup("Custom Events")]
+            public UnityEvent onStart;
+            [FoldoutGroup("Custom Events")]
+            public UnityEvent onComplete;
             public Transform animationObjectParent; // Parent for tutorial animation objects that is set at tutorialAnimation.tutorialObject. If null, animations will be parented to the first canvas in the scene.
             [SerializeReference]
             [GUIColor(nameof(GetNextStepColor))]
@@ -71,9 +75,9 @@ namespace Game
         }
 
         public List<TutorialStep> tutorialSteps = new List<TutorialStep>();
-
+        public float directiveParentHeight;
         public TMP_Text directiveText;
-        public Transform directiveParent;
+        public RectTransform directiveParent;
         [Tooltip("Assign the TutorialHighlightOverlay component. Leave null to skip highlighting.")]
         public TutorialHighlightOverlay highlightOverlay;
 
@@ -262,6 +266,7 @@ namespace Game
             if (_isLevelEnded) return;
             if (step == null || step.isCompleted || step.isStarted) return;
             if (!IsStepEligibleForCurrentLevel(step)) return;
+            if (!IsStepEligibleForCurrentStage(step)) return;
 
             step.isStarted = true;
             _activeStep = step;
@@ -319,12 +324,25 @@ namespace Game
             return World.Instance.lastPlayedLevelIndex == step.requiredLevelIndex;
         }
 
+        private static bool IsStepEligibleForCurrentStage(TutorialStep step)
+        {
+            if (step == null || step.requiredStageIndex < 0)
+                return true;
+
+            LevelScene_Match3Game levelScene = World.Instance != null ? World.Instance.CurrentLevel as LevelScene_Match3Game : null;
+            if (levelScene == null)
+                return false;
+
+            return levelScene.CurrentStageIndex == step.requiredStageIndex;
+        }
+
         public void ShowDirective(TutorialStep step)
         {
             if (directiveText != null)
             {
                 directiveText.text = step.directive;
                 directiveParent.gameObject.SetActive(true);
+                directiveParent.anchoredPosition = new Vector2(directiveParent.anchoredPosition.x, directiveParentHeight);
             }
         }
         public void ClearDirective()
