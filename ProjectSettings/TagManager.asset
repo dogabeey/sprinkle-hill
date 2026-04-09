@@ -8,6 +8,8 @@ TagManager:
   - Light
   - Shadow
   - TempCamera
+  - ObjectiveUI
+  - ObjectiveNodeUI
   layers:
   - Default
   - TransparentFX

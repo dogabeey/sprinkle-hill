@@ -2678,6 +2678,30 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: tutorialSteps.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: 'tutorialSteps.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: d5b5a3024be19a24ab5c9cb38c1238ad, type: 2}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: 'tutorialSteps.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: b71aef537cde7dc47a731839858a4b86, type: 2}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: 'tutorialSteps.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: beab77d328698014dbbc481afce5067d, type: 2}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: 'tutorialSteps.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 65174ccb315f4db4c82f97eb251aae3b, type: 2}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: 'tutorialSteps.Array.data[4]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 330c286938e423543bdbdc65e9090038, type: 2}
     - target: {fileID: 5195539440205897226, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

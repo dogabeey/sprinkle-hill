@@ -424,11 +424,35 @@ namespace Game
     }
 
     /// <summary>
-    /// Highlight selector that allows manually specifying a list of GameObjects to highlight. This can be used for tutorial steps or specific scenarios where you want to highlight certain objects without relying on game logic.
+    /// Highlights all GameObjects in the scene that have any of the specified tags. This can be useful for drawing attention to certain types of objects or areas in the game world during tutorials or specific gameplay scenarios.
     /// </summary>
-    public class SelectedSceneObjects_Highlight : HighlightSelector
+    public class SelectedTags_Highlight : HighlightSelector
     {
-        public List<GameObject> selectedObjects;
-        public override GameObject[] HighlightedObjects => selectedObjects.ToArray();
+        [ValueDropdown(nameof(GetAllTags))]
+        public List<string> selectedTags;
+        public override GameObject[] HighlightedObjects
+        {
+            get
+            {
+                List<GameObject> highlightedObjects = new List<GameObject>();
+                foreach (string tag in selectedTags)
+                {
+                    GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag(tag);
+                    highlightedObjects.AddRange(objectsWithTag);
+                }
+                Debug.Log($"SelectedTags_Highlight: Found {highlightedObjects.Count} objects with tags: {string.Join(", ", selectedTags)}");
+                return highlightedObjects.ToArray();
+            }
+        }
+
+        private IEnumerable GetAllTags()
+        {
+            List<string> allTags = new List<string>();
+            for (int i = 0; i < UnityEditorInternal.InternalEditorUtility.tags.Length; i++)
+            {
+                allTags.Add(UnityEditorInternal.InternalEditorUtility.tags[i]);
+            }
+            return allTags;
+        }
     }
 }
