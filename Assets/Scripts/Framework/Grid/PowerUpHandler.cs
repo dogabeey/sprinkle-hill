@@ -121,7 +121,7 @@ namespace Game
                                 // Skip if this position was already claimed by a higher-priority power-up
                                 if (claimedPositions != null && claimedPositions.Contains(sp)) { found = true; break; }
                                 if (used.Add(sp))
-                                    spawns.Add(new SpawnRequest { position = sp, sourceData = src, powerUpType = ElementPowerUpType.HorizontalRocket });
+                                    spawns.Add(new SpawnRequest { position = sp, sourceData = src, powerUpType = ElementPowerUpType.VerticalRocket }); // horizontal run spawns vertical rocket, and vice versa, to encourage more interesting cascades
                                 found = true; break;
                             }
                             run = 0; runPos.Clear();
@@ -146,7 +146,7 @@ namespace Game
                                 // Skip if this position was already claimed by a higher-priority power-up
                                 if (claimedPositions != null && claimedPositions.Contains(sp)) { found = true; break; }
                                 if (used.Add(sp))
-                                    spawns.Add(new SpawnRequest { position = sp, sourceData = src, powerUpType = ElementPowerUpType.VerticalRocket });
+                                    spawns.Add(new SpawnRequest { position = sp, sourceData = src, powerUpType = ElementPowerUpType.HorizontalRocket }); // horizontal run spawns vertical rocket, and vice versa, to encourage more interesting cascades
                                 found = true; break;
                             }
                             run = 0; runPos.Clear();
