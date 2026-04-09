@@ -10,11 +10,11 @@ namespace Game
         public float duration;
         public bool isLoop;
 
-        internal TutorialManager.TutorialStep referenceStep;
+        internal TutorialStep referenceStep;
 
         protected GameObject tutorialObjectInstance;
 
-        internal void Initialize(TutorialManager.TutorialStep step, GameObject instance)
+        internal void Initialize(TutorialStep step, GameObject instance)
         {
             referenceStep = step;
             tutorialObjectInstance = instance;

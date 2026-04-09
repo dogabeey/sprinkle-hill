@@ -11,71 +11,11 @@ using UnityEngine.UI;
 
 namespace Game
 {
-    public class TutorialManager : SerializedMonoBehaviour
+    public partial class TutorialManager : SerializedMonoBehaviour
     {
-        [System.Serializable]
-        public class TutorialStep
-        {
-            public string Id;
-            public string directive;
-            [LabelText("Disable Action Bar")]
-            public bool disablesActionBar = true;
-            [Tooltip("-1 means any level. Otherwise this step only runs when lastPlayedLevelIndex equals this value.")]
-            public int requiredLevelIndex = -1;
-            [Tooltip("-1 means any stage. Otherwise this step only runs when currentStageIndex equals this value.")]
-            public int requiredStageIndex = -1;
-            [SerializeReference]
-            public TutorialAnimation tutorialAnimation;
-            [SerializeReference]
-            public HighlightSelector highlightSelector;
-            public GameEvent startEvent;
-            [ShowIf(nameof(IsAdvancedMode))]
-            public EventParams startEventExpectedParams;
-            [ShowIf(nameof(IsAdvancedMode))]
-            public EventParam startEventExpectedParamValues;
-            public GameEvent completionEvent;
-            [ShowIf(nameof(IsAdvancedMode))]
-            public EventParams completionEventExpectedParams;
-            [ShowIf(nameof(IsAdvancedMode))]
-            public EventParam completionEventExpectedParamValues;
-            [FoldoutGroup("Custom Events")]
-            public UnityEvent onStart;
-            [FoldoutGroup("Custom Events")]
-            public UnityEvent onComplete;
-            public Transform animationObjectParent; // Parent for tutorial animation objects that is set at tutorialAnimation.tutorialObject. If null, animations will be parented to the first canvas in the scene.
-            [SerializeReference]
-            [GUIColor(nameof(GetNextStepColor))]
-            public TutorialStep nextStep;
-            public bool advancedMode;
-            [HideInInspector]
-            public int serializationDepth;
-            [HideInInspector]
-            public bool isStarted;
-            [HideInInspector]
-            public bool isCompleted;
-
-            public bool IsAdvancedMode() => advancedMode;
-
-            private static readonly Color[] DepthColors =
-            {
-                Color.red,
-                new Color(1f, 0.5f, 0f),
-                Color.yellow,
-                Color.green,
-                Color.cyan,
-                Color.blue,
-                Color.magenta,
-            };
-
-            private Color GetNextStepColor()
-            {
-                int depth = Mathf.Max(0, serializationDepth + 1);
-                return DepthColors[depth % DepthColors.Length];
-            }
-        }
-
         public List<TutorialStep> tutorialSteps = new List<TutorialStep>();
         public float directiveParentHeight;
+        public Transform animationObjectParent; // Parent for tutorial animation objects that is set at tutorialAnimation.tutorialObject. If null, animations will be parented to the first canvas in the scene.
         public TMP_Text directiveText;
         public RectTransform directiveParent;
         [Tooltip("Assign the TutorialHighlightOverlay component. Leave null to skip highlighting.")]
@@ -385,9 +325,9 @@ namespace Game
             ClearTutorialAnimation(step);
 
             GameObject animationInstance;
-            if (step.animationObjectParent != null)
+            if (animationObjectParent != null)
             {
-                animationInstance = Instantiate(step.tutorialAnimation.tutorialObject, step.animationObjectParent);
+                animationInstance = Instantiate(step.tutorialAnimation.tutorialObject, animationObjectParent);
             }
             else
             {

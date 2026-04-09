@@ -1,0 +1,81 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a23e412978b2f9b43ae72e9ce71bb98b, type: 3}
+  m_Name: General_Hint_Shuffle
+  m_EditorClassIdentifier: 
+  Id: general_hint_shuffle
+  directive: You can shuffle the board when out of moves.
+  disablesActionBar: 1
+  requiredLevelIndex: -1
+  requiredStageIndex: -1
+  tutorialAnimation:
+    rid: 3084495758061469785
+  highlightSelector:
+    rid: 3084495758061469783
+  startEvent: 414
+  startEventExpectedParams: 0
+  startEventExpectedParamValues:
+    paramObj: {fileID: 0}
+    paramScriptable: {fileID: 0}
+    paramInt: 0
+    paramFloat: 0
+    paramStr: 
+    vectorList: []
+    paramBool: 0
+  completionEvent: 600
+  completionEventExpectedParams: 0
+  completionEventExpectedParamValues:
+    paramObj: {fileID: 0}
+    paramScriptable: {fileID: 0}
+    paramInt: 0
+    paramFloat: 0
+    paramStr: 
+    vectorList: []
+    paramBool: 0
+  onStart:
+    m_PersistentCalls:
+      m_Calls: []
+  onComplete:
+    m_PersistentCalls:
+      m_Calls: []
+  nextStep: {fileID: 0}
+  advancedMode: 0
+  serializationDepth: 0
+  isStarted: 0
+  isCompleted: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 3084495758061469783
+      type: {class: ActionButton_Highlight, ns: Game, asm: Assembly-CSharp}
+      data:
+        action:
+          rid: 3084495758061469786
+    - rid: 3084495758061469785
+      type: {class: ClickOnFirstHighlightedObject, ns: Game, asm: Assembly-CSharp}
+      data:
+        tutorialObject: {fileID: 1399129251957722908, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
+        duration: 2
+        isLoop: 1
+        screenPositionOffset: {x: 0.6, y: -0.6}
+    - rid: 3084495758061469786
+      type: {class: ShuffleAction, ns: Game, asm: Assembly-CSharp}
+      data:
+        actionBarIcon: {fileID: 1175953842, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+        costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
+        actionSuccessParticle: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
+        startingCount: 10
+        unlockedLevel: 0
+        tiedFeature:
+          featureName: 
+          unlockedLevelIndex: 0
+          icon: {fileID: 0}
