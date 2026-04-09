@@ -16,10 +16,12 @@ namespace Game
     [CreateAssetMenu(fileName = "ConstantManager", menuName = "Game/Constant Manager...", order = 1)]
     public class ConstantManager : ScriptableObject
     {
+        [Header("General")]
+        public float loadingScreenDuration = 1f;
+        [Header("Element Animation")]
         public float elementSwapMoveDuration = 0.3f;
         public float elementFallSpeed = 3.3f;
         public float matchClearDelay = 0.3f;
-        [Header("Element Destroy Animation")]
         public float elementDestroyPopHeight = 0.2f;
         public float elementDestroyPopDuration = 0.08f;
         public float elementDestroyFallDistance = 0.25f;
