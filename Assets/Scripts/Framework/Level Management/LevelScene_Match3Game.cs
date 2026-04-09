@@ -63,6 +63,7 @@ namespace Game
         private bool stageCompletionGridStable;
         private bool stageCompletionRoutineRunning;
 
+        public int CurrentStageIndex => currentLevelEditorIndex;
         public bool AllowDiscoBallCreation => allowDiscoBallCreation;
         public bool AllowRocketCreation => allowRocketCreation;
         public bool AllowBombCreation => allowBombCreation;
@@ -78,6 +79,7 @@ namespace Game
         {
             EventManager.StartListening(GameEvent.OBJECTIVE_COMPLETED, OnObjectiveCompleted);
             EventManager.StartListening(GameEvent.GRID_STABLE, OnGridStable);
+            SetLevelWinEventListener();
         }
         private void OnDisable()
         {
@@ -92,12 +94,17 @@ namespace Game
             if (ObjectiveManager.Instance.activeObjectives != null && ObjectiveManager.Instance.activeObjectives.Count > 0
                 && ObjectiveManager.Instance.activeObjectives.TrueForAll(o => o.isCompleted))
             {
-                stageCompletionPending = true;
-                stageCompletionGridStable = false;
-
-                if (!stageCompletionRoutineRunning)
-                    StartCoroutine(BeginStageCompletionWhenReady());
+                RequestStageCompletion();
             }
+        }
+
+        private void RequestStageCompletion()
+        {
+            stageCompletionPending = true;
+            stageCompletionGridStable = false;
+
+            if (!stageCompletionRoutineRunning)
+                StartCoroutine(BeginStageCompletionWhenReady());
         }
 
         private void OnGridStable(EventParam param)
@@ -112,7 +119,7 @@ namespace Game
         {
             stageCompletionRoutineRunning = true;
 
-            float waitTimeout = 1f;
+            float waitTimeout = 5f;
             while (!isEnded && !stageCompletionGridStable && waitTimeout > 0f)
             {
                 waitTimeout -= Time.deltaTime;
@@ -163,9 +170,6 @@ namespace Game
             isSwitchingStage = true;
             isPaused = true;
 
-            if (GameManager.Instance != null && GameManager.Instance.winParticle != null)
-                GameManager.Instance.winParticle.Play();
-
             yield return PlayRemainingElementsWinAnimation();
 
             if (currentLevelEditorIndex + 1 < levelEditors.Count)
@@ -197,7 +201,7 @@ namespace Game
         }
         private void OnWinEventFire(EventParam param)
         {
-            CompleteLevel();
+            RequestStageCompletion();
         }
         private IEnumerator SwitchToCurrentStage()
         {

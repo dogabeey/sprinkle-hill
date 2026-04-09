@@ -692,10 +692,6 @@ PrefabInstance:
       value: SettingsManager
       objectReference: {fileID: 0}
     - target: {fileID: 8054950767382582105, guid: 33ffe7376da104e4da346a82d1243245, type: 3}
-      propertyPath: m_RootOrder
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8054950767382582105, guid: 33ffe7376da104e4da346a82d1243245, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -1069,7 +1065,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1510078030}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -1090,7 +1086,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1602025052
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2063,10 +2059,6 @@ PrefabInstance:
       value: CurrencyManager
       objectReference: {fileID: 0}
     - target: {fileID: 1412219885008021525, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 1412219885008021525, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -2107,81 +2099,9 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: coinText
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: currencyText
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: coinTransform
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: flightDuration
-      value: 0.35
-      objectReference: {fileID: 0}
-    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
       propertyPath: currencyContainer
       value: 
       objectReference: {fileID: 1393474369}
-    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: currencySpritePrefab
-      value: 
-      objectReference: {fileID: 6522668367705246200, guid: 0bb994df5a34fab418c2b7cd753ad551, type: 3}
-    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: currencyElementPrefab
-      value: 
-      objectReference: {fileID: 6021937502238936245, guid: a2d8821a1d527de4cab774a18abad611, type: 3}
-    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: currencyInfos.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: currencySpriteMultiplier
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: premiumCurrencyTransform
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: currencyModels.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: currencyAnimationContainer
-      value: 
-      objectReference: {fileID: 191646935}
-    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: currencyModels.Array.data[0].currencyID
-      value: Diamond
-      objectReference: {fileID: 0}
-    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: currencyInfos.Array.data[0].currencyModel
-      value: 
-      objectReference: {fileID: 11400000, guid: 31b1c667ab353af4a80bfe0daaa96451, type: 2}
-    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: currencyInfos.Array.data[1].currencyModel
-      value: 
-      objectReference: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
-    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: currencyModels.Array.data[0].currencyText
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: currencyModels.Array.data[0].startingAmount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: currencyModels.Array.data[0].currencyTransform
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
-      propertyPath: currencyModels.Array.data[0].currencySpritePrefab
-      value: 
-      objectReference: {fileID: 6600527556817516632, guid: d12243bc75b32b64d9a4dd0ec103dba9, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2195,17 +2115,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 492599855}
     m_Modifications:
-    - target: {fileID: 1594277042288407864, guid: ebb77acad66ef5444b92a2736a382841, type: 3}
-      propertyPath: coinSource
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 1594277042288407866, guid: ebb77acad66ef5444b92a2736a382841, type: 3}
       propertyPath: m_Name
       value: DebugManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 1594277042288407867, guid: ebb77acad66ef5444b92a2736a382841, type: 3}
-      propertyPath: m_RootOrder
-      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1594277042288407867, guid: ebb77acad66ef5444b92a2736a382841, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2763,34 +2675,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
     - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
-      propertyPath: tutorialSteps.Array.data[0].advancedMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
-      propertyPath: managedReferences[5000171120770941007].Id
-      value: level1_swapbomb
-      objectReference: {fileID: 0}
-    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
-      propertyPath: managedReferences[5000171120770941008].isLoop
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
-      propertyPath: tutorialSteps.Array.data[1].requiredLevelIndex
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
-      propertyPath: managedReferences[5000171120770941008].duration
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
-      propertyPath: managedReferences[5000171120770941007].directive
-      value: Click or Swap Bomb to Activate It!
-      objectReference: {fileID: 0}
-    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
-      propertyPath: managedReferences[5000171120770941007].startEvent
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: tutorialSteps.Array.data[0].animationObjectParent
       value: 
       objectReference: {fileID: 4133448082132307929}
@@ -2799,29 +2683,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4133448082132307929}
     - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
-      propertyPath: managedReferences[3084495758061469770].completionEvent
-      value: 803
-      objectReference: {fileID: 0}
-    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
-      propertyPath: managedReferences[5000171120770941007].completionEvent
-      value: 802
-      objectReference: {fileID: 0}
-    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
-      propertyPath: managedReferences[3084495758061469770].animationObjectParent
-      value: 
-      objectReference: {fileID: 1716899156}
-    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: managedReferences[5000171120770941007].animationObjectParent
       value: 
       objectReference: {fileID: 4133448082132307929}
-    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
-      propertyPath: managedReferences[5000171120770941008].screenPositionOffset.x
-      value: 0.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
-      propertyPath: managedReferences[5000171120770941008].screenPositionOffset.y
-      value: -0.6
-      objectReference: {fileID: 0}
     - target: {fileID: 5195539440205897226, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -3006,14 +2870,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: AdsManager
       objectReference: {fileID: 0}
-    - target: {fileID: 5092102555726562430, guid: a834de95be05b4446860498d9de41de9, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5092102555726562431, guid: a834de95be05b4446860498d9de41de9, type: 3}
-      propertyPath: m_RootOrder
-      value: 7
-      objectReference: {fileID: 0}
     - target: {fileID: 5092102555726562431, guid: a834de95be05b4446860498d9de41de9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -3078,10 +2934,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 492599855}
     m_Modifications:
-    - target: {fileID: 2172909918253963267, guid: 70bd33374545fe1428a509f86d0456fd, type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2172909918253963267, guid: 70bd33374545fe1428a509f86d0456fd, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -3179,26 +3031,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8616632487440646257, guid: 72e5e6c3ed435aa4096da64e16a6aae3, type: 3}
-      propertyPath: features.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8616632487440646257, guid: 72e5e6c3ed435aa4096da64e16a6aae3, type: 3}
-      propertyPath: features.Array.data[3].icon
-      value: 
-      objectReference: {fileID: 433923414, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
-    - target: {fileID: 8616632487440646257, guid: 72e5e6c3ed435aa4096da64e16a6aae3, type: 3}
-      propertyPath: features.Array.data[1].featureName
-      value: Bomb
-      objectReference: {fileID: 0}
-    - target: {fileID: 8616632487440646257, guid: 72e5e6c3ed435aa4096da64e16a6aae3, type: 3}
-      propertyPath: features.Array.data[3].featureName
-      value: Rocket
-      objectReference: {fileID: 0}
-    - target: {fileID: 8616632487440646257, guid: 72e5e6c3ed435aa4096da64e16a6aae3, type: 3}
-      propertyPath: features.Array.data[3].unlockedLevelIndex
-      value: 20
-      objectReference: {fileID: 0}
     - target: {fileID: 9104921528775313611, guid: 72e5e6c3ed435aa4096da64e16a6aae3, type: 3}
       propertyPath: m_Name
       value: Feature Tracker
@@ -3216,70 +3048,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 492599855}
     m_Modifications:
-    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: levelScenes.Array.size
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: 'levelScenes.Array.data[0]'
-      value: 
-      objectReference: {fileID: 6648657062745475262, guid: e5128bc36d805684ebc33c78e679743c, type: 3}
-    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: 'levelScenes.Array.data[1]'
-      value: 
-      objectReference: {fileID: 6648657062745475262, guid: b0d03fb720f2df84ea11450fc29b8d7a, type: 3}
-    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: 'levelScenes.Array.data[2]'
-      value: 
-      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: 'levelScenes.Array.data[3]'
-      value: 
-      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: 'levelScenes.Array.data[4]'
-      value: 
-      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: 'levelScenes.Array.data[5]'
-      value: 
-      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: 'levelScenes.Array.data[6]'
-      value: 
-      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: 'levelScenes.Array.data[7]'
-      value: 
-      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: 'levelScenes.Array.data[8]'
-      value: 
-      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: 'levelScenes.Array.data[9]'
-      value: 
-      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: 'levelScenes.Array.data[10]'
-      value: 
-      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: 'levelScenes.Array.data[11]'
-      value: 
-      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: 'levelScenes.Array.data[12]'
-      value: 
-      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: 'levelScenes.Array.data[13]'
-      value: 
-      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: 'levelScenes.Array.data[14]'
-      value: 
-      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
     - target: {fileID: 7722314759461277705, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: m_Name
       value: Game Manager
@@ -3478,102 +3246,6 @@ PrefabInstance:
       propertyPath: actionBarParent
       value: 
       objectReference: {fileID: 854708863}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: actionBarItemList.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: 'actionBarItemList.Array.data[0]'
-      value: 5000171156985086083
-      objectReference: {fileID: 0}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: 'actionBarItemList.Array.data[1]'
-      value: 943281644091474204
-      objectReference: {fileID: 0}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: 'actionBarItemList.Array.data[2]'
-      value: 3084495758061469768
-      objectReference: {fileID: 0}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: 'actionBarItemList.Array.data[3]'
-      value: 943281644091474012
-      objectReference: {fileID: 0}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: 'actionBarItemList.Array.data[4]'
-      value: 3084495758061469769
-      objectReference: {fileID: 0}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: 'managedReferences[5000171156985086083]'
-      value: Assembly-CSharp Game.PlaceRocketAction
-      objectReference: {fileID: 0}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: managedReferences[5000171156985086083].costCurrency
-      value: 
-      objectReference: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: managedReferences[5000171156985086083].actionBarIcon
-      value: 
-      objectReference: {fileID: 433923414, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: managedReferences[5000171156985086083].startingCount
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: managedReferences[5000171156985086083].unlockedLevel
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: managedReferences[943281644091474012].tiedFeature.icon
-      value: 
-      objectReference: {fileID: -238066524, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: managedReferences[5000171156985086083].tiedFeature.icon
-      value: 
-      objectReference: {fileID: 433923414, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: managedReferences[5000171156985086083].actionSuccessParticle
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: managedReferences[3084495758061469769].unlockableFeature.icon
-      value: 
-      objectReference: {fileID: 524596139, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: managedReferences[5000171156985086083].unlockableFeature.icon
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: managedReferences[943281644091474012].tiedFeature.featureName
-      value: Add Time
-      objectReference: {fileID: 0}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: managedReferences[5000171156985086083].tiedFeature.featureName
-      value: Rocket
-      objectReference: {fileID: 0}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: managedReferences[3084495758061469769].unlockableFeature.featureName
-      value: Candy Bar
-      objectReference: {fileID: 0}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: managedReferences[5000171156985086083].unlockableFeature.featureName
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: managedReferences[943281644091474012].tiedFeature.unlockedLevelIndex
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: managedReferences[5000171156985086083].tiedFeature.unlockedLevelIndex
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: managedReferences[3084495758061469769].unlockableFeature.unlockedLevelIndex
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: managedReferences[5000171156985086083].unlockableFeature.unlockedLevelIndex
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1925703224431792360, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

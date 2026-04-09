@@ -158,4 +158,58 @@ namespace Game
             tutorialObjectInstance.transform.DOScale(Vector3.one * 1.1f, duration / 2f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Yoyo);
         }
     }
+
+    public class LookAndPointAtFirstHighlightedObject : TutorialAnimation
+    {
+        public Vector2 screenPositionOffset = new Vector2(120f, 0f);
+        public float rotationOffset = -90f;
+
+        public override void PlayAnim()
+        {
+            if (tutorialObjectInstance == null || referenceStep?.highlightSelector?.HighlightedObjects == null || referenceStep.highlightSelector.HighlightedObjects.Length == 0)
+                return;
+
+            GameObject targetObject = referenceStep.highlightSelector.HighlightedObjects[0];
+            if (targetObject == null)
+                return;
+
+            Transform targetTransform = targetObject.transform;
+            Vector3 targetScreenPos = GetScreenPosition(targetTransform);
+            Vector3 startScreenPos = targetScreenPos + (Vector3)screenPositionOffset;
+
+            tutorialObjectInstance.transform.DOKill();
+            tutorialObjectInstance.transform.position = startScreenPos;
+
+            Vector3 direction = (targetScreenPos - startScreenPos).normalized;
+            if (direction.sqrMagnitude > 0f)
+            {
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + rotationOffset;
+                tutorialObjectInstance.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+            }
+
+            float halfDuration = Mathf.Max(0.05f, duration * 0.5f);
+
+            if (isLoop)
+            {
+                tutorialObjectInstance.transform.DOMove(targetScreenPos, halfDuration)
+                    .SetEase(Ease.InOutSine)
+                    .SetLoops(-1, LoopType.Yoyo);
+            }
+            else
+            {
+                tutorialObjectInstance.transform.DOMove(targetScreenPos, halfDuration)
+                    .SetEase(Ease.InOutSine)
+                    .OnComplete(() =>
+                    {
+                        if (tutorialObjectInstance != null)
+                        {
+                            tutorialObjectInstance.transform.DOMove(startScreenPos, halfDuration)
+                                .SetEase(Ease.InOutSine);
+                        }
+                    });
+            }
+        }
+    }
+
 }
+

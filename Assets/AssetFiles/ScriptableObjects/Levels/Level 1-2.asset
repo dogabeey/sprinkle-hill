@@ -1018,13 +1018,14 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  levelCreationMode: 0
+  levelCreationMode: 1
   gridSize: {x: 5, y: 5}
   objectives:
   - objectiveType: {fileID: 11400000, guid: ffe972f147b15a3478d78402d760a387, type: 2}
     scriptableObjectParameter: {fileID: 0}
     requiredCount: 5
     isCompleted: 0
+  specialWinEvent: 0
   targetElement: {fileID: 0}
   timer: -1
   proceduralGeneration:
