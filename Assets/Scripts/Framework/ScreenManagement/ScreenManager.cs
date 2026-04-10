@@ -1,19 +1,25 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game
 {
     public class ScreenManager : SingletonComponent<ScreenManager>
     {
+        public Image backgroundMask; // This is toggled when a screen is open to darken the background.
+
         internal List<GameScreen> screens = new List<GameScreen>();
+
+        private float defaultBGAlpha;
 
         private IEnumerator Start()
         {
             yield return new WaitForSeconds(0.5f);
             screens.AddRange(FindObjectsOfType<GameScreen>(true));
 
-            //Show(firstScreen);
+            defaultBGAlpha = backgroundMask.color.a;
         }
 
         private void Update()
@@ -23,6 +29,7 @@ namespace Game
 
         public void Show(GameScreen gameScreen)
         {
+            backgroundMask.enabled = true;
             screens.ForEach(screen => {
                 if (screen.gameObject.activeSelf)
                 {
@@ -38,6 +45,9 @@ namespace Game
 
         public void Show(Screens screenID)
         {
+            backgroundMask.color = new Color(backgroundMask.color.r, backgroundMask.color.g, backgroundMask.color.b, 0);
+            backgroundMask.enabled = true;
+            backgroundMask.DOFade(defaultBGAlpha, 0.5f);
             screens.ForEach(screen => {
                 if (screen.gameObject.activeSelf)
                 {
@@ -53,6 +63,8 @@ namespace Game
         }
         public void CloseAllScreens()
         {
+            backgroundMask.DOFade(0, 0.5f);
+            backgroundMask.enabled = false;
             screens.ForEach(screen => screen.gameObject.SetActive(false));
         }
 
