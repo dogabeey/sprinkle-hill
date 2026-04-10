@@ -50,7 +50,7 @@ MonoBehaviour:
   onComplete:
     m_PersistentCalls:
       m_Calls: []
-  nextStep: {fileID: 11400000, guid: 65174ccb315f4db4c82f97eb251aae3b, type: 2}
+  nextStep: {fileID: 11400000, guid: 330c286938e423543bdbdc65e9090038, type: 2}
   advancedMode: 0
   serializationDepth: 0
   isStarted: 0
@@ -61,10 +61,10 @@ MonoBehaviour:
     - rid: 3084495758061469779
       type: {class: MoveBetweenTwoPoint, ns: Game, asm: Assembly-CSharp}
       data:
-        tutorialObject: {fileID: 1399129251957722908, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
+        tutorialObject: {fileID: 5451101766555202300, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
+        screenPositionOffset: {x: 100, y: -100}
         duration: 2
         isLoop: 1
-        screenPositionOffset: {x: 100, y: -100}
     - rid: 3084495758061469780
       type: {class: TwoRandomSquareMatchableElement_Highlight, ns: Game, asm: Assembly-CSharp}
       data: 

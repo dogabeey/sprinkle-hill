@@ -428,6 +428,7 @@ namespace Game
         private IEnumerator ActivateRocket(Vector2Int rocketPos, ElementPowerUpType rocketType)
         {
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            yield return new WaitForSeconds(0.1f);
             PlayEffect(ConstantManager.SOUNDS.EFFECTS.ROCKET);
 
             GridElement rocketElement = grid.GetElementAt(rocketPos);

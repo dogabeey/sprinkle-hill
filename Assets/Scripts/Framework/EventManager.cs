@@ -161,6 +161,10 @@ public class EventManager : ScriptableObject, IManager
         Action<EventParam> thisEvent = null;
         if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
         {
+            if(thisEvent == null)
+            {
+                Debug.LogWarning($"Event '{eventName}' has some null listener(s). This might result events to notfiy its listeners correctly");
+            }
             thisEvent.Invoke(eventParam);
             // OR USE  instance.eventDictionary[eventName](eventParam);
         }

@@ -1,4 +1,5 @@
 using DG.Tweening;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,15 +7,16 @@ namespace Game
 {
     public abstract class TutorialAnimation
     {
-        public GameObject tutorialObject;
+        public RectTransform tutorialObject;
+        public Vector2 screenPositionOffset;
         public float duration;
         public bool isLoop;
 
         internal TutorialStep referenceStep;
 
-        protected GameObject tutorialObjectInstance;
+        protected RectTransform tutorialObjectInstance;
 
-        internal void Initialize(TutorialStep step, GameObject instance)
+        internal void Initialize(TutorialStep step, RectTransform instance)
         {
             referenceStep = step;
             tutorialObjectInstance = instance;
@@ -24,8 +26,8 @@ namespace Game
         {
             if (tutorialObjectInstance == null) return;
 
-            tutorialObjectInstance.transform.DOKill();
-            Object.Destroy(tutorialObjectInstance);
+            tutorialObjectInstance.DOKill();
+            Object.Destroy(tutorialObjectInstance.gameObject);
             tutorialObjectInstance = null;
         }
 
@@ -59,11 +61,44 @@ namespace Game
             Camera cam = Camera.main;
             return cam != null ? cam.WorldToScreenPoint(target.position) : target.position;
         }
+
+        protected Vector2 ScreenToAnchoredPosition(Vector2 screenPosition)
+        {
+            if (tutorialObjectInstance == null)
+                return screenPosition;
+
+            RectTransform parentRect = tutorialObjectInstance.parent as RectTransform;
+            if (parentRect == null)
+                return screenPosition;
+
+            Camera uiCamera = GetCanvasCamera(parentRect);
+            if (RectTransformUtility.ScreenPointToLocalPointInRectangle(parentRect, screenPosition, uiCamera, out Vector2 anchoredPos))
+                return anchoredPos;
+
+            return screenPosition;
+        }
+
+        protected Vector2 GetAnchoredPosition(Transform target)
+        {
+            Vector2 screenPos = GetScreenPosition(target);
+            return ScreenToAnchoredPosition(screenPos + screenPositionOffset);
+        }
+
+        private static Camera GetCanvasCamera(RectTransform rectTransform)
+        {
+            Canvas canvas = rectTransform.GetComponentInParent<Canvas>();
+            if (canvas == null)
+                return Camera.main;
+
+            if (canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+                return null;
+
+            return canvas.worldCamera != null ? canvas.worldCamera : Camera.main;
+        }
     }
 
     public class MoveBetweenTwoPoint : TutorialAnimation
     {
-        public Vector2 screenPositionOffset;
 
         public override void PlayAnim()
         {
@@ -91,34 +126,33 @@ namespace Game
             Transform endPointTransform = referenceStep.highlightSelector.HighlightedObjects[1].transform;
 
             // Detect the screen position of the start and end points to determine where the animation should be played
-            Vector3 startScreenPos = GetScreenPosition(startPointTransform) + (Vector3)screenPositionOffset;
-            Vector3 endScreenPos = GetScreenPosition(endPointTransform) + (Vector3)screenPositionOffset;
+            Vector2 startAnchoredPos = GetAnchoredPosition(startPointTransform);
+            Vector2 endAnchoredPos = GetAnchoredPosition(endPointTransform);
 
-            tutorialObjectInstance.transform.DOKill();
-            tutorialObjectInstance.transform.position = startScreenPos;
+            tutorialObjectInstance.DOKill();
+            tutorialObjectInstance.anchoredPosition = startAnchoredPos;
 
-            AnimateBetweenPoints(startScreenPos, endScreenPos);
+            AnimateBetweenPoints(startAnchoredPos, endAnchoredPos);
         }
 
-        private void AnimateBetweenPoints(Vector3 startScreenPos, Vector3 endScreenPos)
+        private void AnimateBetweenPoints(Vector2 startAnchoredPos, Vector2 endAnchoredPos)
         {
             if (isLoop)
             {
-                tutorialObjectInstance.transform.DOMove(endScreenPos, duration / 2f).SetLoops(-1, LoopType.Yoyo);
+                tutorialObjectInstance.DOAnchorPos(endAnchoredPos, duration / 2f).SetLoops(-1, LoopType.Yoyo);
             }
             else
             {
-                tutorialObjectInstance.transform.DOMove(endScreenPos, duration / 2f).OnComplete(() =>
+                tutorialObjectInstance.DOAnchorPos(endAnchoredPos, duration / 2f).OnComplete(() =>
                 {
                     if (tutorialObjectInstance != null)
-                        tutorialObjectInstance.transform.DOMove(startScreenPos, duration / 2f);
+                        tutorialObjectInstance.DOAnchorPos(startAnchoredPos, duration / 2f);
                 });
             }
         }
     }
     public class ClickOnFirstHighlightedObject : TutorialAnimation
     {
-        public Vector2 screenPositionOffset;
 
         public override void PlayAnim()
         {
@@ -145,23 +179,22 @@ namespace Game
             Transform startPointTransform = referenceStep.highlightSelector.HighlightedObjects[0].transform;
 
             // Detect the screen position of the start and end points to determine where the animation should be played
-            Vector3 startScreenPos = startPointTransform.position + (Vector3)screenPositionOffset;
+            Vector2 startAnchoredPos = GetAnchoredPosition(startPointTransform);
 
-            tutorialObjectInstance.transform.DOKill();
-            tutorialObjectInstance.transform.position = startScreenPos;
+            tutorialObjectInstance.DOKill();
+            tutorialObjectInstance.anchoredPosition = startAnchoredPos;
 
             ScaleAnimation();
         }
 
         private void ScaleAnimation()
         {
-            tutorialObjectInstance.transform.DOScale(Vector3.one * 1.1f, duration / 2f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Yoyo);
+            tutorialObjectInstance.DOScale(Vector3.one * 1.1f, duration / 2f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Yoyo);
         }
     }
 
     public class LookAndPointAtFirstHighlightedObject : TutorialAnimation
     {
-        public Vector2 screenPositionOffset = new Vector2(120f, 0f);
         public float rotationOffset = -90f;
 
         public override void PlayAnim()
@@ -174,35 +207,36 @@ namespace Game
                 return;
 
             Transform targetTransform = targetObject.transform;
-            Vector3 startScreenPos = targetTransform.position + (Vector3)screenPositionOffset;
+            Vector2 startAnchoredPos = GetAnchoredPosition(targetTransform);
+            Vector2 targetAnchoredPos = ScreenToAnchoredPosition(GetScreenPosition(targetTransform));
 
-            tutorialObjectInstance.transform.DOKill();
-            tutorialObjectInstance.transform.position = startScreenPos;
+            tutorialObjectInstance.DOKill();
+            tutorialObjectInstance.anchoredPosition = startAnchoredPos;
 
-            Vector3 direction = (targetTransform.position - startScreenPos).normalized;
+            Vector2 direction = (targetAnchoredPos - startAnchoredPos).normalized;
             if (direction.sqrMagnitude > 0f)
             {
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + rotationOffset;
-                tutorialObjectInstance.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+                tutorialObjectInstance.rotation = Quaternion.Euler(0f, 0f, angle);
             }
 
             float halfDuration = Mathf.Max(0.05f, duration * 0.5f);
 
             if (isLoop)
             {
-                tutorialObjectInstance.transform.DOMove(targetTransform.position, halfDuration)
+                tutorialObjectInstance.DOAnchorPos(targetAnchoredPos, halfDuration)
                     .SetEase(Ease.InOutSine)
                     .SetLoops(-1, LoopType.Yoyo);
             }
             else
             {
-                tutorialObjectInstance.transform.DOMove(targetTransform.position, halfDuration)
+                tutorialObjectInstance.DOAnchorPos(targetAnchoredPos, halfDuration)
                     .SetEase(Ease.InOutSine)
                     .OnComplete(() =>
                     {
                         if (tutorialObjectInstance != null)
                         {
-                            tutorialObjectInstance.transform.DOMove(startScreenPos, halfDuration)
+                            tutorialObjectInstance.DOAnchorPos(startAnchoredPos, halfDuration)
                                 .SetEase(Ease.InOutSine);
                         }
                     });

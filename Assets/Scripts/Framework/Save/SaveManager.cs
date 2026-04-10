@@ -159,7 +159,7 @@ namespace Game
 #if UNITY_EDITOR
         [MenuItem("Lionsfall/Save Manager/Clear All Saves")]
         [Button]
-        private static void ClearAllSaves()
+        public static void ClearAllSaves()
         {
             foreach (SaveData saveData in Instance.saveDatas)
             {

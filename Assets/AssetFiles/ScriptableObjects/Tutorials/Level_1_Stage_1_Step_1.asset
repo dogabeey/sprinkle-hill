@@ -61,10 +61,10 @@ MonoBehaviour:
     - rid: 3084495758061469777
       type: {class: MoveBetweenTwoPoint, ns: Game, asm: Assembly-CSharp}
       data:
-        tutorialObject: {fileID: 1399129251957722908, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
+        tutorialObject: {fileID: 5451101766555202300, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
+        screenPositionOffset: {x: 150, y: -150}
         duration: 2
         isLoop: 1
-        screenPositionOffset: {x: 100, y: -100}
     - rid: 3084495758061469778
       type: {class: TwoRandomMatchableElements_Highlight, ns: Game, asm: Assembly-CSharp}
       data: 

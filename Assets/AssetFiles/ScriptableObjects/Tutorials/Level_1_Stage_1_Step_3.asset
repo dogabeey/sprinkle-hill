@@ -12,19 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a23e412978b2f9b43ae72e9ce71bb98b, type: 3}
   m_Name: Level_1_Stage_1_Step_3
   m_EditorClassIdentifier: 
-  Id: level_1_stage_1_step_3
-  directive: Click or Swap Bomb to Activate It!
-  directiveParentHeight: 493.38
-  anchorMin: {x: 0, y: 0}
-  anchorMax: {x: 1, y: 0}
+  Id: level_1_stage_2_step_1
+  directive: Complete objectives to pass level
+  directiveParentHeight: -417.0199
+  anchorMin: {x: 0, y: 1}
+  anchorMax: {x: 1, y: 1}
   disablesActionBar: 1
   requiredLevelIndex: 0
-  requiredStageIndex: 0
+  requiredStageIndex: 1
   tutorialAnimation:
-    rid: 3084495758061469781
+    rid: 3084495758061469789
   highlightSelector:
-    rid: 3084495758061469782
-  startEvent: 0
+    rid: 3084495758061469788
+  startEvent: 411
   startEventExpectedParams: 0
   startEventExpectedParamValues:
     paramObj: {fileID: 0}
@@ -34,7 +34,7 @@ MonoBehaviour:
     paramStr: 
     vectorList: []
     paramBool: 0
-  completionEvent: 802
+  completionEvent: 1200
   completionEventExpectedParams: 0
   completionEventExpectedParamValues:
     paramObj: {fileID: 0}
@@ -58,13 +58,16 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 3084495758061469781
-      type: {class: ClickOnFirstHighlightedObject, ns: Game, asm: Assembly-CSharp}
+    - rid: 3084495758061469788
+      type: {class: SelectedTags_Highlight, ns: Game, asm: Assembly-CSharp}
       data:
-        tutorialObject: {fileID: 1399129251957722908, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
-        duration: 1
-        isLoop: 1
-        screenPositionOffset: {x: 0.6, y: -0.6}
-    - rid: 3084495758061469782
-      type: {class: Bomb_Highlight, ns: Game, asm: Assembly-CSharp}
-      data: 
+        selectedTags:
+        - ObjectiveUI
+    - rid: 3084495758061469789
+      type: {class: LookAndPointAtFirstHighlightedObject, ns: Game, asm: Assembly-CSharp}
+      data:
+        tutorialObject: {fileID: 5451101766555202300, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
+        screenPositionOffset: {x: 120, y: -200}
+        duration: 0
+        isLoop: 0
+        rotationOffset: -90

@@ -21,6 +21,7 @@ namespace Game
             if (Input.GetKeyDown(KeyCode.R))
             {
                 PlayerPrefs.DeleteAll();
+                SaveManager.ClearAllSaves();
             }
             if(Input.GetKeyDown(KeyCode.L))
             {

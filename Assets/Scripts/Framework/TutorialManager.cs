@@ -325,7 +325,7 @@ namespace Game
 
             ClearTutorialAnimation(step);
 
-            GameObject animationInstance;
+            RectTransform animationInstance;
             if (animationObjectParent != null)
             {
                 animationInstance = Instantiate(step.tutorialAnimation.tutorialObject, animationObjectParent);

@@ -1021,7 +1021,7 @@ MonoBehaviour:
   levelCreationMode: 0
   gridSize: {x: 5, y: 5}
   objectives: []
-  specialWinEvent: 802
+  specialWinEvent: 803
   targetElement: {fileID: 0}
   timer: -1
   proceduralGeneration:
