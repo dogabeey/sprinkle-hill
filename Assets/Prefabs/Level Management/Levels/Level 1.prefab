@@ -155,6 +155,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: c681c657bfa992d4488aa1a5fe4f23d3, type: 2}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: stageCompletePopupTextPrefab
+      value: 
+      objectReference: {fileID: 8529206322825317147, guid: 9cc54edcdd758424d8b3fc87f1b565b0, type: 3}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: proceduralGeneration.triangleWidth
       value: 0
       objectReference: {fileID: 0}

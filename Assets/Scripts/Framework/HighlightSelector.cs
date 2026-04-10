@@ -428,7 +428,9 @@ namespace Game
     /// </summary>
     public class SelectedTags_Highlight : HighlightSelector
     {
+#if UNITY_EDITOR
         [ValueDropdown(nameof(GetAllTags))]
+#endif
         public List<string> selectedTags;
         public override GameObject[] HighlightedObjects
         {
@@ -444,7 +446,7 @@ namespace Game
                 return highlightedObjects.ToArray();
             }
         }
-
+#if UNITY_EDITOR
         private IEnumerable GetAllTags()
         {
             List<string> allTags = new List<string>();
@@ -454,5 +456,6 @@ namespace Game
             }
             return allTags;
         }
+#endif
     }
 }

@@ -28,6 +28,10 @@ namespace Game
             public float newStageElementDropFromY = 2.5f;
             public float newStageElementDropDuration = 0.28f;
             public float newStageElementDropStagger = 0.006f;
+
+            public float stagePopupInDuration = 0.2f;
+            public float stagePopupHoldDuration = 0.45f;
+            public float stagePopupOutDuration = 0.2f;
         }
 
         [HideInInspector] public List<Objective> objectives = new List<Objective>();
@@ -55,6 +59,9 @@ namespace Game
         [FoldoutGroup("Power Up Settings")]
         public ElementData discoBallElementData;
 
+        [FoldoutGroup("Stage Transition")]
+        public TMP_Text stageCompletePopupTextPrefab;
+
         public StageTransitionAnimationSettings stageTransitionAnimation = new StageTransitionAnimationSettings();
 
         private int currentLevelEditorIndex;
@@ -62,6 +69,16 @@ namespace Game
         private bool stageCompletionPending;
         private bool stageCompletionGridStable;
         private bool stageCompletionRoutineRunning;
+
+        private static readonly string[] StageCompleteMessages =
+        {
+            "Great!",
+            "Awesome!",
+            "Nice!",
+            "Perfect!",
+            "Excellent!",
+            "Well Done!"
+        };
 
         public int CurrentStageIndex => currentLevelEditorIndex;
         public bool AllowDiscoBallCreation => allowDiscoBallCreation;
@@ -171,6 +188,7 @@ namespace Game
             isPaused = true;
 
             yield return PlayRemainingElementsWinAnimation();
+            yield return PlayStageCompletePopupText();
 
             if (currentLevelEditorIndex + 1 < levelEditors.Count)
             {
@@ -186,6 +204,43 @@ namespace Game
             isPaused = false;
             isSwitchingStage = false;
             CompleteLevel();
+        }
+
+        private IEnumerator PlayStageCompletePopupText()
+        {
+            if (stageCompletePopupTextPrefab == null || StageCompleteMessages.Length == 0)
+                yield break;
+
+            Canvas canvas = FindObjectOfType<Canvas>();
+            TMP_Text popup = canvas != null
+                ? Instantiate(stageCompletePopupTextPrefab, canvas.transform)
+                : Instantiate(stageCompletePopupTextPrefab);
+
+            popup.text = StageCompleteMessages[UnityEngine.Random.Range(0, StageCompleteMessages.Length)];
+
+            Transform popupTransform = popup.transform;
+            popupTransform.localScale = Vector3.zero;
+
+            CanvasGroup canvasGroup = popup.GetComponent<CanvasGroup>();
+            if (canvasGroup == null)
+                canvasGroup = popup.gameObject.AddComponent<CanvasGroup>();
+            canvasGroup.alpha = 0f;
+
+            float inDuration = Mathf.Max(0.01f, stageTransitionAnimation.stagePopupInDuration);
+            float holdDuration = Mathf.Max(0f, stageTransitionAnimation.stagePopupHoldDuration);
+            float outDuration = Mathf.Max(0.01f, stageTransitionAnimation.stagePopupOutDuration);
+
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(canvasGroup.DOFade(1f, inDuration));
+            sequence.Join(popupTransform.DOScale(1f, inDuration).SetEase(Ease.OutBack));
+            sequence.AppendInterval(holdDuration);
+            sequence.Append(canvasGroup.DOFade(0f, outDuration));
+            sequence.Join(popupTransform.DOScale(0.85f, outDuration).SetEase(Ease.InBack));
+
+            yield return sequence.WaitForCompletion();
+
+            if (popup != null)
+                Destroy(popup.gameObject);
         }
         private void RemoveLevelWinEventListener()
         {
