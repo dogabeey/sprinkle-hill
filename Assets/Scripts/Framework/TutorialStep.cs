@@ -11,7 +11,6 @@ namespace Game
         public string Id;
         public string directive;
         public float directiveParentHeight;
-        [Range(0f, 1f)]
         public Vector2 anchorMin, anchorMax;
         [LabelText("Disable Action Bar")]
         public bool disablesActionBar = true;

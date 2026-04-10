@@ -14,14 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Id: general_hint_shuffle
   directive: You can shuffle the board when out of moves.
+  directiveParentHeight: 0
+  anchorMin: {x: 0, y: 0}
+  anchorMax: {x: 1, y: 0}
   disablesActionBar: 1
-  requiredLevelIndex: -1
+  requiredLevelIndex: 1
   requiredStageIndex: -1
   tutorialAnimation:
     rid: 3084495758061469785
   highlightSelector:
     rid: 3084495758061469783
-  startEvent: 414
+  startEvent: 202
   startEventExpectedParams: 0
   startEventExpectedParamValues:
     paramObj: {fileID: 0}

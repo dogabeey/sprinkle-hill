@@ -174,13 +174,12 @@ namespace Game
                 return;
 
             Transform targetTransform = targetObject.transform;
-            Vector3 targetScreenPos = GetScreenPosition(targetTransform);
-            Vector3 startScreenPos = targetScreenPos + (Vector3)screenPositionOffset;
+            Vector3 startScreenPos = targetTransform.position + (Vector3)screenPositionOffset;
 
             tutorialObjectInstance.transform.DOKill();
             tutorialObjectInstance.transform.position = startScreenPos;
 
-            Vector3 direction = (targetScreenPos - startScreenPos).normalized;
+            Vector3 direction = (targetTransform.position - startScreenPos).normalized;
             if (direction.sqrMagnitude > 0f)
             {
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg + rotationOffset;
@@ -191,13 +190,13 @@ namespace Game
 
             if (isLoop)
             {
-                tutorialObjectInstance.transform.DOMove(targetScreenPos, halfDuration)
+                tutorialObjectInstance.transform.DOMove(targetTransform.position, halfDuration)
                     .SetEase(Ease.InOutSine)
                     .SetLoops(-1, LoopType.Yoyo);
             }
             else
             {
-                tutorialObjectInstance.transform.DOMove(targetScreenPos, halfDuration)
+                tutorialObjectInstance.transform.DOMove(targetTransform.position, halfDuration)
                     .SetEase(Ease.InOutSine)
                     .OnComplete(() =>
                     {

@@ -15,6 +15,8 @@ MonoBehaviour:
   Id: level_1_stage_1_step_2
   directive: Matching 4 elements as square creates a bomb!
   directiveParentHeight: 493.38
+  anchorMin: {x: 0, y: 0}
+  anchorMax: {x: 1, y: 0}
   disablesActionBar: 1
   requiredLevelIndex: 0
   requiredStageIndex: 0
