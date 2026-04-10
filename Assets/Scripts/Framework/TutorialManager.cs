@@ -14,7 +14,6 @@ namespace Game
     public partial class TutorialManager : SerializedMonoBehaviour
     {
         public List<TutorialStep> tutorialSteps = new List<TutorialStep>();
-        public float directiveParentHeight;
         public Transform animationObjectParent; // Parent for tutorial animation objects that is set at tutorialAnimation.tutorialObject. If null, animations will be parented to the first canvas in the scene.
         public TMP_Text directiveText;
         public RectTransform directiveParent;
@@ -282,7 +281,9 @@ namespace Game
             {
                 directiveText.text = step.directive;
                 directiveParent.gameObject.SetActive(true);
-                directiveParent.anchoredPosition = new Vector2(directiveParent.anchoredPosition.x, directiveParentHeight);
+                directiveParent.anchorMin = step.anchorMin;
+                directiveParent.anchorMax = step.anchorMax;
+                directiveParent.anchoredPosition = new Vector2(directiveParent.anchoredPosition.x, step.directiveParentHeight);
             }
         }
         public void ClearDirective()

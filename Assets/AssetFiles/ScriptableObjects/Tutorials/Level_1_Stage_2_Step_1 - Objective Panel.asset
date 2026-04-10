@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a23e412978b2f9b43ae72e9ce71bb98b, type: 3}
   m_Name: Level_1_Stage_2_Step_1 - Objective Panel
   m_EditorClassIdentifier: 
-  Id: level_1_stage_1_step_3
+  Id: level_1_stage_2_step_1
   directive: This is your objective panel
+  directiveParentHeight: 493.38
+  anchorMin: {x: 0, y: 0}
+  anchorMax: {x: 0, y: 0}
   disablesActionBar: 1
   requiredLevelIndex: 0
   requiredStageIndex: 1
@@ -51,7 +54,7 @@ MonoBehaviour:
   advancedMode: 0
   serializationDepth: 0
   isStarted: 0
-  isCompleted: 0
+  isCompleted: 1
   references:
     version: 2
     RefIds:
@@ -59,7 +62,7 @@ MonoBehaviour:
       type: {class: SelectedTags_Highlight, ns: Game, asm: Assembly-CSharp}
       data:
         selectedTags:
-        - ObjectiveNodeUI
+        - ObjectiveUI
     - rid: 3084495758061469789
       type: {class: LookAndPointAtFirstHighlightedObject, ns: Game, asm: Assembly-CSharp}
       data:

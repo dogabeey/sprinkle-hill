@@ -427,7 +427,7 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 1
   m_StartAxis: 0
-  m_CellSize: {x: 1019.29016, y: 160}
+  m_CellSize: {x: 1019.3602, y: 160}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 2
   m_ConstraintCount: 1
@@ -1065,7 +1065,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1510078030}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -1104,8 +1104,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: 492.76}
-  m_SizeDelta: {x: 0, y: 304.87}
+  m_AnchoredPosition: {x: 0, y: 493.38}
+  m_SizeDelta: {x: 0, y: 306.11}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1602025053
 MonoBehaviour:
@@ -2680,24 +2680,24 @@ PrefabInstance:
       objectReference: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
     - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: tutorialSteps.Array.size
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: 'tutorialSteps.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: d5b5a3024be19a24ab5c9cb38c1238ad, type: 2}
+      objectReference: {fileID: 11400000, guid: b71aef537cde7dc47a731839858a4b86, type: 2}
     - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: 'tutorialSteps.Array.data[1]'
       value: 
-      objectReference: {fileID: 11400000, guid: b71aef537cde7dc47a731839858a4b86, type: 2}
+      objectReference: {fileID: 11400000, guid: beab77d328698014dbbc481afce5067d, type: 2}
     - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: 'tutorialSteps.Array.data[2]'
       value: 
-      objectReference: {fileID: 11400000, guid: beab77d328698014dbbc481afce5067d, type: 2}
+      objectReference: {fileID: 11400000, guid: 65174ccb315f4db4c82f97eb251aae3b, type: 2}
     - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: 'tutorialSteps.Array.data[3]'
       value: 
-      objectReference: {fileID: 11400000, guid: 65174ccb315f4db4c82f97eb251aae3b, type: 2}
+      objectReference: {fileID: 11400000, guid: 330c286938e423543bdbdc65e9090038, type: 2}
     - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: 'tutorialSteps.Array.data[4]'
       value: 
