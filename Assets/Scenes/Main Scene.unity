@@ -1272,6 +1272,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8054950767382582106, guid: 33ffe7376da104e4da346a82d1243245, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8054950767382582106, guid: 33ffe7376da104e4da346a82d1243245, type: 3}
       propertyPath: sfxVolumeSlider
       value: 
       objectReference: {fileID: 0}
@@ -2455,7 +2459,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1889147582
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2556,6 +2560,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   playAnimationName: 
   isPersistent: 0
+  layoutGroup: {fileID: 1889147583}
   restartButton: {fileID: 687793617}
   musicToggle: {fileID: 177710307}
   sfxToggle: {fileID: 1670592312}
@@ -3326,7 +3331,7 @@ MonoBehaviour:
         m_MethodName: Show
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgument: {fileID: 1889147586}
           m_ObjectArgumentAssemblyTypeName: Game.GameScreen, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -4039,6 +4044,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2547576709511450939, guid: 70bd33374545fe1428a509f86d0456fd, type: 3}
       propertyPath: backgroundMask
+      value: 
+      objectReference: {fileID: 687793615}
+    - target: {fileID: 2547576709511450939, guid: 70bd33374545fe1428a509f86d0456fd, type: 3}
+      propertyPath: backgroundImage
       value: 
       objectReference: {fileID: 687793615}
     - target: {fileID: 9191944216798355091, guid: 70bd33374545fe1428a509f86d0456fd, type: 3}

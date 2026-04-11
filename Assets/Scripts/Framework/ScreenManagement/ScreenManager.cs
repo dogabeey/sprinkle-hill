@@ -8,7 +8,7 @@ namespace Game
 {
     public class ScreenManager : SingletonComponent<ScreenManager>
     {
-        public Image backgroundMask; // This is toggled when a screen is open to darken the background.
+        public Image backgroundImage; // This is toggled when a screen is open to darken the background.
 
         internal List<GameScreen> screens = new List<GameScreen>();
 
@@ -19,7 +19,7 @@ namespace Game
             yield return new WaitForSeconds(0.5f);
             screens.AddRange(FindObjectsOfType<GameScreen>(true));
 
-            defaultBGAlpha = backgroundMask.color.a;
+            defaultBGAlpha = backgroundImage.color.a;
         }
 
         private void Update()
@@ -29,7 +29,9 @@ namespace Game
 
         public void Show(GameScreen gameScreen)
         {
-            backgroundMask.enabled = true;
+            backgroundImage.color = new Color(backgroundImage.color.r, backgroundImage.color.g, backgroundImage.color.b, 0);
+            backgroundImage.enabled = true;
+            backgroundImage.DOFade(defaultBGAlpha, 0.5f);
             screens.ForEach(screen => {
                 if (screen.gameObject.activeSelf)
                 {
@@ -45,9 +47,9 @@ namespace Game
 
         public void Show(Screens screenID)
         {
-            backgroundMask.color = new Color(backgroundMask.color.r, backgroundMask.color.g, backgroundMask.color.b, 0);
-            backgroundMask.enabled = true;
-            backgroundMask.DOFade(defaultBGAlpha, 0.5f);
+            backgroundImage.color = new Color(backgroundImage.color.r, backgroundImage.color.g, backgroundImage.color.b, 0);
+            backgroundImage.enabled = true;
+            backgroundImage.DOFade(defaultBGAlpha, 0.5f);
             screens.ForEach(screen => {
                 if (screen.gameObject.activeSelf)
                 {
@@ -63,14 +65,14 @@ namespace Game
         }
         public void CloseAllScreens()
         {
-            backgroundMask.DOFade(0, 0.5f);
-            backgroundMask.enabled = false;
+            backgroundImage.DOFade(0, 0.5f);
+            backgroundImage.enabled = false;
             screens.ForEach(screen => screen.gameObject.SetActive(false));
         }
         public void CloseAllNonPersistentScreens()
         {
-            backgroundMask.DOFade(0, 0.5f);
-            backgroundMask.enabled = false;
+            backgroundImage.DOFade(0, 0.5f);
+            backgroundImage.enabled = false;
             screens.ForEach(screen => {
                 if (!screen.isPersistent) screen.gameObject.SetActive(false);
             });
