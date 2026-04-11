@@ -1017,7 +1017,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -106.72}
+  m_AnchoredPosition: {x: 0, y: -106.71997}
   m_SizeDelta: {x: 0, y: 213.45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1068210312
@@ -1553,7 +1553,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: -172.3}
+  m_AnchoredPosition: {x: 0, y: -172.29999}
   m_SizeDelta: {x: 236.1, y: 164.2558}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1393474370
@@ -2335,7 +2335,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -0.00024414062, y: -164.99998}
+  m_AnchoredPosition: {x: -0.00024414062, y: -164.99997}
   m_SizeDelta: {x: 236.1, y: 165}
   m_Pivot: {x: 1, y: 0}
 --- !u!1 &1730923616
@@ -4213,12 +4213,24 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: levelScenes.Array.size
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: 'levelScenes.Array.data[1]'
       value: 
-      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
+      objectReference: {fileID: 6648657062745475262, guid: 1814c9bb31018004d8ed27f79f92829b, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[2]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 04461135af576014d8552532118fc0ca, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[3]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: cac998f988b69c9439453293c956cda8, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: excludeFirstXLevelFromLoop
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7722314759461277705, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: m_Name
       value: Game Manager

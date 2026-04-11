@@ -1021,11 +1021,11 @@ MonoBehaviour:
   levelCreationMode: 1
   gridSize: {x: 8, y: 8}
   objectives:
-  - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
+  - objectiveType: {fileID: 11400000, guid: ffe972f147b15a3478d78402d760a387, type: 2}
     scriptableObjectParameter: {fileID: 11400000, guid: e8a4ef47323ffc84e9d868a5d7e07f5a, type: 2}
     requiredCount: 9
     isCompleted: 0
-  - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
+  - objectiveType: {fileID: 11400000, guid: ffe972f147b15a3478d78402d760a387, type: 2}
     scriptableObjectParameter: {fileID: 11400000, guid: 4b8190d2fea24a34b9c37319a88d6b52, type: 2}
     requiredCount: 9
     isCompleted: 0

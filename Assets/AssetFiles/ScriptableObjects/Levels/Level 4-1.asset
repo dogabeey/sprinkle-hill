@@ -1021,23 +1021,27 @@ MonoBehaviour:
   levelCreationMode: 1
   gridSize: {x: 8, y: 8}
   objectives:
-  - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
-    scriptableObjectParameter: {fileID: 11400000, guid: b5e047feb0cad314a894341b7d997b76, type: 2}
-    requiredCount: 10
+  - objectiveType: {fileID: 11400000, guid: ffe972f147b15a3478d78402d760a387, type: 2}
+    scriptableObjectParameter: {fileID: 11400000, guid: f006f435c88374942881e4fd9742c0ca, type: 2}
+    requiredCount: 6
     isCompleted: 0
-  - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
-    scriptableObjectParameter: {fileID: 11400000, guid: 6ba60f6e48ed9b54e881da3788fc5d7b, type: 2}
-    requiredCount: 10
+  - objectiveType: {fileID: 11400000, guid: ffe972f147b15a3478d78402d760a387, type: 2}
+    scriptableObjectParameter: {fileID: 11400000, guid: 15add8ec82c964f4fa95e19e667720e0, type: 2}
+    requiredCount: 6
+    isCompleted: 0
+  - objectiveType: {fileID: 11400000, guid: ffe972f147b15a3478d78402d760a387, type: 2}
+    scriptableObjectParameter: {fileID: 11400000, guid: b0323a93d2c3aef4b9f4e45a5aa63cac, type: 2}
+    requiredCount: 6
     isCompleted: 0
   specialWinEvent: 0
   targetElement: {fileID: 0}
-  timer: 180
+  timer: 200
   proceduralGeneration:
     useRandomSeed: 1
     seed: 0
     emptyCellChance: 0
     breakableWallPlacementMode: 1
-    triangleWidth: 8
+    triangleWidth: 7
     triangleDecrement: 1
     rectangleStart: {x: 0, y: 0}
     rectangleEnd: {x: 0, y: 0}
@@ -1046,4 +1050,9 @@ MonoBehaviour:
   elementPool:
   - {fileID: 11400000, guid: 5f772a775fbc8914ea43012dba006383, type: 2}
   - {fileID: 11400000, guid: f006bee3086de89498bb86a23191f83c, type: 2}
-  - {fileID: 11400000, guid: e8a4ef47323ffc84e9d868a5d7e07f5a, type: 2}
+  - {fileID: 11400000, guid: 4fe8a0c53d743b842b064651e77b0934, type: 2}
+  - {fileID: 11400000, guid: 15add8ec82c964f4fa95e19e667720e0, type: 2}
+  - {fileID: 11400000, guid: f006f435c88374942881e4fd9742c0ca, type: 2}
+  - {fileID: 11400000, guid: 3cc4cfe4adda2264b8c6dc023c7fe12d, type: 2}
+  - {fileID: 11400000, guid: b0323a93d2c3aef4b9f4e45a5aa63cac, type: 2}
+  - {fileID: 11400000, guid: e3e6d6f930f04b4458ca5e2ddfadee99, type: 2}
