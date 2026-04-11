@@ -816,7 +816,7 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 1
   m_StartAxis: 0
-  m_CellSize: {x: 1019.29016, y: 160}
+  m_CellSize: {x: 1019.3602, y: 160}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 2
   m_ConstraintCount: 1
@@ -4213,7 +4213,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: levelScenes.Array.size
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: 'levelScenes.Array.data[1]'
@@ -4228,8 +4228,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6648657062745475262, guid: cac998f988b69c9439453293c956cda8, type: 3}
     - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[4]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 4bd797af29402654ba1c870264e5a7e9, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: excludeFirstXLevelFromLoop
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7722314759461277705, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: m_Name

@@ -74,8 +74,19 @@ public class Objective
 {
     [Tooltip("The type of this objective. Created via scriptable object, it defines the event that will be listened to for this objective and the parameter type of that event.")]
     public ObjectiveType objectiveType;
+    [Tooltip("Indicates whether this objective is procedurally generated.")]
+    public bool isProcedurallyGenerated;
     [Tooltip("The scriptable object parameter associated with this objective's event. Every time the event specified in objective type is sent with this specific scriptable object, the required objective count will decreased.")]
-    public VisualizableScriptableObject scriptableObjectParameter;
+    [HideIf("IsProcedurallyGenerated")]
+    public VisualizableScriptableObject scriptableObjectParameter; 
+    [HideIf("IsProcedurallyGenerated")]
     public int requiredCount;
+    [ShowIf("IsProcedurallyGenerated"), MinMaxSlider(1, 20)]
+    public Vector2Int generatedCount;
     public bool isCompleted;
+
+    bool IsProcedurallyGenerated()
+    {
+        return isProcedurallyGenerated;
+    }
 }

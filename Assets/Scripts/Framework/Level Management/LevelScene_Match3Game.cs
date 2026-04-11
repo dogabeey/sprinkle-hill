@@ -3,6 +3,7 @@ using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -371,7 +372,7 @@ namespace Game
                 return;
             }
 
-            objectives = CloneObjectives(currentEditor.objectives);
+            objectives = CloneObjectives(currentEditor.objectives, currentEditor.ElementPool);
             targetElement = currentEditor.targetElement;
             timer = currentEditor.timer;
 
@@ -435,11 +436,15 @@ namespace Game
             return levelEditors[currentLevelEditorIndex];
         }
 
-        private static List<Objective> CloneObjectives(List<Objective> source)
+        private static List<Objective> CloneObjectives(List<Objective> source, List<ElementData> possibleElementsPool)
         {
             List<Objective> cloned = new List<Objective>();
             if (source == null)
                 return cloned;
+
+            List<ElementData> validElementPool = possibleElementsPool != null
+                ? possibleElementsPool.Where(element => element != null).ToList()
+                : new List<ElementData>();
 
             for (int i = 0; i < source.Count; i++)
             {
@@ -447,11 +452,32 @@ namespace Game
                 if (objective == null)
                     continue;
 
+                VisualizableScriptableObject scriptableParameter = objective.scriptableObjectParameter;
+                int requiredCount = objective.requiredCount;
+
+                if (objective.isProcedurallyGenerated)
+                {
+                    if (validElementPool.Count > 0)
+                    {
+                        scriptableParameter = validElementPool[UnityEngine.Random.Range(0, validElementPool.Count)];
+                    }
+
+                    int minCount = Mathf.RoundToInt(Mathf.Min(objective.generatedCount.x, objective.generatedCount.y));
+                    int maxCount = Mathf.RoundToInt(Mathf.Max(objective.generatedCount.x, objective.generatedCount.y));
+
+                    minCount = Mathf.Max(1, minCount);
+                    maxCount = Mathf.Max(minCount, maxCount);
+
+                    requiredCount = UnityEngine.Random.Range(minCount, maxCount + 1);
+                }
+
                 cloned.Add(new Objective
                 {
                     objectiveType = objective.objectiveType,
-                    scriptableObjectParameter = objective.scriptableObjectParameter,
-                    requiredCount = objective.requiredCount,
+                    isProcedurallyGenerated = objective.isProcedurallyGenerated,
+                    scriptableObjectParameter = scriptableParameter,
+                    requiredCount = requiredCount,
+                    generatedCount = objective.generatedCount,
                     isCompleted = false,
                 });
             }

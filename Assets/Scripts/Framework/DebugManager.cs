@@ -21,7 +21,9 @@ namespace Game
             if (Input.GetKeyDown(KeyCode.R))
             {
                 PlayerPrefs.DeleteAll();
+#if UNITY_EDITOR
                 SaveManager.ClearAllSaves();
+#endif
             }
             if(Input.GetKeyDown(KeyCode.L))
             {
