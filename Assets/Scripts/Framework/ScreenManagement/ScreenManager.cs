@@ -76,7 +76,7 @@ namespace Game
             backgroundImage.DOFade(0, 0.5f);
             backgroundImage.enabled = false;
             screens.ForEach(screen => {
-                if (!screen.isPersistent) screen.gameObject.SetActive(false);
+                if (!screen.isPersistent) screen.CloseUI();
             });
         }
 

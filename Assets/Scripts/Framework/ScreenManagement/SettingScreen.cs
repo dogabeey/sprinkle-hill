@@ -18,36 +18,33 @@ namespace Game
         }
         public override void CloseUI()
         {
-            StartCoroutine(MenuCloseCoroutine());
+            if(gameObject.activeSelf)
+                StartCoroutine(MenuCloseCoroutine());
             base.CloseUI();
         }
 
         private IEnumerator MenuOpenCoroutine()
         {
-            DOVirtual.Float(0, 1, 0.3f, (value) =>
-            {
-                layoutGroup.spacing = Vector2.Lerp(new Vector2(0, 0), new Vector2(0, 50), value);
-            }).SetEase(Ease.OutBack);
             musicToggle.gameObject.SetActive(true);
-            yield return new WaitForSeconds(0.1f);
             sfxToggle.gameObject.SetActive(true);
-            yield return new WaitForSeconds(0.1f);
             vibrationToggle.gameObject.SetActive(true);
-            yield return new WaitForSeconds(0.1f);
             restartButton.gameObject.SetActive(true);
+
+            yield return DOVirtual.Float(0, 50, 0.3f, (value) =>
+            {
+                layoutGroup.spacing = Vector2.one * value;
+            }).SetEase(Ease.OutBack).WaitForCompletion();
         }
         private IEnumerator MenuCloseCoroutine()
         {
-            DOVirtual.Float(1, 0, 0.3f, (value) =>
+            yield return DOVirtual.Float(50, 0, 0.3f, (value) =>
             {
-                layoutGroup.spacing = Vector2.Lerp(new Vector2(0, 50), new Vector2(0, 0), value);
-            }).SetEase(Ease.InBack);
+                layoutGroup.spacing = Vector2.one * value;
+            }).SetEase(Ease.InBack).WaitForCompletion();
+
             restartButton.gameObject.SetActive(false);
-            yield return new WaitForSeconds(0.1f);
             vibrationToggle.gameObject.SetActive(false);
-            yield return new WaitForSeconds(0.1f);
             sfxToggle.gameObject.SetActive(false);
-            yield return new WaitForSeconds(0.1f);
             musicToggle.gameObject.SetActive(false);
         }
     }
