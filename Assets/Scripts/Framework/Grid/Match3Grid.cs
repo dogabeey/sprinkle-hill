@@ -97,6 +97,14 @@ namespace Game
 
         }
 
+        public GridCellController GetCellControllerAt(Vector2Int pos)
+        {
+            if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)
+                return tile;
+
+            return null;
+        }
+
         // ------------------------------------------------------------------
         //  Lifecycle
         // ------------------------------------------------------------------
@@ -1178,6 +1186,163 @@ namespace Game
             }
 
             return false;
+        }
+
+        public bool TryGetRandomPossibleMove(out Vector2Int mover, out Vector2Int target, out List<Vector2Int> matchedGroup)
+        {
+            mover = default;
+            target = default;
+            matchedGroup = null;
+
+            Vector2Int[] dirs = { Vector2Int.right, Vector2Int.up };
+            List<(Vector2Int mover, Vector2Int target, List<Vector2Int> group)> candidates = new List<(Vector2Int, Vector2Int, List<Vector2Int>)>();
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    Vector2Int aPos = new Vector2Int(x, y);
+                    GridCell aCell = GetCell(aPos);
+                    if (!IsMatchableForMove(aCell)) continue;
+
+                    for (int i = 0; i < dirs.Length; i++)
+                    {
+                        Vector2Int bPos = aPos + dirs[i];
+                        GridCell bCell = GetCell(bPos);
+                        if (!IsMatchableForMove(bCell)) continue;
+
+                        ElementData aData = aCell.elementInfo.elementData;
+                        ElementData bData = bCell.elementInfo.elementData;
+                        if (aData == bData) continue;
+
+                        aCell.elementInfo.elementData = bData;
+                        bCell.elementInfo.elementData = aData;
+
+                        bool aIsMover = CreatesMatchAt(bPos);
+                        bool bIsMover = CreatesMatchAt(aPos);
+
+                        if (aIsMover)
+                        {
+                            candidates.Add((aPos, bPos, BuildMatchedGroupForSwap(aPos, bPos)));
+                        }
+
+                        if (bIsMover)
+                        {
+                            candidates.Add((bPos, aPos, BuildMatchedGroupForSwap(bPos, aPos)));
+                        }
+
+                        aCell.elementInfo.elementData = aData;
+                        bCell.elementInfo.elementData = bData;
+                    }
+                }
+            }
+
+            if (candidates.Count == 0)
+            {
+                return false;
+            }
+
+            var selected = candidates[Random.Range(0, candidates.Count)];
+            mover = selected.mover;
+            target = selected.target;
+            matchedGroup = selected.group;
+            return true;
+        }
+
+        private List<Vector2Int> BuildMatchedGroupForSwap(Vector2Int moverPos, Vector2Int targetPos)
+        {
+            HashSet<Vector2Int> group = new HashSet<Vector2Int>();
+
+            GridCell targetCell = GetCell(targetPos);
+            if (targetCell != null && IsMatchableForMove(targetCell))
+            {
+                ElementData movedData = targetCell.elementInfo.elementData;
+                CollectLineMatch(targetPos, movedData, group);
+                CollectSquareMatch(targetPos, movedData, group);
+            }
+
+            GridCell moverCell = GetCell(moverPos);
+            if (moverCell != null && IsMatchableForMove(moverCell))
+            {
+                ElementData secondData = moverCell.elementInfo.elementData;
+                CollectLineMatch(moverPos, secondData, group);
+                CollectSquareMatch(moverPos, secondData, group);
+            }
+
+            return new List<Vector2Int>(group);
+        }
+
+        private void CollectLineMatch(Vector2Int pos, ElementData data, HashSet<Vector2Int> group)
+        {
+            List<Vector2Int> horizontal = new List<Vector2Int> { pos };
+            Vector2Int cur = pos + Vector2Int.left;
+            while (true)
+            {
+                GridCell c = GetCell(cur);
+                if (!IsMatchableForMove(c) || c.elementInfo.elementData != data) break;
+                horizontal.Add(cur);
+                cur += Vector2Int.left;
+            }
+
+            cur = pos + Vector2Int.right;
+            while (true)
+            {
+                GridCell c = GetCell(cur);
+                if (!IsMatchableForMove(c) || c.elementInfo.elementData != data) break;
+                horizontal.Add(cur);
+                cur += Vector2Int.right;
+            }
+
+            if (horizontal.Count >= 3)
+            {
+                for (int i = 0; i < horizontal.Count; i++) group.Add(horizontal[i]);
+            }
+
+            List<Vector2Int> vertical = new List<Vector2Int> { pos };
+            cur = pos + Vector2Int.down;
+            while (true)
+            {
+                GridCell c = GetCell(cur);
+                if (!IsMatchableForMove(c) || c.elementInfo.elementData != data) break;
+                vertical.Add(cur);
+                cur += Vector2Int.down;
+            }
+
+            cur = pos + Vector2Int.up;
+            while (true)
+            {
+                GridCell c = GetCell(cur);
+                if (!IsMatchableForMove(c) || c.elementInfo.elementData != data) break;
+                vertical.Add(cur);
+                cur += Vector2Int.up;
+            }
+
+            if (vertical.Count >= 3)
+            {
+                for (int i = 0; i < vertical.Count; i++) group.Add(vertical[i]);
+            }
+        }
+
+        private void CollectSquareMatch(Vector2Int pos, ElementData data, HashSet<Vector2Int> group)
+        {
+            Vector2Int[] origins =
+            {
+                pos,
+                pos + Vector2Int.left,
+                pos + Vector2Int.down,
+                pos + Vector2Int.left + Vector2Int.down
+            };
+
+            for (int i = 0; i < origins.Length; i++)
+            {
+                Vector2Int o = origins[i];
+                if (!IsSquareAt(o, data)) continue;
+
+                group.Add(o);
+                group.Add(o + Vector2Int.right);
+                group.Add(o + Vector2Int.up);
+                group.Add(o + Vector2Int.right + Vector2Int.up);
+            }
         }
 
         private bool CreatesMatchAt(Vector2Int pos)

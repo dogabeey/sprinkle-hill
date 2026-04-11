@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using DG.Tweening;
 using static Game.Grid3D;
 
 namespace Game
@@ -9,6 +11,9 @@ namespace Game
         [SerializeField] private Match3Grid match3Grid;
         [SerializeField] private Camera inputCamera;
         [SerializeField] private float minDragDistance = 20f; // pixels
+        [SerializeField] private float idleHintDelay = 5f;
+        [SerializeField] private float hintMoveDuration = 1.4f;
+        [SerializeField] private float hintMoveAmount = 0.1f;
 
         private GridElement_Match3Game draggedElement;
         private Vector2 dragStartScreenPos;
@@ -16,6 +21,15 @@ namespace Game
         private bool dragConsumed;
         private PendingPlacementAction pendingPlacementAction;
         private bool isPlacementReady;
+        private float idleTimer;
+        private bool hintActive;
+        private Tween hintTweenA;
+        private Tween hintTweenB;
+        private GridElement hintedElementA;
+        private GridElement hintedElementB;
+        private Vector3 hintedElementAStartPos;
+        private Vector3 hintedElementBStartPos;
+        private readonly List<GridCellController> outlinedHintCells = new List<GridCellController>();
 
         private enum PendingPlacementAction
         {
@@ -31,6 +45,21 @@ namespace Game
             {
                 inputCamera = Camera.main;
             }
+        }
+
+        private void OnEnable()
+        {
+            EventManager.StartListening(GameEvent.INPUT_RECEIVED, OnInputReceived);
+            EventManager.StartListening(GameEvent.GRID_STABLE, OnGridStable);
+            EventManager.StartListening(GameEvent.ELEMENTS_SWAPPED, OnBoardChanged);
+        }
+
+        private void OnDisable()
+        {
+            EventManager.StopListening(GameEvent.INPUT_RECEIVED, OnInputReceived);
+            EventManager.StopListening(GameEvent.GRID_STABLE, OnGridStable);
+            EventManager.StopListening(GameEvent.ELEMENTS_SWAPPED, OnBoardChanged);
+            ClearHintVisuals();
         }
 
         private void Update()
@@ -52,6 +81,15 @@ namespace Game
                     TryPlacePendingAction();
                 }
                 return;
+            }
+
+            if (draggedElement == null)
+            {
+                idleTimer += Time.deltaTime;
+                if (!hintActive && idleTimer >= idleHintDelay)
+                {
+                    ShowIdleHint();
+                }
             }
 
             if (Input.GetMouseButtonDown(0))
@@ -195,18 +233,22 @@ namespace Game
 
         private IEnumerator ActivatePowerUpRoutine(Vector2Int pos)
         {
+            ClearHintVisuals();
             isProcessing = true;
             yield return StartCoroutine(match3Grid.SwapAndMatch(pos, pos));
             isProcessing = false;
+            idleTimer = 0f;
         }
 
         private IEnumerator SwapAndMatchRoutine(Vector2Int firstPos, Vector2Int secondPos)
         {
+            ClearHintVisuals();
             isProcessing = true;
 
             yield return StartCoroutine(match3Grid.SwapAndMatch(firstPos, secondPos));
 
             isProcessing = false;
+            idleTimer = 0f;
         }
 
         /// <summary>
@@ -275,6 +317,7 @@ namespace Game
 
         private IEnumerator BombPlacementRoutine(Vector2Int center)
         {
+            ClearHintVisuals();
             isProcessing = true;
             BombPlacementAction bombAction = GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is BombPlacementAction) as BombPlacementAction;
             if (bombAction == null)
@@ -289,10 +332,12 @@ namespace Game
             yield return StartCoroutine(match3Grid.ClearAreaAt(center, 1));
             yield return StartCoroutine(match3Grid.ApplyGravityPublic());
             isProcessing = false;
+            idleTimer = 0f;
         }
 
         private IEnumerator RocketPlacementRoutine(Vector2Int center)
         {
+            ClearHintVisuals();
             isProcessing = true;
 
             PlaceRocketAction rocketAction = GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is PlaceRocketAction) as PlaceRocketAction;
@@ -316,10 +361,12 @@ namespace Game
             yield return StartCoroutine(match3Grid.PlaceHorizontalRocketActionAt(center));
 
             isProcessing = false;
+            idleTimer = 0f;
         }
 
         private IEnumerator DiscoBallPlacementRoutine(Vector2Int center)
         {
+            ClearHintVisuals();
             isProcessing = true;
 
             PlaceDiscoBallAction discoBallAction = GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is PlaceDiscoBallAction) as PlaceDiscoBallAction;
@@ -343,6 +390,7 @@ namespace Game
             yield return StartCoroutine(match3Grid.PlaceDiscoBallActionAt(center));
 
             isProcessing = false;
+            idleTimer = 0f;
         }
 
         private GridCellController GetCellAtScreenPos(Camera cam, Vector3 screenPos)
@@ -370,6 +418,100 @@ namespace Game
                 return true;
 
             return GameManager.Instance.tutorialManager.IsElementInteractionAllowed(targetObject);
+        }
+
+        private void OnInputReceived(EventParam _)
+        {
+            idleTimer = 0f;
+            ClearHintVisuals();
+        }
+
+        private void OnGridStable(EventParam _)
+        {
+            idleTimer = 0f;
+            ClearHintVisuals();
+        }
+
+        private void OnBoardChanged(EventParam _)
+        {
+            idleTimer = 0f;
+            ClearHintVisuals();
+        }
+
+        private void ShowIdleHint()
+        {
+            if (match3Grid == null) return;
+            if (!match3Grid.TryGetRandomPossibleMove(out Vector2Int mover, out Vector2Int target, out List<Vector2Int> matchedGroup))
+                return;
+
+            GridElement elementA = match3Grid.GetElementAt(mover);
+            GridElement elementB = match3Grid.GetElementAt(target);
+            if (elementA == null || elementB == null)
+                return;
+
+            hintedElementA = elementA;
+            hintedElementB = elementB;
+
+            Vector3 startA = elementA.transform.position;
+            Vector3 startB = elementB.transform.position;
+            hintedElementAStartPos = startA;
+            hintedElementBStartPos = startB;
+            Vector3 toA = Vector3.Lerp(startA, startB, Mathf.Clamp01(hintMoveAmount));
+            Vector3 toB = Vector3.Lerp(startB, startA, Mathf.Clamp01(hintMoveAmount));
+
+            hintTweenA = elementA.transform.DOMove(toA, hintMoveDuration).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
+            hintTweenB = elementB.transform.DOMove(toB, hintMoveDuration).SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo);
+
+            DrawMatchedGroupOutline(matchedGroup);
+            hintActive = true;
+        }
+
+        private void DrawMatchedGroupOutline(List<Vector2Int> group)
+        {
+            ClearHintOutline();
+            if (group == null || group.Count == 0) return;
+
+            HashSet<Vector2Int> positions = new HashSet<Vector2Int>(group);
+            foreach (Vector2Int pos in positions)
+            {
+                GridCellController cell = match3Grid.GetCellControllerAt(pos);
+                if (cell == null) continue;
+
+                bool up = !positions.Contains(pos + Vector2Int.up);
+                bool down = !positions.Contains(pos + Vector2Int.down);
+                bool left = !positions.Contains(pos + Vector2Int.left);
+                bool right = !positions.Contains(pos + Vector2Int.right);
+
+                cell.SetBorders(up, down, left, right);
+                outlinedHintCells.Add(cell);
+            }
+        }
+
+        private void ClearHintOutline()
+        {
+            for (int i = 0; i < outlinedHintCells.Count; i++)
+            {
+                if (outlinedHintCells[i] != null)
+                    outlinedHintCells[i].ClearBorders();
+            }
+            outlinedHintCells.Clear();
+        }
+
+        private void ClearHintVisuals()
+        {
+            hintActive = false;
+
+            if (hintTweenA != null && hintTweenA.IsActive()) hintTweenA.Kill();
+            if (hintTweenB != null && hintTweenB.IsActive()) hintTweenB.Kill();
+            hintTweenA = null;
+            hintTweenB = null;
+
+            if (hintedElementA != null) hintedElementA.transform.position = hintedElementAStartPos;
+            if (hintedElementB != null) hintedElementB.transform.position = hintedElementBStartPos;
+            hintedElementA = null;
+            hintedElementB = null;
+
+            ClearHintOutline();
         }
     }
 }
