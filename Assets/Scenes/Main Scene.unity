@@ -1449,6 +1449,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1393474369}
   - component: {fileID: 1393474370}
+  - component: {fileID: 1393474371}
   m_Layer: 5
   m_Name: MoneyUI
   m_TagString: Untagged
@@ -1499,6 +1500,18 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 20}
   m_Constraint: 1
   m_ConstraintCount: 1
+--- !u!225 &1393474371
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1393474368}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1444157068
 GameObject:
   m_ObjectHideFlags: 0
@@ -3154,6 +3167,10 @@ PrefabInstance:
       propertyPath: currencyContainer
       value: 
       objectReference: {fileID: 1393474369}
+    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
+      propertyPath: currencyCanvasGroup
+      value: 
+      objectReference: {fileID: 1393474371}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4113,6 +4130,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 492599855}
     m_Modifications:
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: levelScenes.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[1]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
     - target: {fileID: 7722314759461277705, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: m_Name
       value: Game Manager

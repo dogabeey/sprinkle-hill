@@ -24,6 +24,7 @@ namespace Game
 
         [Header("References")]
         public Transform currencyContainer;
+        public CanvasGroup currencyCanvasGroup;
         public CurrencyElement currencyElementPrefab;
         public List<CurrencyInfo> currencyInfos;
 
@@ -34,6 +35,27 @@ namespace Game
         public float currencySpriteMultiplier = 10f;
 
         private readonly List<CurrencyElement> currencyElements = new List<CurrencyElement>();
+
+        private void OnEnable()
+        {
+            EventManager.StartListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
+            EventManager.StartListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
+            EventManager.StartListening(GameEvent.LEVEL_FAILED, OnLevelCompleted);
+        }
+        private void OnDisable()
+        {
+            EventManager.StopListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
+            EventManager.StopListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
+            EventManager.StopListening(GameEvent.LEVEL_FAILED, OnLevelCompleted);
+        }
+        private void OnLevelStarted(EventParam e)
+        {
+            currencyCanvasGroup.alpha = 0; // Turn it off when level starts.
+        }
+        private void OnLevelCompleted(EventParam e)
+        {
+            currencyCanvasGroup.alpha = 1; // Turn it on when level ends.
+        }
 
         private void Start()
         {
