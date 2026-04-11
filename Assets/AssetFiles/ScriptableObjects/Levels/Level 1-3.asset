@@ -1023,15 +1023,15 @@ MonoBehaviour:
   objectives:
   - objectiveType: {fileID: 11400000, guid: ffe972f147b15a3478d78402d760a387, type: 2}
     scriptableObjectParameter: {fileID: 11400000, guid: 0beb8f42119a75c4c8fff95fb8eb913b, type: 2}
-    requiredCount: 3
+    requiredCount: 2
     isCompleted: 0
   - objectiveType: {fileID: 11400000, guid: ffe972f147b15a3478d78402d760a387, type: 2}
     scriptableObjectParameter: {fileID: 11400000, guid: afb7de669d097f54ab7742316eb3c3c1, type: 2}
-    requiredCount: 3
+    requiredCount: 2
     isCompleted: 0
   - objectiveType: {fileID: 11400000, guid: ffe972f147b15a3478d78402d760a387, type: 2}
     scriptableObjectParameter: {fileID: 11400000, guid: 5f772a775fbc8914ea43012dba006383, type: 2}
-    requiredCount: 3
+    requiredCount: 2
     isCompleted: 0
   specialWinEvent: 0
   targetElement: {fileID: 0}
