@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using DG.Tweening;
 using System.Collections;
+using MobileHapticsProFreeEdition;
 
 namespace Game
 {
@@ -168,9 +169,7 @@ namespace Game
 
         public static void ShakeCamera(float duration, float magnitude, int vibrato, float randomness)
         {
-            Camera cam = Camera.main;
-            if (cam != null)
-                cam.transform.DOShakePosition(duration, magnitude, vibrato, randomness);
+            return;
         }
     }
 }
