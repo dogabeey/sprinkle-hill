@@ -20,6 +20,7 @@ namespace Game
         public string worldName;
         public bool mainWorld;
         public List<LevelScene> levelScenes;
+        [Min(0)] public int excludeFirstXLevelFromLoop;
         public int lastPlayedLevelIndex;
 
         private LevelScene currentLevel;
@@ -74,6 +75,25 @@ namespace Game
             lastPlayedLevelIndex = (int)saveData["lastPlayedLevelIndex"];
             onLoadSuccess?.Invoke();
             return true;
+        }
+
+        public int GetSceneIndexForProgressIndex(int progressIndex)
+        {
+            if (levelScenes == null || levelScenes.Count == 0)
+                return -1;
+
+            int levelCount = levelScenes.Count;
+            int excludedCount = Mathf.Clamp(excludeFirstXLevelFromLoop, 0, Mathf.Max(0, levelCount - 1));
+
+            if (progressIndex < levelCount)
+                return Mathf.Clamp(progressIndex, 0, levelCount - 1);
+
+            int loopingLevelCount = levelCount - excludedCount;
+            int loopedIndex = (progressIndex - levelCount) % loopingLevelCount;
+            if (loopedIndex < 0)
+                loopedIndex += loopingLevelCount;
+
+            return excludedCount + loopedIndex;
         }
     }
 

@@ -181,12 +181,14 @@ namespace Game
         }
         private LevelScene FindCurrentLevel()
         {
-            return World.Instance.levelScenes[World.Instance.lastPlayedLevelIndex % World.Instance.levelScenes.Count];
+            int sceneIndex = World.Instance.GetSceneIndexForProgressIndex(World.Instance.lastPlayedLevelIndex);
+            return sceneIndex >= 0 ? World.Instance.levelScenes[sceneIndex] : null;
         }
         private LevelScene FindNextLevel()
         {
             World.Instance.lastPlayedLevelIndex++;
-            return World.Instance.levelScenes[World.Instance.lastPlayedLevelIndex % World.Instance.levelScenes.Count];
+            int sceneIndex = World.Instance.GetSceneIndexForProgressIndex(World.Instance.lastPlayedLevelIndex);
+            return sceneIndex >= 0 ? World.Instance.levelScenes[sceneIndex] : null;
         }
 
     }
