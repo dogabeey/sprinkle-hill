@@ -1,4 +1,5 @@
 using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace Game
         public abstract Screens ScreenID { get; }
         public Animator animator;
         public string playAnimationName;
+        public string closeAnimationName;
         public bool isPersistent;
 
         private void OnValidate()
@@ -20,7 +22,23 @@ namespace Game
         }
 
         public abstract void InitUI();
-        public virtual void CloseUI() { }
+        public virtual void CloseUI() {
+                if (animator != null && !string.IsNullOrEmpty(closeAnimationName))
+                {
+                    animator.Play(closeAnimationName);
+                    StartCoroutine(DisableAfterAnimation());
+                }
+                else
+                {
+                    gameObject.SetActive(false);
+            }
+        }
+
+        private IEnumerator DisableAfterAnimation()
+        {
+            yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+            gameObject.SetActive(false);
+        }
     }
     public class MainMenuScreen : GameScreen
     {
