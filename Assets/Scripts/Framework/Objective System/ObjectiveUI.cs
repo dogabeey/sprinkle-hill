@@ -110,7 +110,7 @@ public class UpperPanelUI : UIElement
             else
             {
                 timerText.enableAutoSizing = false;
-                timerText.text = timer > 0 ? FormatTime(timer) : string.Format(timerFormat, 0, 0);
+                timerText.text = timer.ToString();
             }
 
             if (levelScene.isEnded)
