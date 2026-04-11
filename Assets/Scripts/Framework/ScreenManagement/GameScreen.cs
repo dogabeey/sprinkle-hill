@@ -20,6 +20,7 @@ namespace Game
         }
 
         public abstract void InitUI();
+        public virtual void CloseUI() { }
     }
     public class MainMenuScreen : GameScreen
     {
