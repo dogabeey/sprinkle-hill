@@ -1035,7 +1035,9 @@ MonoBehaviour:
     isCompleted: 0
   specialWinEvent: 0
   targetElement: {fileID: 0}
+  levelLimitType: 1
   timer: 180
+  moves: 120
   proceduralGeneration:
     useRandomSeed: 1
     seed: 0

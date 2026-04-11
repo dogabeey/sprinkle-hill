@@ -37,7 +37,9 @@ namespace Game
 
         [HideInInspector] public List<Objective> objectives = new List<Objective>();
         [HideInInspector] public ElementData targetElement;
+        [HideInInspector] public LevelEditor.LevelLimitType levelLimitType;
         [HideInInspector] public int timer;
+        [HideInInspector] public int moves;
         [FoldoutGroup("Level Settings")]
         public Grid3D grid;
         [FoldoutGroup("Level Settings")]
@@ -97,12 +99,14 @@ namespace Game
         {
             EventManager.StartListening(GameEvent.OBJECTIVE_COMPLETED, OnObjectiveCompleted);
             EventManager.StartListening(GameEvent.GRID_STABLE, OnGridStable);
+            EventManager.StartListening(GameEvent.ELEMENTS_SWAPPED, OnElementsSwapped);
             SetLevelWinEventListener();
         }
         private void OnDisable()
         {
             EventManager.StopListening(GameEvent.OBJECTIVE_COMPLETED, OnObjectiveCompleted);
             EventManager.StopListening(GameEvent.GRID_STABLE, OnGridStable);
+            EventManager.StopListening(GameEvent.ELEMENTS_SWAPPED, OnElementsSwapped);
         }
         private void OnObjectiveCompleted(EventParam param)
         {
@@ -161,6 +165,12 @@ namespace Game
             {
                 yield return new WaitForSeconds(1f);
 
+                if (levelLimitType != LevelEditor.LevelLimitType.Timer)
+                {
+                    EventManager.TriggerEvent(GameEvent.TIMER_PASSED);
+                    continue;
+                }
+
                 if (timer == -1)
                 {
                     EventManager.TriggerEvent(GameEvent.TIMER_PASSED);
@@ -180,6 +190,28 @@ namespace Game
                     EventManager.TriggerEvent(GameEvent.TIMER_EXPIRED);
                     FailLevel("You are out of time.\n\nDon't worry, you'll get them next time.");
                 }
+            }
+        }
+
+        private void OnElementsSwapped(EventParam param)
+        {
+            if (levelLimitType != LevelEditor.LevelLimitType.Moves)
+                return;
+
+            if (isPaused || isEnded)
+                return;
+
+            if (moves <= 0)
+                return;
+
+            moves--;
+            EventManager.TriggerEvent(GameEvent.TIMER_PASSED);
+
+            if (moves <= 0)
+            {
+                moves = 0;
+                EventManager.TriggerEvent(GameEvent.TIMER_EXPIRED);
+                FailLevel("You are out of moves.\n\nDon't worry, you'll get them next time.");
             }
         }
 
@@ -374,7 +406,9 @@ namespace Game
 
             objectives = CloneObjectives(currentEditor.objectives, currentEditor.ElementPool);
             targetElement = currentEditor.targetElement;
+            levelLimitType = currentEditor.levelLimitType;
             timer = currentEditor.timer;
+            moves = Mathf.Max(0, currentEditor.moves);
 
             if (grid == null)
             {

@@ -13,6 +13,12 @@ namespace Game
     [CreateAssetMenu(fileName = "New Level", menuName = "Game/New Level")]
     public class LevelEditor : SerializedScriptableObject
     {
+        public enum LevelLimitType
+        {
+            Timer,
+            Moves
+        }
+
         [ GUIColor("green")]
         public Grid3D.LevelCreationMode levelCreationMode = Grid3D.LevelCreationMode.LevelEditor;
 
@@ -21,7 +27,11 @@ namespace Game
         public List<Objective> objectives = new List<Objective>();
         public GameEvent specialWinEvent;
         public ElementData targetElement;
+        public LevelLimitType levelLimitType = LevelLimitType.Timer;
+        [ShowIf(nameof(IsTimerLimit))]
         public int timer = -1;
+        [ShowIf(nameof(IsMovesLimit))]
+        public int moves = 20;
         [ShowIf(nameof(UseProcedural))]
         public Grid3D.ProceduralGenerationSettings proceduralGeneration = new Grid3D.ProceduralGenerationSettings();
 
@@ -36,6 +46,8 @@ namespace Game
         public List<ElementData> ElementPool => elementPool;
 
         private bool UseProcedural => levelCreationMode == Grid3D.LevelCreationMode.Procedural;
+        private bool IsTimerLimit => levelLimitType == LevelLimitType.Timer;
+        private bool IsMovesLimit => levelLimitType == LevelLimitType.Moves;
 
 #if UNITY_EDITOR
         [Button]

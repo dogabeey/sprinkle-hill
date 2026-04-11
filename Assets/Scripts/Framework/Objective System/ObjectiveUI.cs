@@ -101,16 +101,24 @@ public class UpperPanelUI : UIElement
 
         while (true)
         {
-            int timer = levelScene.timer;
-            if (timer <= -1)
+            if (levelScene.levelLimitType == LevelEditor.LevelLimitType.Moves)
             {
-                timerText.text = "∞";
-                timerText.enableAutoSizing = true;
+                timerText.enableAutoSizing = false;
+                timerText.text = Mathf.Max(0, levelScene.moves).ToString();
             }
             else
             {
-                timerText.enableAutoSizing = false;
-                timerText.text = timer.ToString();
+                int timer = levelScene.timer;
+                if (timer == -1)
+                {
+                    timerText.text = "∞";
+                    timerText.enableAutoSizing = true;
+                }
+                else
+                {
+                    timerText.enableAutoSizing = false;
+                    timerText.text = Mathf.Max(0, timer).ToString();
+                }
             }
 
             if (levelScene.isEnded)
