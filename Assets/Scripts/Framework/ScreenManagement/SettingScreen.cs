@@ -19,6 +19,7 @@ namespace Game
         public override void CloseUI()
         {
             StartCoroutine(MenuCloseCoroutine());
+            base.CloseUI();
         }
 
         private IEnumerator MenuOpenCoroutine()

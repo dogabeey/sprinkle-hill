@@ -42,6 +42,8 @@ namespace Game
         [InlineEditor]
         [FoldoutGroup("Managers")]
         public ActionBarManager actionBarManager;
+        [FoldoutGroup("Managers")]
+        public ScreenManager screenManager;
         [InlineEditor]
         [FoldoutGroup("Managers")]
         public FeatureTracker featureTracker;

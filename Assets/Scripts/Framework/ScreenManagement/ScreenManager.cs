@@ -6,8 +6,10 @@ using UnityEngine.UI;
 
 namespace Game
 {
-    public class ScreenManager : SingletonComponent<ScreenManager>
+    public class ScreenManager : MonoBehaviour
     {
+        public static ScreenManager Instance => GameManager.Instance.screenManager;
+
         public Image backgroundImage; // This is toggled when a screen is open to darken the background.
 
         internal List<GameScreen> screens = new List<GameScreen>();
@@ -16,7 +18,7 @@ namespace Game
 
         private IEnumerator Start()
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.2f);
             screens.AddRange(FindObjectsOfType<GameScreen>(true));
 
             defaultBGAlpha = backgroundImage.color.a;
@@ -67,7 +69,7 @@ namespace Game
         {
             backgroundImage.DOFade(0, 0.5f);
             backgroundImage.enabled = false;
-            screens.ForEach(screen => screen.gameObject.SetActive(false));
+            screens.ForEach(screen => screen.CloseUI());
         }
         public void CloseAllNonPersistentScreens()
         {
