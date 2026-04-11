@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: d9235c0493136ab43b48dfd10a0a81e0
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 300177
+  packageName: 'Mobile Haptics Pro: Free Edition'
+  packageVersion: 1.0.1
+  assetPath: Assets/IntelligentLabs/MobileHapticsProFREE/Materials/LightYellow_FREE.mat
+  uploadId: 709527

@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 67c02cd2064acca419004827e59fc08b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 300177
+  packageName: 'Mobile Haptics Pro: Free Edition'
+  packageVersion: 1.0.1
+  assetPath: Assets/IntelligentLabs/MobileHapticsProFREE/Scripts/GameScene/HapticButtonManager.cs
+  uploadId: 709527

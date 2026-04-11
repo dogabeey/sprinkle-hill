@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 9a9b4848e3c2bfc4a971e01a41c022a2
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 300177
+  packageName: 'Mobile Haptics Pro: Free Edition'
+  packageVersion: 1.0.1
+  assetPath: Assets/IntelligentLabs/MobileHapticsProFREE/Scripts/GameScene/FPSController.cs
+  uploadId: 709527

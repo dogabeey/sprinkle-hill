@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 2906b681883182d4fa9ca6be7a6f327b
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 300177
+  packageName: 'Mobile Haptics Pro: Free Edition'
+  packageVersion: 1.0.1
+  assetPath: Assets/IntelligentLabs/MobileHapticsProFREE/Scenes/HapticDemoScene_FREE.unity
+  uploadId: 709527

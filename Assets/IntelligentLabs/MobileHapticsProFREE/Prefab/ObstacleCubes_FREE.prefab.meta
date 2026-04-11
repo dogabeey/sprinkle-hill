@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ec78957c1d47b094aa1de1cb17334253
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 300177
+  packageName: 'Mobile Haptics Pro: Free Edition'
+  packageVersion: 1.0.1
+  assetPath: Assets/IntelligentLabs/MobileHapticsProFREE/Prefab/ObstacleCubes_FREE.prefab
+  uploadId: 709527

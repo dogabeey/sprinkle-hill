@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 5d84c7c1ea68bcc46a33b7f90ca1191e
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 300177
+  packageName: 'Mobile Haptics Pro: Free Edition'
+  packageVersion: 1.0.1
+  assetPath: Assets/IntelligentLabs/MobileHapticsProFREE/Animations/GameSceneAnim/SpaceIntro_FREE.anim
+  uploadId: 709527

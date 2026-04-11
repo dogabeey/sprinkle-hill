@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 9629047cb5e33334d869db4db2e25034
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 300177
+  packageName: 'Mobile Haptics Pro: Free Edition'
+  packageVersion: 1.0.1
+  assetPath: Assets/IntelligentLabs/MobileHapticsProFREE/Prefab/ParticleSystem_FREE.prefab
+  uploadId: 709527

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: a5e6664ac44aaf244ab749c356c1b2e7
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 300177
+  packageName: 'Mobile Haptics Pro: Free Edition'
+  packageVersion: 1.0.1
+  assetPath: Assets/IntelligentLabs/MobileHapticsProFREE/Prefab/CubeMissile_FREE.prefab
+  uploadId: 709527

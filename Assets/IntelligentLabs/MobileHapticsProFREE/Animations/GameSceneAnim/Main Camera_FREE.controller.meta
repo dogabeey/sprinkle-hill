@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 35aa40ef3eba1934dac1a315099e95ed
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 300177
+  packageName: 'Mobile Haptics Pro: Free Edition'
+  packageVersion: 1.0.1
+  assetPath: Assets/IntelligentLabs/MobileHapticsProFREE/Animations/GameSceneAnim/Main
+    Camera_FREE.controller
+  uploadId: 709527

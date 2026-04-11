@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7af60e0a023864743977af3268c7cf57
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 300177
+  packageName: 'Mobile Haptics Pro: Free Edition'
+  packageVersion: 1.0.1
+  assetPath: Assets/IntelligentLabs/MobileHapticsProFREE/Animations/GameSceneAnim/Panel_FREE.controller
+  uploadId: 709527

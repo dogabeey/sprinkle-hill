@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c260a819ad6a51d4aad10f1a021b64c8
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 300177
+  packageName: 'Mobile Haptics Pro: Free Edition'
+  packageVersion: 1.0.1
+  assetPath: Assets/IntelligentLabs/MobileHapticsProFREE/Materials/DarkBG_FREE.mat
+  uploadId: 709527

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 07c39a47dcbdae34c9d82efa5b5b894b
+TextScriptImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 300177
+  packageName: 'Mobile Haptics Pro: Free Edition'
+  packageVersion: 1.0.1
+  assetPath: Assets/IntelligentLabs/MobileHapticsProFREE/Plugins/Android/AndroidManifest.xml
+  uploadId: 709527
