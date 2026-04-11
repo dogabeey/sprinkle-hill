@@ -81,20 +81,22 @@ namespace Game
 
         public JSONNode LoadSave(ISaveable saveable)
         {
-            // Check if the save file has been loaded and if not try and load it
-            if (loadedSave == null && !LoadSave(saveable, out loadedSave))
+            // Always load the JSON that corresponds to this saveable's SaveDataType.
+            // A single shared cache can point to a different file and cause misses
+            // when different save systems load in different orders.
+            if (!LoadSave(saveable, out JSONNode json))
             {
                 return null;
             }
 
             // Check if the loaded save file has the given save id
-            if (!loadedSave.AsObject.HasKey(saveable.SaveId))
+            if (!json.AsObject.HasKey(saveable.SaveId))
             {
                 return null;
             }
 
             // Return the JSONNode for the save id
-            return loadedSave[saveable.SaveId];
+            return json[saveable.SaveId];
         }
 
         #endregion

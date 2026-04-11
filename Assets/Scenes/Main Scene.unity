@@ -146,7 +146,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &132486935
 RectTransform:
   m_ObjectHideFlags: 0
@@ -163,7 +163,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 63.74, y: 124.640015}
+  m_AnchoredPosition: {x: 63.74, y: -25.359985}
   m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &132486936
@@ -269,7 +269,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &177710306
 RectTransform:
   m_ObjectHideFlags: 0
@@ -592,17 +592,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 687793613}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 4133448082132307929}
+  m_Father: {fileID: 1061930360}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: -0.00024414}
+  m_AnchoredPosition: {x: 0, y: 932.8363}
+  m_SizeDelta: {x: 0, y: 1865.6731}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &687793615
 MonoBehaviour:
@@ -971,6 +971,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 687793614}
   - {fileID: 854708863}
   m_Father: {fileID: 4133448082132307929}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1780,7 +1781,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1670592311
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1798,7 +1799,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 63.74, y: -215.35999}
+  m_AnchoredPosition: {x: 63.74, y: -265.36}
   m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1670592312
@@ -2366,7 +2367,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1773514877
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2384,7 +2385,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 63.74, y: -45.359985}
+  m_AnchoredPosition: {x: 63.74, y: -145.35999}
   m_SizeDelta: {x: 120, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1773514878
@@ -2459,7 +2460,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1889147582
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2560,6 +2561,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   playAnimationName: 
   isPersistent: 0
+  toggleSettingsButton: {fileID: 3740352658647510049}
   layoutGroup: {fileID: 1889147583}
   restartButton: {fileID: 132486938}
   musicToggle: {fileID: 177710307}
@@ -3325,19 +3327,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4661796516676966170}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1269927695}
-        m_TargetAssemblyTypeName: Game.ScreenManager, Assembly-CSharp
-        m_MethodName: Show
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1889147586}
-          m_ObjectArgumentAssemblyTypeName: Game.GameScreen, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!224 &4015973062932856401 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1184524320411938946, guid: 0d3109f511b9ec04bb8f59b3ee81087c, type: 3}
@@ -3392,7 +3382,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1061930360}
-  - {fileID: 687793614}
   - {fileID: 407152368}
   - {fileID: 1068210311}
   - {fileID: 900864207}

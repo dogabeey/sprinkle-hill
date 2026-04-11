@@ -59,9 +59,9 @@ namespace Game
 
         #region Properties
         public static SoundManager Instance => GameManager.Instance.soundManager;
-        public bool IsMusicOn { get; private set; }
-        public bool IsSoundEffectsOn { get; private set; }
-        public bool IsVibrationOn { get; private set; }
+        public bool IsMusicOn { get;  set; }
+        public bool IsSoundEffectsOn { get;  set; }
+        public bool IsVibrationOn { get;  set; }
         #endregion
 
         public string SaveId { get { return "sound_manager"; } }
