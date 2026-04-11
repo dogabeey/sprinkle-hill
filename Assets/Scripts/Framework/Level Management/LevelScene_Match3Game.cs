@@ -420,10 +420,6 @@ namespace Game
             {
                 settings.elementPool.AddRange(levelEditor.ElementPool);
             }
-            else if (source != null && source.elementPool != null)
-            {
-                settings.elementPool.AddRange(source.elementPool);
-            }
 
             return settings;
         }

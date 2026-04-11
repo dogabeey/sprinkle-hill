@@ -185,6 +185,7 @@ namespace Game
 
             gridCells = new GridCell[gridSize.x, gridSize.y];
             System.Random random = proceduralGeneration.CreateRandom();
+            List<ElementData> configuredElementPool = GetConfiguredElementPool();
 
             float emptyChance = Mathf.Clamp01(proceduralGeneration.emptyCellChance);
             float hiddenBoxChance = Mathf.Clamp01(proceduralGeneration.hiddenBoxChance);
@@ -199,10 +200,10 @@ namespace Game
 
                     ElementData elementData = null;
                     bool isHidden = false;
-                    if (cellType == CellType.Normal && proceduralGeneration.elementPool != null && proceduralGeneration.elementPool.Count > 0)
+                    if (cellType == CellType.Normal && configuredElementPool.Count > 0)
                     {
-                        int index = random.Next(proceduralGeneration.elementPool.Count);
-                        elementData = proceduralGeneration.elementPool[index];
+                        int index = random.Next(configuredElementPool.Count);
+                        elementData = configuredElementPool[index];
                         isHidden = random.NextDouble() < hiddenBoxChance;
                     }
 
@@ -396,6 +397,33 @@ namespace Game
         protected bool UseProcedural => levelCreationMode == LevelCreationMode.Procedural;
         protected LevelEditor ActiveLevelEditor => levelEditor;
 
+        protected List<ElementData> GetConfiguredElementPool()
+        {
+            List<ElementData> pool = new List<ElementData>();
+
+            if (ActiveLevelEditor != null && ActiveLevelEditor.ElementPool != null)
+            {
+                for (int i = 0; i < ActiveLevelEditor.ElementPool.Count; i++)
+                {
+                    ElementData data = ActiveLevelEditor.ElementPool[i];
+                    if (data != null && !pool.Contains(data))
+                        pool.Add(data);
+                }
+            }
+
+            if (pool.Count == 0 && proceduralGeneration != null && proceduralGeneration.elementPool != null)
+            {
+                for (int i = 0; i < proceduralGeneration.elementPool.Count; i++)
+                {
+                    ElementData data = proceduralGeneration.elementPool[i];
+                    if (data != null && !pool.Contains(data))
+                        pool.Add(data);
+                }
+            }
+
+            return pool;
+        }
+
         [System.Serializable]
         public class ProceduralGenerationSettings
         {
@@ -417,6 +445,7 @@ namespace Game
             public Vector2Int rectangleEnd;
             [Range(0f, 1f)]
             public float hiddenBoxChance;
+            [HideInInspector]
             public List<ElementData> elementPool = new List<ElementData>();
 
             public System.Random CreateRandom()

@@ -1099,21 +1099,10 @@ namespace Game
         // ------------------------------------------------------------------
         private List<ElementData> BuildElementPool()
         {
-            if (UseLevelEditor && ActiveLevelEditor != null && ActiveLevelEditor.ElementPool != null && ActiveLevelEditor.ElementPool.Count > 0)
+            List<ElementData> configuredPool = GetConfiguredElementPool();
+            if (configuredPool.Count > 0)
             {
-                List<ElementData> editorPool = new List<ElementData>();
-                for (int i = 0; i < ActiveLevelEditor.ElementPool.Count; i++)
-                {
-                    ElementData data = ActiveLevelEditor.ElementPool[i];
-                    if (data != null && !editorPool.Contains(data))
-                    {
-                        editorPool.Add(data);
-                    }
-                }
-                if (editorPool.Count > 0)
-                {
-                    return editorPool;
-                }
+                return configuredPool;
             }
 
             List<ElementData> pool = new List<ElementData>();
