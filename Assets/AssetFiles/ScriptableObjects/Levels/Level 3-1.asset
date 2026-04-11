@@ -1019,15 +1019,19 @@ MonoBehaviour:
       Entry: 8
       Data: 
   levelCreationMode: 1
-  gridSize: {x: 8, y: 8}
+  gridSize: {x: 7, y: 9}
   objectives:
-  - objectiveType: {fileID: 11400000, guid: ffe972f147b15a3478d78402d760a387, type: 2}
+  - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
+    isProcedurallyGenerated: 0
     scriptableObjectParameter: {fileID: 11400000, guid: 5f772a775fbc8914ea43012dba006383, type: 2}
-    requiredCount: 6
+    requiredCount: 20
+    generatedCount: {x: 0, y: 0}
     isCompleted: 0
-  - objectiveType: {fileID: 11400000, guid: ffe972f147b15a3478d78402d760a387, type: 2}
+  - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
+    isProcedurallyGenerated: 0
     scriptableObjectParameter: {fileID: 11400000, guid: f006bee3086de89498bb86a23191f83c, type: 2}
-    requiredCount: 6
+    requiredCount: 20
+    generatedCount: {x: 0, y: 0}
     isCompleted: 0
   specialWinEvent: 0
   targetElement: {fileID: 0}
