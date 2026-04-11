@@ -1,4 +1,5 @@
 using DG.Tweening;
+using MobileHapticsProFreeEdition;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
@@ -49,12 +50,14 @@ namespace Game
             if (isWin) // PUT YOUR WIN CONDITIONS HERE
             {
                 isEnded = true;
+                GridHelper.TriggerHaptic(HapticModes.Confirm);
                 EventParam param = new EventParam();
                 EventManager.TriggerEvent(GameEvent.LEVEL_COMPLETED, param); // You can trigger this event anywhere and It will trigger On Win actions in the inspector, along with regular Level Completion events. This one also passes the time it took to win the level.
             }
             if (isLose) // PUT YOUR LOSE CONDITIONS HERE
             {
                 isEnded = true;
+                GridHelper.TriggerHaptic(HapticModes.Failure);
                 EventParam param = new EventParam();
                 EventManager.TriggerEvent(GameEvent.LEVEL_FAILED, param); // You can trigger this event anywhere and It will trigger It will trigger On Lose actions in the inspector, along with regular Level Failure events. This one also passes the time it took to lose the level.
             }

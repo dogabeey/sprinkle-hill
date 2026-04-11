@@ -143,6 +143,17 @@ namespace Game
     {
         private const string EmissionProperty = "_Emission";
 
+        public static void TriggerHaptic(HapticModes mode)
+        {
+            if (GameManager.Instance == null || GameManager.Instance.soundManager == null)
+                return;
+
+            if (!GameManager.Instance.soundManager.IsVibrationOn)
+                return;
+
+            TapticWave.TriggerHaptic(mode);
+        }
+
         public static void SetEmission(GridElement element, float value)
         {
             if (element == null) return;

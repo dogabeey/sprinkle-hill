@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using MobileHapticsProFreeEdition;
 using UnityEngine;
 
 namespace Game
@@ -178,6 +179,7 @@ namespace Game
                     vectorList: new Vector3[] { new Vector3(first.x, first.y, 0), new Vector3(second.x, second.y, 0) }
                 ));
                 GameManager.Instance.soundManager.Play(ConstantManager.SOUNDS.EFFECTS.ELEMENT_SWAP);
+                GridHelper.TriggerHaptic(HapticModes.Select);
 
                 // After swap, the power-up that was at 'first' is now at 'second' and vice versa
                 if (PowerUpHandler.IsSpecialPowerUp(firstType))
@@ -211,6 +213,7 @@ namespace Game
                 vectorList: new Vector3[] { new Vector3(first.x, first.y, 0), new Vector3(second.x, second.y, 0) }
             ));
             GameManager.Instance.soundManager.Play(ConstantManager.SOUNDS.EFFECTS.ELEMENT_SWAP);
+            GridHelper.TriggerHaptic(HapticModes.Select);
             yield return StartCoroutine(MatchProcess(first, second));
         }
 
@@ -228,6 +231,7 @@ namespace Game
                 GameObject matchOrigin = GetMatchOriginObject(matchedGroups);
                 RewardCurrencyForCombo(currentComboCount, matchOrigin);
                 GameManager.Instance.soundManager.Play(ConstantManager.SOUNDS.EFFECTS.MATCH, pitchOffset: currentComboCount * 0.1f);
+                GridHelper.TriggerHaptic(HapticModes.Confirm);
 
                 LevelScene_Match3Game level = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
                 bool allowDiscoBall = level.AllowDiscoBallCreation;
@@ -281,6 +285,7 @@ namespace Game
                 EventManager.TriggerEvent(GameEvent.SWAP_FAILED, new EventParam(
                     vectorList: new Vector3[] { new Vector3(init1.x, init1.y, 0), new Vector3(init2.x, init2.y, 0) }
                 ));
+                GridHelper.TriggerHaptic(HapticModes.Alert);
                 yield return StartCoroutine(SwapElements(init1, init2));
             }
             else
