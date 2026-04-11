@@ -67,6 +67,14 @@ namespace Game
             backgroundMask.enabled = false;
             screens.ForEach(screen => screen.gameObject.SetActive(false));
         }
+        public void CloseAllNonPersistentScreens()
+        {
+            backgroundMask.DOFade(0, 0.5f);
+            backgroundMask.enabled = false;
+            screens.ForEach(screen => {
+                if (!screen.isPersistent) screen.gameObject.SetActive(false);
+            });
+        }
 
         private static void ShowScreen(GameScreen gameScreen)
         {

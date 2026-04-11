@@ -485,6 +485,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 6784706702312863217}
   playAnimationName: 
+  isPersistent: 1
   levelHeaderText: {fileID: 0}
   levelLostText: {fileID: 0}
   repeatLevelButton: {fileID: 0}

@@ -591,6 +591,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 5489645690243221849}
   playAnimationName: scale_out
+  isPersistent: 1
   levelHeaderText: {fileID: 1709764659891344339}
   levelWinText: {fileID: 3924045471341495434}
   levelRewardContainer: {fileID: 4212387458682828322}
