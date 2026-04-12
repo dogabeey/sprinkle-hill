@@ -24,6 +24,7 @@ public class UpperPanelUI : UIElement
     public CanvasGroup objectivesContainer;
     public Image targetIcon;
     public Image targetIconPlaceholder;
+    public TMP_Text timerHeaderText;
     public TMP_Text timerText;
     [Header("Timer Settings")]
     public TimerType timerType = TimerType.Countdown;
@@ -103,11 +104,13 @@ public class UpperPanelUI : UIElement
         {
             if (levelScene.levelLimitType == LevelEditor.LevelLimitType.Moves)
             {
+                timerHeaderText.text = "MOVES";
                 timerText.enableAutoSizing = false;
                 timerText.text = Mathf.Max(0, levelScene.moves).ToString();
             }
             else
             {
+                timerHeaderText.text = "TIME";
                 int timer = levelScene.timer;
                 if (timer == -1)
                 {
