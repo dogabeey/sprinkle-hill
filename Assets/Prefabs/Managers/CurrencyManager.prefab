@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 1
   currencyContainer: {fileID: 0}
+  currencyCanvasGroup: {fileID: 0}
   currencyElementPrefab: {fileID: 6021937502238936245, guid: a2d8821a1d527de4cab774a18abad611, type: 3}
   currencyInfos:
   - currencyModel: {fileID: 11400000, guid: 31b1c667ab353af4a80bfe0daaa96451, type: 2}

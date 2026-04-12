@@ -50,7 +50,6 @@ MonoBehaviour:
   - rid: 943281644091474204
   - rid: 3084495758061469768
   - rid: 943281644091474012
-  - rid: 3084495758061469769
   actionBarParent: {fileID: 0}
   lockedSprite: {fileID: -320327708, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
   references:
@@ -93,18 +92,6 @@ MonoBehaviour:
           featureName: Bomb Feature
           unlockedLevelIndex: 10
           icon: {fileID: -1949253524, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
-    - rid: 3084495758061469769
-      type: {class: ShuffleAction, ns: Game, asm: Assembly-CSharp}
-      data:
-        actionBarIcon: {fileID: 1175953842, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
-        costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
-        actionSuccessParticle: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
-        startingCount: 10
-        unlockedLevel: 0
-        tiedFeature:
-          featureName: 
-          unlockedLevelIndex: 0
-          icon: {fileID: 0}
     - rid: 5000171156985086083
       type: {class: PlaceRocketAction, ns: Game, asm: Assembly-CSharp}
       data:

@@ -48,20 +48,11 @@ MonoBehaviour:
   mainWorld: 1
   levelScenes:
   - {fileID: 6648657062745475262, guid: e5128bc36d805684ebc33c78e679743c, type: 3}
-  - {fileID: 6648657062745475262, guid: b0d03fb720f2df84ea11450fc29b8d7a, type: 3}
-  - {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-  - {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-  - {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-  - {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-  - {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-  - {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-  - {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-  - {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-  - {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-  - {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-  - {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-  - {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
-  - {fileID: 6648657062745475262, guid: 837f6cbd68d07454b9e772bdef39d9f6, type: 3}
+  - {fileID: 6648657062745475262, guid: 1814c9bb31018004d8ed27f79f92829b, type: 3}
+  - {fileID: 6648657062745475262, guid: 04461135af576014d8552532118fc0ca, type: 3}
+  - {fileID: 6648657062745475262, guid: cac998f988b69c9439453293c956cda8, type: 3}
+  - {fileID: 6648657062745475262, guid: 4bd797af29402654ba1c870264e5a7e9, type: 3}
+  excludeFirstXLevelFromLoop: 4
   lastPlayedLevelIndex: 0
 --- !u!1 &7722314759461277705
 GameObject:
@@ -115,8 +106,10 @@ MonoBehaviour:
   constantManager: {fileID: 11400000, guid: b9406341470b1d141960d0d2aa97dec6, type: 2}
   tutorialManager: {fileID: 0}
   actionBarManager: {fileID: 0}
+  screenManager: {fileID: 0}
   featureTracker: {fileID: 0}
   showFeatureProgressScreen: 0
+  autoShuffleWhenOutOfPossibleMoves: 1
   worlds:
   - {fileID: 7722314759128445691}
   levelContainer: {fileID: 0}
