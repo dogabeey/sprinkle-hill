@@ -794,6 +794,17 @@ MonoBehaviour:
   flatSpacing: {x: 0, y: 0}
   percentPadding: {x: 0, y: 0, z: 0, w: 0}
   flatPadding: {x: 0, y: 0, z: 25, w: 0}
+--- !u!114 &878437641 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1670456106122746841, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+  m_PrefabInstance: {fileID: 9132301250057630277}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &900864206
 GameObject:
   m_ObjectHideFlags: 0
@@ -4117,7 +4128,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6052314207170396806, guid: 7a5c4060ec73d144bbd658c529e7f638, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4216,6 +4227,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: timerHeaderText
+      value: 
+      objectReference: {fileID: 878437641}
     - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
       propertyPath: objectiveManager
       value: 

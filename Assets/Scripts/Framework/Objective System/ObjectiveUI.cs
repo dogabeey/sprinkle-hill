@@ -104,13 +104,13 @@ public class UpperPanelUI : UIElement
         {
             if (levelScene.levelLimitType == LevelEditor.LevelLimitType.Moves)
             {
-                timerHeaderText.text = "MOVES";
+                timerHeaderText.text = "Move";
                 timerText.enableAutoSizing = false;
                 timerText.text = Mathf.Max(0, levelScene.moves).ToString();
             }
             else
             {
-                timerHeaderText.text = "TIME";
+                timerHeaderText.text = "Time";
                 int timer = levelScene.timer;
                 if (timer == -1)
                 {
