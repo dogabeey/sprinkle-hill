@@ -50,6 +50,8 @@ namespace Game
 
         [FoldoutGroup("Settings")]
         public bool showFeatureProgressScreen;
+        [FoldoutGroup("Settings")]
+        public bool autoShuffleWhenOutOfPossibleMoves;
         [FoldoutGroup("References")]
         public List<World> worlds;
         [FoldoutGroup("References")]
@@ -60,6 +62,8 @@ namespace Game
         public UpperPanelUI upperPanelUI;
         [FoldoutGroup("Settings")]
         public bool isSequentalLevels = true;
+
+        private bool isAutoShuffleRunning;
 
         private World currentWorld;
 
@@ -78,16 +82,19 @@ namespace Game
             }
         }
         public LevelScene CurrentLevel => World.Instance.CurrentLevel;
+        public int CurrentLevelIndex => World.Instance.lastPlayedLevelIndex;
 
         private void OnEnable()
         {
             EventManager.StartListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
             EventManager.StartListening(GameEvent.LEVEL_FAILED, OnLevelFailed);
+            EventManager.StartListening(GameEvent.NO_POSSIBLE_MOVES, OnNoPossibleMoves);
         }
         private void OnDisable()
         {
             EventManager.StopListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
             EventManager.StopListening(GameEvent.LEVEL_FAILED, OnLevelFailed);
+            EventManager.StopListening(GameEvent.NO_POSSIBLE_MOVES, OnNoPossibleMoves);
         }
         void OnLevelCompleted(EventParam param)
         {
@@ -101,6 +108,28 @@ namespace Game
             SoundManager.Instance.Play(ConstantManager.SOUNDS.EFFECTS.LEVEL_FAILED);
             DOVirtual.DelayedCall(1, () =>
             ScreenManager.Instance.Show(Screens.LoseScreen));
+        }
+
+        private void OnNoPossibleMoves(EventParam param)
+        {
+            if (!autoShuffleWhenOutOfPossibleMoves || isAutoShuffleRunning)
+                return;
+
+            if (!(CurrentLevel is LevelScene_Match3Game levelScene) || levelScene == null || levelScene.isEnded)
+                return;
+
+            Match3Grid match3Grid = levelScene.grid as Match3Grid;
+            if (match3Grid == null)
+                return;
+
+            StartCoroutine(AutoShuffleRoutine(match3Grid));
+        }
+
+        private IEnumerator AutoShuffleRoutine(Match3Grid match3Grid)
+        {
+            isAutoShuffleRunning = true;
+            yield return StartCoroutine(match3Grid.ShuffleBoardAndResolve());
+            isAutoShuffleRunning = false;
         }
 
         protected override void Awake()

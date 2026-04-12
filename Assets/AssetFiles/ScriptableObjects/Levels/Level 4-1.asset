@@ -1021,29 +1021,29 @@ MonoBehaviour:
   levelCreationMode: 1
   gridSize: {x: 7, y: 9}
   objectives:
-  - objectiveType: {fileID: 11400000, guid: ffe972f147b15a3478d78402d760a387, type: 2}
+  - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
     isProcedurallyGenerated: 0
     scriptableObjectParameter: {fileID: 11400000, guid: f006f435c88374942881e4fd9742c0ca, type: 2}
-    requiredCount: 5
+    requiredCount: 20
     generatedCount: {x: 0, y: 0}
     isCompleted: 0
-  - objectiveType: {fileID: 11400000, guid: ffe972f147b15a3478d78402d760a387, type: 2}
+  - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
     isProcedurallyGenerated: 0
     scriptableObjectParameter: {fileID: 11400000, guid: 15add8ec82c964f4fa95e19e667720e0, type: 2}
-    requiredCount: 5
+    requiredCount: 20
     generatedCount: {x: 0, y: 0}
     isCompleted: 0
-  - objectiveType: {fileID: 11400000, guid: ffe972f147b15a3478d78402d760a387, type: 2}
+  - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
     isProcedurallyGenerated: 0
     scriptableObjectParameter: {fileID: 11400000, guid: b0323a93d2c3aef4b9f4e45a5aa63cac, type: 2}
-    requiredCount: 5
+    requiredCount: 20
     generatedCount: {x: 0, y: 0}
     isCompleted: 0
   specialWinEvent: 0
   targetElement: {fileID: 0}
   levelLimitType: 1
   timer: 200
-  moves: 120
+  moves: 90
   proceduralGeneration:
     useRandomSeed: 1
     seed: 0
