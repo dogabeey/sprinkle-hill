@@ -16,7 +16,7 @@ namespace Game
         public override void InitUI()
         {
             LevelScene levelScene = GameManager.Instance.CurrentLevel;
-            levelHeaderText.text = levelScene.levelName;
+            levelHeaderText.text = "LEVEL " + (GameManager.Instance.CurrentLevelIndex + 1).ToString();
             levelLostText.text = levelScene.loseText;
 
 
