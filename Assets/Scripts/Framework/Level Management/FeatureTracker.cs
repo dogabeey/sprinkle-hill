@@ -19,7 +19,6 @@ namespace Game
                 {
                     continue;
                 }
-
                 if (feature.IsUnlocked(currentLevelIndex))
                 {
                     continue;
