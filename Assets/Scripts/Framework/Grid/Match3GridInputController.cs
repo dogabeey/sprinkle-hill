@@ -170,12 +170,33 @@ namespace Game
                 return;
             }
 
-            Vector2Int direction = GetDominantDirection(dragDelta);
-            Vector2Int toPos = fromPos + direction;
-
-            if (!match3Grid.IsValidPosition(toPos))
+            Camera cam = inputCamera != null ? inputCamera : Camera.main;
+            if (cam == null)
             {
                 CancelDrag();
+                return;
+            }
+
+            GridElement_Match3Game hoveredElement = GetElementAtScreenPos(cam, Input.mousePosition);
+            if (hoveredElement == null || hoveredElement == draggedElement || hoveredElement.ownerGrid != match3Grid)
+            {
+                return;
+            }
+
+            if (!IsTutorialInputAllowed(hoveredElement.gameObject))
+            {
+                CancelDrag();
+                return;
+            }
+
+            if (!match3Grid.TryGetElementPosition(hoveredElement, out Vector2Int toPos))
+            {
+                CancelDrag();
+                return;
+            }
+
+            if (!Match3Grid.AreAdjacent(fromPos, toPos))
+            {
                 return;
             }
 
