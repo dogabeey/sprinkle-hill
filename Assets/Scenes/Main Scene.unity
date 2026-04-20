@@ -3339,7 +3339,6 @@ MonoBehaviour:
   tutorialSteps:
   - {fileID: 11400000, guid: b71aef537cde7dc47a731839858a4b86, type: 2}
   - {fileID: 11400000, guid: beab77d328698014dbbc481afce5067d, type: 2}
-  - {fileID: 11400000, guid: 330c286938e423543bdbdc65e9090038, type: 2}
   animationObjectParent: {fileID: 4133448082132307929}
   directiveText: {fileID: 2048280538}
   directiveParent: {fileID: 1602025052}

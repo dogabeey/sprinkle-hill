@@ -69,6 +69,15 @@ namespace Game
                 return;
             }
 
+            if (ShouldBlockHintsForTutorial())
+            {
+                idleTimer = 0f;
+                if (hintActive)
+                {
+                    ClearHintVisuals();
+                }
+            }
+
             if (pendingPlacementAction != PendingPlacementAction.None)
             {
                 if (Input.GetMouseButtonDown(0))
@@ -85,6 +94,11 @@ namespace Game
 
             if (draggedElement == null)
             {
+                if (ShouldBlockHintsForTutorial())
+                {
+                    return;
+                }
+
                 idleTimer += Time.deltaTime;
                 if (!hintActive && idleTimer >= idleHintDelay)
                 {
@@ -418,6 +432,13 @@ namespace Game
                 return true;
 
             return GameManager.Instance.tutorialManager.IsElementInteractionAllowed(targetObject);
+        }
+
+        private bool ShouldBlockHintsForTutorial()
+        {
+            return GameManager.Instance != null
+                && GameManager.Instance.tutorialManager != null
+                && GameManager.Instance.tutorialManager.HasActiveStep;
         }
 
         private void OnInputReceived(EventParam _)
