@@ -58,6 +58,8 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
     - rid: 3084495758061469779
       type: {class: MoveBetweenTwoPoint, ns: Game, asm: Assembly-CSharp}
       data:
@@ -67,4 +69,3 @@ MonoBehaviour:
         isLoop: 1
     - rid: 3084495758061469780
       type: {class: TwoRandomSquareMatchableElement_Highlight, ns: Game, asm: Assembly-CSharp}
-      data: 

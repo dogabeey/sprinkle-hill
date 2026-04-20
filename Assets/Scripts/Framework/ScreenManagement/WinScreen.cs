@@ -15,13 +15,15 @@ namespace Game
         public Transform levelRewardContainer;
         [AssetsOnly] public TMP_Text rewardTextPrefab;
         public Button nextLevelButton;
+        [Header("Settings")]
+        public string levelHeaderFormat = "DAY {0} RESULTS";
 
         private List<TMP_Text> rewards = new List<TMP_Text>();
 
         public override void InitUI()
         {
             LevelScene levelScene = GameManager.Instance.CurrentLevel;
-            levelHeaderText.text = "LEVEL " + (GameManager.Instance.CurrentLevelIndex + 1).ToString();
+            levelHeaderText.text = string.Format(levelHeaderFormat, GameManager.Instance.CurrentLevelIndex + 1);
             levelWinText.text = levelScene.winText;
 
             // Remove old rewards

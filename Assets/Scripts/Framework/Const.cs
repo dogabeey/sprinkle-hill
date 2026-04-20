@@ -101,11 +101,14 @@ namespace Game
             }
         }
 
-        public struct CURRENCY
+        public struct RESOURCES
         {
-            public const string CASH = "Cash";
-            public const string GEM = "Gem";
-            public const string TOKEN = "Token";
+            public struct CURRENCY
+            {
+                public const string CASH = "Cash";
+                public const string GEM = "Gem";
+                public const string TOKEN = "Token";
+            }
         }
     }
 }

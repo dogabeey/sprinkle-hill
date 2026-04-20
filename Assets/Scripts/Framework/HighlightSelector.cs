@@ -6,11 +6,13 @@ using UnityEngine;
 
 namespace Game
 {
+    [Serializable]
     public abstract class HighlightSelector
     {
         public abstract GameObject[] HighlightedObjects { get; }
     }
 
+    [Serializable]
     public class TwoRandomMatchableElements_Highlight : HighlightSelector
     {
         private static readonly Vector2Int[] Dirs = { Vector2Int.right, Vector2Int.up };
@@ -148,6 +150,7 @@ namespace Game
         }
     }
 
+    [Serializable]
     public class TwoRandomSquareMatchableElement_Highlight : HighlightSelector
     {
         private static readonly Vector2Int[] Dirs = { Vector2Int.right, Vector2Int.up };
@@ -291,6 +294,7 @@ namespace Game
     /// <summary>
     /// Highlight selector that randomly selects a Bomb power-up (either regular Bomb or Big Bomb) from the Match-3 grid and highlights it.
     /// </summary>
+    [Serializable]
     public class Bomb_Highlight : HighlightSelector
     {
         public override GameObject[] HighlightedObjects => HighlightSelectorPowerUpUtility.GetRandomPowerUpObjects(ElementPowerUpType.Bomb, ElementPowerUpType.BigBomb);
@@ -299,6 +303,7 @@ namespace Game
     /// <summary>
     /// Highlight selector that randomly selects a Rocket power-up (either Vertical or Horizontal) from the Match-3 grid and highlights it.
     /// </summary>
+    [Serializable]
     public class Rocket_Highlight : HighlightSelector
     {
         public override GameObject[] HighlightedObjects => HighlightSelectorPowerUpUtility.GetRandomPowerUpObjects(ElementPowerUpType.VerticalRocket, ElementPowerUpType.HorizontalRocket);
@@ -307,6 +312,7 @@ namespace Game
     /// <summary>
     /// Highlight selector that randomly selects a Disco Ball power-up from the Match-3 grid and highlights it.
     /// </summary>
+    [Serializable]
     public class DiscoBall_Highlight : HighlightSelector
     {
         public override GameObject[] HighlightedObjects => HighlightSelectorPowerUpUtility.GetRandomPowerUpObjects(ElementPowerUpType.DiscoBall);
@@ -426,6 +432,7 @@ namespace Game
     /// <summary>
     /// Highlights all GameObjects in the scene that have any of the specified tags. This can be useful for drawing attention to certain types of objects or areas in the game world during tutorials or specific gameplay scenarios.
     /// </summary>
+    [Serializable]
     public class SelectedTags_Highlight : HighlightSelector
     {
 #if UNITY_EDITOR
@@ -434,9 +441,9 @@ namespace Game
         public List<string> selectedTags;
         public override GameObject[] HighlightedObjects
         {
-            get
+            get 
             {
-                List<GameObject> highlightedObjects = new List<GameObject>();
+                List<GameObject> highlightedObjects = new List<GameObject>(); 
                 foreach (string tag in selectedTags)
                 {
                     GameObject[] objectsWithTag = GameObject.FindGameObjectsWithTag(tag);

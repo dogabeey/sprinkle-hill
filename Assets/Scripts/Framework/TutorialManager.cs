@@ -211,7 +211,7 @@ namespace Game
             _activeStep = step;
             step.onStart?.Invoke();
             ShowOverlay(step);
-            ShowDirective(step);
+            ShowDirective(step); 
         }
 
         private void OnHighlightUpdated(EventParam param)

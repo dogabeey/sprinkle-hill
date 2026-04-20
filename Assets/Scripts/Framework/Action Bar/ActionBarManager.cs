@@ -12,7 +12,7 @@ namespace Game
     /// instantiated and placed in the appropriate positions. This class can be extended to add more functionality to the drawing process.
     /// </summary>
     public class ActionBarManager : MonoBehaviour
-    {
+    { 
         public ActionBarView actionBarViewPrefab;
         [SerializeReference]
         public List<ActionBarItem> actionBarItemList;

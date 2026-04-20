@@ -35,7 +35,7 @@ namespace Game
         [FoldoutGroup("Custom Events")]
         public UnityEvent onStart;
         [FoldoutGroup("Custom Events")]
-        public UnityEvent onComplete;[SerializeReference]
+        public UnityEvent onComplete;
         [GUIColor(nameof(GetNextStepColor))]
         public TutorialStep nextStep;
         public bool advancedMode;

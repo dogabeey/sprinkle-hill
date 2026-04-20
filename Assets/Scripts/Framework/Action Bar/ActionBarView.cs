@@ -14,6 +14,7 @@ namespace Game
     {
         public ActionBarItem actionBarItem;
         public Image actionIcon;
+        public Image lockedIcon;
         public GameObject lockedPanel;
         public TMP_Text unlockConditionText;
         public TMP_Text actionText;
@@ -77,9 +78,12 @@ namespace Game
             if (actionBarItem != null)
             {
                 if (actionIcon)
+                {
+                    actionIcon.enabled = actionBarItem.IsAvailable();
                     actionIcon.sprite = actionBarItem.actionBarIcon;
-                if (lockedPanel)
-                    lockedPanel.SetActive(!actionBarItem.IsAvailable());
+                }
+                if (lockedIcon)
+                    lockedIcon.enabled = actionIcon && !actionIcon.enabled;
                 if (actionText) 
                     actionText.text = actionBarItem.ActionName;
                 if (costText)

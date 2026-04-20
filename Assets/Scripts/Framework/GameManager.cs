@@ -24,28 +24,30 @@ namespace Game
     {
         [FoldoutGroup("Managers")]
         [InlineEditor]
-        [FoldoutGroup("Managers")]
         public EventManager eventManager;
         [FoldoutGroup("Managers")]
         [InlineEditor]
-        [FoldoutGroup("Managers")]
         public SoundManager soundManager;
-        [InlineEditor]
         [FoldoutGroup("Managers")]
+        [InlineEditor]
         public SaveManager saveManager;
-        [InlineEditor]
         [FoldoutGroup("Managers")]
+        [InlineEditor]
         public ConstantManager constantManager;
-        [InlineEditor]
         [FoldoutGroup("Managers")]
+        [InlineEditor]
+        public Gfx gfxManager;
+        [FoldoutGroup("Managers")]
+        [InlineEditor]
         public TutorialManager tutorialManager;
-        [InlineEditor]
         [FoldoutGroup("Managers")]
+        [InlineEditor]
         public ActionBarManager actionBarManager;
         [FoldoutGroup("Managers")]
-        public ScreenManager screenManager;
         [InlineEditor]
+        public ScreenManager screenManager;
         [FoldoutGroup("Managers")]
+        [InlineEditor]
         public FeatureTracker featureTracker;
 
         [FoldoutGroup("Settings")]

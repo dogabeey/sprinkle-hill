@@ -1,10 +1,10 @@
 using DG.Tweening;
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game
 {
+    [System.Serializable]
     public abstract class TutorialAnimation
     {
         public RectTransform tutorialObject;
@@ -25,11 +25,11 @@ namespace Game
         public virtual void ClearAnim()
         {
             if (tutorialObjectInstance == null) return;
-
+             
             tutorialObjectInstance.DOKill();
             Object.Destroy(tutorialObjectInstance.gameObject);
             tutorialObjectInstance = null;
-        }
+        } 
 
         public abstract void PlayAnim();
 
@@ -97,6 +97,7 @@ namespace Game
         }
     }
 
+    [System.Serializable]
     public class MoveBetweenTwoPoint : TutorialAnimation
     {
 
@@ -107,7 +108,7 @@ namespace Game
 
             DirectiveTextAnim();
             TutorialObjectsAnim();
-        }
+        } 
 
         private void DirectiveTextAnim()
         {
@@ -151,6 +152,7 @@ namespace Game
             }
         }
     }
+    [System.Serializable]
     public class ClickOnFirstHighlightedObject : TutorialAnimation
     {
 
@@ -193,6 +195,7 @@ namespace Game
         }
     }
 
+    [System.Serializable]
     public class LookAndPointAtFirstHighlightedObject : TutorialAnimation
     {
         public float rotationOffset = -90f;

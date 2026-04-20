@@ -21,10 +21,10 @@ namespace Game
         private const float clickabilityCheckInterval = 0.1f;
 
         public abstract string ActionName { get; }
-        public Sprite actionBarIcon;
-        public CurrencyModel costCurrency;
-        public ParticleSystem actionSuccessParticle;
-        public int startingCount = 10; // This is only used for the first time the player gets this action. After that, the count will be saved in PlayerPrefs and this value will not be used anymore. This is useful for testing and debugging.
+        public abstract Sprite actionBarIcon { get; }
+        public abstract CurrencyModel costCurrency { get; }
+        public abstract ParticleSystem actionSuccessParticle { get; } 
+        public abstract int StartingCount { get; } // This is only used for the first time the player gets this action. After that, the count will be saved in PlayerPrefs and this value will not be used anymore. This is useful for testing and debugging.
 
         internal bool isVisible, isClickable, isAvailable;
 
@@ -39,7 +39,7 @@ namespace Game
 
         public int CurrentCount // TODO: change this to Isaveable when implementing save system
         {
-            get => PlayerPrefs.GetInt(ActionName + "_count", startingCount);
+            get => PlayerPrefs.GetInt(ActionName + "_count", StartingCount);
             set => PlayerPrefs.SetInt(ActionName + "_count", value);
         }
 
@@ -60,7 +60,7 @@ namespace Game
             if (GameManager.Instance != null && GameManager.Instance.tutorialManager != null && GameManager.Instance.tutorialManager.ShouldDisableActionBar)
                 return false;
 
-            return CurrentCount > 0;
+            return CurrentCount > 0 || !IsAvailable();
         }
         /// <summary>
         /// Determines whether the object is available. This is used to show or hide the locked panel.
@@ -73,8 +73,7 @@ namespace Game
     public abstract class BonusPremiumAction : ActionBarItem
     {
         public int unlockedLevel;
-        [ValueDropdown("GetAllFeatures")]
-        [FormerlySerializedAs("unlockableFeature")]
+        [ValueDropdown(nameof(GetAllFeatures))]
         public UnlockableFeature tiedFeature; // This is used to determine whether the action is unlocked or not. If the feature is unlocked, the action will be available regardless of the level requirement.
 
         private IEnumerable GetAllFeatures()
@@ -85,6 +84,10 @@ namespace Game
                 features.Add(feature.featureName, feature);
             }
             return features;
+        }
+        public override bool IsAvailable()
+        {
+            return World.Instance.lastPlayedLevelIndex >= unlockedLevel /* || (tiedFeature != null && tiedFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex))*/;
         }
     }
 
@@ -101,6 +104,14 @@ namespace Game
         public override string ClickabilityExplanation => "";
         public override string AvailabilityExplanation => $"Level {unlockedLevel}";
 
+        public override Sprite actionBarIcon => GameManager.Instance.gfxManager.addTimeIcon;
+
+        public override CurrencyModel costCurrency => GameManager.Instance.gfxManager.cashCurrency;
+
+        public override ParticleSystem actionSuccessParticle => GameManager.Instance.gfxManager.addTimePowerupTrailParticlePrefab;
+
+        public override int StartingCount => 5;
+
         public override int GetCost()
         {
             return 0;
@@ -109,11 +120,6 @@ namespace Game
         public override bool IsVisible()
         {
             return true;
-        }
-
-        public override bool IsAvailable()
-        {
-            return World.Instance.lastPlayedLevelIndex >= unlockedLevel || (tiedFeature != null && tiedFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex));
         }
 
         public override void OnClick()
@@ -151,6 +157,10 @@ namespace Game
     {
 
         public override string ActionName => "Shuffle";
+        public override Sprite actionBarIcon => GameManager.Instance.gfxManager.shuffleActionIcon;
+        public override CurrencyModel costCurrency => GameManager.Instance.gfxManager.premiumCurrency;
+        public override ParticleSystem actionSuccessParticle => GameManager.Instance.gfxManager.shufflePowerupTrailParticlePrefab;
+        public override int StartingCount => 0;
         public override float BaseCost => 0;
         public override float CostIncrement => 0;
         public override float CostAcceleration => 0;
@@ -166,11 +176,6 @@ namespace Game
         public override bool IsVisible()
         {
             return true;
-        }
-
-        public override bool IsAvailable()
-        {
-            return World.Instance.lastPlayedLevelIndex >= unlockedLevel || (tiedFeature != null && tiedFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex));
         }
 
         public override void OnClick()
@@ -205,6 +210,10 @@ namespace Game
     public class BombPlacementAction : BonusPremiumAction
     {
         public override string ActionName => "Bomb Placement";
+        public override Sprite actionBarIcon => GameManager.Instance.gfxManager.bombElementIcon;
+        public override CurrencyModel costCurrency => GameManager.Instance.gfxManager.premiumCurrency;
+        public override ParticleSystem actionSuccessParticle => GameManager.Instance.gfxManager.bombPowerupTrailParticlePrefab;
+        public override int StartingCount => 0;
         public override float BaseCost => 0;
         public override float CostIncrement => 0;
         public override float CostAcceleration => 0;
@@ -215,8 +224,6 @@ namespace Game
         public override int GetCost() => 0;
 
         public override bool IsVisible() => true;
-
-        public override bool IsAvailable() => World.Instance.lastPlayedLevelIndex >= unlockedLevel || (tiedFeature != null && tiedFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex));
 
         public override void OnClick()
         {
@@ -246,6 +253,10 @@ namespace Game
     public class PlaceDiscoBallAction : BonusPremiumAction
     {
         public override string ActionName => "Place Disco Ball";
+        public override Sprite actionBarIcon => GameManager.Instance.gfxManager.discoBallElementIcon;
+        public override CurrencyModel costCurrency => GameManager.Instance.gfxManager.premiumCurrency;
+        public override ParticleSystem actionSuccessParticle => GameManager.Instance.gfxManager.discoBallPowerupTrailParticlePrefab;
+        public override int StartingCount => 0;
         public override float BaseCost => 0;
         public override float CostIncrement => 0;
         public override float CostAcceleration => 0;
@@ -257,8 +268,6 @@ namespace Game
 
         public override bool IsVisible() => true;
 
-        public override bool IsAvailable() => World.Instance.lastPlayedLevelIndex >= unlockedLevel || (tiedFeature != null && tiedFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex));
-        
         public override void OnClick()
         {
             Match3GridInputController inputController = GetInputController();
@@ -286,6 +295,10 @@ namespace Game
     public class PlaceRocketAction : BonusPremiumAction
     {
         public override string ActionName => "Place Rocket";
+        public override Sprite actionBarIcon => GameManager.Instance.gfxManager.rocketElementIcon;
+        public override CurrencyModel costCurrency => GameManager.Instance.gfxManager.premiumCurrency;
+        public override ParticleSystem actionSuccessParticle => GameManager.Instance.gfxManager.rocketPowerupTrailParticlePrefab;
+        public override int StartingCount => 0;
         public override float BaseCost => 0;
         public override float CostIncrement => 0;
         public override float CostAcceleration => 0;
@@ -296,9 +309,6 @@ namespace Game
         public override int GetCost() => 0;
 
         public override bool IsVisible() => true;
-
-        public override bool IsAvailable() => World.Instance.lastPlayedLevelIndex >= unlockedLevel || (tiedFeature != null && tiedFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex));
-
         public override void OnClick()
         {
             Match3GridInputController inputController = GetInputController();

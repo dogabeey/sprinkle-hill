@@ -99,6 +99,8 @@ namespace Game
         }
         public void OnUpdate()
         {
+            if (playingAudioSources.IsNullOrEmpty()) return;
+
             for (int i = 0; i < playingAudioSources.Count; i++)
             {
                 AudioSource audioSource = playingAudioSources[i].audioSource;
