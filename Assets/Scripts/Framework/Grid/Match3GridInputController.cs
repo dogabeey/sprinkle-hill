@@ -94,15 +94,13 @@ namespace Game
 
             if (draggedElement == null)
             {
-                if (ShouldBlockHintsForTutorial())
+                if (!ShouldBlockHintsForTutorial())
                 {
-                    return;
-                }
-
-                idleTimer += Time.deltaTime;
-                if (!hintActive && idleTimer >= idleHintDelay)
-                {
-                    ShowIdleHint();
+                    idleTimer += Time.deltaTime;
+                    if (!hintActive && idleTimer >= idleHintDelay)
+                    {
+                        ShowIdleHint();
+                    }
                 }
             }
 

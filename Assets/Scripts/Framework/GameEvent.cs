@@ -41,6 +41,7 @@ public enum GameEvent
     // UI Events
     SCREEN_OPENED = 700,
     SCREEN_CLOSED = 701,
+    LOADING_SCREEN_COMPLETE = 702,
     
     // Special Elements
     BOX_DESTROYED = 800,

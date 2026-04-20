@@ -24,8 +24,11 @@ namespace Game
             DOVirtual.Float(1, 0, 0.25f, (float value) =>
             {
                 screenContainer.alpha = value;
+            }).OnComplete(() =>
+            {
+                screenContainer.blocksRaycasts = false;
+                EventManager.TriggerEvent(GameEvent.LOADING_SCREEN_COMPLETE);
             }));
-            screenContainer.blocksRaycasts = false;
         }
     }
 
