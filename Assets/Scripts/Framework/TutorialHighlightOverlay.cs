@@ -88,6 +88,9 @@ namespace Game
                 return;
             }
 
+            // Overlay is visual-only: do not block gameplay/UI input raycasts.
+            overlayImage.raycastTarget = false;
+
             // Instance material so we don't mutate the shared asset
             _mat = new Material(overlayImage.material != null
                 ? overlayImage.material

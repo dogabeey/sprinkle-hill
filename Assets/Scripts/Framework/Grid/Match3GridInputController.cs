@@ -69,6 +69,12 @@ namespace Game
                 return;
             }
 
+            if (ShouldBlockBoardInput())
+            {
+                CancelDrag();
+                return;
+            }
+
             if (ShouldBlockHintsForTutorial())
             {
                 idleTimer = 0f;
@@ -437,6 +443,12 @@ namespace Game
             return GameManager.Instance != null
                 && GameManager.Instance.tutorialManager != null
                 && GameManager.Instance.tutorialManager.HasActiveStep;
+        }
+
+        private bool ShouldBlockBoardInput()
+        {
+            LevelScene currentLevel = GameManager.Instance != null ? GameManager.Instance.CurrentLevel : null;
+            return currentLevel != null && (currentLevel.isPaused || currentLevel.isEnded);
         }
 
         private void OnInputReceived(EventParam _)

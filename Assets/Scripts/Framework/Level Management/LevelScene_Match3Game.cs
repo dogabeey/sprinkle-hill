@@ -124,6 +124,7 @@ namespace Game
         {
             stageCompletionPending = true;
             stageCompletionGridStable = false;
+            isPaused = true;
 
             if (!stageCompletionRoutineRunning)
                 StartCoroutine(BeginStageCompletionWhenReady());

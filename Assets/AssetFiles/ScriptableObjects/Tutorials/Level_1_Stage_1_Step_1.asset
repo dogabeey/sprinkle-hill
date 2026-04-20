@@ -31,7 +31,7 @@ MonoBehaviour:
   highlightSelectorSettings:
     actionName: 
     selectedTags: []
-  startEvent: 411
+  startEvent: 702
   startEventExpectedParams: 0
   startEventExpectedParamValues:
     paramObj: {fileID: 0}
