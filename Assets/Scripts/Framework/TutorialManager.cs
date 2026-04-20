@@ -297,7 +297,8 @@ namespace Game
 
         private void ShowOverlay(TutorialStep step)
         {
-            GameObject[] targets = step?.highlightSelector?.HighlightedObjects;
+            HighlightSelector selector = step != null ? step.GetHighlightSelector() : null;
+            GameObject[] targets = selector != null ? selector.HighlightedObjects : null;
             bool hasTargets = targets != null && targets.Length > 0;
 
             if (highlightOverlay != null)
@@ -320,7 +321,8 @@ namespace Game
 
         private void PlayTutorialAnimation(TutorialStep step)
         {
-            if (step?.tutorialAnimation == null || step.tutorialAnimation.tutorialObject == null)
+            TutorialAnimation tutorialAnimation = step != null ? step.GetTutorialAnimation() : null;
+            if (tutorialAnimation == null || tutorialAnimation.tutorialObject == null)
                 return;
 
             ClearTutorialAnimation(step);
@@ -328,23 +330,23 @@ namespace Game
             RectTransform animationInstance;
             if (animationObjectParent != null)
             {
-                animationInstance = Instantiate(step.tutorialAnimation.tutorialObject, animationObjectParent);
+                animationInstance = Instantiate(tutorialAnimation.tutorialObject, animationObjectParent);
             }
             else
             {
                 Canvas firstCanvas = FindObjectOfType<Canvas>();
                 animationInstance = firstCanvas != null
-                    ? Instantiate(step.tutorialAnimation.tutorialObject, firstCanvas.transform)
-                    : Instantiate(step.tutorialAnimation.tutorialObject);
+                    ? Instantiate(tutorialAnimation.tutorialObject, firstCanvas.transform)
+                    : Instantiate(tutorialAnimation.tutorialObject);
             }
 
-            step.tutorialAnimation.Initialize(step, animationInstance);
-            step.tutorialAnimation.PlayAnim();
+            tutorialAnimation.Initialize(step, animationInstance);
+            tutorialAnimation.PlayAnim();
         }
 
         private void ClearTutorialAnimation(TutorialStep step)
         {
-            step?.tutorialAnimation?.ClearAnim();
+            step?.GetTutorialAnimation()?.ClearAnim();
         }
 
         public bool IsElementInteractionAllowed(GameObject candidate)
@@ -356,7 +358,8 @@ namespace Game
             if (step == null || !step.isStarted || step.isCompleted)
                 return true;
 
-            GameObject[] highlighted = step.highlightSelector != null ? step.highlightSelector.HighlightedObjects : null;
+            HighlightSelector selector = step.GetHighlightSelector();
+            GameObject[] highlighted = selector != null ? selector.HighlightedObjects : null;
             if (highlighted == null || highlighted.Length == 0)
                 return true;
 

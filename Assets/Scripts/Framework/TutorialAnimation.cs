@@ -1,4 +1,5 @@
 using DG.Tweening;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -103,7 +104,9 @@ namespace Game
 
         public override void PlayAnim()
         {
-            if (tutorialObjectInstance == null || referenceStep?.highlightSelector?.HighlightedObjects == null || referenceStep.highlightSelector.HighlightedObjects.Length < 2)
+            HighlightSelector selector = referenceStep != null ? referenceStep.GetHighlightSelector() : null;
+            GameObject[] highlightedObjects = selector != null ? selector.HighlightedObjects : null;
+            if (tutorialObjectInstance == null || highlightedObjects == null || highlightedObjects.Length < 2)
                 return;
 
             DirectiveTextAnim();
@@ -123,8 +126,13 @@ namespace Game
 
         private void TutorialObjectsAnim()
         {
-            Transform startPointTransform = referenceStep.highlightSelector.HighlightedObjects[0].transform;
-            Transform endPointTransform = referenceStep.highlightSelector.HighlightedObjects[1].transform;
+            HighlightSelector selector = referenceStep != null ? referenceStep.GetHighlightSelector() : null;
+            GameObject[] highlightedObjects = selector != null ? selector.HighlightedObjects : null;
+            if (highlightedObjects == null || highlightedObjects.Length < 2 || highlightedObjects[0] == null || highlightedObjects[1] == null)
+                return;
+
+            Transform startPointTransform = highlightedObjects[0].transform;
+            Transform endPointTransform = highlightedObjects[1].transform;
 
             // Detect the screen position of the start and end points to determine where the animation should be played
             Vector2 startAnchoredPos = GetAnchoredPosition(startPointTransform);
@@ -158,7 +166,9 @@ namespace Game
 
         public override void PlayAnim()
         {
-            if (tutorialObjectInstance == null || referenceStep?.highlightSelector?.HighlightedObjects == null)
+            HighlightSelector selector = referenceStep != null ? referenceStep.GetHighlightSelector() : null;
+            GameObject[] highlightedObjects = selector != null ? selector.HighlightedObjects : null;
+            if (tutorialObjectInstance == null || highlightedObjects == null || highlightedObjects.Length == 0)
                 return;
 
             DirectiveTextAnim();
@@ -178,7 +188,12 @@ namespace Game
 
         private void TutorialObjectsAnim()
         {
-            Transform startPointTransform = referenceStep.highlightSelector.HighlightedObjects[0].transform;
+            HighlightSelector selector = referenceStep != null ? referenceStep.GetHighlightSelector() : null;
+            GameObject[] highlightedObjects = selector != null ? selector.HighlightedObjects : null;
+            if (highlightedObjects == null || highlightedObjects.Length == 0 || highlightedObjects[0] == null)
+                return;
+
+            Transform startPointTransform = highlightedObjects[0].transform;
 
             // Detect the screen position of the start and end points to determine where the animation should be played
             Vector2 startAnchoredPos = GetAnchoredPosition(startPointTransform);
@@ -202,10 +217,12 @@ namespace Game
 
         public override void PlayAnim()
         {
-            if (tutorialObjectInstance == null || referenceStep?.highlightSelector?.HighlightedObjects == null || referenceStep.highlightSelector.HighlightedObjects.Length == 0)
+            HighlightSelector selector = referenceStep != null ? referenceStep.GetHighlightSelector() : null;
+            GameObject[] highlightedObjects = selector != null ? selector.HighlightedObjects : null;
+            if (tutorialObjectInstance == null || highlightedObjects == null || highlightedObjects.Length == 0)
                 return;
 
-            GameObject targetObject = referenceStep.highlightSelector.HighlightedObjects[0];
+            GameObject targetObject = highlightedObjects[0];
             if (targetObject == null)
                 return;
 

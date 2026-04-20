@@ -385,15 +385,16 @@ namespace Game
     [Serializable]
     public class ActionButton_Highlight : HighlightSelector
     {
-        [ValueDropdown(nameof(GetAllActions))]
-        [SerializeReference]
-        public ActionBarItem action;
+        [ValueDropdown(nameof(GetAllActionNames))]
+        public string actionName;
 
         public override GameObject[] HighlightedObjects
         {
             get
             {
                 ActionBarManager actionBarManager = GetActionBarManager();
+                if (actionBarManager == null || string.IsNullOrEmpty(actionName))
+                    return new GameObject[0];
 
                 for (int i = 0; i < actionBarManager.actionBarViews.Count; i++)
                 {
@@ -401,7 +402,7 @@ namespace Game
                     if (view == null || view.actionBarItem == null)
                         continue;
 
-                    if (view.actionBarItem.ActionName == action.ActionName)
+                    if (view.actionBarItem.ActionName == actionName)
                         return new[] { view.useButton.gameObject };
                 }
 
@@ -417,13 +418,19 @@ namespace Game
             return GameManager.Instance.actionBarManager;
         }
 
-        private IEnumerable GetAllActions()
+        private IEnumerable GetAllActionNames()
         {
             ActionBarManager actionBarManager = GetActionBarManager();
-            ValueDropdownList<ActionBarItem> valueDropdownItems = new();
+            ValueDropdownList<string> valueDropdownItems = new();
+            if (actionBarManager == null || actionBarManager.actionBarItemList == null)
+                return valueDropdownItems;
+
             foreach (ActionBarItem item in actionBarManager.actionBarItemList)
             {
-                valueDropdownItems.Add(item.ActionName, item);
+                if (item == null || string.IsNullOrEmpty(item.ActionName))
+                    continue;
+
+                valueDropdownItems.Add(item.ActionName, item.ActionName);
             }
             return valueDropdownItems;
         }

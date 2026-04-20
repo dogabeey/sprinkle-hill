@@ -20,10 +20,17 @@ MonoBehaviour:
   disablesActionBar: 1
   requiredLevelIndex: 0
   requiredStageIndex: 0
-  tutorialAnimation:
-    rid: 3084495758061469779
-  highlightSelector:
-    rid: 3084495758061469780
+  tutorialAnimationType: 1
+  tutorialAnimationSettings:
+    tutorialObject: {fileID: 5451101766555202300, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
+    screenPositionOffset: {x: 0, y: 0}
+    duration: 1
+    isLoop: 1
+    rotationOffset: -90
+  highlightSelectorType: 2
+  highlightSelectorSettings:
+    actionName: 
+    selectedTags: []
   startEvent: 0
   startEventExpectedParams: 0
   startEventExpectedParamValues:
@@ -55,17 +62,3 @@ MonoBehaviour:
   serializationDepth: 0
   isStarted: 0
   isCompleted: 1
-  references:
-    version: 2
-    RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
-    - rid: 3084495758061469779
-      type: {class: MoveBetweenTwoPoint, ns: Game, asm: Assembly-CSharp}
-      data:
-        tutorialObject: {fileID: 5451101766555202300, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
-        screenPositionOffset: {x: 100, y: -100}
-        duration: 2
-        isLoop: 1
-    - rid: 3084495758061469780
-      type: {class: TwoRandomSquareMatchableElement_Highlight, ns: Game, asm: Assembly-CSharp}
