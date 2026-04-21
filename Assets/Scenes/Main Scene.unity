@@ -2086,6 +2086,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5461160753145643669, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
+      propertyPath: boundsOffset.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461160753145643669, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
+      propertyPath: boundsOffset.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461160753145643669, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
+      propertyPath: boundsOffset.z
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 5783798625139703641, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
       propertyPath: m_Name
       value: Game Camera
