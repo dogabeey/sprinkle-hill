@@ -102,7 +102,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -126,7 +126,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -150,7 +150,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -174,7 +174,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -270,7 +270,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -294,7 +294,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -396,7 +396,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -420,7 +420,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -468,7 +468,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -492,7 +492,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -672,7 +672,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -696,7 +696,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -720,7 +720,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -978,7 +978,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1002,7 +1002,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1260,7 +1260,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1284,7 +1284,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1308,7 +1308,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1488,7 +1488,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1512,7 +1512,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1560,7 +1560,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1584,7 +1584,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1686,7 +1686,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1710,7 +1710,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1806,7 +1806,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1830,7 +1830,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1854,7 +1854,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1878,7 +1878,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 

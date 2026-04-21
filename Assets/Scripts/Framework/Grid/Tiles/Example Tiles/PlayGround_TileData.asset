@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normalCell: {fileID: -1835132901946771215, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
   normalTileSprites: {fileID: 11400000, guid: 34a38090dcc083c4eba590c0a7ae2983, type: 2}
-  unbreakableWallTileSprites: {fileID: 0}
+  unbreakableWallTileSprites: {fileID: 11400000, guid: c977cd7ac9520b240944f0a304d861e6, type: 2}
   breakableWall: {fileID: -7147398998111169648, guid: ba3f33d2583db034bac290c91a22a1fc, type: 3}
   unbreakableWall: {fileID: 0}
   generalPositionOffset: {x: 0, y: 0, z: 0}
