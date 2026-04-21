@@ -159,7 +159,7 @@ namespace Game
             return true;
         }
 #if UNITY_EDITOR
-        [MenuItem("Lionsfall/Save Manager/Clear All Saves")]
+        [MenuItem("Game/Save Manager/Clear All Saves")]
         [Button]
         public static void ClearAllSaves()
         {
@@ -173,13 +173,13 @@ namespace Game
                 }
             }
         }
-        [MenuItem("Lionsfall/Save Manager/Save Now")]
+        [MenuItem("Game/Save Manager/Save Now")]
         [Button]
         private static void SaveNow()
         {
             Instance.Save();
         }
-        [MenuItem("Lionsfall/Save Manager/Show Save Folder")]
+        [MenuItem("Game/Save Manager/Show Save Folder")]
         [Button]
         private static void ShowSaveFolder()
         {

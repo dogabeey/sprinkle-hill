@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 namespace Game
 {
-    [CreateAssetMenu(menuName = "Tutorial/Tutorial Step...", fileName = "TutorialStep")]
+    [CreateAssetMenu(menuName = "Game/Tutorial Step...", fileName = "TutorialStep")]
     [InlineEditor]
     public class TutorialStep : ScriptableObject
     {

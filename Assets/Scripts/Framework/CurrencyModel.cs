@@ -3,7 +3,7 @@ using TMPro;
 
 namespace Game
 {
-    [CreateAssetMenu(fileName = "CurrencyModel", menuName = "Scriptable Objects/Currency Model")]
+    [CreateAssetMenu(fileName = "CurrencyModel", menuName = "Game/Currency Model")]
     public class CurrencyModel : ScriptableObject
     {
         public string currencyID;

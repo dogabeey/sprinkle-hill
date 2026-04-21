@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Dialogue", menuName = "Lionsfall/New Dialogue...")]
+[CreateAssetMenu(fileName = "New Dialogue", menuName = "Game/New Dialogue...")]
 public class Dialogue : ScriptableObject
 {
     public string dialogueID;
