@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Corn
   displayColor: {r: 0.9686275, g: 0.7176471, b: 0.0627451, a: 0}
-  displayIcon: {fileID: -402175774, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
+  displayIcon: {fileID: -1969473945, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
   elementMesh: {fileID: 0}
   elementMaterial: {fileID: 0}

@@ -21,8 +21,6 @@ namespace Game
 
         [ GUIColor("green")]
         public Grid3D.LevelCreationMode levelCreationMode = Grid3D.LevelCreationMode.LevelEditor;
-
-        [ShowIf(nameof(UseProcedural))]
         public Vector2Int gridSize = new Vector2Int(8, 8);
         public List<Objective> objectives = new List<Objective>();
         public GameEvent specialWinEvent;
@@ -75,7 +73,29 @@ namespace Game
 
             MarkDirty();
         }
-
+        [Button]
+        public void PopulateRandomlyFromPool()
+            {
+            if (elementPool == null || elementPool.Count == 0)
+            {
+                Debug.LogError("Element pool is empty. Cannot populate grid.");
+                return;
+            }
+            EnsureGridCells();
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    Grid3D.GridCell cell = gridCells[x, y];
+                    if (cell != null && cell.cellType == Grid3D.CellType.Normal)
+                    {
+                        ElementData randomElement = elementPool[Random.Range(0, elementPool.Count)];
+                        cell.elementInfo = new GridElementInfo { elementData = randomElement };
+                    }
+                }
+            }
+            MarkDirty();
+        }
         private void MarkDirty()
         {
             EditorUtility.SetDirty(this);
