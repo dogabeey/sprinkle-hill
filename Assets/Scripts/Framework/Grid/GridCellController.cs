@@ -5,6 +5,7 @@ namespace Game
 {
     public class GridCellController : MonoBehaviour, ICameraBoundSetter
     {
+        public SpriteRenderer gridSprite;
         public SpriteRenderer upperBorder;
         public SpriteRenderer lowerBorder;
         public SpriteRenderer leftBorder;

@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,69 @@ namespace Game
             Right = 8
         }
 
+        [FoldoutGroup("Tile Types")]
         public GridCellController normalCell;
+        [FoldoutGroup("Tile Types")]
+        public Sprite topLeftCorner;
+        [FoldoutGroup("Tile Types")]
+        public Sprite topRightCorner;
+        [FoldoutGroup("Tile Types")]
+        public Sprite bottomLeftCorner;
+        [FoldoutGroup("Tile Types")]
+        public Sprite bottomRightCorner;
+        [FoldoutGroup("Tile Types")]
+        public Sprite topEdge;
+        [FoldoutGroup("Tile Types")]
+        public Sprite bottomEdge;
+        [FoldoutGroup("Tile Types")]
+        public Sprite leftEdge;
+        [FoldoutGroup("Tile Types")]
+        public Sprite rightEdge;
+        [FoldoutGroup("Tile Types")]
+        public Sprite topTip;
+        [FoldoutGroup("Tile Types")]
+        public Sprite bottomTip;
+        [FoldoutGroup("Tile Types")]
+        public Sprite leftTip;
+        [FoldoutGroup("Tile Types")]
+        public Sprite rightTip;
+        [FoldoutGroup("Tile Types")]
+        public Sprite verticalTile;
+        [FoldoutGroup("Tile Types")]
+        public Sprite horizontalTile;
+        [FoldoutGroup("Tile Types")]
+        public Sprite verticalWithLeftConnectionTile;
+        [FoldoutGroup("Tile Types")]
+        public Sprite verticalWithRightConnectionTile;
+        [FoldoutGroup("Tile Types")]
+        public Sprite horizontalWithUpConnectionTile;
+        [FoldoutGroup("Tile Types")]
+        public Sprite horizontalWithDownConnectionTile;
+        [FoldoutGroup("Tile Types")]
+        public Sprite onlyVerticalAndHorizontalConnectionTile;
+        [FoldoutGroup("Tile Types")]
+        public Sprite upperAndLeftTile;
+        [FoldoutGroup("Tile Types")]
+        public Sprite upperAndRightTile;
+        [FoldoutGroup("Tile Types")]
+        public Sprite lowerAndLeftTile;
+        [FoldoutGroup("Tile Types")]
+        public Sprite lowerAndRightTile;
+        [FoldoutGroup("Tile Types")]
+        public Sprite singleTileStandalone;
+        [FoldoutGroup("Tile Types")]
+        public Sprite topLeftConvexCorner;
+        [FoldoutGroup("Tile Types")]
+        public Sprite topRightConvexCorner;
+        [FoldoutGroup("Tile Types")]
+        public Sprite bottomLeftConvexCorner;
+        [FoldoutGroup("Tile Types")]
+        public Sprite bottomRightConvexCorner;
+        [FoldoutGroup("Tile Types")]
+        public Sprite singleInnerTile;
+        [FoldoutGroup("Tile Types")]
+        public Sprite errorTile;
+
         public GridCellController breakableWall;
         [Header("Settings")]
         public Vector3 generalPositionOffset;
@@ -64,10 +127,29 @@ namespace Game
                                 break;
                         }
 
-                        GridCellController tilePrefab = DetermineTileType(gridCells, i, j);
+                        bool isBreakableWall = gridCells != null &&
+                                               i < gridCells.GetLength(0) &&
+                                               j < gridCells.GetLength(1) &&
+                                               gridCells[i, j] != null &&
+                                               gridCells[i, j].cellType == Grid3D.CellType.BreakableWall;
+
+                        GridCellController tilePrefab = isBreakableWall
+                            ? (breakableWall != null ? breakableWall : normalCell)
+                            : normalCell;
+
                         if (tilePrefab != null)
                         {
                             GridCellController cellController = Instantiate(tilePrefab, position, Quaternion.identity, parent);
+
+                            if (!isBreakableWall)
+                            {
+                                Sprite tileSprite = DetermineTileType(createData, i, j, drawStartingCorner, gridCells);
+                                if (cellController.gridSprite != null)
+                                {
+                                    cellController.gridSprite.sprite = FallbackToErrorTile(tileSprite);
+                                }
+                            }
+
                             generatedObjects.Add(cellController.gameObject);
 
                             Vector2Int coordinates = new Vector2Int(i, j);
@@ -96,7 +178,7 @@ namespace Game
             return generatedTileDict;
         }
 
-        private GridCellController DetermineTileType(Grid3D.GridCell[,] gridCells, int x, int y)
+        private Sprite DetermineTileType(bool[,] createData, int x, int y, DrawStartingCorner drawStartingCorner, Grid3D.GridCell[,] gridCells = null, WallSideOverrides wallSideOverrides = WallSideOverrides.None)
         {
             bool isBreakableWall = gridCells != null &&
                                    x < gridCells.GetLength(0) &&
@@ -104,12 +186,87 @@ namespace Game
                                    gridCells[x, y] != null &&
                                    gridCells[x, y].cellType == Grid3D.CellType.BreakableWall;
 
-            if (isBreakableWall && breakableWall != null)
+            if (isBreakableWall)
             {
-                return breakableWall;
+                return null;
             }
 
-            return normalCell;
+            bool up = false, down = false, left = false, right = false, upLeft = false, upRight = false, downLeft = false, downRight = false;
+            switch (drawStartingCorner)
+            {
+                case DrawStartingCorner.TopLeft:
+                    up = y > 0 && createData[x, y - 1] || (wallSideOverrides & WallSideOverrides.Up) != 0;
+                    down = y < createData.GetLength(1) - 1 && createData[x, y + 1] || (wallSideOverrides & WallSideOverrides.Down) != 0;
+                    left = x > 0 && createData[x - 1, y] || (wallSideOverrides & WallSideOverrides.Left) != 0;
+                    right = x < createData.GetLength(0) - 1 && createData[x + 1, y] || (wallSideOverrides & WallSideOverrides.Right) != 0;
+                    upLeft = x > 0 && y > 0 && createData[x - 1, y - 1];
+                    upRight = x < createData.GetLength(0) - 1 && y > 0 && createData[x + 1, y - 1];
+                    downLeft = x > 0 && y < createData.GetLength(1) - 1 && createData[x - 1, y + 1];
+                    downRight = x < createData.GetLength(0) - 1 && y < createData.GetLength(1) - 1 && createData[x + 1, y + 1];
+                    break;
+                case DrawStartingCorner.TopRight:
+                    up = y > 0 && createData[x, y - 1] || (wallSideOverrides & WallSideOverrides.Up) != 0;
+                    down = y < createData.GetLength(1) - 1 && createData[x, y + 1] || (wallSideOverrides & WallSideOverrides.Down) != 0;
+                    right = x > 0 && createData[x - 1, y] || (wallSideOverrides & WallSideOverrides.Right) != 0;
+                    left = x < createData.GetLength(0) - 1 && createData[x + 1, y] || (wallSideOverrides & WallSideOverrides.Left) != 0;
+                    upRight = x > 0 && y > 0 && createData[x - 1, y - 1];
+                    upLeft = x < createData.GetLength(0) - 1 && y > 0 && createData[x + 1, y - 1];
+                    downRight = x > 0 && y < createData.GetLength(1) - 1 && createData[x - 1, y + 1];
+                    downLeft = x < createData.GetLength(0) - 1 && y < createData.GetLength(1) - 1 && createData[x + 1, y + 1];
+                    break;
+                case DrawStartingCorner.BottomLeft:
+                    up = y < createData.GetLength(1) - 1 && createData[x, y + 1] || (wallSideOverrides & WallSideOverrides.Up) != 0;
+                    down = y > 0 && createData[x, y - 1] || (wallSideOverrides & WallSideOverrides.Down) != 0;
+                    left = x > 0 && createData[x - 1, y] || (wallSideOverrides & WallSideOverrides.Left) != 0;
+                    right = x < createData.GetLength(0) - 1 && createData[x + 1, y] || (wallSideOverrides & WallSideOverrides.Right) != 0;
+                    downLeft = x > 0 && y > 0 && createData[x - 1, y - 1];
+                    downRight = x < createData.GetLength(0) - 1 && y > 0 && createData[x + 1, y - 1];
+                    upLeft = x > 0 && y < createData.GetLength(1) - 1 && createData[x - 1, y + 1];
+                    upRight = x < createData.GetLength(0) - 1 && y < createData.GetLength(1) - 1 && createData[x + 1, y + 1];
+                    break;
+                case DrawStartingCorner.BottomRight:
+                    up = y < createData.GetLength(1) - 1 && createData[x, y + 1] || (wallSideOverrides & WallSideOverrides.Up) != 0;
+                    down = y > 0 && createData[x, y - 1] || (wallSideOverrides & WallSideOverrides.Down) != 0;
+                    right = x > 0 && createData[x - 1, y] || (wallSideOverrides & WallSideOverrides.Right) != 0;
+                    left = x < createData.GetLength(0) - 1 && createData[x + 1, y] || (wallSideOverrides & WallSideOverrides.Left) != 0;
+                    downRight = x > 0 && y > 0 && createData[x - 1, y - 1];
+                    downLeft = x < createData.GetLength(0) - 1 && y > 0 && createData[x + 1, y - 1];
+                    upRight = x > 0 && y < createData.GetLength(1) - 1 && createData[x - 1, y + 1];
+                    upLeft = x < createData.GetLength(0) - 1 && y < createData.GetLength(1) - 1 && createData[x + 1, y + 1];
+                    break;
+            }
+
+            if (!up && !left && right && down) return topLeftCorner;
+            if (!up && !right && left && down) return topRightCorner;
+            if (!down && !left && right && up) return bottomLeftCorner;
+            if (!down && !right && left && up) return bottomRightCorner;
+            if (!up && down && left && right) return topEdge;
+            if (!down && up && left && right) return bottomEdge;
+            if (!left && right && up && down) return leftEdge;
+            if (!right && left && up && down) return rightEdge;
+            if (!up && down && !left && !right) return topTip;
+            if (!down && up && !left && !right) return bottomTip;
+            if (!left && right && !up && !down) return leftTip;
+            if (!right && left && !up && !down) return rightTip;
+            if (!left && !right && up && down) return verticalTile;
+            if (!up && !down && left && right) return horizontalTile;
+            if (!upLeft && !downLeft && up && down && left) return verticalWithLeftConnectionTile;
+            if (!upRight && !downRight && up && down && right) return verticalWithRightConnectionTile;
+            if (!upLeft && !upRight && left && right && up) return horizontalWithUpConnectionTile;
+            if (!downLeft && !downRight && left && right && down) return horizontalWithDownConnectionTile;
+            if (up && down && left && right && !upLeft && !upRight && !downLeft && !downRight) return onlyVerticalAndHorizontalConnectionTile;
+            if (up && !down && left && !right && !downLeft && !upLeft && !upRight && !downRight) return upperAndLeftTile;
+            if (up && !down && !left && right && !downLeft && !upLeft && !upRight && !downRight) return upperAndRightTile;
+            if (!up && down && left && !right && !downLeft && !upLeft && !upRight && !downRight) return lowerAndLeftTile;
+            if (!up && down && !left && right && !downLeft && !upLeft && !upRight && !downRight) return lowerAndRightTile;
+            if (!up && !down && !left && !right) return singleTileStandalone;
+            if (!upLeft && upRight && downLeft && downRight) return topLeftConvexCorner;
+            if (!upRight && upLeft && downLeft && downRight) return topRightConvexCorner;
+            if (!downLeft && upLeft && upRight && downRight) return bottomLeftConvexCorner;
+            if (!downRight && upLeft && upRight && downLeft) return bottomRightConvexCorner;
+            if (up && down && left && right && upLeft && upRight && downLeft && downRight) return singleInnerTile;
+
+            return FallbackToErrorTile(errorTile);
         }
 
         public static GameObject CombineMeshes<T>(List<T> sources, Transform parent, string objectName, ShadowCastingMode shadowCastingMode = ShadowCastingMode.On) where T : Component
@@ -212,106 +369,16 @@ namespace Game
                 child.parent = parent;
             }
         }
-        /*
-        /// <summary>
-        /// Determines the type of tile to use based on the surrounding tiles.
-        /// </summary>
-        /// <param name="createData">Boolean matrix representing where tiles should be created.</param>
-        /// <param name="x">X coordinates of the index you are trying to determine.</param>
-        /// <param name="y">Y coordinates of the index you are trying to determine.</param>
-        /// <param name="drawStartingCorner">Which corner the drawing starts from.</param>
-        /// <param name="wallSideOverrides">Optional overrides to force certain sides to be treated as walls.</param></param>
-        /// <returns></returns>
+        
         public GameObject DetermineTileType(bool[,] createData, int x, int y, DrawStartingCorner drawStartingCorner, WallSideOverrides wallSideOverrides = WallSideOverrides.None)
         {
-            bool up = false, down = false, left = false, right = false, upLeft = false, upRight = false, downLeft = false, downRight = false;
-            switch (drawStartingCorner)
-            {
-                case DrawStartingCorner.TopLeft:
-                    up = y > 0 && createData[x, y - 1] || (wallSideOverrides & WallSideOverrides.Up) != 0;
-                    down = y < createData.GetLength(1) - 1 && createData[x, y + 1] || (wallSideOverrides & WallSideOverrides.Down) != 0;
-                    left = x > 0 && createData[x - 1, y] || (wallSideOverrides & WallSideOverrides.Left) != 0;
-                    right = x < createData.GetLength(0) - 1 && createData[x + 1, y] || (wallSideOverrides & WallSideOverrides.Right) != 0;
-                    upLeft = x > 0 && y > 0 && createData[x - 1, y - 1];
-                    upRight = x < createData.GetLength(0) - 1 && y > 0 && createData[x + 1, y - 1];
-                    downLeft = x > 0 && y < createData.GetLength(1) - 1 && createData[x - 1, y + 1];
-                    downRight = x < createData.GetLength(0) - 1 && y < createData.GetLength(1) - 1 && createData[x + 1, y + 1];
-                    break;
-                case DrawStartingCorner.TopRight:
-                    up = y > 0 && createData[x, y - 1] || (wallSideOverrides & WallSideOverrides.Up) != 0;
-                    down = y < createData.GetLength(1) - 1 && createData[x, y + 1] || (wallSideOverrides & WallSideOverrides.Down) != 0;
-                    right = x > 0 && createData[x - 1, y] || (wallSideOverrides & WallSideOverrides.Right) != 0;
-                    left = x < createData.GetLength(0) - 1 && createData[x + 1, y] || (wallSideOverrides & WallSideOverrides.Left) != 0;
-                    upRight = x > 0 && y > 0 && createData[x - 1, y - 1];
-                    upLeft = x < createData.GetLength(0) - 1 && y > 0 && createData[x + 1, y - 1];
-                    downRight = x > 0 && y < createData.GetLength(1) - 1 && createData[x - 1, y + 1];
-                    downLeft = x < createData.GetLength(0) - 1 && y < createData.GetLength(1) - 1 && createData[x + 1, y + 1];
-                    break;
-                case DrawStartingCorner.BottomLeft:
-                    up = y < createData.GetLength(1) - 1 && createData[x, y + 1] || (wallSideOverrides & WallSideOverrides.Up) != 0;
-                    down = y > 0 && createData[x, y - 1] || (wallSideOverrides & WallSideOverrides.Down) != 0;
-                    left = x > 0 && createData[x - 1, y] || (wallSideOverrides & WallSideOverrides.Left) != 0;
-                    right = x < createData.GetLength(0) - 1 && createData[x + 1, y] || (wallSideOverrides & WallSideOverrides.Right) != 0;
-                    downLeft = x > 0 && y > 0 && createData[x - 1, y - 1];
-                    downRight = x < createData.GetLength(0) - 1 && y > 0 && createData[x + 1, y - 1];
-                    upLeft = x > 0 && y < createData.GetLength(1) - 1 && createData[x - 1, y + 1];
-                    upRight = x < createData.GetLength(0) - 1 && y < createData.GetLength(1) - 1 && createData[x + 1, y + 1];
-                    break;
-                case DrawStartingCorner.BottomRight:
-                    up = y < createData.GetLength(1) - 1 && createData[x, y + 1] || (wallSideOverrides & WallSideOverrides.Up) != 0;
-                    down = y > 0 && createData[x, y - 1] || (wallSideOverrides & WallSideOverrides.Down) != 0;
-                    right = x > 0 && createData[x - 1, y] || (wallSideOverrides & WallSideOverrides.Right) != 0;
-                    left = x < createData.GetLength(0) - 1 && createData[x + 1, y] || (wallSideOverrides & WallSideOverrides.Left) != 0;
-                    downRight = x > 0 && y > 0 && createData[x - 1, y - 1];
-                    downLeft = x < createData.GetLength(0) - 1 && y > 0 && createData[x + 1, y - 1];
-                    upRight = x > 0 && y < createData.GetLength(1) - 1 && createData[x - 1, y + 1];
-                    upLeft = x < createData.GetLength(0) - 1 && y < createData.GetLength(1) - 1 && createData[x + 1, y + 1];
-                    break;
-                default:
-                    break;
-            }
-            // Check for corners
-            if (!up && !left && right && down) return topLeftCorner;
-            if (!up && !right && left && down) return topRightCorner;
-            if (!down && !left && right && up) return bottomLeftCorner;
-            if (!down && !right && left && up) return bottomRightCorner;
-            // Check for edges
-            if (!up && down && left && right) return topEdge;
-            if (!down && up && left && right) return bottomEdge;
-            if (!left && right && up && down) return leftEdge;
-            if (!right && left && up && down) return rightEdge;
-            // Check for tips
-            if (!up && down && !left && !right) return topTip;
-            if (!down && up && !left && !right) return bottomTip;
-            if (!left && right && !up && !down) return leftTip;
-            if (!right && left && !up && !down) return rightTip;
-            // Horizontal and vertical tiles
-            if (!left && !right && up && down) return verticalTile;
-            if (!up && !down && left && right) return horizontalTile;
-            // Horizontal and vertical tiles with one connection
-            if (!upLeft && !downLeft && up && down && left) return verticalWithLeftConnectionTile;
-            if (!upRight && !downRight && up && down && right) return verticalWithRightConnectionTile;
-            if (!upLeft && !upRight && left && right && up) return horizontalWithUpConnectionTile;
-            if (!downLeft && !downRight && left && right && down) return horizontalWithDownConnectionTile;
-            // Horizontal and vertical tile with four connection
-            if (up && down && left && right && !upLeft && !upRight && !downLeft && !downRight) return onlyVerticalAndHorizontalConnectionTile;
-            // Two connection tiles
-            if (up && !down && left && !right && !downLeft && !upLeft && !upRight && !downRight) return upperAndLeftTile;
-            if (up && !down && !left && right && !downLeft && !upLeft && !upRight && !downRight) return upperAndRightTile;
-            if (!up && down && left && !right && !downLeft && !upLeft && !upRight && !downRight) return lowerAndLeftTile;
-            if (!up && down && !left && right && !downLeft && !upLeft && !upRight && !downRight) return lowerAndRightTile;
-            // Single tile
-            if (!up && !down && !left && !right) return singleTileStandalone;
-            // If surrounded on all sides
-            // Check for convex corners
-            if (!upLeft && upRight && downLeft && downRight) return topLeftConvexCorner;
-            if (!upRight && upLeft && downLeft && downRight) return topRightConvexCorner;
-            if (!downLeft && upLeft && upRight && downRight) return bottomLeftConvexCorner;
-            if (!downRight && upLeft && upRight && downLeft) return bottomRightConvexCorner;
-            // If ALL true
-            if (up && down && left && right && upLeft && upRight && downLeft && downRight) return singleInnerTile;
-            return errorTile;
-        }*/
+            return normalCell != null ? normalCell.gameObject : null;
+        }
+
+        private Sprite FallbackToErrorTile(Sprite tile)
+        {
+            return tile != null ? tile : errorTile;
+        }
         /*
         /// <summary>
         /// Scans a rectangular area in the game world to decide if there can be walls placed based on the presence of colliders of a specific layermask, then returns a boolean matrix representing where walls should be created.

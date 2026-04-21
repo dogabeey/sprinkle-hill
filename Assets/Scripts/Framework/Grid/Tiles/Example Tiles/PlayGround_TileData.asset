@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fda7e12cf25807488823af8618bc05d, type: 3}
+  m_Name: PlayGround_TileData
+  m_EditorClassIdentifier: 
+  normalCell: {fileID: -1835132901946771215, guid: 5af076576079fff469016f9ac7ead72e, type: 3}
+  topLeftCorner: {fileID: -433659526, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  topRightCorner: {fileID: 57921286, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  bottomLeftCorner: {fileID: -1991390889, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  bottomRightCorner: {fileID: 1732160799, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  topEdge: {fileID: 1392601304, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  bottomEdge: {fileID: 497921412, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  leftEdge: {fileID: 373469258, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  rightEdge: {fileID: -672199269, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  topTip: {fileID: -1528660111, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  bottomTip: {fileID: -713001569, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  leftTip: {fileID: 219023208, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  rightTip: {fileID: -748366229, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  verticalTile: {fileID: -399505187, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  horizontalTile: {fileID: -399505187, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  verticalWithLeftConnectionTile: {fileID: -399505187, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  verticalWithRightConnectionTile: {fileID: -399505187, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  horizontalWithUpConnectionTile: {fileID: -399505187, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  horizontalWithDownConnectionTile: {fileID: -399505187, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  onlyVerticalAndHorizontalConnectionTile: {fileID: -399505187, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  upperAndLeftTile: {fileID: -399505187, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  upperAndRightTile: {fileID: -399505187, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  lowerAndLeftTile: {fileID: -399505187, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  lowerAndRightTile: {fileID: -399505187, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  singleTileStandalone: {fileID: -399505187, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  topLeftConvexCorner: {fileID: -399505187, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  topRightConvexCorner: {fileID: -399505187, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  bottomLeftConvexCorner: {fileID: -399505187, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  bottomRightConvexCorner: {fileID: -399505187, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  singleInnerTile: {fileID: -399505187, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  errorTile: {fileID: -399505187, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
+  breakableWall: {fileID: -7147398998111169648, guid: ba3f33d2583db034bac290c91a22a1fc, type: 3}
+  generalPositionOffset: {x: 0, y: 0, z: 0}
+  spacing: {x: 1, y: 1}
