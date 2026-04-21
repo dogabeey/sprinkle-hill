@@ -90,7 +90,69 @@ namespace Game
         [FoldoutGroup("Tile Types")]
         public Sprite errorTile;
 
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableTopLeftCorner;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableTopRightCorner;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableBottomLeftCorner;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableBottomRightCorner;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableTopEdge;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableBottomEdge;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableLeftEdge;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableRightEdge;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableTopTip;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableBottomTip;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableLeftTip;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableRightTip;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableVerticalTile;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableHorizontalTile;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableVerticalWithLeftConnectionTile;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableVerticalWithRightConnectionTile;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableHorizontalWithUpConnectionTile;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableHorizontalWithDownConnectionTile;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableOnlyVerticalAndHorizontalConnectionTile;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableUpperAndLeftTile;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableUpperAndRightTile;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableLowerAndLeftTile;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableLowerAndRightTile;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableSingleTileStandalone;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableTopLeftConvexCorner;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableTopRightConvexCorner;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableBottomLeftConvexCorner;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableBottomRightConvexCorner;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableSingleInnerTile;
+        [FoldoutGroup("Unbreakable Wall Tile Types")]
+        public Sprite unbreakableErrorTile;
+
         public GridCellController breakableWall;
+        public GridCellController unbreakableWall;
         [Header("Settings")]
         public Vector3 generalPositionOffset;
         public Vector2 spacing;
@@ -133,9 +195,17 @@ namespace Game
                                                gridCells[i, j] != null &&
                                                gridCells[i, j].cellType == Grid3D.CellType.BreakableWall;
 
+                        bool isUnbreakableWall = gridCells != null &&
+                                                 i < gridCells.GetLength(0) &&
+                                                 j < gridCells.GetLength(1) &&
+                                                 gridCells[i, j] != null &&
+                                                 gridCells[i, j].cellType == Grid3D.CellType.UnbreakableWall;
+
                         GridCellController tilePrefab = isBreakableWall
                             ? (breakableWall != null ? breakableWall : normalCell)
-                            : normalCell;
+                            : isUnbreakableWall
+                                ? (unbreakableWall != null ? unbreakableWall : normalCell)
+                                : normalCell;
 
                         if (tilePrefab != null)
                         {
@@ -185,6 +255,12 @@ namespace Game
                                    y < gridCells.GetLength(1) &&
                                    gridCells[x, y] != null &&
                                    gridCells[x, y].cellType == Grid3D.CellType.BreakableWall;
+
+            bool isUnbreakableWall = gridCells != null &&
+                                     x < gridCells.GetLength(0) &&
+                                     y < gridCells.GetLength(1) &&
+                                     gridCells[x, y] != null &&
+                                     gridCells[x, y].cellType == Grid3D.CellType.UnbreakableWall;
 
             if (isBreakableWall)
             {
@@ -236,37 +312,39 @@ namespace Game
                     break;
             }
 
-            if (!up && !left && right && down) return topLeftCorner;
-            if (!up && !right && left && down) return topRightCorner;
-            if (!down && !left && right && up) return bottomLeftCorner;
-            if (!down && !right && left && up) return bottomRightCorner;
-            if (!up && down && left && right) return topEdge;
-            if (!down && up && left && right) return bottomEdge;
-            if (!left && right && up && down) return leftEdge;
-            if (!right && left && up && down) return rightEdge;
-            if (!up && down && !left && !right) return topTip;
-            if (!down && up && !left && !right) return bottomTip;
-            if (!left && right && !up && !down) return leftTip;
-            if (!right && left && !up && !down) return rightTip;
-            if (!left && !right && up && down) return verticalTile;
-            if (!up && !down && left && right) return horizontalTile;
-            if (!upLeft && !downLeft && up && down && left) return verticalWithLeftConnectionTile;
-            if (!upRight && !downRight && up && down && right) return verticalWithRightConnectionTile;
-            if (!upLeft && !upRight && left && right && up) return horizontalWithUpConnectionTile;
-            if (!downLeft && !downRight && left && right && down) return horizontalWithDownConnectionTile;
-            if (up && down && left && right && !upLeft && !upRight && !downLeft && !downRight) return onlyVerticalAndHorizontalConnectionTile;
-            if (up && !down && left && !right && !downLeft && !upLeft && !upRight && !downRight) return upperAndLeftTile;
-            if (up && !down && !left && right && !downLeft && !upLeft && !upRight && !downRight) return upperAndRightTile;
-            if (!up && down && left && !right && !downLeft && !upLeft && !upRight && !downRight) return lowerAndLeftTile;
-            if (!up && down && !left && right && !downLeft && !upLeft && !upRight && !downRight) return lowerAndRightTile;
-            if (!up && !down && !left && !right) return singleTileStandalone;
-            if (!upLeft && upRight && downLeft && downRight) return topLeftConvexCorner;
-            if (!upRight && upLeft && downLeft && downRight) return topRightConvexCorner;
-            if (!downLeft && upLeft && upRight && downRight) return bottomLeftConvexCorner;
-            if (!downRight && upLeft && upRight && downLeft) return bottomRightConvexCorner;
-            if (up && down && left && right && upLeft && upRight && downLeft && downRight) return singleInnerTile;
+            if (!up && !left && right && down) return ResolveSprite(topLeftCorner, unbreakableTopLeftCorner, isUnbreakableWall);
+            if (!up && !right && left && down) return ResolveSprite(topRightCorner, unbreakableTopRightCorner, isUnbreakableWall);
+            if (!down && !left && right && up) return ResolveSprite(bottomLeftCorner, unbreakableBottomLeftCorner, isUnbreakableWall);
+            if (!down && !right && left && up) return ResolveSprite(bottomRightCorner, unbreakableBottomRightCorner, isUnbreakableWall);
+            if (!up && down && left && right) return ResolveSprite(topEdge, unbreakableTopEdge, isUnbreakableWall);
+            if (!down && up && left && right) return ResolveSprite(bottomEdge, unbreakableBottomEdge, isUnbreakableWall);
+            if (!left && right && up && down) return ResolveSprite(leftEdge, unbreakableLeftEdge, isUnbreakableWall);
+            if (!right && left && up && down) return ResolveSprite(rightEdge, unbreakableRightEdge, isUnbreakableWall);
+            if (!up && down && !left && !right) return ResolveSprite(topTip, unbreakableTopTip, isUnbreakableWall);
+            if (!down && up && !left && !right) return ResolveSprite(bottomTip, unbreakableBottomTip, isUnbreakableWall);
+            if (!left && right && !up && !down) return ResolveSprite(leftTip, unbreakableLeftTip, isUnbreakableWall);
+            if (!right && left && !up && !down) return ResolveSprite(rightTip, unbreakableRightTip, isUnbreakableWall);
+            if (!left && !right && up && down) return ResolveSprite(verticalTile, unbreakableVerticalTile, isUnbreakableWall);
+            if (!up && !down && left && right) return ResolveSprite(horizontalTile, unbreakableHorizontalTile, isUnbreakableWall);
+            if (!upLeft && !downLeft && up && down && left) return ResolveSprite(verticalWithLeftConnectionTile, unbreakableVerticalWithLeftConnectionTile, isUnbreakableWall);
+            if (!upRight && !downRight && up && down && right) return ResolveSprite(verticalWithRightConnectionTile, unbreakableVerticalWithRightConnectionTile, isUnbreakableWall);
+            if (!upLeft && !upRight && left && right && up) return ResolveSprite(horizontalWithUpConnectionTile, unbreakableHorizontalWithUpConnectionTile, isUnbreakableWall);
+            if (!downLeft && !downRight && left && right && down) return ResolveSprite(horizontalWithDownConnectionTile, unbreakableHorizontalWithDownConnectionTile, isUnbreakableWall);
+            if (up && down && left && right && !upLeft && !upRight && !downLeft && !downRight) return ResolveSprite(onlyVerticalAndHorizontalConnectionTile, unbreakableOnlyVerticalAndHorizontalConnectionTile, isUnbreakableWall);
+            if (up && !down && left && !right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(upperAndLeftTile, unbreakableUpperAndLeftTile, isUnbreakableWall);
+            if (up && !down && !left && right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(upperAndRightTile, unbreakableUpperAndRightTile, isUnbreakableWall);
+            if (!up && down && left && !right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(lowerAndLeftTile, unbreakableLowerAndLeftTile, isUnbreakableWall);
+            if (!up && down && !left && right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(lowerAndRightTile, unbreakableLowerAndRightTile, isUnbreakableWall);
+            if (!up && !down && !left && !right) return ResolveSprite(singleTileStandalone, unbreakableSingleTileStandalone, isUnbreakableWall);
+            if (!upLeft && upRight && downLeft && downRight) return ResolveSprite(topLeftConvexCorner, unbreakableTopLeftConvexCorner, isUnbreakableWall);
+            if (!upRight && upLeft && downLeft && downRight) return ResolveSprite(topRightConvexCorner, unbreakableTopRightConvexCorner, isUnbreakableWall);
+            if (!downLeft && upLeft && upRight && downRight) return ResolveSprite(bottomLeftConvexCorner, unbreakableBottomLeftConvexCorner, isUnbreakableWall);
+            if (!downRight && upLeft && upRight && downLeft) return ResolveSprite(bottomRightConvexCorner, unbreakableBottomRightConvexCorner, isUnbreakableWall);
+            if (up && down && left && right && upLeft && upRight && downLeft && downRight) return ResolveSprite(singleInnerTile, unbreakableSingleInnerTile, isUnbreakableWall);
 
-            return FallbackToErrorTile(errorTile);
+            return isUnbreakableWall
+                ? ResolveSprite(errorTile, unbreakableErrorTile, true)
+                : FallbackToErrorTile(errorTile);
         }
 
         public static GameObject CombineMeshes<T>(List<T> sources, Transform parent, string objectName, ShadowCastingMode shadowCastingMode = ShadowCastingMode.On) where T : Component
@@ -378,6 +456,17 @@ namespace Game
         private Sprite FallbackToErrorTile(Sprite tile)
         {
             return tile != null ? tile : errorTile;
+        }
+
+        private Sprite ResolveSprite(Sprite normalSprite, Sprite unbreakableSprite, bool useUnbreakable)
+        {
+            if (!useUnbreakable)
+                return FallbackToErrorTile(normalSprite);
+
+            if (unbreakableSprite != null)
+                return unbreakableSprite;
+
+            return FallbackToErrorTile(normalSprite);
         }
         /*
         /// <summary>

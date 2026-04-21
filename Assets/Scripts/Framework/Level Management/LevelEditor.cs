@@ -194,6 +194,7 @@ namespace Game
             Color emptyCellColor = new Color(0.8f, 0.8f, 0.8f, 0.5f);
             Color normalCellColor = new Color(0.5f, 0.5f, 1f, 0.5f);
             Color breakableWallColor = new Color(1f, 0.5f, 0.2f, 0.8f);
+            Color unbreakableWallColor = new Color(0.35f, 0.35f, 0.35f, 0.9f);
             Rect elementRect = new Rect(rect.x + rect.width * 0.1f, rect.y + rect.height * 0.1f, rect.width * 0.8f, rect.height * 0.8f);
 
             switch (value.cellType)
@@ -206,6 +207,9 @@ namespace Game
                     break;
                 case Grid3D.CellType.BreakableWall:
                     EditorGUI.DrawRect(rect, breakableWallColor);
+                    break;
+                case Grid3D.CellType.UnbreakableWall:
+                    EditorGUI.DrawRect(rect, unbreakableWallColor);
                     break;
             }
 
@@ -249,6 +253,13 @@ namespace Game
                     else if (Event.current.keyCode == KeyCode.B)
                     {
                         value.cellType = Grid3D.CellType.BreakableWall;
+                        value.elementInfo = null;
+                        MarkDirty();
+                        Event.current.Use();
+                    }
+                    else if (Event.current.keyCode == KeyCode.U)
+                    {
+                        value.cellType = Grid3D.CellType.UnbreakableWall;
                         value.elementInfo = null;
                         MarkDirty();
                         Event.current.Use();

@@ -16,12 +16,12 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
+    - {fileID: 11400000, guid: e3e6d6f930f04b4458ca5e2ddfadee99, type: 2}
     - {fileID: 11400000, guid: afb7de669d097f54ab7742316eb3c3c1, type: 2}
+    - {fileID: 11400000, guid: cfc8f8a90e8c1f34aade67c0a2ddc391, type: 2}
     - {fileID: 11400000, guid: 5f772a775fbc8914ea43012dba006383, type: 2}
-    - {fileID: 11400000, guid: 0beb8f42119a75c4c8fff95fb8eb913b, type: 2}
-    - {fileID: 11400000, guid: fcba4310cd5fca344aad5d26ad52423f, type: 2}
-    - {fileID: 11400000, guid: dbcd01a6f969aed4a8156284d01cc4e7, type: 2}
-    - {fileID: 11400000, guid: b5e047feb0cad314a894341b7d997b76, type: 2}
+    - {fileID: 11400000, guid: 4b8190d2fea24a34b9c37319a88d6b52, type: 2}
+    - {fileID: 11400000, guid: 921335def82896144bd517f3da89e683, type: 2}
     - {fileID: 11400000, guid: ce870fd5d06ef2244952ffd6faf955b6, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
@@ -30,16 +30,16 @@ MonoBehaviour:
     SerializationNodes:
     - Name: gridCells
       Entry: 7
-      Data: 0|Game.Grid3D+GridCell[,], Assembly-CSharp
+      Data: 0|Game.Grid3D+GridCell[,], Game
     - Name: 
       Entry: 12
-      Data: 25
+      Data: 64
     - Name: ranks
       Entry: 1
-      Data: 5|5
+      Data: 8|8
     - Name: 
       Entry: 7
-      Data: 1|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 1|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -54,31 +54,16 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 1
+      Data: 0
     - Name: elementInfo
-      Entry: 7
-      Data: 2|Game.GridElementInfo, Assembly-CSharp
-    - Name: elementData
-      Entry: 10
-      Data: 0
-    - Name: isSparkling
-      Entry: 5
-      Data: false
-    - Name: isHidden
-      Entry: 5
-      Data: false
-    - Name: powerUpType
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 3|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 2|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -93,31 +78,16 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 1
+      Data: 0
     - Name: elementInfo
-      Entry: 7
-      Data: 4|Game.GridElementInfo, Assembly-CSharp
-    - Name: elementData
-      Entry: 10
-      Data: 0
-    - Name: isSparkling
-      Entry: 5
-      Data: false
-    - Name: isHidden
-      Entry: 5
-      Data: false
-    - Name: powerUpType
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 5|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 3|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -132,31 +102,16 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 1
-    - Name: elementInfo
-      Entry: 7
-      Data: 6|Game.GridElementInfo, Assembly-CSharp
-    - Name: elementData
-      Entry: 10
-      Data: 1
-    - Name: isSparkling
-      Entry: 5
-      Data: false
-    - Name: isHidden
-      Entry: 5
-      Data: false
-    - Name: powerUpType
-      Entry: 3
       Data: 0
-    - Name: 
-      Entry: 8
+    - Name: elementInfo
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 7|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 4|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -171,31 +126,16 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 1
-    - Name: elementInfo
-      Entry: 7
-      Data: 8|Game.GridElementInfo, Assembly-CSharp
-    - Name: elementData
-      Entry: 10
-      Data: 2
-    - Name: isSparkling
-      Entry: 5
-      Data: false
-    - Name: isHidden
-      Entry: 5
-      Data: false
-    - Name: powerUpType
-      Entry: 3
       Data: 0
-    - Name: 
-      Entry: 8
+    - Name: elementInfo
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 9|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 5|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -210,10 +150,415 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 6|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 7|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 8|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 9|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 10|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 11|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 12|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 10|Game.GridElementInfo, Assembly-CSharp
+      Data: 13|Game.GridElementInfo, Game
+    - Name: elementData
+      Entry: 10
+      Data: 0
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: false
+    - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 14|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 1
+    - Name: elementInfo
+      Entry: 7
+      Data: 15|Game.GridElementInfo, Game
+    - Name: elementData
+      Entry: 10
+      Data: 1
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: false
+    - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 16|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 17|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 18|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 19|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 20|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 21|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 1
+    - Name: elementInfo
+      Entry: 7
+      Data: 22|Game.GridElementInfo, Game
+    - Name: elementData
+      Entry: 10
+      Data: 2
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: false
+    - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 23|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 1
+    - Name: elementInfo
+      Entry: 7
+      Data: 24|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
       Data: 3
@@ -234,16 +579,16 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 11|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 25|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 3
-      Data: 0
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -252,10 +597,10 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 12|Game.GridElementInfo, Assembly-CSharp
+      Data: 26|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 1
+      Data: 2
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -273,16 +618,16 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 13|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 27|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 3
-      Data: 1
+      Data: 5
     - Name: 
       Entry: 8
       Data: 
@@ -291,7 +636,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 14|Game.GridElementInfo, Assembly-CSharp
+      Data: 28|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
       Data: 4
@@ -312,13 +657,124 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 15|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 29|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 30|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 31|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 32|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 3
       Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 1
+    - Name: elementInfo
+      Entry: 7
+      Data: 33|Game.GridElementInfo, Game
+    - Name: elementData
+      Entry: 10
+      Data: 1
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: false
+    - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 34|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 3
     - Name: 
       Entry: 3
       Data: 2
@@ -330,7 +786,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 16|Game.GridElementInfo, Assembly-CSharp
+      Data: 35|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
       Data: 0
@@ -351,13 +807,13 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 17|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 36|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 1
+      Data: 3
     - Name: 
       Entry: 3
       Data: 3
@@ -369,7 +825,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 18|Game.GridElementInfo, Assembly-CSharp
+      Data: 37|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
       Data: 5
@@ -390,13 +846,13 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 19|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 38|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 1
+      Data: 3
     - Name: 
       Entry: 3
       Data: 4
@@ -408,10 +864,10 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 20|Game.GridElementInfo, Assembly-CSharp
+      Data: 39|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 2
+      Data: 0
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -429,16 +885,16 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 21|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 40|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: 
       Entry: 3
-      Data: 0
+      Data: 5
     - Name: 
       Entry: 8
       Data: 
@@ -447,7 +903,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 22|Game.GridElementInfo, Assembly-CSharp
+      Data: 41|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
       Data: 6
@@ -468,16 +924,16 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 23|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 42|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: 
       Entry: 3
-      Data: 1
+      Data: 6
     - Name: 
       Entry: 8
       Data: 
@@ -486,46 +942,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 24|Game.GridElementInfo, Assembly-CSharp
-    - Name: elementData
-      Entry: 10
-      Data: 2
-    - Name: isSparkling
-      Entry: 5
-      Data: false
-    - Name: isHidden
-      Entry: 5
-      Data: false
-    - Name: powerUpType
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 25|Game.Grid3D+GridCell, Assembly-CSharp
-    - Name: coordinates
-      Entry: 7
-      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
-    - Name: 
-      Entry: 3
-      Data: 2
-    - Name: 
-      Entry: 3
-      Data: 2
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: cellType
-      Entry: 3
-      Data: 1
-    - Name: elementInfo
-      Entry: 7
-      Data: 26|Game.GridElementInfo, Assembly-CSharp
+      Data: 43|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
       Data: 6
@@ -546,106 +963,76 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 27|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 44|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: 
       Entry: 3
-      Data: 3
+      Data: 7
     - Name: 
       Entry: 8
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 1
-    - Name: elementInfo
-      Entry: 7
-      Data: 28|Game.GridElementInfo, Assembly-CSharp
-    - Name: elementData
-      Entry: 10
-      Data: 1
-    - Name: isSparkling
-      Entry: 5
-      Data: false
-    - Name: isHidden
-      Entry: 5
-      Data: false
-    - Name: powerUpType
-      Entry: 3
       Data: 0
-    - Name: 
-      Entry: 8
+    - Name: elementInfo
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 29|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 45|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
-    - Name: 
-      Entry: 3
-      Data: 2
     - Name: 
       Entry: 3
       Data: 4
     - Name: 
-      Entry: 8
-      Data: 
-    - Name: cellType
-      Entry: 3
-      Data: 1
-    - Name: elementInfo
-      Entry: 7
-      Data: 30|Game.GridElementInfo, Assembly-CSharp
-    - Name: elementData
-      Entry: 10
-      Data: 3
-    - Name: isSparkling
-      Entry: 5
-      Data: false
-    - Name: isHidden
-      Entry: 5
-      Data: false
-    - Name: powerUpType
       Entry: 3
       Data: 0
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 31|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 46|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 3
-    - Name: 
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: cellType
-      Entry: 3
-      Data: 1
-    - Name: elementInfo
-      Entry: 7
-      Data: 32|Game.GridElementInfo, Assembly-CSharp
-    - Name: elementData
-      Entry: 10
       Data: 4
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 1
+    - Name: elementInfo
+      Entry: 7
+      Data: 47|Game.GridElementInfo, Game
+    - Name: elementData
+      Entry: 10
+      Data: 6
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -663,16 +1050,16 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 33|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 48|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 3
+      Data: 4
     - Name: 
       Entry: 3
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -681,7 +1068,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 34|Game.GridElementInfo, Assembly-CSharp
+      Data: 49|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
       Data: 2
@@ -702,16 +1089,16 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 35|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 50|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 3
+      Data: 4
     - Name: 
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: 
       Entry: 8
       Data: 
@@ -720,7 +1107,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 36|Game.GridElementInfo, Assembly-CSharp
+      Data: 51|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
       Data: 4
@@ -741,16 +1128,16 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 37|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 52|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 3
+      Data: 4
     - Name: 
       Entry: 3
-      Data: 3
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -759,7 +1146,85 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 38|Game.GridElementInfo, Assembly-CSharp
+      Data: 53|Game.GridElementInfo, Game
+    - Name: elementData
+      Entry: 10
+      Data: 6
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: false
+    - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 54|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 1
+    - Name: elementInfo
+      Entry: 7
+      Data: 55|Game.GridElementInfo, Game
+    - Name: elementData
+      Entry: 10
+      Data: 4
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: false
+    - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 56|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 1
+    - Name: elementInfo
+      Entry: 7
+      Data: 57|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
       Data: 2
@@ -780,16 +1245,88 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 39|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 58|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 3
+      Data: 4
     - Name: 
       Entry: 3
-      Data: 4
+      Data: 7
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 59|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 60|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 61|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 3
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -798,7 +1335,46 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 40|Game.GridElementInfo, Assembly-CSharp
+      Data: 62|Game.GridElementInfo, Game
+    - Name: elementData
+      Entry: 10
+      Data: 1
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: false
+    - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 63|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 1
+    - Name: elementInfo
+      Entry: 7
+      Data: 64|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
       Data: 5
@@ -819,16 +1395,16 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 41|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 65|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 4
+      Data: 5
     - Name: 
       Entry: 3
-      Data: 0
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -837,10 +1413,10 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 42|Game.GridElementInfo, Assembly-CSharp
+      Data: 66|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 3
+      Data: 1
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -858,16 +1434,16 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 43|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 67|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 4
+      Data: 5
     - Name: 
       Entry: 3
-      Data: 1
+      Data: 5
     - Name: 
       Entry: 8
       Data: 
@@ -876,10 +1452,10 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 44|Game.GridElementInfo, Assembly-CSharp
+      Data: 68|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 4
+      Data: 2
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -897,13 +1473,109 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 45|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 69|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 4
+      Data: 5
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 70|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 71|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 72|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 73|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 6
     - Name: 
       Entry: 3
       Data: 2
@@ -912,37 +1584,22 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 1
-    - Name: elementInfo
-      Entry: 7
-      Data: 46|Game.GridElementInfo, Assembly-CSharp
-    - Name: elementData
-      Entry: 10
-      Data: 4
-    - Name: isSparkling
-      Entry: 5
-      Data: false
-    - Name: isHidden
-      Entry: 5
-      Data: false
-    - Name: powerUpType
-      Entry: 3
       Data: 0
-    - Name: 
-      Entry: 8
+    - Name: elementInfo
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 47|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 74|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 4
+      Data: 6
     - Name: 
       Entry: 3
       Data: 3
@@ -954,7 +1611,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 48|Game.GridElementInfo, Assembly-CSharp
+      Data: 75|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
       Data: 0
@@ -975,13 +1632,13 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 49|Game.Grid3D+GridCell, Assembly-CSharp
+      Data: 76|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 4
+      Data: 6
     - Name: 
       Entry: 3
       Data: 4
@@ -993,10 +1650,10 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 50|Game.GridElementInfo, Assembly-CSharp
+      Data: 77|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 5
+      Data: 3
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1008,6 +1665,270 @@ MonoBehaviour:
       Data: 0
     - Name: 
       Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 78|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 79|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 80|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 81|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 82|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 83|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 84|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 85|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 86|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 87|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 88|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
@@ -1018,15 +1939,9 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  levelCreationMode: 1
-  gridSize: {x: 5, y: 5}
+  levelCreationMode: 0
+  gridSize: {x: 8, y: 8}
   objectives:
-  - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
-    isProcedurallyGenerated: 0
-    scriptableObjectParameter: {fileID: 11400000, guid: 0beb8f42119a75c4c8fff95fb8eb913b, type: 2}
-    requiredCount: 6
-    generatedCount: {x: 0, y: 0}
-    isCompleted: 0
   - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
     isProcedurallyGenerated: 0
     scriptableObjectParameter: {fileID: 11400000, guid: afb7de669d097f54ab7742316eb3c3c1, type: 2}
@@ -1035,7 +1950,13 @@ MonoBehaviour:
     isCompleted: 0
   - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
     isProcedurallyGenerated: 0
-    scriptableObjectParameter: {fileID: 11400000, guid: 5f772a775fbc8914ea43012dba006383, type: 2}
+    scriptableObjectParameter: {fileID: 11400000, guid: 4b8190d2fea24a34b9c37319a88d6b52, type: 2}
+    requiredCount: 6
+    generatedCount: {x: 0, y: 0}
+    isCompleted: 0
+  - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
+    isProcedurallyGenerated: 0
+    scriptableObjectParameter: {fileID: 11400000, guid: ce870fd5d06ef2244952ffd6faf955b6, type: 2}
     requiredCount: 6
     generatedCount: {x: 0, y: 0}
     isCompleted: 0
@@ -1059,4 +1980,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: afb7de669d097f54ab7742316eb3c3c1, type: 2}
   - {fileID: 11400000, guid: 5f772a775fbc8914ea43012dba006383, type: 2}
   - {fileID: 11400000, guid: ce870fd5d06ef2244952ffd6faf955b6, type: 2}
-  - {fileID: 11400000, guid: 0beb8f42119a75c4c8fff95fb8eb913b, type: 2}
+  - {fileID: 11400000, guid: cfc8f8a90e8c1f34aade67c0a2ddc391, type: 2}
+  - {fileID: 11400000, guid: 4b8190d2fea24a34b9c37319a88d6b52, type: 2}
+  - {fileID: 11400000, guid: e3e6d6f930f04b4458ca5e2ddfadee99, type: 2}
+  - {fileID: 11400000, guid: 921335def82896144bd517f3da89e683, type: 2}

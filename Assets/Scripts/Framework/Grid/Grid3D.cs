@@ -491,6 +491,7 @@ namespace Game
             Empty,
             Normal,
             BreakableWall,
+            UnbreakableWall,
         }
     }
 }
