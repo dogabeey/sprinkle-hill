@@ -2,6 +2,7 @@ using DG.Tweening;
 using Sirenix.OdinInspector;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game
 {
@@ -9,6 +10,21 @@ namespace Game
     {
         [FoldoutGroup("Match3")]
         public SpriteRenderer highlightSprite;
+        [FoldoutGroup("Match3/Cauldron")]
+        public Image cauldronProgressBackground;
+        [FoldoutGroup("Match3/Cauldron")]
+        public Image cauldronProgressFill;
+        [FoldoutGroup("Match3/Cauldron")]
+        public SpriteRenderer cauldronReadyIndicator;
+
+        private Vector3 cauldronFillBaseScale;
+        private bool cauldronFillCached;
+
+        public override void InitElement(Grid3D ownerGrid, GridElementInfo elementInfo)
+        {
+            base.InitElement(ownerGrid, elementInfo);
+            RefreshCauldronVisual();
+        }
 
         public override void PostInit()
         {
@@ -29,6 +45,31 @@ namespace Game
         private void OnDisable()
         {
             SetSelected(false);
+        }
+
+        private void RefreshCauldronVisual()
+        {
+            bool isCauldron = elementInfo != null &&
+                              elementInfo.powerUpType == ElementPowerUpType.Cauldron &&
+                              elementInfo.elementData != null &&
+                              elementInfo.elementData.isCauldron;
+
+            if (cauldronProgressBackground != null)
+                cauldronProgressBackground.gameObject.SetActive(isCauldron) ;
+
+            if (cauldronProgressFill != null)
+            {
+                cauldronProgressFill.enabled = isCauldron;
+                cauldronProgressFill.fillAmount = isCauldron && elementInfo.elementData.cauldronChargeRequired > 0
+                    ? Mathf.Clamp01((float)elementInfo.cauldronProgress / elementInfo.elementData.cauldronChargeRequired)
+                    : 0f;
+            }
+
+            if (cauldronReadyIndicator != null)
+            {
+                bool isReady = isCauldron && elementInfo.cauldronProgress >= Mathf.Max(1, elementInfo.elementData.cauldronChargeRequired);
+                cauldronReadyIndicator.enabled = isReady;
+            }
         }
 
         protected override IEnumerator HueAnim()

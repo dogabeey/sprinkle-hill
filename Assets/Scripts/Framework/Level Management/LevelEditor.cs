@@ -58,6 +58,24 @@ namespace Game
         private bool IsTimerLimit => levelLimitType == LevelLimitType.Timer;
         private bool IsMovesLimit => levelLimitType == LevelLimitType.Moves;
 
+        private static ElementPowerUpType ResolveElementPowerUpType(ElementData data)
+        {
+            return data != null && data.isCauldron ? ElementPowerUpType.Cauldron : ElementPowerUpType.None;
+        }
+
+        private static GridElementInfo CreateElementInfo(ElementData data)
+        {
+            if (data == null)
+                return null;
+
+            return new GridElementInfo
+            {
+                elementData = data,
+                powerUpType = ResolveElementPowerUpType(data),
+                cauldronProgress = 0
+            };
+        }
+
 #if UNITY_EDITOR
         [Button]
         public void InitializeArray()
@@ -101,7 +119,7 @@ namespace Game
                     if (cell != null && cell.cellType == Grid3D.CellType.Normal)
                     {
                         ElementData randomElement = elementPool[Random.Range(0, elementPool.Count)];
-                        cell.elementInfo = new GridElementInfo { elementData = randomElement };
+                        cell.elementInfo = CreateElementInfo(randomElement);
                     }
                 }
             }
@@ -133,7 +151,10 @@ namespace Game
                             elementData = sourceCell.elementInfo.elementData,
                             isSparkling = sourceCell.elementInfo.isSparkling,
                             isHidden = sourceCell.elementInfo.isHidden,
-                            powerUpType = sourceCell.elementInfo.powerUpType
+                            powerUpType = sourceCell.elementInfo.powerUpType == ElementPowerUpType.None
+                                ? ResolveElementPowerUpType(sourceCell.elementInfo.elementData)
+                                : sourceCell.elementInfo.powerUpType,
+                            cauldronProgress = sourceCell.elementInfo.cauldronProgress
                         }
                         : null;
 
@@ -283,7 +304,7 @@ namespace Game
                             if (randomElement != null)
                             {
                                 value.cellType = Grid3D.CellType.Normal;
-                                value.elementInfo = new GridElementInfo { elementData = randomElement };
+                                value.elementInfo = CreateElementInfo(randomElement);
                                 MarkDirty();
                             }
                         }
@@ -302,7 +323,7 @@ namespace Game
                             if (randomElement != null)
                             {
                                 value.cellType = Grid3D.CellType.Normal;
-                                value.elementInfo = new GridElementInfo { elementData = randomElement };
+                                value.elementInfo = CreateElementInfo(randomElement);
                                 MarkDirty();
                             }
                         });
@@ -331,7 +352,7 @@ namespace Game
                         menu.AddItem(new GUIContent($"{capturedPooledElement.name}"), false, () =>
                         {
                             value.cellType = Grid3D.CellType.Normal;
-                            value.elementInfo = new GridElementInfo { elementData = capturedPooledElement };
+                            value.elementInfo = CreateElementInfo(capturedPooledElement);
                             MarkDirty();
                         });
                         addedPoolElements = true;
@@ -353,7 +374,7 @@ namespace Game
                             menu.AddItem(new GUIContent(elementData.name), false, () =>
                             {
                                 value.cellType = Grid3D.CellType.Normal;
-                                value.elementInfo = new GridElementInfo { elementData = capturedElementData };
+                                value.elementInfo = CreateElementInfo(capturedElementData);
                                 MarkDirty();
                             });
                         }
@@ -372,7 +393,7 @@ namespace Game
                         if (elementData != null)
                         {
                             value.cellType = Grid3D.CellType.Normal;
-                            value.elementInfo = new GridElementInfo { elementData = elementData };
+                            value.elementInfo = CreateElementInfo(elementData);
                             MarkDirty();
                         }
                     }

@@ -157,6 +157,15 @@ namespace Game
 
         private void TryCommitDrag()
         {
+            if (draggedElement != null && match3Grid != null && match3Grid.TryGetElementPosition(draggedElement, out Vector2Int draggedPos))
+            {
+                GridCell draggedCell = match3Grid.GetCellPublic(draggedPos);
+                if (draggedCell?.elementInfo != null && draggedCell.elementInfo.powerUpType == ElementPowerUpType.Cauldron)
+                {
+                    return;
+                }
+            }
+
             Vector2 dragDelta = (Vector2)Input.mousePosition - dragStartScreenPos;
 
             if (dragDelta.magnitude < minDragDistance)
@@ -197,6 +206,15 @@ namespace Game
 
             if (!Match3Grid.AreAdjacent(fromPos, toPos))
             {
+                return;
+            }
+
+            GridCell fromCell = match3Grid.GetCellPublic(fromPos);
+            GridCell toCell = match3Grid.GetCellPublic(toPos);
+            if ((fromCell?.elementInfo != null && fromCell.elementInfo.powerUpType == ElementPowerUpType.Cauldron) ||
+                (toCell?.elementInfo != null && toCell.elementInfo.powerUpType == ElementPowerUpType.Cauldron))
+            {
+                CancelDrag();
                 return;
             }
 
@@ -258,6 +276,14 @@ namespace Game
                     GridCell cell = match3Grid.GetCellPublic(pos);
                     if (cell?.elementInfo != null && PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType))
                     {
+                        if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron && !match3Grid.IsCauldronReadyAt(pos))
+                        {
+                            draggedElement.SetSelected(false);
+                            draggedElement = null;
+                            dragConsumed = false;
+                            return;
+                        }
+
                         draggedElement.SetSelected(false);
                         draggedElement = null;
                         dragConsumed = false;

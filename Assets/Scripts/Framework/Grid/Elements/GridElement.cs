@@ -123,6 +123,7 @@ namespace Game
         public bool isSparkling;
         public bool isHidden;
         public ElementPowerUpType powerUpType;
+        public int cauldronProgress;
     }
 
     public enum ElementPowerUpType
@@ -133,7 +134,8 @@ namespace Game
         HorizontalRocket,
         BigBomb,
         Scatter,
-        DiscoBall
+        DiscoBall,
+        Cauldron
     }
 
     /// <summary>

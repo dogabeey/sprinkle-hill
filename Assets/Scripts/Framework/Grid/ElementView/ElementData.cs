@@ -17,6 +17,12 @@ public class ElementData : VisualizableScriptableObject
     public Mesh elementMesh;
     public Material elementMaterial;
 
+    [Header("Cauldron")]
+    public bool isCauldron;
+    [Min(1)] public int cauldronChargeRequired = 8;
+    [Min(1)] public int cauldronChargeRadius = 1;
+    public ParticleSystem cauldronExplosionParticle;
+
     public static ElementData GetElementDataByName(string name, List<ElementData> elementDataList)
     {
         if (elementDataList == null)

@@ -230,6 +230,8 @@ namespace Game
                 yield return grid.StartCoroutine(ActivateBomb(pos));
             else if (IsRocket(type))
                 yield return grid.StartCoroutine(ActivateRocket(pos, type));
+            else if (type == ElementPowerUpType.Cauldron)
+                yield return grid.StartCoroutine(ActivateCauldron(pos));
             else if (IsDiscoBall(type))
             {
                 // Disco Ball requires swap context to know target element type.
@@ -332,6 +334,15 @@ namespace Game
                 GameManager.Instance.constantManager.matchShakeRandomness);
 
             yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
+        }
+
+        private IEnumerator ActivateCauldron(Vector2Int cauldronPos)
+        {
+            if (!grid.IsCauldronReadyAt(cauldronPos))
+                yield break;
+
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.BOMB, volumeMultiplier: 1.1f, pitchOffset: -0.05f);
+            yield return grid.StartCoroutine(grid.TriggerCauldronExplosion(cauldronPos));
         }
 
         private IEnumerator AnimateDiscoBallTrails(Vector2Int sourcePos, List<Vector2Int> targets, ElementData targetElementData)
@@ -591,7 +602,9 @@ namespace Game
             Grid3D.GridCell cell = grid.GetCellPublic(pos);
             if (cell == null) return;
             if (cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null) return;
+            if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron) return;
 
+            grid.NotifyElementCleared(pos);
             cell.elementInfo = null;
             GridElement element = grid.GetElementAt(pos);
             if (element != null) grid.StartCoroutine(element.DestroyElement());

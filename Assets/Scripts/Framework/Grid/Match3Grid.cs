@@ -144,6 +144,47 @@ namespace Game
 
         public bool IsValidPosition(Vector2Int pos) => GetCell(pos) != null;
 
+        public bool IsCauldronReadyAt(Vector2Int pos)
+        {
+            GridCell cell = GetCell(pos);
+            if (cell?.elementInfo == null || cell.elementInfo.powerUpType != ElementPowerUpType.Cauldron)
+                return false;
+
+            int required = Mathf.Max(1, cell.elementInfo.elementData != null ? cell.elementInfo.elementData.cauldronChargeRequired : 1);
+            return cell.elementInfo.cauldronProgress >= required;
+        }
+
+        public void NotifyElementCleared(Vector2Int clearedPos)
+        {
+            GridCell clearedCell = GetCell(clearedPos);
+            if (clearedCell?.elementInfo != null && clearedCell.elementInfo.powerUpType == ElementPowerUpType.Cauldron)
+                return;
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    Vector2Int cauldronPos = new Vector2Int(x, y);
+                    GridCell cauldronCell = GetCell(cauldronPos);
+                    if (cauldronCell?.elementInfo == null || cauldronCell.elementInfo.powerUpType != ElementPowerUpType.Cauldron)
+                        continue;
+
+                    ElementData data = cauldronCell.elementInfo.elementData;
+                    int radius = Mathf.Max(1, data != null ? data.cauldronChargeRadius : 1);
+                    int distance = Mathf.Abs(cauldronPos.x - clearedPos.x) + Mathf.Abs(cauldronPos.y - clearedPos.y);
+                    if (distance > radius)
+                        continue;
+
+                    int required = Mathf.Max(1, data != null ? data.cauldronChargeRequired : 1);
+                    if (cauldronCell.elementInfo.cauldronProgress >= required)
+                        continue;
+
+                    cauldronCell.elementInfo.cauldronProgress = Mathf.Min(required, cauldronCell.elementInfo.cauldronProgress + 1);
+                    RefreshElementVisual(cauldronPos);
+                }
+            }
+        }
+
         // ------------------------------------------------------------------
         //  Swap & Match entry point
         // ------------------------------------------------------------------
@@ -155,6 +196,13 @@ namespace Game
             // Activate power-ups on swap
             ElementPowerUpType firstType = firstCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
             ElementPowerUpType secondType = secondCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
+
+            if (firstType == ElementPowerUpType.Cauldron || secondType == ElementPowerUpType.Cauldron)
+            {
+                if (first == second && firstType == ElementPowerUpType.Cauldron)
+                    yield return StartCoroutine(powerUpHandler.ActivateAt(first, null));
+                yield break;
+            }
 
             // Click activation (no drag, same position)
             if (first == second)
@@ -346,7 +394,9 @@ namespace Game
                     if (cell == null) continue;
                     if (cell.cellType == CellType.BreakableWall) { wallsToBreak.Add(pos); continue; }
                     if (cell.cellType != CellType.Normal || cell.elementInfo == null) continue;
+                    if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron) continue;
 
+                    NotifyElementCleared(pos);
                     cell.elementInfo = null;
                     GridElement element = GetElementAt(pos);
                     if (element != null) StartCoroutine(element.DestroyElement());
@@ -672,6 +722,10 @@ namespace Game
         protected override void GenerateElements()
         {
             EnsureGridCells();
+            for (int x = 0; x < gridSize.x; x++)
+                for (int y = 0; y < gridSize.y; y++)
+                    NormalizeSpecialElementInfo(GetCell(new Vector2Int(x, y)));
+
             List<ElementData> elementPool = BuildElementPool();
 
             for (int x = 0; x < gridSize.x; x++)
@@ -682,7 +736,12 @@ namespace Game
                     if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo?.elementData == null)
                         continue;
 
-                    if (!UseLevelEditor && !cell.elementInfo.isHidden && elementPool.Count > 1)
+                    NormalizeSpecialElementInfo(cell);
+
+                    if (!UseLevelEditor &&
+                        !cell.elementInfo.isHidden &&
+                        cell.elementInfo.powerUpType != ElementPowerUpType.Cauldron &&
+                        elementPool.Count > 1)
                     {
                         List<ElementData> candidates = new List<ElementData>();
                         foreach (ElementData data in elementPool)
@@ -840,7 +899,9 @@ namespace Game
 
                     GridCell cell = GetCell(pos);
                     if (cell?.elementInfo == null) continue;
+                    if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron) continue;
 
+                    NotifyElementCleared(pos);
                     cell.elementInfo = null;
                     GridElement element = GetElementAt(pos);
                     if (element != null)
@@ -975,6 +1036,7 @@ namespace Game
                 // Fallback: scan instantiated elements
                 foreach (GridElement el in generatedElements)
                     if (el != null && el.elementInfo != null && el.elementInfo.elementData != null &&
+                        !el.elementInfo.elementData.isCauldron &&
                         el.elementInfo.powerUpType == ElementPowerUpType.None && !elementPool.Contains(el.elementInfo.elementData))
                         elementPool.Add(el.elementInfo.elementData);
             }
@@ -1094,12 +1156,120 @@ namespace Game
                 EventManager.TriggerEvent(GameEvent.ELEMENTS_REFILLED, new EventParam(paramInt: refilledCount));
         }
 
+        public IEnumerator TriggerCauldronExplosion(Vector2Int cauldronPos)
+        {
+            GridCell cauldronCell = GetCell(cauldronPos);
+            if (cauldronCell?.elementInfo == null || cauldronCell.elementInfo.powerUpType != ElementPowerUpType.Cauldron)
+                yield break;
+
+            GridElement cauldronElement = GetElementAt(cauldronPos);
+            Vector3 center = GetWorldPosition(cauldronPos);
+
+            ParticleSystem customExplosion = cauldronCell.elementInfo.elementData != null
+                ? cauldronCell.elementInfo.elementData.cauldronExplosionParticle
+                : null;
+            if (customExplosion != null)
+            {
+                ParticleSystem fx = Instantiate(customExplosion, center, Quaternion.identity);
+                fx.Play();
+                Destroy(fx.gameObject, fx.main.duration + fx.main.startLifetime.constantMax + 0.2f);
+            }
+
+            cauldronCell.elementInfo = null;
+
+            Sequence clearSeq = DOTween.Sequence();
+            bool hasTween = false;
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    if (pos == cauldronPos)
+                        continue;
+
+                    GridCell cell = GetCell(pos);
+                    if (cell == null)
+                        continue;
+
+                    if (cell.cellType == CellType.Normal && cell.elementInfo != null)
+                    {
+                        NotifyElementCleared(pos);
+                        cell.elementInfo = null;
+
+                        GridElement element = GetElementAt(pos);
+                        if (element != null)
+                        {
+                            float delay = Vector2Int.Distance(cauldronPos, pos) * 0.02f;
+                            element.transform.DOKill();
+                            clearSeq.Join(element.transform.DOMove(center, 0.2f).SetDelay(delay).SetEase(Ease.InQuad));
+                            clearSeq.Join(element.transform.DOScale(0f, 0.2f).SetDelay(delay).SetEase(Ease.InBack));
+                            hasTween = true;
+                        }
+                    }
+                }
+            }
+
+            if (cauldronElement != null)
+            {
+                cauldronElement.transform.DOKill();
+                clearSeq.Join(cauldronElement.transform.DOScale(0f, 0.22f).SetEase(Ease.InBack));
+                hasTween = true;
+            }
+
+            if (hasTween)
+                yield return clearSeq.WaitForCompletion();
+
+            List<GridElement> activeElements = GetAllActiveElements();
+            for (int i = 0; i < activeElements.Count; i++)
+            {
+                if (activeElements[i] != null)
+                    Destroy(activeElements[i].gameObject);
+            }
+            generatedElements.Clear();
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            yield return StartCoroutine(ResolveBoardAfterSpecialClear());
+        }
+
         // ------------------------------------------------------------------
         //  Shared internal helpers
         // ------------------------------------------------------------------
+        private bool IsCauldronCell(GridCell cell)
+        {
+            if (cell?.elementInfo == null)
+                return false;
+
+            NormalizeSpecialElementInfo(cell);
+            return cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron;
+        }
+
+        private void NormalizeSpecialElementInfo(GridCell cell)
+        {
+            if (cell?.elementInfo == null)
+                return;
+
+            ElementData data = cell.elementInfo.elementData;
+            if (data == null)
+                return;
+
+            if (data.isCauldron)
+            {
+                cell.elementInfo.powerUpType = ElementPowerUpType.Cauldron;
+                if (cell.elementInfo.cauldronProgress < 0)
+                    cell.elementInfo.cauldronProgress = 0;
+            }
+            else if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron)
+            {
+                cell.elementInfo.powerUpType = ElementPowerUpType.None;
+                cell.elementInfo.cauldronProgress = 0;
+            }
+        }
+
         private List<ElementData> BuildElementPool()
         {
             List<ElementData> configuredPool = GetConfiguredElementPool();
+            configuredPool.RemoveAll(d => d == null || d.isCauldron);
             if (configuredPool.Count > 0)
             {
                 return configuredPool;
@@ -1111,7 +1281,7 @@ namespace Game
                 {
                     GridCell cell = GetCell(new Vector2Int(x, y));
                     ElementData data = cell?.elementInfo?.elementData;
-                    if (data != null && cell.elementInfo.powerUpType == ElementPowerUpType.None && !pool.Contains(data))
+                    if (data != null && !data.isCauldron && cell.elementInfo.powerUpType == ElementPowerUpType.None && !pool.Contains(data))
                         pool.Add(data);
                 }
             return pool;
@@ -1124,7 +1294,11 @@ namespace Game
             for (int y = 0; y < gridSize.y; y++)
             {
                 GridCell cell = GetCell(new Vector2Int(x, y));
-                if (cell != null && cell.cellType == CellType.Normal) current.Add(y);
+                if (cell != null && cell.cellType == CellType.Normal)
+                {
+                    if (!IsCauldronCell(cell))
+                        current.Add(y);
+                }
                 else
                 {
                     if (current.Count > 0) { sections.Add(new List<int>(current)); current.Clear(); }
