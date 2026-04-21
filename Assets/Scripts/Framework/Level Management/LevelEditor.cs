@@ -36,6 +36,17 @@ namespace Game
         [Tooltip("Pool used for randomly generated refill elements during gameplay.")]
         [SerializeField] private List<ElementData> elementPool = new List<ElementData>();
 
+        [ShowInInspector, ReadOnly, MultiLineProperty(8), PropertyOrder(-1), LabelText("Editor Shortcuts")]
+        private string ShortcutLegend =>
+            "Grid Cell Shortcuts\n" +
+            "E: Set cell to Empty\n" +
+            "N: Set cell to Normal\n" +
+            "B: Set cell to Breakable Wall\n" +
+            "U: Set cell to Unbreakable Wall\n" +
+            "R: Assign random element from pool\n" +
+            "1-9: Assign element by indexed asset list\n" +
+            "Right Click: Open element selection menu";
+
         [HideIf(nameof(UseProcedural))]
         [TableMatrix(DrawElementMethod = nameof(DrawGridCells), SquareCells = true)]
         [OdinSerialize] private Grid3D.GridCell[,] gridCells;
@@ -264,21 +275,85 @@ namespace Game
                         MarkDirty();
                         Event.current.Use();
                     }
+                    else if (Event.current.keyCode == KeyCode.R)
+                    {
+                        if (elementPool != null && elementPool.Count > 0)
+                        {
+                            ElementData randomElement = elementPool[Random.Range(0, elementPool.Count)];
+                            if (randomElement != null)
+                            {
+                                value.cellType = Grid3D.CellType.Normal;
+                                value.elementInfo = new GridElementInfo { elementData = randomElement };
+                                MarkDirty();
+                            }
+                        }
+                        Event.current.Use();
+                    }
                 }
                 else if (Event.current.type == EventType.MouseDown && Event.current.button == 1)
                 {
                     GenericMenu menu = new GenericMenu();
+
+                    if (elementPool != null && elementPool.Count > 0)
+                    {
+                        menu.AddItem(new GUIContent("Random Element (Pool)"), false, () =>
+                        {
+                            ElementData randomElement = elementPool[Random.Range(0, elementPool.Count)];
+                            if (randomElement != null)
+                            {
+                                value.cellType = Grid3D.CellType.Normal;
+                                value.elementInfo = new GridElementInfo { elementData = randomElement };
+                                MarkDirty();
+                            }
+                        });
+                        menu.AddSeparator("");
+                    }
+
                     string[] elementGuids = AssetDatabase.FindAssets("t:ElementData");
+                    HashSet<ElementData> poolSet = new HashSet<ElementData>();
+                    if (elementPool != null)
+                    {
+                        for (int i = 0; i < elementPool.Count; i++)
+                        {
+                            if (elementPool[i] != null)
+                                poolSet.Add(elementPool[i]);
+                        }
+                    }
+
+                    bool addedPoolElements = false;
+                    for (int i = 0; i < elementPool.Count; i++)
+                    {
+                        ElementData pooledElement = elementPool[i];
+                        if (pooledElement == null)
+                            continue;
+
+                        ElementData capturedPooledElement = pooledElement;
+                        menu.AddItem(new GUIContent($"{capturedPooledElement.name}"), false, () =>
+                        {
+                            value.cellType = Grid3D.CellType.Normal;
+                            value.elementInfo = new GridElementInfo { elementData = capturedPooledElement };
+                            MarkDirty();
+                        });
+                        addedPoolElements = true;
+                    }
+
+                    if (addedPoolElements)
+                        menu.AddSeparator("");
+
                     foreach (string guid in elementGuids)
                     {
                         string path = AssetDatabase.GUIDToAssetPath(guid);
                         ElementData elementData = AssetDatabase.LoadAssetAtPath<ElementData>(path);
                         if (elementData != null)
                         {
+                            if (poolSet.Contains(elementData))
+                                continue;
+
+                            ElementData capturedElementData = elementData;
                             menu.AddItem(new GUIContent(elementData.name), false, () =>
                             {
                                 value.cellType = Grid3D.CellType.Normal;
-                                value.elementInfo = new GridElementInfo { elementData = elementData };
+                                value.elementInfo = new GridElementInfo { elementData = capturedElementData };
                                 MarkDirty();
                             });
                         }
