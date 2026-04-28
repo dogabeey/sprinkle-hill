@@ -10,6 +10,8 @@ namespace Game
     public abstract class GridElement : Grid3D
     {
         private static Material _defaultSpriteMaterial;
+        private bool _cachedInitialScale;
+        private Vector3 _initialLocalScale;
 
         [System.Serializable]
         public class MeshData
@@ -32,12 +34,61 @@ namespace Game
         {
             this.ownerGrid = ownerGrid;
             this.elementInfo = elementInfo;
+
+            if (!_cachedInitialScale)
+            {
+                _initialLocalScale = transform.localScale;
+                _cachedInitialScale = true;
+            }
+
             SetElement();
+            ApplyCoverageTransform();
             
             if (elementInfo.isSparkling && !elementInfo.isHidden)
             {
                 StartCoroutine(HueAnim());
             }
+        }
+
+        private static Vector2Int GetGridCoverage(ElementData data)
+        {
+            if (data == null)
+                return Vector2Int.one;
+
+            return new Vector2Int(Mathf.Max(1, data.gridCoverage.x), Mathf.Max(1, data.gridCoverage.y));
+        }
+
+        private void ApplyCoverageTransform()
+        {
+            Vector2Int coverage = GetGridCoverage(elementInfo != null ? elementInfo.elementData : null);
+
+            transform.localScale = new Vector3(
+                _initialLocalScale.x * coverage.x,
+                _initialLocalScale.y * coverage.y,
+                _initialLocalScale.z);
+
+            if (coverage == Vector2Int.one)
+            {
+                transform.localPosition = Vector3.zero;
+                return;
+            }
+
+            if (!(ownerGrid is Match3Grid match3Grid) || !match3Grid.TryGetElementPosition(this, out Vector2Int anchorPos))
+            {
+                transform.localPosition = Vector3.zero;
+                return;
+            }
+
+            Vector2Int endPos = anchorPos + new Vector2Int(coverage.x - 1, coverage.y - 1);
+            if (!match3Grid.IsValidPosition(endPos))
+            {
+                transform.localPosition = Vector3.zero;
+                return;
+            }
+
+            Vector3 startWorld = match3Grid.GetCellPositionInGrid(anchorPos);
+            Vector3 endWorld = match3Grid.GetCellPositionInGrid(endPos);
+            transform.position = (startWorld + endWorld) * 0.5f;
         }
 
         protected virtual void SetElement()
