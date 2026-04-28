@@ -17,3 +17,11 @@ MonoBehaviour:
   displayIcon: {fileID: -417829723, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
   elementMesh: {fileID: 0}
   elementMaterial: {fileID: 0}
+  gridCoverage: {x: 1, y: 1}
+  defaultIdleAnimation: idle
+  animationController: {fileID: 9100000, guid: 609094f0c2956c044913e8dc6732517b, type: 2}
+  isCauldron: 0
+  cauldronChargeRequired: 8
+  cauldronChargeRadius: 1
+  cauldronExplosionParticle: {fileID: 0}
+  elementAnimationsByProgress: []

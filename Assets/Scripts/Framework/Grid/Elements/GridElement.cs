@@ -149,10 +149,28 @@ namespace Game
 
         private void SetElementAnimation()
         {
-            if (elementAnimator == null || elementInfo == null || elementInfo.elementData == null)
+            if (elementInfo == null || elementInfo.elementData == null)
+                return;
+
+            if (elementAnimator == null)
+                elementAnimator = GetComponent<Animator>();
+
+            if (elementAnimator == null)
+                elementAnimator = GetComponentInChildren<Animator>(true);
+
+            if (elementAnimator == null)
                 return;
 
             elementAnimator.runtimeAnimatorController = elementInfo.elementData.animationController;
+
+            if (elementAnimator.runtimeAnimatorController == null)
+            {
+                currentAnimationLayerIndex = -1;
+                return;
+            }
+
+            elementAnimator.Rebind();
+            elementAnimator.Update(0f);
 
             int targetLayer = ResolveAnimationLayer();
             int maxLayer = Mathf.Max(0, elementAnimator.layerCount - 1);

@@ -19,8 +19,17 @@ MonoBehaviour:
   elementMaterial: {fileID: 0}
   gridCoverage: {x: 2, y: 2}
   defaultIdleAnimation: idle
+  animationController: {fileID: 9100000, guid: adb5b707a9c84d346bec2bf2a7044866, type: 2}
   isCauldron: 1
   cauldronChargeRequired: 1
   cauldronChargeRadius: 1
   cauldronExplosionParticle: {fileID: 0}
-  elementAnimationsByProgress: []
+  elementAnimationsByProgress:
+  - progressRange: {x: 0, y: 0.25274727}
+    animationLayer: 0
+  - progressRange: {x: 0.24852072, y: 0.5029586}
+    animationLayer: 1
+  - progressRange: {x: 0.5029586, y: 0.75739646}
+    animationLayer: 2
+  - progressRange: {x: 0.74556214, y: 1}
+    animationLayer: 3
