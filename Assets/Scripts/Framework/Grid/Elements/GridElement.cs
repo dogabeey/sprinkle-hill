@@ -23,12 +23,16 @@ namespace Game
         [FoldoutGroup("Grid Element")]
         public GridElementInfo elementInfo;
         [FoldoutGroup("Grid Element")]
+        public Animator elementAnimator;
+        [FoldoutGroup("Grid Element")]
         public Renderer elementRenderer;
         [FoldoutGroup("Grid Element")]
         public Sprite hiddenSprite;
         [FoldoutGroup("Grid Element")]
         [ReadOnly]
         public Grid3D ownerGrid;
+
+        internal int currentAnimationLayerIndex = -1;
 
         public virtual void InitElement(Grid3D ownerGrid, GridElementInfo elementInfo)
         {
@@ -42,6 +46,7 @@ namespace Game
             }
 
             SetElement();
+            SetElementAnimation();
             ApplyCoverageTransform();
             
             if (elementInfo.isSparkling && !elementInfo.isHidden)
@@ -140,6 +145,62 @@ namespace Game
                     ? Quaternion.Euler(0f, 0f, 90f)
                     : Quaternion.identity;
             }
+        }
+
+        private void SetElementAnimation()
+        {
+            if (elementAnimator == null || elementInfo == null || elementInfo.elementData == null)
+                return;
+
+            elementAnimator.runtimeAnimatorController = elementInfo.elementData.animationController;
+
+            int targetLayer = ResolveAnimationLayer();
+            int maxLayer = Mathf.Max(0, elementAnimator.layerCount - 1);
+            targetLayer = Mathf.Clamp(targetLayer, 0, maxLayer);
+
+            elementAnimator.SetLayerWeight(0, 1f);
+            for (int i = 1; i < elementAnimator.layerCount; i++)
+            {
+                elementAnimator.SetLayerWeight(i, i == targetLayer ? 1f : 0f);
+            }
+
+            currentAnimationLayerIndex = targetLayer;
+
+            string animationName = elementInfo.elementData.defaultIdleAnimation;
+            if (string.IsNullOrWhiteSpace(animationName))
+                return;
+
+            int stateHash = Animator.StringToHash(animationName);
+            if (elementAnimator.HasState(targetLayer, stateHash))
+            {
+                elementAnimator.Play(stateHash, targetLayer, 0f);
+            }
+            else if (targetLayer != 0 && elementAnimator.HasState(0, stateHash))
+            {
+                elementAnimator.Play(stateHash, 0, 0f);
+                currentAnimationLayerIndex = 0;
+            }
+        }
+
+        private int ResolveAnimationLayer()
+        {
+            ElementData data = elementInfo.elementData;
+            if (data == null || !data.isCauldron || data.elementAnimationsByProgress == null || data.elementAnimationsByProgress.Length == 0)
+                return 0;
+
+            int required = Mathf.Max(1, data.cauldronChargeRequired);
+            float progress01 = Mathf.Clamp01((float)elementInfo.cauldronProgress / required);
+
+            for (int i = 0; i < data.elementAnimationsByProgress.Length; i++)
+            {
+                ElementData.ElementAnimationByProgress animationByProgress = data.elementAnimationsByProgress[i];
+                float min = Mathf.Min(animationByProgress.progressRange.x, animationByProgress.progressRange.y);
+                float max = Mathf.Max(animationByProgress.progressRange.x, animationByProgress.progressRange.y);
+                if (progress01 >= min && progress01 <= max)
+                    return Mathf.Max(0, animationByProgress.animationLayer);
+            }
+
+            return 0;
         }
 
         protected virtual IEnumerator HueAnim()

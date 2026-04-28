@@ -17,6 +17,10 @@ public class ElementData : VisualizableScriptableObject
     public Mesh elementMesh;
     public Material elementMaterial;
     public Vector2Int gridCoverage = Vector2Int.one;
+    [FoldoutGroup("Animation")]
+    public string defaultIdleAnimation = "idle";
+    [FoldoutGroup("Animation")]
+    public RuntimeAnimatorController animationController;
     [FoldoutGroup("Cauldron")]
     public bool isCauldron;
     [FoldoutGroup("Cauldron"), ShowIf(nameof(IsCauldron))]
@@ -25,6 +29,15 @@ public class ElementData : VisualizableScriptableObject
     [Min(1)] public int cauldronChargeRadius = 1;
     [FoldoutGroup("Cauldron"), ShowIf(nameof(IsCauldron))]
     public ParticleSystem cauldronExplosionParticle;
+    [FoldoutGroup("Cauldron"), ShowIf(nameof(IsCauldron))]
+    public ElementAnimationByProgress[] elementAnimationsByProgress;
+
+    [Serializable]
+    public class ElementAnimationByProgress
+    {
+        [MinMaxSlider(0, 1)] public Vector2 progressRange;
+        public int animationLayer;
+    }
 
     public static ElementData GetElementDataByName(string name, List<ElementData> elementDataList)
     {

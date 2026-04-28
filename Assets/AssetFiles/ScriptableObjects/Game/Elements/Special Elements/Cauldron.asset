@@ -14,11 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Cauldron
   displayColor: {r: 0, g: 0, b: 0, a: 0}
-  displayIcon: {fileID: 961751986, guid: 8c13a9348c5804941ac0263072b45742, type: 3}
+  displayIcon: {fileID: 391954892, guid: 8c13a9348c5804941ac0263072b45742, type: 3}
   elementMesh: {fileID: 0}
   elementMaterial: {fileID: 0}
   gridCoverage: {x: 2, y: 2}
+  defaultIdleAnimation: idle
   isCauldron: 1
   cauldronChargeRequired: 1
   cauldronChargeRadius: 1
   cauldronExplosionParticle: {fileID: 0}
+  elementAnimationsByProgress: []
