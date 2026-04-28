@@ -16,11 +16,14 @@ public class ElementData : VisualizableScriptableObject
 {
     public Mesh elementMesh;
     public Material elementMaterial;
-
-    [Header("Cauldron")]
+    public Vector2Int gridCoverage = Vector2Int.one;
+    [FoldoutGroup("Cauldron")]
     public bool isCauldron;
+    [FoldoutGroup("Cauldron"), ShowIf(nameof(IsCauldron))]
     [Min(1)] public int cauldronChargeRequired = 8;
+    [FoldoutGroup("Cauldron"), ShowIf(nameof(IsCauldron))]
     [Min(1)] public int cauldronChargeRadius = 1;
+    [FoldoutGroup("Cauldron"), ShowIf(nameof(IsCauldron))]
     public ParticleSystem cauldronExplosionParticle;
 
     public static ElementData GetElementDataByName(string name, List<ElementData> elementDataList)
@@ -38,4 +41,6 @@ public class ElementData : VisualizableScriptableObject
         }
         return null;
     }
+
+    public bool IsCauldron => isCauldron;
 }

@@ -215,6 +215,9 @@ namespace Game
                 yield break;
             }
 
+            if (IsMultiCellElementAnchor(first) || IsMultiCellElementAnchor(second))
+                yield break;
+
             // Swap-based power-up activation: swap first, then activate at new position
             if (PowerUpHandler.IsSpecialPowerUp(firstType) || PowerUpHandler.IsSpecialPowerUp(secondType))
             {
@@ -602,7 +605,7 @@ namespace Game
                 {
                     Vector2Int pos = new Vector2Int(x, y);
                     GridCell cell = GetCell(pos);
-                    if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null) continue;
+                    if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null || IsMultiCellElementAnchor(pos)) continue;
 
                     positions.Add(pos);
                     originalInfos.Add(cell.elementInfo);
@@ -792,7 +795,8 @@ namespace Game
             {
                 GridCell cell = GetCell(new Vector2Int(x, y));
                 if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null ||
-                    cell.elementInfo.isHidden || PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType))
+                    cell.elementInfo.isHidden || PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType) ||
+                    IsMultiCellData(cell.elementInfo.elementData))
                     return null;
                 return cell.elementInfo.elementData;
             }
@@ -1269,7 +1273,7 @@ namespace Game
         private List<ElementData> BuildElementPool()
         {
             List<ElementData> configuredPool = GetConfiguredElementPool();
-            configuredPool.RemoveAll(d => d == null || d.isCauldron);
+            configuredPool.RemoveAll(d => d == null || d.isCauldron || IsMultiCellData(d));
             if (configuredPool.Count > 0)
             {
                 return configuredPool;
@@ -1281,7 +1285,7 @@ namespace Game
                 {
                     GridCell cell = GetCell(new Vector2Int(x, y));
                     ElementData data = cell?.elementInfo?.elementData;
-                    if (data != null && !data.isCauldron && cell.elementInfo.powerUpType == ElementPowerUpType.None && !pool.Contains(data))
+                    if (data != null && !data.isCauldron && !IsMultiCellData(data) && cell.elementInfo.powerUpType == ElementPowerUpType.None && !pool.Contains(data))
                         pool.Add(data);
                 }
             return pool;
@@ -1293,9 +1297,13 @@ namespace Game
             List<int> current = new List<int>();
             for (int y = 0; y < gridSize.y; y++)
             {
-                GridCell cell = GetCell(new Vector2Int(x, y));
+                Vector2Int pos = new Vector2Int(x, y);
+                GridCell cell = GetCell(pos);
                 if (cell != null && cell.cellType == CellType.Normal)
                 {
+                    if (IsCellCoveredByMultiCellElement(pos))
+                        continue;
+
                     if (!IsCauldronCell(cell))
                         current.Add(y);
                 }
@@ -1314,8 +1322,130 @@ namespace Game
                    cell.cellType == CellType.Normal &&
                    cell.elementInfo != null &&
                    cell.elementInfo.elementData != null &&
+                   !IsMultiCellData(cell.elementInfo.elementData) &&
                    !cell.elementInfo.isHidden &&
                    cell.elementInfo.powerUpType == ElementPowerUpType.None;
+        }
+
+        private static Vector2Int GetGridCoverage(ElementData data)
+        {
+            if (data == null)
+                return Vector2Int.one;
+
+            return new Vector2Int(Mathf.Max(1, data.gridCoverage.x), Mathf.Max(1, data.gridCoverage.y));
+        }
+
+        private static bool IsMultiCellData(ElementData data)
+        {
+            Vector2Int coverage = GetGridCoverage(data);
+            return coverage.x > 1 || coverage.y > 1;
+        }
+
+        private bool IsInsideGrid(Vector2Int pos)
+        {
+            return pos.x >= 0 && pos.y >= 0 && pos.x < gridSize.x && pos.y < gridSize.y;
+        }
+
+        private bool IsInsideCoverage(Vector2Int pos, Vector2Int anchorPos, Vector2Int coverage)
+        {
+            return pos.x >= anchorPos.x && pos.x < anchorPos.x + coverage.x &&
+                   pos.y >= anchorPos.y && pos.y < anchorPos.y + coverage.y;
+        }
+
+        private bool IsMultiCellElementAnchor(Vector2Int pos)
+        {
+            GridCell cell = GetCell(pos);
+            return cell != null && cell.cellType == CellType.Normal && cell.elementInfo?.elementData != null && IsMultiCellData(cell.elementInfo.elementData);
+        }
+
+        private bool IsCellCoveredByMultiCellElement(Vector2Int pos)
+        {
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    GridCell anchorCell = GetCell(new Vector2Int(x, y));
+                    ElementData data = anchorCell?.elementInfo?.elementData;
+                    if (anchorCell == null || anchorCell.cellType != CellType.Normal || data == null || !IsMultiCellData(data))
+                        continue;
+
+                    Vector2Int anchorPos = new Vector2Int(x, y);
+                    Vector2Int coverage = GetGridCoverage(data);
+                    if (IsInsideCoverage(pos, anchorPos, coverage))
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void NormalizeMultiCellLayout()
+        {
+            bool[,] occupied = new bool[gridSize.x, gridSize.y];
+
+            for (int y = 0; y < gridSize.y; y++)
+            {
+                for (int x = 0; x < gridSize.x; x++)
+                {
+                    Vector2Int anchorPos = new Vector2Int(x, y);
+                    GridCell anchorCell = GetCell(anchorPos);
+                    if (anchorCell == null)
+                        continue;
+
+                    if (anchorCell.cellType != CellType.Normal)
+                    {
+                        anchorCell.elementInfo = null;
+                        continue;
+                    }
+
+                    if (anchorCell.elementInfo == null || anchorCell.elementInfo.elementData == null)
+                        continue;
+
+                    Vector2Int coverage = GetGridCoverage(anchorCell.elementInfo.elementData);
+                    bool isValid = true;
+
+                    for (int dx = 0; dx < coverage.x && isValid; dx++)
+                    {
+                        for (int dy = 0; dy < coverage.y; dy++)
+                        {
+                            Vector2Int coveredPos = new Vector2Int(x + dx, y + dy);
+                            if (!IsInsideGrid(coveredPos))
+                            {
+                                isValid = false;
+                                break;
+                            }
+
+                            GridCell coveredCell = GetCell(coveredPos);
+                            if (coveredCell == null || coveredCell.cellType != CellType.Normal || occupied[coveredPos.x, coveredPos.y])
+                            {
+                                isValid = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!isValid)
+                    {
+                        anchorCell.elementInfo = null;
+                        continue;
+                    }
+
+                    for (int dx = 0; dx < coverage.x; dx++)
+                    {
+                        for (int dy = 0; dy < coverage.y; dy++)
+                        {
+                            Vector2Int coveredPos = new Vector2Int(x + dx, y + dy);
+                            occupied[coveredPos.x, coveredPos.y] = true;
+                            if (dx != 0 || dy != 0)
+                            {
+                                GridCell coveredCell = GetCell(coveredPos);
+                                if (coveredCell != null)
+                                    coveredCell.elementInfo = null;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         public bool HasAnyPossibleMove()
