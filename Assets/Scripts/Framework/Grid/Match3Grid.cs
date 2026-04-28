@@ -170,8 +170,9 @@ namespace Game
                         continue;
 
                     ElementData data = cauldronCell.elementInfo.elementData;
+                    Vector2Int coverage = GetGridCoverage(data);
                     int radius = Mathf.Max(1, data != null ? data.cauldronChargeRadius : 1);
-                    int distance = Mathf.Abs(cauldronPos.x - clearedPos.x) + Mathf.Abs(cauldronPos.y - clearedPos.y);
+                    int distance = GetManhattanDistanceToCoverage(clearedPos, cauldronPos, coverage);
                     if (distance > radius)
                         continue;
 
@@ -1339,6 +1340,18 @@ namespace Game
         {
             Vector2Int coverage = GetGridCoverage(data);
             return coverage.x > 1 || coverage.y > 1;
+        }
+
+        private static int GetManhattanDistanceToCoverage(Vector2Int pos, Vector2Int coverageStart, Vector2Int coverage)
+        {
+            int minX = coverageStart.x;
+            int maxX = coverageStart.x + coverage.x - 1;
+            int minY = coverageStart.y;
+            int maxY = coverageStart.y + coverage.y - 1;
+
+            int dx = pos.x < minX ? minX - pos.x : (pos.x > maxX ? pos.x - maxX : 0);
+            int dy = pos.y < minY ? minY - pos.y : (pos.y > maxY ? pos.y - maxY : 0);
+            return dx + dy;
         }
 
         private bool IsInsideGrid(Vector2Int pos)
