@@ -43,7 +43,8 @@ namespace Game
             "N: Set cell to Normal\n" +
             "B: Set cell to Breakable Wall\n" +
             "U: Set cell to Unbreakable Wall\n" +
-            "R: Assign random element from pool\n" +
+            "R: Toggle random element marker\n" +
+            "Ctrl+R: Assign random element from pool\n" +
             "1-9: Assign element by indexed asset list\n" +
             "Right Click: Open element selection menu";
 
@@ -74,6 +75,123 @@ namespace Game
                 powerUpType = ResolveElementPowerUpType(data),
                 cauldronProgress = 0
             };
+        }
+
+        private ElementData GetRandomElementFromPool()
+        {
+            if (elementPool == null || elementPool.Count == 0)
+                return null;
+
+            return elementPool[Random.Range(0, elementPool.Count)];
+        }
+
+        private static GridElementInfo CreateRandomElementInfo()
+        {
+            return new GridElementInfo
+            {
+                randomElement = true,
+                powerUpType = ElementPowerUpType.None,
+                cauldronProgress = 0
+            };
+        }
+
+        private void ToggleRandomElementAt(Vector2Int position)
+        {
+            if (!IsInsideGrid(position))
+                return;
+
+            EnsureGridCells();
+            ClearElementsIntersectingArea(position, Vector2Int.one);
+
+            Grid3D.GridCell targetCell = gridCells[position.x, position.y];
+            targetCell.cellType = Grid3D.CellType.Normal;
+
+            if (targetCell.elementInfo != null && targetCell.elementInfo.randomElement)
+            {
+                targetCell.elementInfo = null;
+                return;
+            }
+
+            targetCell.elementInfo = CreateRandomElementInfo();
+        }
+
+        private bool PlaceRandomElementFromPoolAt(Vector2Int position)
+        {
+            ElementData randomElement = GetRandomElementFromPool();
+            if (randomElement == null)
+                return false;
+
+            PlaceElementAt(position, randomElement);
+            return true;
+        }
+
+        private ElementData ResolveRandomRuntimeElement(Grid3D.GridCell[,] runtimeCells, int x, int y)
+        {
+            if (elementPool == null || elementPool.Count == 0)
+                return null;
+
+            List<ElementData> candidates = new List<ElementData>();
+            for (int i = 0; i < elementPool.Count; i++)
+            {
+                ElementData candidate = elementPool[i];
+                if (candidate == null)
+                    continue;
+
+                if (!WouldCreateInvalidStartupMatch(runtimeCells, x, y, candidate))
+                    candidates.Add(candidate);
+            }
+
+            if (candidates.Count > 0)
+                return candidates[Random.Range(0, candidates.Count)];
+
+            List<ElementData> fallback = new List<ElementData>();
+            for (int i = 0; i < elementPool.Count; i++)
+            {
+                if (elementPool[i] != null)
+                    fallback.Add(elementPool[i]);
+            }
+
+            if (fallback.Count == 0)
+                return null;
+
+            return fallback[Random.Range(0, fallback.Count)];
+        }
+
+        private bool WouldCreateInvalidStartupMatch(Grid3D.GridCell[,] runtimeCells, int x, int y, ElementData data)
+        {
+            if (runtimeCells == null || data == null)
+                return false;
+
+            if (IsSameRuntimeElement(runtimeCells, x - 1, y, data) && IsSameRuntimeElement(runtimeCells, x - 2, y, data))
+                return true;
+
+            if (IsSameRuntimeElement(runtimeCells, x, y - 1, data) && IsSameRuntimeElement(runtimeCells, x, y - 2, data))
+                return true;
+
+            if (IsSameRuntimeElement(runtimeCells, x - 1, y, data) &&
+                IsSameRuntimeElement(runtimeCells, x, y - 1, data) &&
+                IsSameRuntimeElement(runtimeCells, x - 1, y - 1, data))
+                return true;
+
+            return false;
+        }
+
+        private bool IsSameRuntimeElement(Grid3D.GridCell[,] runtimeCells, int x, int y, ElementData data)
+        {
+            if (runtimeCells == null || data == null)
+                return false;
+
+            if (x < 0 || y < 0 || x >= runtimeCells.GetLength(0) || y >= runtimeCells.GetLength(1))
+                return false;
+
+            Grid3D.GridCell cell = runtimeCells[x, y];
+            if (cell == null || cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null)
+                return false;
+
+            if (cell.elementInfo.isHidden || cell.elementInfo.powerUpType != ElementPowerUpType.None)
+                return false;
+
+            return cell.elementInfo.elementData == data;
         }
 
         private static Vector2Int GetGridCoverage(ElementData data)
@@ -305,19 +423,30 @@ namespace Game
                 {
                     Grid3D.GridCell sourceCell = gridCells[x, y];
                     Grid3D.CellType cellType = sourceCell != null ? sourceCell.cellType : Grid3D.CellType.Empty;
+                    GridElementInfo sourceInfo = sourceCell != null ? sourceCell.elementInfo : null;
+                    ElementData runtimeElementData = null;
+                    bool hasSourceInfo = cellType == Grid3D.CellType.Normal && sourceInfo != null;
+                    if (hasSourceInfo)
+                    {
+                        if (sourceInfo.randomElement)
+                            runtimeElementData = ResolveRandomRuntimeElement(runtimeCells, x, y);
+                        else
+                            runtimeElementData = sourceInfo.elementData;
+                    }
+
                     GridElementInfo elementInfo = cellType == Grid3D.CellType.Normal &&
-                                                  sourceCell != null &&
-                                                  sourceCell.elementInfo != null &&
-                                                  sourceCell.elementInfo.elementData != null
+                                                  sourceInfo != null &&
+                                                  runtimeElementData != null
                         ? new GridElementInfo
                         {
-                            elementData = sourceCell.elementInfo.elementData,
-                            isSparkling = sourceCell.elementInfo.isSparkling,
-                            isHidden = sourceCell.elementInfo.isHidden,
-                            powerUpType = sourceCell.elementInfo.powerUpType == ElementPowerUpType.None
-                                ? ResolveElementPowerUpType(sourceCell.elementInfo.elementData)
-                                : sourceCell.elementInfo.powerUpType,
-                            cauldronProgress = sourceCell.elementInfo.cauldronProgress
+                            elementData = runtimeElementData,
+                            randomElement = false,
+                            isSparkling = sourceInfo.isSparkling,
+                            isHidden = sourceInfo.isHidden,
+                            powerUpType = sourceInfo.powerUpType == ElementPowerUpType.None || sourceInfo.randomElement
+                                ? ResolveElementPowerUpType(runtimeElementData)
+                                : sourceInfo.powerUpType,
+                            cauldronProgress = sourceInfo.cauldronProgress
                         }
                         : null;
 
@@ -413,7 +542,17 @@ namespace Game
                 value.elementInfo = null;
             }
 
-            if (value.elementInfo != null && value.elementInfo.elementData != null)
+            if (value.elementInfo != null && value.elementInfo.randomElement)
+            {
+                GUIStyle questionStyle = new GUIStyle(EditorStyles.boldLabel)
+                {
+                    alignment = TextAnchor.MiddleCenter,
+                    fontSize = Mathf.Max(12, Mathf.RoundToInt(rect.height * 0.8f))
+                };
+                questionStyle.normal.textColor = Color.white;
+                EditorGUI.LabelField(rect, "?", questionStyle);
+            }
+            else if (value.elementInfo != null && value.elementInfo.elementData != null)
             {
                 Sprite icon = value.elementInfo.elementData.displayIcon;
                 if (icon != null && icon.texture != null)
@@ -467,21 +606,40 @@ namespace Game
                     }
                     else if (Event.current.keyCode == KeyCode.R)
                     {
-                        if (elementPool != null && elementPool.Count > 0)
+                        bool usePoolRandom = Event.current.control || Event.current.command;
+                        if (usePoolRandom)
                         {
-                            ElementData randomElement = elementPool[Random.Range(0, elementPool.Count)];
-                            if (randomElement != null)
+                            if (TryGetCellCoordinates(value, out Vector2Int cellPos))
                             {
-                                if (TryGetCellCoordinates(value, out Vector2Int cellPos))
-                                    PlaceElementAt(cellPos, randomElement);
-                                else
+                                if (PlaceRandomElementFromPoolAt(cellPos))
+                                    MarkDirty();
+                            }
+                            else
+                            {
+                                ElementData randomElement = GetRandomElementFromPool();
+                                if (randomElement != null)
                                 {
                                     value.cellType = Grid3D.CellType.Normal;
                                     value.elementInfo = CreateElementInfo(randomElement);
+                                    MarkDirty();
                                 }
-                                MarkDirty();
                             }
                         }
+                        else
+                        {
+                            if (TryGetCellCoordinates(value, out Vector2Int cellPos))
+                                ToggleRandomElementAt(cellPos);
+                            else
+                            {
+                                value.cellType = Grid3D.CellType.Normal;
+                                if (value.elementInfo != null && value.elementInfo.randomElement)
+                                    value.elementInfo = null;
+                                else
+                                    value.elementInfo = CreateRandomElementInfo();
+                            }
+                            MarkDirty();
+                        }
+
                         Event.current.Use();
                     }
                 }

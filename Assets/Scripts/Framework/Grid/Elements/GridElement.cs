@@ -171,6 +171,7 @@ namespace Game
     public class GridElementInfo
     {
         public ElementData elementData;
+        public bool randomElement;
         public bool isSparkling;
         public bool isHidden;
         public ElementPowerUpType powerUpType;
