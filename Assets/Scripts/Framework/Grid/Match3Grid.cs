@@ -619,11 +619,13 @@ namespace Game
             List<int> shuffled = new List<int>(positions.Count);
             for (int i = 0; i < positions.Count; i++) shuffled.Add(i);
 
-            bool changed = false;
-            for (int attempt = 0; attempt < 6 && !changed; attempt++)
+            List<ElementData> elementPool = BuildElementPool();
+            bool layoutReady = false;
+            for (int attempt = 0; attempt < 24 && !layoutReady; attempt++)
             {
                 shuffled.Shuffle();
-                changed = false;
+
+                bool changed = false;
                 for (int i = 0; i < shuffled.Count; i++)
                 {
                     if (shuffled[i] != i)
@@ -632,13 +634,23 @@ namespace Game
                         break;
                     }
                 }
+
+                if (!changed)
+                    continue;
+
+                for (int i = 0; i < positions.Count; i++)
+                {
+                    GridCell targetCell = GetCell(positions[i]);
+                    if (targetCell != null)
+                        targetCell.elementInfo = originalInfos[shuffled[i]];
+                }
+
+                EnsureAtLeastOneMoveAvailable(elementPool);
+                layoutReady = HasAnyPossibleMove();
             }
 
-            for (int i = 0; i < positions.Count; i++)
-            {
-                GridCell targetCell = GetCell(positions[i]);
-                if (targetCell != null) targetCell.elementInfo = originalInfos[shuffled[i]];
-            }
+            if (!layoutReady)
+                EnsureAtLeastOneMoveAvailable(elementPool);
 
             float duration = Mathf.Max(0.2f, GameManager.Instance.constantManager.elementSwapMoveDuration * 1.35f);
             Sequence shuffleSeq = DOTween.Sequence();

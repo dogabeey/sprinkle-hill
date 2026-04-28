@@ -245,7 +245,7 @@ namespace Game
             if (stageCompletePopupTextPrefab == null || StageCompleteMessages.Length == 0)
                 yield break;
 
-            Canvas canvas = FindObjectOfType<Canvas>();
+            Canvas canvas = GameManager.Instance.mainCanvas;
             TMP_Text popup = canvas != null
                 ? Instantiate(stageCompletePopupTextPrefab, canvas.transform)
                 : Instantiate(stageCompletePopupTextPrefab);

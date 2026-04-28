@@ -426,7 +426,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -2114870144, guid: 8c13a9348c5804941ac0263072b45742, type: 3}
+  m_Sprite: {fileID: -544277971, guid: 8c13a9348c5804941ac0263072b45742, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -510,7 +510,7 @@ MonoBehaviour:
     isHidden: 0
     powerUpType: 0
     cauldronProgress: 0
-  elementAnimator: {fileID: 0}
+  elementAnimator: {fileID: 8132023732941228010}
   elementRenderer: {fileID: 482629601680886882}
   hiddenSprite: {fileID: -136137942, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
   ownerGrid: {fileID: 0}
@@ -574,7 +574,7 @@ Animator:
   m_GameObject: {fileID: 6532699754744590328}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 609094f0c2956c044913e8dc6732517b, type: 2}
+  m_Controller: {fileID: 9100000, guid: adb5b707a9c84d346bec2bf2a7044866, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

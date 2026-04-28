@@ -61,6 +61,8 @@ namespace Game
         [FoldoutGroup("References")]
         public ParticleSystem winParticle;
         [FoldoutGroup("UI References")]
+        public Canvas mainCanvas;
+        [FoldoutGroup("UI References")]
         public UpperPanelUI upperPanelUI;
         [FoldoutGroup("Settings")]
         public bool isSequentalLevels = true;

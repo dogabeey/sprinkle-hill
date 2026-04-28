@@ -74,7 +74,6 @@ namespace Game
 
             if (coverage == Vector2Int.one)
             {
-                transform.localPosition = Vector3.zero;
                 return;
             }
 
@@ -149,7 +148,9 @@ namespace Game
 
         private void SetElementAnimation()
         {
-            if (elementInfo == null || elementInfo.elementData == null)
+            elementAnimator.enabled = false;
+
+            if (elementInfo == null || elementInfo.elementData == null || elementInfo.elementData.animationController == null)
                 return;
 
             if (elementAnimator == null)
@@ -169,6 +170,7 @@ namespace Game
                 return;
             }
 
+            elementAnimator.enabled = true;
             elementAnimator.Rebind();
             elementAnimator.Update(0f);
 
