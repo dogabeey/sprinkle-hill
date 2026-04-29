@@ -13,10 +13,19 @@ namespace Game
     {
         private readonly Match3Grid grid;
         private const int SortingOrderBoost = 200;
+        private readonly Dictionary<ElementPowerUpType, IPowerUpActivationStrategy> activationStrategies;
 
         public PowerUpHandler(Match3Grid grid)
         {
             this.grid = grid;
+            activationStrategies = new Dictionary<ElementPowerUpType, IPowerUpActivationStrategy>
+            {
+                { ElementPowerUpType.Bomb, new BombActivationStrategy(this) },
+                { ElementPowerUpType.HorizontalRocket, new RocketActivationStrategy(this, ElementPowerUpType.HorizontalRocket) },
+                { ElementPowerUpType.VerticalRocket, new RocketActivationStrategy(this, ElementPowerUpType.VerticalRocket) },
+                { ElementPowerUpType.Cauldron, new CauldronActivationStrategy(this) },
+                { ElementPowerUpType.DiscoBall, new DiscoBallActivationStrategy(this) }
+            };
         }
 
         public static bool IsSpecialPowerUp(ElementPowerUpType type)
@@ -226,19 +235,84 @@ namespace Game
         {
             Grid3D.GridCell cell = grid.GetCellPublic(pos);
             ElementPowerUpType type = cell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
-            if (type == ElementPowerUpType.Bomb)
-                yield return grid.StartCoroutine(ActivateBomb(pos));
-            else if (IsRocket(type))
-                yield return grid.StartCoroutine(ActivateRocket(pos, type));
-            else if (type == ElementPowerUpType.Cauldron)
-                yield return grid.StartCoroutine(ActivateCauldron(pos));
-            else if (IsDiscoBall(type))
-            {
-                // Disco Ball requires swap context to know target element type.
-                if (swappedElementData == null)
-                    yield break;
+            if (!activationStrategies.TryGetValue(type, out IPowerUpActivationStrategy strategy))
+                yield break;
 
-                yield return grid.StartCoroutine(ActivateDiscoBall(pos, swappedElementData));
+            yield return grid.StartCoroutine(strategy.Activate(pos, swappedElementData));
+        }
+
+        private interface IPowerUpActivationStrategy
+        {
+            IEnumerator Activate(Vector2Int pos, ElementData swappedElementData);
+        }
+
+        private sealed class BombActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+
+            public BombActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                return handler.ActivateBomb(pos);
+            }
+        }
+
+        private sealed class RocketActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            private readonly ElementPowerUpType rocketType;
+
+            public RocketActivationStrategy(PowerUpHandler handler, ElementPowerUpType rocketType)
+            {
+                this.handler = handler;
+                this.rocketType = rocketType;
+            }
+
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                return handler.ActivateRocket(pos, rocketType);
+            }
+        }
+
+        private sealed class CauldronActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+
+            public CauldronActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                return handler.ActivateCauldron(pos);
+            }
+        }
+
+        private sealed class DiscoBallActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+
+            public DiscoBallActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                if (swappedElementData == null)
+                    return Empty();
+
+                return handler.ActivateDiscoBall(pos, swappedElementData);
+            }
+
+            private static IEnumerator Empty()
+            {
+                yield break;
             }
         }
 

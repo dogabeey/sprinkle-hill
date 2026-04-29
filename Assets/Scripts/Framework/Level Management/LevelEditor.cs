@@ -19,6 +19,7 @@ namespace Game
             Moves
         }
 
+        [Range(1,3)] public int levelDifficulty = 1;
         [ GUIColor("green")]
         public Grid3D.LevelCreationMode levelCreationMode = Grid3D.LevelCreationMode.LevelEditor;
         public Vector2Int gridSize = new Vector2Int(8, 8);

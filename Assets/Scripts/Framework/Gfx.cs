@@ -15,6 +15,9 @@ namespace Game
         public Sprite bombElementIcon;
         public Sprite discoBallElementIcon;
         public Sprite rocketElementIcon;
+        public Sprite easyLevelIcon;
+        public Sprite mediumLevelIcon;
+        public Sprite hardLevelIcon;
         [Header("Particle Systems")]
         public ParticleSystem elementDestroyParticlePrefab;
         public ParticleSystem bombImpactParticlePrefab;
