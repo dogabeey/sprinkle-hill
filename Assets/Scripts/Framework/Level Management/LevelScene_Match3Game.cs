@@ -93,6 +93,7 @@ namespace Game
             currentLevelEditorIndex = 0;
             ApplyLevelSettings(false);
             base.Awake();
+            EventManager.TriggerEvent(GameEvent.STAGE_STARTED, new EventParam(paramInt: currentLevelEditorIndex));
             StartCoroutine(TimerCoroutine());
         }
         private void OnEnable()
@@ -221,6 +222,8 @@ namespace Game
             isSwitchingStage = true;
             isPaused = true;
 
+            EventManager.TriggerEvent(GameEvent.STAGE_COMPLETED, new EventParam(paramInt: currentLevelEditorIndex));
+
             yield return PlayRemainingElementsWinAnimation();
             yield return PlayStageCompletePopupText();
 
@@ -299,6 +302,7 @@ namespace Game
             ApplyLevelSettings(true);
 
             yield return PlayNewStageElementsDropAnimation();
+            EventManager.TriggerEvent(GameEvent.STAGE_STARTED, new EventParam(paramInt: currentLevelEditorIndex));
         }
 
         private IEnumerator PlayPreviousStageElementsOutAnimation()
@@ -519,5 +523,26 @@ namespace Game
 
             return cloned;
         }
-    }
+
+        /// <summary>
+        /// Return a float between 0 and 1 representing the player's stage progress through level and objective completion through the stage.
+        /// </summary>
+        /// <returns></returns>
+        public float GetStageProgress()
+        {
+            return (float)currentLevelEditorIndex / (float)levelEditors.Count;
+        }
+
+        public float GetObjectiveProgress(Objective objective)
+        {
+            if (objective == null || objective.objectiveType == null)
+                return 0f;
+            int currentCount = ObjectiveManager.Instance.GetCurrentCount(objective);
+            int requiredCount = objective.requiredCount;
+            if (requiredCount <= 0)
+                return 1f;
+            float progress = 1f - ((float)currentCount / (float)requiredCount);
+            return Mathf.Clamp01(progress);
+        }
+        }
 }

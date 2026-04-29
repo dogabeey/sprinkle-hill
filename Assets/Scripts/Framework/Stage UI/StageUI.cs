@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 namespace Game
 {
@@ -15,7 +16,7 @@ namespace Game
         internal LevelScene_Match3Game currentLevel;
         public override void InitUI()
         {
-            LevelScene_Match3Game currentLevel = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
+            currentLevel = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
             // Clear existing indicators
             foreach (Transform child in stageIndicatorContainer)
             {
@@ -25,15 +26,16 @@ namespace Game
             int stageIndex = 0;
             foreach (var stage in currentLevel.levelEditors)
             {
-                stageIndex++;
                 StageIndicator indicator = Instantiate(stageIndicatorPrefab, stageIndicatorContainer);
                 indicator.Init(stage, stageIndex);
+                stageIndex++;
             }
         }
 
         public override void DrawUI()
         {
-            fillImage.fillAmount = (float)currentLevel.CurrentStageIndex / currentLevel.levelEditors.Count;
+            float currentFillAmount = fillImage.fillAmount;
+            DOVirtual.Float(currentFillAmount, currentLevel.GetStageProgress(), 0.5f, value => fillImage.fillAmount = value);
         }
     }
 }
