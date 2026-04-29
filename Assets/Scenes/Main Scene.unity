@@ -4764,13 +4764,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1068210311}
     m_Modifications:
+    - target: {fileID: 37336599637278409, guid: bc2114f4dcf61284f84a303851838cad, type: 3}
+      propertyPath: m_fontSize
+      value: 35.3
+      objectReference: {fileID: 0}
     - target: {fileID: 394406237167395869, guid: bc2114f4dcf61284f84a303851838cad, type: 3}
       propertyPath: m_Name
       value: Stage Progress UI
-      objectReference: {fileID: 0}
-    - target: {fileID: 1157054643053426732, guid: bc2114f4dcf61284f84a303851838cad, type: 3}
-      propertyPath: m_Padding.m_Right
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2176603239660044330, guid: bc2114f4dcf61284f84a303851838cad, type: 3}
       propertyPath: m_AnchorMax.y
@@ -4790,7 +4790,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2939826811144587626, guid: bc2114f4dcf61284f84a303851838cad, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -17
+      value: -11
       objectReference: {fileID: 0}
     - target: {fileID: 6644353102786467534, guid: bc2114f4dcf61284f84a303851838cad, type: 3}
       propertyPath: m_Pivot.x
@@ -4872,6 +4872,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7485066785586357898, guid: bc2114f4dcf61284f84a303851838cad, type: 3}
+      propertyPath: m_fontSize
+      value: 35.3
+      objectReference: {fileID: 0}
     - target: {fileID: 7632281535035646455, guid: bc2114f4dcf61284f84a303851838cad, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -4888,6 +4892,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8600525034780647188, guid: bc2114f4dcf61284f84a303851838cad, type: 3}
+      propertyPath: m_fontSize
+      value: 35.3
+      objectReference: {fileID: 0}
     - target: {fileID: 8741540721532983401, guid: bc2114f4dcf61284f84a303851838cad, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -4903,13 +4911,12 @@ PrefabInstance:
     - target: {fileID: 8741540721532983401, guid: bc2114f4dcf61284f84a303851838cad, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8891801509659321269, guid: bc2114f4dcf61284f84a303851838cad, type: 3}
-      propertyPath: 'fireEvents.Array.data[1]'
-      value: 1102
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 6502264905818025610, guid: bc2114f4dcf61284f84a303851838cad, type: 3}
+    - {fileID: 4420360682016782025, guid: bc2114f4dcf61284f84a303851838cad, type: 3}
+    - {fileID: 3306550289400713047, guid: bc2114f4dcf61284f84a303851838cad, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc2114f4dcf61284f84a303851838cad, type: 3}

@@ -20,6 +20,7 @@ public class ObjectiveManager : SingletonComponent<ObjectiveManager>
                 if (objective.scriptableObjectParameter == null || param.paramScriptable == objective.scriptableObjectParameter)
                 {
                     objective.requiredCount--;
+                    EventManager.TriggerEvent(GameEvent.OBJECTIVE_PROGRESS_UPDATED);
                     if (objective.requiredCount <= 0)
                     {
                         // Objective completed, trigger event or call method here
