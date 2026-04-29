@@ -1180,7 +1180,7 @@ namespace Game
                 yield break;
 
             GridElement cauldronElement = GetElementAt(cauldronPos);
-            Vector3 center = GetWorldPosition(cauldronPos);
+            Vector3 center = GetElementCoverageCenterWorld(cauldronPos, cauldronCell.elementInfo.elementData);
 
             ParticleSystem customExplosion = cauldronCell.elementInfo.elementData != null
                 ? cauldronCell.elementInfo.elementData.cauldronExplosionParticle
@@ -1218,8 +1218,13 @@ namespace Game
                         if (element != null)
                         {
                             float delay = Vector2Int.Distance(cauldronPos, pos) * 0.02f;
+                            Vector3 start = element.transform.position;
+                            Vector3 arcPeak = GetCauldronArcPeak(start, center);
                             element.transform.DOKill();
-                            clearSeq.Join(element.transform.DOMove(center, 0.2f).SetDelay(delay).SetEase(Ease.InQuad));
+                            clearSeq.Join(element.transform
+                                .DOPath(new[] { arcPeak, center }, 0.26f, PathType.CatmullRom)
+                                .SetDelay(delay)
+                                .SetEase(Ease.InQuad));
                             clearSeq.Join(element.transform.DOScale(0f, 0.2f).SetDelay(delay).SetEase(Ease.InBack));
                             hasTween = true;
                         }
@@ -1247,6 +1252,30 @@ namespace Game
 
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
             yield return StartCoroutine(ResolveBoardAfterSpecialClear());
+        }
+
+        private Vector3 GetElementCoverageCenterWorld(Vector2Int anchorPos, ElementData data)
+        {
+            Vector2Int coverage = GetGridCoverage(data);
+            Vector2Int endPos = anchorPos + new Vector2Int(coverage.x - 1, coverage.y - 1);
+
+            if (IsInsideGrid(endPos))
+            {
+                Vector3 startWorld = GetCellPositionInGrid(anchorPos);
+                Vector3 endWorld = GetCellPositionInGrid(endPos);
+                return (startWorld + endWorld) * 0.5f;
+            }
+
+            return GetWorldPosition(anchorPos);
+        }
+
+        private static Vector3 GetCauldronArcPeak(Vector3 start, Vector3 target)
+        {
+            Vector3 midpoint = Vector3.Lerp(start, target, 0.5f);
+            float distance = Vector3.Distance(start, target);
+            float arcHeight = Mathf.Max(0.6f, distance * 0.3f);
+            midpoint.y += arcHeight;
+            return midpoint;
         }
 
         // ------------------------------------------------------------------
