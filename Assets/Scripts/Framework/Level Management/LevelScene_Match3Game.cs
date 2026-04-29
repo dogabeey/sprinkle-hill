@@ -516,6 +516,7 @@ namespace Game
                     isProcedurallyGenerated = objective.isProcedurallyGenerated,
                     scriptableObjectParameter = scriptableParameter,
                     requiredCount = requiredCount,
+                    initialRequiredCount = requiredCount,
                     generatedCount = objective.generatedCount,
                     isCompleted = false,
                 });

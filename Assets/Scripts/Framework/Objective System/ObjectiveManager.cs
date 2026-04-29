@@ -67,6 +67,14 @@ public class ObjectiveManager : SingletonComponent<ObjectiveManager>
     {
         return objective.requiredCount;
     }
+    public float GetTotalRemainingObjectives()
+    {
+        return ObjectiveManager.Instance.activeObjectives.Sum(obj => obj.requiredCount);
+    }
+    public float GetTotalInitialObjectives()
+    {
+        return ObjectiveManager.Instance.activeObjectives.Sum(obj => obj.isProcedurallyGenerated ? obj.generatedCount.y : obj.initialRequiredCount);
+    }
 }
 
 [System.Serializable]
@@ -85,8 +93,11 @@ public class Objective
     public Vector2Int generatedCount;
     public bool isCompleted;
 
+    internal int initialRequiredCount;
+
     bool IsProcedurallyGenerated()
     {
         return isProcedurallyGenerated;
     }
+
 }

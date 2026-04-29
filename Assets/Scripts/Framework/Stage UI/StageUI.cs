@@ -35,7 +35,16 @@ namespace Game
         public override void DrawUI()
         {
             float currentFillAmount = fillImage.fillAmount;
-            DOVirtual.Float(currentFillAmount, currentLevel.GetStageProgress(), 0.5f, value => fillImage.fillAmount = value);
+
+            ObjectiveManager objectiveManager = ObjectiveManager.Instance;
+            int totalStages = currentLevel.levelEditors.Count;
+            float totalObjectives = objectiveManager.GetTotalInitialObjectives();
+            float remainingObjectives = objectiveManager.GetTotalRemainingObjectives();
+            float progress = 1f - (remainingObjectives / totalObjectives);
+            float stageProgress = currentLevel.GetStageProgress();
+            float finalProgress = stageProgress + (progress / totalStages);
+
+            fillImage.DOFillAmount(finalProgress, 0.25f).SetEase(Ease.OutCubic);
         }
     }
 }

@@ -32,7 +32,7 @@ public class EventManager : ScriptableObject, IManager
     [SerializeField, Tooltip("Total number of active listeners")]
     private int totalListenerCount = 0;
 
-    public static EventManager instance => GameManager.Instance.eventManager;
+    public static EventManager instance => GameManager.Instance ? GameManager.Instance.eventManager : null;
 
     public void OnInit()
     {
