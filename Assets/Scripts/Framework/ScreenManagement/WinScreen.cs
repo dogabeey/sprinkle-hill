@@ -24,8 +24,8 @@ namespace Game
         public override void InitUI()
         {
             LevelScene levelScene = GameManager.Instance.CurrentLevel;
-            levelHeaderText.text = string.Format(levelHeaderFormat, GameManager.Instance.CurrentLevelIndex + 1);
-            levelWinText.text = levelScene.winText;
+            if(levelHeaderText) levelHeaderText.text = string.Format(levelHeaderFormat, GameManager.Instance.CurrentLevelIndex + 1);
+            if(levelWinText) levelWinText.text = levelScene.winText;
 
             // Remove old rewards
             foreach (var reward in rewards)

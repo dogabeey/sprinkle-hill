@@ -92,7 +92,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 34.3
+  m_fontSize: 72
   m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -156,7 +156,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &9012760483244602300
 RectTransform:
   m_ObjectHideFlags: 0
@@ -242,6 +242,7 @@ MonoBehaviour:
   levelHeaderText: {fileID: 7233249454556271696}
   levelLostText: {fileID: 0}
   repeatLevelButton: {fileID: 4422356036824305581}
+  levelHeaderFormat: LEVEL {0} FAILED
 --- !u!1 &3693181113750730227
 GameObject:
   m_ObjectHideFlags: 0
@@ -277,7 +278,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -143.61725}
+  m_AnchoredPosition: {x: 0, y: -580.9133}
   m_SizeDelta: {x: 0, y: 287.2345}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8732198005325406224
@@ -352,8 +353,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 21.7089}
-  m_SizeDelta: {x: -266.92, y: -168.4095}
+  m_AnchoredPosition: {x: -6, y: 28}
+  m_SizeDelta: {x: -619.76, y: -153.83}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3115138228758595464
 CanvasRenderer:
@@ -410,10 +411,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
+  m_fontSize: 53.75
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -491,8 +492,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 45}
-  m_SizeDelta: {x: 272.53, y: 84.2}
+  m_AnchoredPosition: {x: 0, y: 753}
+  m_SizeDelta: {x: 527.7, y: 161.86}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5116016241181134177
 CanvasRenderer:
