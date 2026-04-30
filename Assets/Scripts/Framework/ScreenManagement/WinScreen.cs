@@ -17,6 +17,7 @@ namespace Game
         public Button nextLevelButton;
         [Header("Settings")]
         public string levelHeaderFormat = "DAY {0} RESULTS";
+        public string rewardTextFormat = "<sprite index={0}>\n{1}";
 
         private List<TMP_Text> rewards = new List<TMP_Text>();
 
@@ -36,7 +37,7 @@ namespace Game
             {
                 var rewardText = Instantiate(rewardTextPrefab, levelRewardContainer);
                 rewards.Add(rewardText);
-                rewardText.text = $"<sprite index={reward.type.spriteIndexForUI}> {reward.amount}";
+                rewardText.text = string.Format(rewardTextFormat, reward.type.spriteIndexForUI, reward.amount);
             }
 
             nextLevelButton.onClick.RemoveAllListeners();

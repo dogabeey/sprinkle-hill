@@ -12,11 +12,13 @@ namespace Game
         public TMP_Text levelHeaderText;
         public TMP_Text levelLostText;
         public Button repeatLevelButton;
+        [Header("Settings")]
+        public string levelHeaderFormat = "LEVEL {0} FAILED";
 
         public override void InitUI()
         {
             LevelScene levelScene = GameManager.Instance.CurrentLevel;
-            levelHeaderText.text = "LEVEL " + (GameManager.Instance.CurrentLevelIndex + 1).ToString();
+            levelHeaderText.text = string.Format(levelHeaderFormat, GameManager.Instance.CurrentLevelIndex + 1);
             levelLostText.text = levelScene.loseText;
 
 
