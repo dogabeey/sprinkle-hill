@@ -1271,9 +1271,12 @@ namespace Game
 
         private static Vector3 GetCauldronArcPeak(Vector3 start, Vector3 target)
         {
+            float elementMaxHeight = GameManager.Instance.constantManager.elementToCauldronMaxHeight;
+            float elementHeightMultiplier = GameManager.Instance.constantManager.elementToCauldronHeightMultiplier;
+
             Vector3 midpoint = Vector3.Lerp(start, target, 0.5f);
             float distance = Vector3.Distance(start, target);
-            float arcHeight = Mathf.Max(0.6f, distance * 0.3f);
+            float arcHeight = Mathf.Max(elementMaxHeight, distance * elementHeightMultiplier);
             midpoint.y += arcHeight;
             return midpoint;
         }

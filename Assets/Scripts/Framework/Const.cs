@@ -79,6 +79,11 @@ namespace Game
         public int rocketShakeVibrato = 10;
         public float rocketShakeRandomness = 90f;
 
+        [Header("Cauldron")]
+        public float elementToCauldronMoveDuration = 0.5f;
+        public float elementToCauldronMaxHeight = 0.75f;
+        public float elementToCauldronHeightMultiplier = 0.5f;
+
         public struct SOUNDS
         {
             public struct MUSICS
