@@ -4245,6 +4245,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lose Panel
       objectReference: {fileID: 0}
+    - target: {fileID: 3482836386519400218, guid: 0d3109f511b9ec04bb8f59b3ee81087c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9012760483244602300, guid: 0d3109f511b9ec04bb8f59b3ee81087c, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

@@ -545,5 +545,27 @@ namespace Game
             float progress = 1f - ((float)currentCount / (float)requiredCount);
             return Mathf.Clamp01(progress);
         }
+
+        internal bool CanBuyExtraMovesOrTime()
+        {
+            return CurrencyManager.Instance.GetCurrencyAmount(extraMoveCost.type) >= extraMoveCost.amount;
         }
+        internal void BuyExtraMovesOrTime()
+        {
+            if (CanBuyExtraMovesOrTime())
+            {
+                // Deduct the cost from the player's currency
+                CurrencyManager.Instance.AddCurrency(extraMoveCost.type.currencyID, extraMoveCost.amount);
+                if (levelEditors[currentLevelEditorIndex].levelLimitType == LevelEditor.LevelLimitType.Moves)
+                {
+                    moves += extraMovesGiven;
+                }
+                else
+                {
+                    timer += extraMovesGiven;
+                }
+                EventManager.TriggerEvent(GameEvent.EXTRA_MOVES_OR_TIMER_BOUGHT, new EventParam { paramInt = extraMovesGiven });
+            }
+        }
+    }
 }

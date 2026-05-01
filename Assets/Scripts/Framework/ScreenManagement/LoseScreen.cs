@@ -11,6 +11,7 @@ namespace Game
 
         public TMP_Text levelHeaderText;
         public TMP_Text levelLostText;
+        public Button addMovesButton;
         public Button repeatLevelButton;
         [Header("Settings")]
         public string levelHeaderFormat = "LEVEL {0} FAILED";
@@ -21,6 +22,14 @@ namespace Game
             levelHeaderText.text = string.Format(levelHeaderFormat, GameManager.Instance.CurrentLevelIndex + 1);
             levelLostText.text = levelScene.loseText;
 
+            addMovesButton.interactable = CanAddMoves();
+
+            addMovesButton.onClick.RemoveAllListeners();
+            addMovesButton.onClick.AddListener(() =>
+            {
+                ScreenManager.Instance.CloseAllScreens();
+                (GameManager.Instance.CurrentLevel as LevelScene_Match3Game).BuyExtraMovesOrTime();
+        });
 
             repeatLevelButton.onClick.RemoveAllListeners();
             repeatLevelButton.onClick.AddListener(() =>
@@ -29,7 +38,12 @@ namespace Game
                 GameManager.Instance.ResetCurrentLevel();
             });
         }
+
+        private bool CanAddMoves()
+        {
+            LevelScene_Match3Game levelScene = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
+            return levelScene != null && levelScene.CanBuyExtraMovesOrTime();
+        }
     }
-    
 }
 

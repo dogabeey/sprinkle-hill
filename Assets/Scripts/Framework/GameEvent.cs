@@ -68,10 +68,11 @@ public enum GameEvent
     MUSIC_STOPPED = 1002,
     SOUND_SETTINGS_CHANGED = 1003,
 
-    // Timer Events
+    // Timer and Move Events
     TIMER_STARTED = 1100,
     TIMER_EXPIRED = 1101,
-    TIMER_PASSED = 1102,   
+    TIMER_PASSED = 1102,
+    EXTRA_MOVES_OR_TIMER_BOUGHT = 1103,
 
     // Input events
     INPUT_RECEIVED = 1200,

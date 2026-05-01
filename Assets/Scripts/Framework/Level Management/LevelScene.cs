@@ -1,6 +1,7 @@
 using DG.Tweening;
 using MobileHapticsProFreeEdition;
 using Sirenix.OdinInspector;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,6 +27,10 @@ namespace Game
         [TextArea]
         public string loseText;
         public List<CurrencyReward> rewards;
+        [FoldoutGroup("Extra Moves")]
+        public CurrencyReward extraMoveCost;
+        [FoldoutGroup("Extra Moves")]
+        public int extraMovesGiven;
 
         protected virtual void Awake()
         {
@@ -64,7 +69,6 @@ namespace Game
 
 
         }
-
     }
     [System.Serializable]
     public class CurrencyReward
