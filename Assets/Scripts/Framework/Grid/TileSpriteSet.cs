@@ -1,40 +1,60 @@
 using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Game
 {
     [CreateAssetMenu(fileName = "TileSpriteSet", menuName = "Game/Tile Sprite Set", order = 2)]
     public class TileSpriteSet : ScriptableObject
     {
-        [FoldoutGroup("Tiles")] public Sprite topLeftCorner;
-        [FoldoutGroup("Tiles")] public Sprite topRightCorner;
-        [FoldoutGroup("Tiles")] public Sprite bottomLeftCorner;
-        [FoldoutGroup("Tiles")] public Sprite bottomRightCorner;
-        [FoldoutGroup("Tiles")] public Sprite topEdge;
-        [FoldoutGroup("Tiles")] public Sprite bottomEdge;
-        [FoldoutGroup("Tiles")] public Sprite leftEdge;
-        [FoldoutGroup("Tiles")] public Sprite rightEdge;
-        [FoldoutGroup("Tiles")] public Sprite topTip;
-        [FoldoutGroup("Tiles")] public Sprite bottomTip;
-        [FoldoutGroup("Tiles")] public Sprite leftTip;
-        [FoldoutGroup("Tiles")] public Sprite rightTip;
-        [FoldoutGroup("Tiles")] public Sprite verticalTile;
-        [FoldoutGroup("Tiles")] public Sprite horizontalTile;
-        [FoldoutGroup("Tiles")] public Sprite verticalWithLeftConnectionTile;
-        [FoldoutGroup("Tiles")] public Sprite verticalWithRightConnectionTile;
-        [FoldoutGroup("Tiles")] public Sprite horizontalWithUpConnectionTile;
-        [FoldoutGroup("Tiles")] public Sprite horizontalWithDownConnectionTile;
-        [FoldoutGroup("Tiles")] public Sprite onlyVerticalAndHorizontalConnectionTile;
-        [FoldoutGroup("Tiles")] public Sprite upperAndLeftTile;
-        [FoldoutGroup("Tiles")] public Sprite upperAndRightTile;
-        [FoldoutGroup("Tiles")] public Sprite lowerAndLeftTile;
-        [FoldoutGroup("Tiles")] public Sprite lowerAndRightTile;
-        [FoldoutGroup("Tiles")] public Sprite singleTileStandalone;
-        [FoldoutGroup("Tiles")] public Sprite topLeftConvexCorner;
-        [FoldoutGroup("Tiles")] public Sprite topRightConvexCorner;
-        [FoldoutGroup("Tiles")] public Sprite bottomLeftConvexCorner;
-        [FoldoutGroup("Tiles")] public Sprite bottomRightConvexCorner;
-        [FoldoutGroup("Tiles")] public Sprite singleInnerTile;
-        [FoldoutGroup("Tiles")] public Sprite errorTile;
+        [SerializeReference] public ColorRuleSet colorRuleset; // NOT IMPLEMENTED YET, but this is where you would specify rules for how to color the tiles in this set. This is separate from the sprites because some sets might want to use the same coloring rules.
+        public Sprite topLeftCorner;
+        public Sprite topRightCorner;
+        public Sprite bottomLeftCorner;
+        public Sprite bottomRightCorner;
+        public Sprite topEdge;
+        public Sprite bottomEdge;
+        public Sprite leftEdge;
+        public Sprite rightEdge;
+        public Sprite topTip;
+        public Sprite bottomTip;
+        public Sprite leftTip;
+        public Sprite rightTip;
+        public Sprite verticalTile;
+        public Sprite horizontalTile;
+        public Sprite verticalWithLeftConnectionTile;
+        public Sprite verticalWithRightConnectionTile;
+        public Sprite horizontalWithUpConnectionTile;
+        public Sprite horizontalWithDownConnectionTile;
+        public Sprite onlyVerticalAndHorizontalConnectionTile;
+        public Sprite upperAndLeftTile;
+        public Sprite upperAndRightTile;
+        public Sprite lowerAndLeftTile;
+        public Sprite lowerAndRightTile;
+        public Sprite singleTileStandalone;
+        public Sprite topLeftConvexCorner;
+        public Sprite topRightConvexCorner;
+        public Sprite bottomLeftConvexCorner;
+        public Sprite bottomRightConvexCorner;
+        public Sprite singleInnerTile;
+        public Sprite errorTile;
+    }
+
+
+    public abstract class ColorRuleSet
+    {
+        public BlendMode blendMode;
+
+        public abstract Color GetTileColor(Vector2Int coordinates);
+    }
+    public class CheckerboardColorRuleSet : ColorRuleSet
+    {
+        public Color color1;
+        public Color color2;
+        public override Color GetTileColor(Vector2Int coordinates)
+        {
+            bool isEven = (coordinates.x + coordinates.y) % 2 == 0;
+            return isEven ? color1 : color2;
+        }
     }
 }
