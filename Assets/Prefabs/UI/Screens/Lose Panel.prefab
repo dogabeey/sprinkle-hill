@@ -151,7 +151,7 @@ GameObject:
   - component: {fileID: 4029044756508687525}
   - component: {fileID: 8044131330533471035}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: add moves text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -577,10 +577,14 @@ MonoBehaviour:
   closeAnimationName: 
   isPersistent: 1
   levelHeaderText: {fileID: 7233249454556271696}
-  levelLostText: {fileID: 0}
-  addMovesButton: {fileID: 0}
-  repeatLevelButton: {fileID: 4422356036824305581}
+  levelLostReason: {fileID: 842609956816249221}
+  addMovesText: {fileID: 8044131330533471035}
+  addMovesCost: {fileID: 8695513910205135651}
+  addMovesButton: {fileID: 4422356036824305581}
+  repeatLevelButton: {fileID: 4625087122695131784}
   levelHeaderFormat: LEVEL {0} FAILED
+  addMovesButtonFormat: +{0} MOVES
+  addMovesCostFormat: <sprite index={1}>{0}
 --- !u!1 &3693181113750730227
 GameObject:
   m_ObjectHideFlags: 0
@@ -598,7 +602,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8083013783547231962
 RectTransform:
   m_ObjectHideFlags: 0
@@ -672,7 +676,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6433566563038527324
 RectTransform:
   m_ObjectHideFlags: 0
@@ -980,7 +984,7 @@ GameObject:
   - component: {fileID: 9090749276001992488}
   - component: {fileID: 8695513910205135651}
   m_Layer: 5
-  m_Name: Text (TMP) (1)
+  m_Name: add moves cost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

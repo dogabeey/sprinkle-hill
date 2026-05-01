@@ -99,6 +99,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &5515343091115864449
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -117,6 +118,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -138,9 +141,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -503466991
   m_SortingLayer: -1
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 02419cd7b9592824e82e51f931b8e839, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -150,7 +155,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &5080939635781388422
 GameObject:
@@ -199,6 +203,9 @@ MonoBehaviour:
   match3Grid: {fileID: 6111944330127197299}
   inputCamera: {fileID: 0}
   minDragDistance: 20
+  idleHintDelay: 5
+  hintMoveDuration: 1.4
+  hintMoveAmount: 0.1
 --- !u!1 &5120543934254136597
 GameObject:
   m_ObjectHideFlags: 0
@@ -274,27 +281,28 @@ MonoBehaviour:
   isEnded: 0
   isPaused: 0
   levelName: End Results
-  winText: 'WELL DONE!
-
-
-    You''ve completed your order successfully'
-  loseText: 'You didn''t make it in time.
-
-
-    Don''t fret! There is always a next
-    time.'
+  winText: WELL DONE!
+  loseText: OUT OF MOVES!
   rewards:
   - type: {fileID: 11400000, guid: 31b1c667ab353af4a80bfe0daaa96451, type: 2}
     amount: 50
   - type: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
     amount: 2
+  extraMoveCost:
+    type: {fileID: 11400000, guid: 31b1c667ab353af4a80bfe0daaa96451, type: 2}
+    amount: 100
+  extraMovesGiven: 10
   objectives:
   - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
+    isProcedurallyGenerated: 0
     scriptableObjectParameter: {fileID: 11400000, guid: f006f435c88374942881e4fd9742c0ca, type: 2}
     requiredCount: 30
+    generatedCount: {x: 0, y: 0}
     isCompleted: 0
   targetElement: {fileID: 11400000, guid: d35d7301f52f6504a8cc2a157fc9a0b8, type: 2}
+  levelLimitType: 0
   timer: 120
+  moves: 0
   grid: {fileID: 6111944330127197299}
   levelEditors:
   - {fileID: 11400000, guid: 7a3257018b70ead4a81299d022a11654, type: 2}
@@ -308,6 +316,7 @@ MonoBehaviour:
   bombElementData: {fileID: 11400000, guid: 2f83e159c6b368646a1f9d8e7ec081e9, type: 2}
   rocketElementData: {fileID: 11400000, guid: 56c62304f3d4a6c428379f3845a428a7, type: 2}
   discoBallElementData: {fileID: 11400000, guid: 24c241fb46e7d3447b4a3d140a9cda60, type: 2}
+  stageCompletePopupTextPrefab: {fileID: 0}
   stageTransitionAnimation:
     elementWinAnimDuration: 1
     elementWinAnimStagger: 0.01
@@ -320,6 +329,9 @@ MonoBehaviour:
     newStageElementDropFromY: 5
     newStageElementDropDuration: 0.5
     newStageElementDropStagger: 0.006
+    stagePopupInDuration: 0.2
+    stagePopupHoldDuration: 0.45
+    stagePopupOutDuration: 0.2
 --- !u!1 &5642222179130585919
 GameObject:
   m_ObjectHideFlags: 0
