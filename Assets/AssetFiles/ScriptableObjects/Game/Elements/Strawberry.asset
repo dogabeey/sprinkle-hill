@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd567b4ecb2599643a9d8e24b3610941, type: 3}
   m_Name: Strawberry
   m_EditorClassIdentifier: 
-  displayName: 
+  displayName: Strawberry
   displayColor: {r: 1, g: 0.042452812, b: 0.042452812, a: 0}
   displayIcon: {fileID: 1038001037, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
   elementMesh: {fileID: 0}

@@ -15,14 +15,7 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects:
-    - {fileID: 11400000, guid: 4b8190d2fea24a34b9c37319a88d6b52, type: 2}
-    - {fileID: 11400000, guid: 921335def82896144bd517f3da89e683, type: 2}
-    - {fileID: 11400000, guid: afb7de669d097f54ab7742316eb3c3c1, type: 2}
-    - {fileID: 11400000, guid: e3e6d6f930f04b4458ca5e2ddfadee99, type: 2}
-    - {fileID: 11400000, guid: cfc8f8a90e8c1f34aade67c0a2ddc391, type: 2}
-    - {fileID: 11400000, guid: 69d335464f54691419e9101cf98729e0, type: 2}
-    - {fileID: 11400000, guid: ce870fd5d06ef2244952ffd6faf955b6, type: 2}
+    ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -131,8 +124,11 @@ MonoBehaviour:
       Entry: 7
       Data: 5|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -140,6 +136,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -170,8 +169,11 @@ MonoBehaviour:
       Entry: 7
       Data: 7|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 1
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -179,6 +181,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -329,8 +334,11 @@ MonoBehaviour:
       Entry: 7
       Data: 14|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 2
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -338,6 +346,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -368,8 +379,11 @@ MonoBehaviour:
       Entry: 7
       Data: 16|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 3
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -377,6 +391,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -407,8 +424,11 @@ MonoBehaviour:
       Entry: 7
       Data: 18|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 2
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -416,6 +436,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -446,8 +469,11 @@ MonoBehaviour:
       Entry: 7
       Data: 20|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 4
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -455,6 +481,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -557,8 +586,11 @@ MonoBehaviour:
       Entry: 7
       Data: 25|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -566,6 +598,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -596,8 +631,11 @@ MonoBehaviour:
       Entry: 7
       Data: 27|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 4
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -605,6 +643,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -635,8 +676,11 @@ MonoBehaviour:
       Entry: 7
       Data: 29|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 5
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -644,6 +688,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -674,8 +721,11 @@ MonoBehaviour:
       Entry: 7
       Data: 31|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 4
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -683,6 +733,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -713,8 +766,11 @@ MonoBehaviour:
       Entry: 7
       Data: 33|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -722,6 +778,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -752,8 +811,11 @@ MonoBehaviour:
       Entry: 7
       Data: 35|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 2
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -761,6 +823,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -815,8 +880,11 @@ MonoBehaviour:
       Entry: 7
       Data: 38|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 1
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -824,6 +892,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -854,8 +925,11 @@ MonoBehaviour:
       Entry: 7
       Data: 40|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 6
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -863,6 +937,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -893,8 +970,11 @@ MonoBehaviour:
       Entry: 7
       Data: 42|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 3
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -902,6 +982,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -932,8 +1015,11 @@ MonoBehaviour:
       Entry: 7
       Data: 44|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 1
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -941,6 +1027,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -971,8 +1060,11 @@ MonoBehaviour:
       Entry: 7
       Data: 46|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 4
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -980,6 +1072,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1010,8 +1105,11 @@ MonoBehaviour:
       Entry: 7
       Data: 48|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 6
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1019,6 +1117,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1049,8 +1150,11 @@ MonoBehaviour:
       Entry: 7
       Data: 50|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 6
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1058,6 +1162,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1088,8 +1195,11 @@ MonoBehaviour:
       Entry: 7
       Data: 52|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1097,6 +1207,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1127,8 +1240,11 @@ MonoBehaviour:
       Entry: 7
       Data: 54|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 1
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1136,6 +1252,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1166,8 +1285,11 @@ MonoBehaviour:
       Entry: 7
       Data: 56|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 6
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1175,6 +1297,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1205,8 +1330,11 @@ MonoBehaviour:
       Entry: 7
       Data: 58|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 3
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1214,6 +1342,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1244,8 +1375,11 @@ MonoBehaviour:
       Entry: 7
       Data: 60|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1253,6 +1387,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1283,8 +1420,11 @@ MonoBehaviour:
       Entry: 7
       Data: 62|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 5
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1292,6 +1432,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1322,8 +1465,11 @@ MonoBehaviour:
       Entry: 7
       Data: 64|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1331,6 +1477,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1361,8 +1510,11 @@ MonoBehaviour:
       Entry: 7
       Data: 66|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 1
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1370,6 +1522,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1400,8 +1555,11 @@ MonoBehaviour:
       Entry: 7
       Data: 68|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 3
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1409,6 +1567,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1463,8 +1624,11 @@ MonoBehaviour:
       Entry: 7
       Data: 71|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 5
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1472,6 +1636,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1502,8 +1669,11 @@ MonoBehaviour:
       Entry: 7
       Data: 73|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 2
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1511,6 +1681,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1541,8 +1714,11 @@ MonoBehaviour:
       Entry: 7
       Data: 75|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 5
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1550,6 +1726,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1580,8 +1759,11 @@ MonoBehaviour:
       Entry: 7
       Data: 77|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 1
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1589,6 +1771,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1619,8 +1804,11 @@ MonoBehaviour:
       Entry: 7
       Data: 79|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 2
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1628,6 +1816,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1658,8 +1849,11 @@ MonoBehaviour:
       Entry: 7
       Data: 81|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 5
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1667,6 +1861,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1769,8 +1966,11 @@ MonoBehaviour:
       Entry: 7
       Data: 86|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1778,6 +1978,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1808,8 +2011,11 @@ MonoBehaviour:
       Entry: 7
       Data: 88|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 3
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1817,6 +2023,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1847,8 +2056,11 @@ MonoBehaviour:
       Entry: 7
       Data: 90|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1856,6 +2068,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -1886,8 +2101,11 @@ MonoBehaviour:
       Entry: 7
       Data: 92|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1895,6 +2113,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -2045,8 +2266,11 @@ MonoBehaviour:
       Entry: 7
       Data: 99|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 1
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -2054,6 +2278,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -2084,8 +2311,11 @@ MonoBehaviour:
       Entry: 7
       Data: 101|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 1
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -2093,6 +2323,9 @@ MonoBehaviour:
       Entry: 5
       Data: false
     - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
@@ -2179,6 +2412,7 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+  levelDifficulty: 1
   levelCreationMode: 0
   gridSize: {x: 8, y: 8}
   objectives:
@@ -2205,10 +2439,9 @@ MonoBehaviour:
     hiddenBoxChance: 0
     elementPool: []
   elementPool:
-  - {fileID: 11400000, guid: afb7de669d097f54ab7742316eb3c3c1, type: 2}
-  - {fileID: 11400000, guid: ce870fd5d06ef2244952ffd6faf955b6, type: 2}
-  - {fileID: 11400000, guid: cfc8f8a90e8c1f34aade67c0a2ddc391, type: 2}
-  - {fileID: 11400000, guid: 4b8190d2fea24a34b9c37319a88d6b52, type: 2}
-  - {fileID: 11400000, guid: e3e6d6f930f04b4458ca5e2ddfadee99, type: 2}
-  - {fileID: 11400000, guid: 921335def82896144bd517f3da89e683, type: 2}
-  - {fileID: 11400000, guid: 69d335464f54691419e9101cf98729e0, type: 2}
+  - {fileID: 11400000, guid: 0aff893b628e16b449d95f9a8befead9, type: 2}
+  - {fileID: 11400000, guid: d35d7301f52f6504a8cc2a157fc9a0b8, type: 2}
+  - {fileID: 11400000, guid: 15add8ec82c964f4fa95e19e667720e0, type: 2}
+  - {fileID: 11400000, guid: 6ba60f6e48ed9b54e881da3788fc5d7b, type: 2}
+  - {fileID: 11400000, guid: d9774d8308604ca44bffaa11cb98af63, type: 2}
+  - {fileID: 11400000, guid: 2c060768e07cda04dabcaaa5a6beefdf, type: 2}
