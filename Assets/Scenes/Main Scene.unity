@@ -1762,7 +1762,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.50836164, g: 1, b: 0.23113209, a: 1}
+  m_Color: {r: 0.5490196, g: 0.7882354, b: 0.1411765, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2054,10 +2054,10 @@ RectTransform:
   - {fileID: 1921390541}
   m_Father: {fileID: 4133448082132307929}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1766.41, y: 3821.23}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1510078032
 MonoBehaviour:
@@ -2075,7 +2075,25 @@ MonoBehaviour:
   fireEvents: 
   triggerLatency: 0
   screenContainer: {fileID: 1510078035}
+  loadingText: {fileID: 1696311921}
   fillBar: {fileID: 1340314734}
+  waitTime: 3
+  altLoadingTexts:
+  - Baking the soda...
+  - Preheating the oven... again...
+  - Kneading the dough (gently)...
+  - Sifting flour dramatically...
+  - Whisking with confidence...
+  - Checking the recipe (optional)...
+  - Asking AI for recipes...
+  - Consulting the chef...
+  - Tossing the salad...
+  - Cleaning as we go (not really)...
+  - Loading chef.md
+  - "Adding just a pinch more\u2026"
+  - Putting too much butter...
+  - Adding love (extra)...
+  - Collecting green apples...
 --- !u!114 &1510078033
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2096,7 +2114,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: ce2b68e23cb443542b4deabc3c938342, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 585268f7da8d8f24ead0227382503eb6, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2122,7 +2140,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1510078030}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -2555,7 +2573,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: LOADING...
+  m_text: Checking the recipe (optional)...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 32f83a2865f8b2d40921fe5f1b42c6c4, type: 2}
   m_sharedMaterial: {fileID: -2831885914188979708, guid: 32f83a2865f8b2d40921fe5f1b42c6c4, type: 2}
@@ -2676,7 +2694,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.9399986}
+  m_AnchoredPosition: {x: 0, y: -0.94000244}
   m_SizeDelta: {x: -24, y: -16.91}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1730923618
@@ -2999,8 +3017,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 1483}
-  m_SizeDelta: {x: 639.25, y: 77.46997}
+  m_AnchoredPosition: {x: 0, y: 171.94995}
+  m_SizeDelta: {x: 916.3, y: 151.59}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1921390542
 MonoBehaviour:
