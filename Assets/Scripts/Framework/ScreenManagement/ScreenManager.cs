@@ -89,7 +89,7 @@ namespace Game
         {
             gameScreen.gameObject.SetActive(true);
             gameScreen.InitUI();
-            if (gameScreen.animator) gameScreen.animator.Play(gameScreen.playAnimationName);
+            if (gameScreen.animator) gameScreen.animator.SetTrigger(gameScreen.playAnimationName);
             
             EventManager.TriggerEvent(GameEvent.SCREEN_OPENED, new EventParam(
                 paramObj: gameScreen.gameObject,

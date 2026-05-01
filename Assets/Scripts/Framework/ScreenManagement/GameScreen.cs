@@ -25,7 +25,7 @@ namespace Game
         public virtual void CloseUI() {
                 if (animator != null && !string.IsNullOrEmpty(closeAnimationName))
                 {
-                    animator.Play(closeAnimationName);
+                    animator.SetTrigger(closeAnimationName);
                     StartCoroutine(DisableAfterAnimation());
                 }
                 else
