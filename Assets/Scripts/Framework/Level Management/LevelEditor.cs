@@ -375,7 +375,8 @@ namespace Game
                     gridCells[x, y] = new Grid3D.GridCell
                     {
                         coordinates = new Vector2Int(x, y),
-                        cellType = Grid3D.CellType.Normal
+                        cellType = Grid3D.CellType.Normal,
+                        elementInfo = CreateRandomElementInfo()
                     };
                 }
             }
