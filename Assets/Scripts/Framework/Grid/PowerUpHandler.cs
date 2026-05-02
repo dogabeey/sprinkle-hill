@@ -722,7 +722,25 @@ namespace Game
             {
                 Transform tempParent = grid.GridParent != null ? grid.GridParent : grid.transform;
                 propellerElement.transform.SetParent(tempParent, true);
-                yield return propellerElement.transform.DOMove(targetWorldPos, 0.28f).SetEase(Ease.InOutQuad).WaitForCompletion();
+
+                Vector3 startWorldPos = propellerElement.transform.position;
+                float travelDuration = 0.3f;
+                float arcHeight = Mathf.Clamp(Vector3.Distance(startWorldPos, targetWorldPos) * 0.22f, 0.3f, 0.9f);
+                Vector3 midPoint = Vector3.Lerp(startWorldPos, targetWorldPos, 0.5f) + (Vector3.up * arcHeight);
+
+                Sequence travelSequence = DOTween.Sequence();
+                travelSequence.Join(
+                    propellerElement.transform
+                        .DOPath(new[] { startWorldPos, midPoint, targetWorldPos }, travelDuration, PathType.CatmullRom)
+                        .SetEase(Ease.InOutSine)
+                        .SetOptions(false));
+                travelSequence.Join(
+                    propellerElement.transform
+                        .DORotate(new Vector3(0f, 0f, 1080f), travelDuration, RotateMode.FastBeyond360)
+                        .SetEase(Ease.Linear)
+                        .SetRelative());
+
+                yield return travelSequence.WaitForCompletion();
                 grid.StartCoroutine(propellerElement.DestroyElement());
             }
 
