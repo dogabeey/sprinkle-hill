@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34cdb16ba66f3394ca9d5fbeb985b8db, type: 3}
   m_Name: Normal Cell Tile Data
   m_EditorClassIdentifier: 
+  colorRuleset:
+    rid: 7533469493743321291
   topLeftCorner: {fileID: 120667313, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
   topRightCorner: {fileID: 262520162, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
   bottomLeftCorner: {fileID: -1553399037, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
@@ -42,3 +44,11 @@ MonoBehaviour:
   bottomRightConvexCorner: {fileID: -271041133, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
   singleInnerTile: {fileID: 1262562994, guid: fd9828db5c3c5f54eb6bcdff6f30f54f, type: 3}
   errorTile: {fileID: 21300000, guid: 321dfcc1c12d7cf42b0037754b1cdf9b, type: 3}
+  references:
+    version: 2
+    RefIds:
+    - rid: 7533469493743321291
+      type: {class: SingleColorRuleSet, ns: Game, asm: Game}
+      data:
+        blendMode: 0
+        color: {r: 0.84313726, g: 0.70980394, b: 0.5294118, a: 1}

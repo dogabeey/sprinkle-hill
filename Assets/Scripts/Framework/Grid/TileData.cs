@@ -97,10 +97,18 @@ namespace Game
 
                             if (!isBreakableWall)
                             {
+                                TileSpriteSet selectedSet = isUnbreakableWall && unbreakableWallTileSprites != null
+                                    ? unbreakableWallTileSprites
+                                    : normalTileSprites;
+
                                 Sprite tileSprite = DetermineTileType(createData, i, j, drawStartingCorner, gridCells);
                                 if (cellController.gridSprite != null)
                                 {
                                     cellController.gridSprite.sprite = FallbackToErrorTile(tileSprite);
+                                    Color currentColor = cellController.gridSprite.color;
+                                    cellController.gridSprite.color = selectedSet != null
+                                        ? selectedSet.GetColorForTile(new Vector2Int(i, j), currentColor)
+                                        : currentColor;
                                 }
                             }
 
