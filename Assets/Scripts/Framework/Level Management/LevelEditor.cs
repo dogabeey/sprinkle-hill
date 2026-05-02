@@ -688,7 +688,7 @@ namespace Game
                             continue;
 
                         ElementData capturedPooledElement = pooledElement;
-                        menu.AddItem(new GUIContent($"{capturedPooledElement.name}"), false, () =>
+                        menu.AddItem(new GUIContent($"{capturedPooledElement.name} {capturedPooledElement.gridCoverage.x}x{capturedPooledElement.gridCoverage.y}"), false, () =>
                         {
                             if (TryGetCellCoordinates(value, out Vector2Int cellPos))
                                 PlaceElementAt(cellPos, capturedPooledElement);
@@ -714,8 +714,9 @@ namespace Game
                             if (poolSet.Contains(elementData))
                                 continue;
 
-                            ElementData capturedElementData = elementData;
-                            menu.AddItem(new GUIContent(elementData.name), false, () =>
+                            ElementData capturedElementData = elementData;  
+                            string category = GetCategoryBasedOnElementType(capturedElementData);
+                            menu.AddItem(new GUIContent(category + elementData.name), false, () =>
                             {
                                 if (TryGetCellCoordinates(value, out Vector2Int cellPos))
                                     PlaceElementAt(cellPos, capturedElementData);
@@ -756,6 +757,13 @@ namespace Game
             }
 
             return value;
+        }
+
+        private string GetCategoryBasedOnElementType(ElementData capturedElementData)
+        {
+            if (capturedElementData.isCauldron)
+                return "Special Elements/";
+            else return "Other Elements/";
         }
 #else
         private Grid3D.GridCell DrawGridCells(Rect rect, Grid3D.GridCell value)
