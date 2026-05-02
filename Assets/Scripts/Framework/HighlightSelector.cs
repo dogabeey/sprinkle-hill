@@ -306,7 +306,7 @@ namespace Game
     [Serializable]
     public class Rocket_Highlight : HighlightSelector
     {
-        public override GameObject[] HighlightedObjects => HighlightSelectorPowerUpUtility.GetRandomPowerUpObjects(ElementPowerUpType.VerticalRocket, ElementPowerUpType.HorizontalRocket);
+        public override GameObject[] HighlightedObjects => HighlightSelectorPowerUpUtility.GetRandomPowerUpObjects(ElementPowerUpType.Rocket, ElementPowerUpType.VerticalRocket, ElementPowerUpType.HorizontalRocket);
     }
 
     /// <summary>

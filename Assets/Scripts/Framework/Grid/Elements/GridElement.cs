@@ -263,6 +263,7 @@ namespace Game
     {
         None,
         Bomb,
+        Rocket,
         VerticalRocket,
         HorizontalRocket,
         BigBomb,

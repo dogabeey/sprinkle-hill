@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd567b4ecb2599643a9d8e24b3610941, type: 3}
-  m_Name: Rolling Pin - Vertical
+  m_Name: Rolling Pin - Default
   m_EditorClassIdentifier: 
   displayName: Rolling Pin
   displayColor: {r: 0.745283, g: 0.6142448, b: 0.045701336, a: 0}

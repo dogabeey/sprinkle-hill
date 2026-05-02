@@ -51,7 +51,7 @@ namespace Game
                 yield break;
 
             ElementData selectedElementData = cell.elementInfo.elementData;
-            powerUpHandler.CreatePowerUpAt(center, selectedElementData, ElementPowerUpType.HorizontalRocket);
+            powerUpHandler.CreatePowerUpAt(center, selectedElementData, ElementPowerUpType.Rocket);
             yield break;
         }
 
@@ -290,24 +290,21 @@ namespace Game
                 bool allowBomb = level.AllowBombCreation;
                 bool allowRocket = level.AllowRocketCreation;
 
-                // Detect power-up spawns
-                List<PowerUpHandler.SpawnRequest> discoBallSpawns = allowDiscoBall
-                    ? powerUpHandler.FindDiscoBallSpawns(matchedGroups, init1, init2)
-                    : new List<PowerUpHandler.SpawnRequest>();
-                List<PowerUpHandler.SpawnRequest> bombSpawns = allowBomb
-                    ? powerUpHandler.FindBombSpawns(matchedGroups, init1, init2)
-                    : new List<PowerUpHandler.SpawnRequest>();
+                // Detect power-up spawns (strategy ordered pipeline)
+                PowerUpHandler.SpawnResolution spawnResolution = powerUpHandler.ResolveSpawns(new PowerUpHandler.CreationContext
+                {
+                    matchedGroups = matchedGroups,
+                    init1 = init1,
+                    init2 = init2,
+                    allowDiscoBall = allowDiscoBall,
+                    allowBomb = allowBomb,
+                    allowRocket = allowRocket
+                });
 
-                HashSet<Vector2Int> discoBallPositions = new HashSet<Vector2Int>();
-                for (int i = 0; i < discoBallSpawns.Count; i++) discoBallPositions.Add(discoBallSpawns[i].position);
-
-                List<PowerUpHandler.SpawnRequest> rocketSpawns = allowRocket
-                    ? powerUpHandler.FindRocketSpawns(matchedGroups, init1, init2, discoBallPositions)
-                    : new List<PowerUpHandler.SpawnRequest>();
-
-                HashSet<Vector2Int> protectedPositions = new HashSet<Vector2Int>(discoBallPositions);
-                for (int i = 0; i < bombSpawns.Count; i++) protectedPositions.Add(bombSpawns[i].position);
-                for (int i = 0; i < rocketSpawns.Count; i++) protectedPositions.Add(rocketSpawns[i].position);
+                List<PowerUpHandler.SpawnRequest> discoBallSpawns = spawnResolution.discoBallSpawns;
+                List<PowerUpHandler.SpawnRequest> bombSpawns = spawnResolution.bombSpawns;
+                List<PowerUpHandler.SpawnRequest> rocketSpawns = spawnResolution.rocketSpawns;
+                HashSet<Vector2Int> protectedPositions = spawnResolution.protectedPositions;
 
                 // Events
                 EventManager.TriggerEvent(GameEvent.MATCH_DETECTED, new EventParam(paramInt: matchedGroups.Count));

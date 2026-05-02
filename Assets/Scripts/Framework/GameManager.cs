@@ -146,10 +146,6 @@ namespace Game
 
             Application.targetFrameRate = 60;
             CurrentWorld = worlds[0];
-        }
-        private void Start()
-        {
-
             if (isSequentalLevels)
             {
                 LevelScene foundLevel = FindAnyObjectByType<LevelScene>();
@@ -161,6 +157,7 @@ namespace Game
                 }
             }
         }
+
         private void Update()
         {
             eventManager.OnUpdate();
