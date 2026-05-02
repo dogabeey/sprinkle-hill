@@ -14,6 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Rolling Pin
   displayColor: {r: 0.745283, g: 0.6142448, b: 0.045701336, a: 0}
-  displayIcon: {fileID: 633019683, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
+  displayIcon: {fileID: -1949253524, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
   elementMesh: {fileID: 0}
   elementMaterial: {fileID: 0}
+  gridCoverage: {x: 1, y: 1}
+  defaultIdleAnimation: idle
+  animationController: {fileID: 0}
+  isCauldron: 0
+  cauldronChargeRequired: 8
+  cauldronChargeRadius: 1
+  cauldronExplosionParticle: {fileID: 0}
+  elementAnimationsByProgress: []
