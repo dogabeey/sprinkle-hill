@@ -488,25 +488,23 @@ namespace Game
             if (bombCell?.elementInfo == null || bombCell.elementInfo.powerUpType != ElementPowerUpType.Bomb)
                 yield break;
 
-            Vector2Int targetPos = grid.GetBombTargetPosition();
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
             PlayEffect(ConstantManager.SOUNDS.EFFECTS.BOMB);
 
             GridElement bombElement = grid.GetElementAt(bombPos);
+            Vector3 impactWorldPos = grid.GetWorldPosition(bombPos);
             if (bombElement != null)
             {
-                Transform tempParent = grid.GridParent != null ? grid.GridParent : grid.transform;
-                bombElement.transform.SetParent(tempParent, true);
-
-                Vector3 impactWorldPos = grid.GetWorldPosition(targetPos);
-                yield return grid.StartCoroutine(AnimateBombFlight(bombElement, impactWorldPos));
-
                 PlayBombImpactEffects(impactWorldPos);
                 grid.StartCoroutine(bombElement.DestroyElement());
             }
+            else
+            {
+                PlayBombImpactEffects(impactWorldPos);
+            }
 
             bombCell.elementInfo = null;
-            yield return grid.StartCoroutine(grid.ClearAreaAt(targetPos, 1));
+            yield return grid.StartCoroutine(grid.ClearAreaAt(bombPos, 1));
             yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
         }
 
