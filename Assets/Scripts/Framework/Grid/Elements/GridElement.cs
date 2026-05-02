@@ -264,6 +264,7 @@ namespace Game
         None,
         Bomb,
         Rocket,
+        Propeller,
         VerticalRocket,
         HorizontalRocket,
         BigBomb,

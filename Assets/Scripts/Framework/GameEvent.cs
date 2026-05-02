@@ -53,6 +53,7 @@ public enum GameEvent
     BOMB_CREATED = 803,
     ROCKET_CREATED = 804,
     DISCO_BALL_CREATED = 805,
+    PROPELLER_CREATED = 806,
 
     // Ad Events
     AD_SHOWN = 900,

@@ -23,6 +23,7 @@ namespace Game
             {
                 { ElementPowerUpType.Bomb, new BombActivationStrategy(this) },
                 { ElementPowerUpType.Rocket, new RocketActivationStrategy(this) },
+                { ElementPowerUpType.Propeller, new PropellerActivationStrategy(this) },
                 { ElementPowerUpType.HorizontalRocket, new RocketActivationStrategy(this) },
                 { ElementPowerUpType.VerticalRocket, new RocketActivationStrategy(this) },
                 { ElementPowerUpType.Cauldron, new CauldronActivationStrategy(this) },
@@ -32,6 +33,7 @@ namespace Game
             creationStrategies = new List<IPowerUpCreationStrategy>
             {
                 new DiscoBallCreationStrategy(this),
+                new PropellerCreationStrategy(this),
                 new BombCreationStrategy(this),
                 new RocketCreationStrategy(this)
             };
@@ -54,6 +56,11 @@ namespace Game
             return type == ElementPowerUpType.DiscoBall;
         }
 
+        public static bool IsPropeller(ElementPowerUpType type)
+        {
+            return type == ElementPowerUpType.Propeller;
+        }
+
         public struct SpawnRequest
         {
             public Vector2Int position;
@@ -67,6 +74,7 @@ namespace Game
             public Vector2Int init1;
             public Vector2Int init2;
             public bool allowDiscoBall;
+            public bool allowPropeller;
             public bool allowBomb;
             public bool allowRocket;
         }
@@ -74,6 +82,7 @@ namespace Game
         public sealed class SpawnResolution
         {
             public readonly List<SpawnRequest> discoBallSpawns = new List<SpawnRequest>();
+            public readonly List<SpawnRequest> propellerSpawns = new List<SpawnRequest>();
             public readonly List<SpawnRequest> bombSpawns = new List<SpawnRequest>();
             public readonly List<SpawnRequest> rocketSpawns = new List<SpawnRequest>();
             public readonly HashSet<Vector2Int> protectedPositions = new HashSet<Vector2Int>();
@@ -140,6 +149,74 @@ namespace Game
                 }
             }
             return spawns;
+        }
+
+        public List<SpawnRequest> FindPropellerSpawns(List<List<Vector2Int>> matchedGroups, Vector2Int init1, Vector2Int init2, HashSet<Vector2Int> claimedPositions = null)
+        {
+            List<SpawnRequest> spawns = new List<SpawnRequest>();
+            HashSet<Vector2Int> used = new HashSet<Vector2Int>();
+
+            for (int g = 0; g < matchedGroups.Count; g++)
+            {
+                List<Vector2Int> group = matchedGroups[g];
+                if (group == null || group.Count < 4)
+                    continue;
+
+                HashSet<Vector2Int> groupSet = new HashSet<Vector2Int>(group);
+                ElementData src = grid.GetCellPublic(group[0])?.elementInfo?.elementData;
+                if (src == null)
+                    continue;
+
+                bool found = false;
+                for (int i = 0; i < group.Count && !found; i++)
+                {
+                    Vector2Int pivot = group[i];
+                    int upLen = 0;
+                    while (groupSet.Contains(pivot + (Vector2Int.up * (upLen + 1)))) upLen++;
+                    int downLen = 0;
+                    while (groupSet.Contains(pivot + (Vector2Int.down * (downLen + 1)))) downLen++;
+                    int leftLen = 0;
+                    while (groupSet.Contains(pivot + (Vector2Int.left * (leftLen + 1)))) leftLen++;
+                    int rightLen = 0;
+                    while (groupSet.Contains(pivot + (Vector2Int.right * (rightLen + 1)))) rightLen++;
+
+                    bool hasLShape =
+                        IsValidPropellerL(upLen, leftLen) ||
+                        IsValidPropellerL(upLen, rightLen) ||
+                        IsValidPropellerL(downLen, leftLen) ||
+                        IsValidPropellerL(downLen, rightLen);
+
+                    if (!hasLShape)
+                        continue;
+
+                    Vector2Int spawnPos = groupSet.Contains(init2) ? init2 : (groupSet.Contains(init1) ? init1 : pivot);
+                    if (claimedPositions != null && claimedPositions.Contains(spawnPos))
+                    {
+                        found = true;
+                        break;
+                    }
+
+                    if (used.Add(spawnPos))
+                        spawns.Add(new SpawnRequest { position = spawnPos, sourceData = src, powerUpType = ElementPowerUpType.Propeller });
+                    found = true;
+                }
+            }
+
+            return spawns;
+        }
+
+        private static bool IsValidPropellerL(int verticalArmLen, int horizontalArmLen)
+        {
+            if (verticalArmLen < 1 || horizontalArmLen < 1)
+                return false;
+
+            int uniqueCount = verticalArmLen + horizontalArmLen + 1;
+            if (uniqueCount < 4)
+                return false;
+
+            // Prevent 2x2 square from being treated as propeller (1+1+1 == 3),
+            // and require at least one arm to extend beyond a single neighbor.
+            return verticalArmLen >= 2 || horizontalArmLen >= 2;
         }
 
         public List<SpawnRequest> FindRocketSpawns(List<List<Vector2Int>> matchedGroups, Vector2Int init1, Vector2Int init2, HashSet<Vector2Int> claimedPositions = null)
@@ -227,11 +304,61 @@ namespace Game
                 if (src == null) continue;
 
                 HashSet<Vector2Int> groupSet = new HashSet<Vector2Int>(group);
-                Vector2Int sp = PickPreferredFromSet(groupSet, init1, init2);
-                if (claimedPositions != null && claimedPositions.Contains(sp))
-                    continue;
-                if (used.Add(sp))
-                    spawns.Add(new SpawnRequest { position = sp, sourceData = src, powerUpType = ElementPowerUpType.DiscoBall });
+                bool found = false;
+
+                for (int y = 0; y < grid.GridSize.y && !found; y++)
+                {
+                    int run = 0;
+                    HashSet<Vector2Int> runPos = new HashSet<Vector2Int>();
+                    for (int x = 0; x <= grid.GridSize.x; x++)
+                    {
+                        Vector2Int pos = new Vector2Int(x, y);
+                        if (x < grid.GridSize.x && groupSet.Contains(pos)) { run++; runPos.Add(pos); }
+                        else
+                        {
+                            if (run >= 5)
+                            {
+                                Vector2Int sp = PickPreferredFromSet(runPos, init1, init2);
+                                if (claimedPositions == null || !claimedPositions.Contains(sp))
+                                {
+                                    if (used.Add(sp))
+                                        spawns.Add(new SpawnRequest { position = sp, sourceData = src, powerUpType = ElementPowerUpType.DiscoBall });
+                                }
+                                found = true;
+                                break;
+                            }
+                            run = 0;
+                            runPos.Clear();
+                        }
+                    }
+                }
+
+                for (int x = 0; x < grid.GridSize.x && !found; x++)
+                {
+                    int run = 0;
+                    HashSet<Vector2Int> runPos = new HashSet<Vector2Int>();
+                    for (int y = 0; y <= grid.GridSize.y; y++)
+                    {
+                        Vector2Int pos = new Vector2Int(x, y);
+                        if (y < grid.GridSize.y && groupSet.Contains(pos)) { run++; runPos.Add(pos); }
+                        else
+                        {
+                            if (run >= 5)
+                            {
+                                Vector2Int sp = PickPreferredFromSet(runPos, init1, init2);
+                                if (claimedPositions == null || !claimedPositions.Contains(sp))
+                                {
+                                    if (used.Add(sp))
+                                        spawns.Add(new SpawnRequest { position = sp, sourceData = src, powerUpType = ElementPowerUpType.DiscoBall });
+                                }
+                                found = true;
+                                break;
+                            }
+                            run = 0;
+                            runPos.Clear();
+                        }
+                    }
+                }
             }
             return spawns;
         }
@@ -284,6 +411,30 @@ namespace Game
                 {
                     SpawnRequest spawn = spawns[i];
                     resolution.bombSpawns.Add(spawn);
+                    resolution.protectedPositions.Add(spawn.position);
+                    claimedPositions.Add(spawn.position);
+                }
+            }
+        }
+
+        private sealed class PropellerCreationStrategy : IPowerUpCreationStrategy
+        {
+            private readonly PowerUpHandler handler;
+
+            public PropellerCreationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+
+            public bool IsEnabled(CreationContext context) => context.allowPropeller;
+
+            public void CollectSpawns(CreationContext context, SpawnResolution resolution, HashSet<Vector2Int> claimedPositions)
+            {
+                List<SpawnRequest> spawns = handler.FindPropellerSpawns(context.matchedGroups, context.init1, context.init2, claimedPositions);
+                for (int i = 0; i < spawns.Count; i++)
+                {
+                    SpawnRequest spawn = spawns[i];
+                    resolution.propellerSpawns.Add(spawn);
                     resolution.protectedPositions.Add(spawn.position);
                     claimedPositions.Add(spawn.position);
                 }
@@ -348,6 +499,7 @@ namespace Game
             GameEvent evt;
             if (type == ElementPowerUpType.Bomb) evt = GameEvent.BOMB_CREATED;
             else if (IsRocket(type)) evt = GameEvent.ROCKET_CREATED;
+            else if (IsPropeller(type)) evt = GameEvent.PROPELLER_CREATED;
             else if (IsDiscoBall(type)) evt = GameEvent.DISCO_BALL_CREATED;
             else return;
 
@@ -400,6 +552,21 @@ namespace Game
             public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
             {
                 return handler.ActivateRocket(pos);
+            }
+        }
+
+        private sealed class PropellerActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+
+            public PropellerActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                return handler.ActivatePropeller(pos);
             }
         }
 
@@ -533,6 +700,76 @@ namespace Game
                 GameManager.Instance.constantManager.matchShakeRandomness);
 
             yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
+        }
+
+        private IEnumerator ActivatePropeller(Vector2Int propellerPos)
+        {
+            Grid3D.GridCell propellerCell = grid.GetCellPublic(propellerPos);
+            if (propellerCell?.elementInfo == null || propellerCell.elementInfo.powerUpType != ElementPowerUpType.Propeller)
+                yield break;
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.ROCKET, volumeMultiplier: 0.9f, pitchOffset: 0.08f);
+
+            GridElement propellerElement = grid.GetElementAt(propellerPos);
+            if (propellerElement != null)
+                propellerElement.transform.DOKill();
+
+            Vector2Int targetPos = PickPropellerTargetPosition(propellerPos);
+            Vector3 targetWorldPos = grid.GetWorldPosition(targetPos);
+
+            if (propellerElement != null)
+            {
+                Transform tempParent = grid.GridParent != null ? grid.GridParent : grid.transform;
+                propellerElement.transform.SetParent(tempParent, true);
+                yield return propellerElement.transform.DOMove(targetWorldPos, 0.28f).SetEase(Ease.InOutQuad).WaitForCompletion();
+                grid.StartCoroutine(propellerElement.DestroyElement());
+            }
+
+            propellerCell.elementInfo = null;
+            yield return grid.StartCoroutine(grid.ClearAreaAt(targetPos, 0));
+            yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
+        }
+
+        private Vector2Int PickPropellerTargetPosition(Vector2Int origin)
+        {
+            List<Vector2Int> breakableAdjacent = new List<Vector2Int>();
+            List<Vector2Int> normalCandidates = new List<Vector2Int>();
+            Vector2Int[] offsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+
+            for (int x = 0; x < grid.GridSize.x; x++)
+            {
+                for (int y = 0; y < grid.GridSize.y; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    if (pos == origin)
+                        continue;
+
+                    Grid3D.GridCell cell = grid.GetCellPublic(pos);
+                    if (cell == null || cell.cellType != Grid3D.CellType.Normal)
+                        continue;
+
+                    bool nearBreakable = false;
+                    for (int i = 0; i < offsets.Length; i++)
+                    {
+                        Grid3D.GridCell adj = grid.GetCellPublic(pos + offsets[i]);
+                        if (adj != null && adj.cellType == Grid3D.CellType.BreakableWall)
+                        {
+                            nearBreakable = true;
+                            break;
+                        }
+                    }
+
+                    if (nearBreakable) breakableAdjacent.Add(pos);
+                    else if (cell.elementInfo != null) normalCandidates.Add(pos);
+                }
+            }
+
+            if (breakableAdjacent.Count > 0)
+                return breakableAdjacent[Random.Range(0, breakableAdjacent.Count)];
+            if (normalCandidates.Count > 0)
+                return normalCandidates[Random.Range(0, normalCandidates.Count)];
+            return origin;
         }
 
         private IEnumerator ActivateCauldron(Vector2Int cauldronPos)
@@ -872,6 +1109,7 @@ namespace Game
             if (!(GameManager.Instance.CurrentLevel is LevelScene_Match3Game lvl)) return sourceData;
             if (type == ElementPowerUpType.Bomb && lvl.bombElementData != null) return lvl.bombElementData;
             if (IsRocket(type) && lvl.rocketElementData != null) return lvl.rocketElementData;
+            if (IsPropeller(type) && lvl.propellerElementData != null) return lvl.propellerElementData;
             if (IsDiscoBall(type) && lvl.discoBallElementData != null) return lvl.discoBallElementData;
             return sourceData;
         }

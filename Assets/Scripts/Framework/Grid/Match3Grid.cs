@@ -287,6 +287,7 @@ namespace Game
 
                 LevelScene_Match3Game level = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
                 bool allowDiscoBall = level.AllowDiscoBallCreation;
+                bool allowPropeller = level.AllowPropellerCreation;
                 bool allowBomb = level.AllowBombCreation;
                 bool allowRocket = level.AllowRocketCreation;
 
@@ -297,11 +298,13 @@ namespace Game
                     init1 = init1,
                     init2 = init2,
                     allowDiscoBall = allowDiscoBall,
+                    allowPropeller = allowPropeller,
                     allowBomb = allowBomb,
                     allowRocket = allowRocket
                 });
 
                 List<PowerUpHandler.SpawnRequest> discoBallSpawns = spawnResolution.discoBallSpawns;
+                List<PowerUpHandler.SpawnRequest> propellerSpawns = spawnResolution.propellerSpawns;
                 List<PowerUpHandler.SpawnRequest> bombSpawns = spawnResolution.bombSpawns;
                 List<PowerUpHandler.SpawnRequest> rocketSpawns = spawnResolution.rocketSpawns;
                 HashSet<Vector2Int> protectedPositions = spawnResolution.protectedPositions;
@@ -320,6 +323,8 @@ namespace Game
                 // Create power-ups (disco ball has highest priority)
                 for (int i = 0; i < discoBallSpawns.Count; i++)
                     powerUpHandler.CreatePowerUpAt(discoBallSpawns[i].position, discoBallSpawns[i].sourceData, discoBallSpawns[i].powerUpType);
+                for (int i = 0; i < propellerSpawns.Count; i++)
+                    powerUpHandler.CreatePowerUpAt(propellerSpawns[i].position, propellerSpawns[i].sourceData, propellerSpawns[i].powerUpType);
                 for (int i = 0; i < bombSpawns.Count; i++)
                     powerUpHandler.CreatePowerUpAt(bombSpawns[i].position, bombSpawns[i].sourceData, bombSpawns[i].powerUpType);
                 for (int i = 0; i < rocketSpawns.Count; i++)
@@ -355,6 +360,30 @@ namespace Game
             while ((matchedGroups = CheckMatchOf(3)).Count > 0)
             {
                 currentComboCount++;
+
+                LevelScene_Match3Game level = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
+                bool allowDiscoBall = level != null && level.AllowDiscoBallCreation;
+                bool allowPropeller = level != null && level.AllowPropellerCreation;
+                bool allowBomb = level != null && level.AllowBombCreation;
+                bool allowRocket = level != null && level.AllowRocketCreation;
+
+                PowerUpHandler.SpawnResolution spawnResolution = powerUpHandler.ResolveSpawns(new PowerUpHandler.CreationContext
+                {
+                    matchedGroups = matchedGroups,
+                    init1 = new Vector2Int(-1, -1),
+                    init2 = new Vector2Int(-1, -1),
+                    allowDiscoBall = allowDiscoBall,
+                    allowPropeller = allowPropeller,
+                    allowBomb = allowBomb,
+                    allowRocket = allowRocket
+                });
+
+                List<PowerUpHandler.SpawnRequest> discoBallSpawns = spawnResolution.discoBallSpawns;
+                List<PowerUpHandler.SpawnRequest> propellerSpawns = spawnResolution.propellerSpawns;
+                List<PowerUpHandler.SpawnRequest> bombSpawns = spawnResolution.bombSpawns;
+                List<PowerUpHandler.SpawnRequest> rocketSpawns = spawnResolution.rocketSpawns;
+                HashSet<Vector2Int> protectedPositions = spawnResolution.protectedPositions;
+
                 EventManager.TriggerEvent(GameEvent.MATCH_DETECTED, new EventParam(paramInt: matchedGroups.Count));
                 if (currentComboCount > 1)
                     EventManager.TriggerEvent(GameEvent.COMBO_TRIGGERED, new EventParam(paramInt: currentComboCount));
@@ -362,7 +391,17 @@ namespace Game
                     EventManager.TriggerEvent(GameEvent.ELEMENT_MATCHED, new EventParam(
                         paramScriptable: GetCell(group[0])?.elementInfo?.elementData, paramInt: group.Count));
 
-                yield return StartCoroutine(ClearMatches(matchedGroups));
+                yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions));
+
+                for (int i = 0; i < discoBallSpawns.Count; i++)
+                    powerUpHandler.CreatePowerUpAt(discoBallSpawns[i].position, discoBallSpawns[i].sourceData, discoBallSpawns[i].powerUpType);
+                for (int i = 0; i < propellerSpawns.Count; i++)
+                    powerUpHandler.CreatePowerUpAt(propellerSpawns[i].position, propellerSpawns[i].sourceData, propellerSpawns[i].powerUpType);
+                for (int i = 0; i < bombSpawns.Count; i++)
+                    powerUpHandler.CreatePowerUpAt(bombSpawns[i].position, bombSpawns[i].sourceData, bombSpawns[i].powerUpType);
+                for (int i = 0; i < rocketSpawns.Count; i++)
+                    powerUpHandler.CreatePowerUpAt(rocketSpawns[i].position, rocketSpawns[i].sourceData, rocketSpawns[i].powerUpType);
+
                 yield return StartCoroutine(ApplyGravity());
             }
 

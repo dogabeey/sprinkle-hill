@@ -50,6 +50,8 @@ namespace Game
         [SerializeField] private bool allowRocketCreation = true;
         [FoldoutGroup("Power Up Settings")]
         [SerializeField] private bool allowBombCreation = true;
+        [FoldoutGroup("Power Up Settings")]
+        [SerializeField] private bool allowPropellerCreation = true;
 
         [FoldoutGroup("Power Up Settings")]
         public int sparklingPowerAfterXCombo = 3;
@@ -59,6 +61,8 @@ namespace Game
         public ElementData bombElementData;
         [FoldoutGroup("Power Up Settings")]
         public ElementData rocketElementData;
+        [FoldoutGroup("Power Up Settings")]
+        public ElementData propellerElementData;
         [FoldoutGroup("Power Up Settings")]
         public ElementData discoBallElementData;
 
@@ -87,6 +91,7 @@ namespace Game
         public bool AllowDiscoBallCreation => allowDiscoBallCreation;
         public bool AllowRocketCreation => allowRocketCreation;
         public bool AllowBombCreation => allowBombCreation;
+        public bool AllowPropellerCreation => allowPropellerCreation;
 
         protected override void Awake()
         {

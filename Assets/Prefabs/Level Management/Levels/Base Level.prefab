@@ -311,10 +311,12 @@ MonoBehaviour:
   allowDiscoBallCreation: 1
   allowRocketCreation: 1
   allowBombCreation: 1
+  allowPropellerCreation: 1
   sparklingPowerAfterXCombo: 1
   sparklingAppearChance: 0
   bombElementData: {fileID: 11400000, guid: 2f83e159c6b368646a1f9d8e7ec081e9, type: 2}
   rocketElementData: {fileID: 11400000, guid: 56c62304f3d4a6c428379f3845a428a7, type: 2}
+  propellerElementData: {fileID: 11400000, guid: 154ee2fd4a3a356489c4482e8b443c06, type: 2}
   discoBallElementData: {fileID: 11400000, guid: 24c241fb46e7d3447b4a3d140a9cda60, type: 2}
   stageCompletePopupTextPrefab: {fileID: 0}
   stageTransitionAnimation:
