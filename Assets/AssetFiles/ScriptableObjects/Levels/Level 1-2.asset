@@ -95,7 +95,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -209,7 +209,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -305,7 +305,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -509,7 +509,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -557,7 +557,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -851,7 +851,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1595,7 +1595,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1889,7 +1889,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1937,7 +1937,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -2141,7 +2141,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -2237,7 +2237,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -2351,7 +2351,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -2442,6 +2442,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0aff893b628e16b449d95f9a8befead9, type: 2}
   - {fileID: 11400000, guid: d35d7301f52f6504a8cc2a157fc9a0b8, type: 2}
   - {fileID: 11400000, guid: 15add8ec82c964f4fa95e19e667720e0, type: 2}
-  - {fileID: 11400000, guid: 6ba60f6e48ed9b54e881da3788fc5d7b, type: 2}
-  - {fileID: 11400000, guid: d9774d8308604ca44bffaa11cb98af63, type: 2}
   - {fileID: 11400000, guid: 2c060768e07cda04dabcaaa5a6beefdf, type: 2}

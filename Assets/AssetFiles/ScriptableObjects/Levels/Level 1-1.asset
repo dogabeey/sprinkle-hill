@@ -16,11 +16,10 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 11400000, guid: 15add8ec82c964f4fa95e19e667720e0, type: 2}
+    - {fileID: 11400000, guid: 0aff893b628e16b449d95f9a8befead9, type: 2}
     - {fileID: 11400000, guid: 2c060768e07cda04dabcaaa5a6beefdf, type: 2}
     - {fileID: 11400000, guid: d35d7301f52f6504a8cc2a157fc9a0b8, type: 2}
-    - {fileID: 11400000, guid: 0aff893b628e16b449d95f9a8befead9, type: 2}
-    - {fileID: 11400000, guid: d9774d8308604ca44bffaa11cb98af63, type: 2}
+    - {fileID: 11400000, guid: 15add8ec82c964f4fa95e19e667720e0, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -784,7 +783,7 @@ MonoBehaviour:
       Data: 33|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 3
+      Data: 0
     - Name: randomElement
       Entry: 5
       Data: false
@@ -829,7 +828,7 @@ MonoBehaviour:
       Data: 35|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 0
+      Data: 2
     - Name: randomElement
       Entry: 5
       Data: false
@@ -874,7 +873,7 @@ MonoBehaviour:
       Data: 37|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 0
+      Data: 3
     - Name: randomElement
       Entry: 5
       Data: false
@@ -919,7 +918,7 @@ MonoBehaviour:
       Data: 39|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 2
+      Data: 0
     - Name: randomElement
       Entry: 5
       Data: false
@@ -964,7 +963,7 @@ MonoBehaviour:
       Data: 41|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 4
+      Data: 2
     - Name: randomElement
       Entry: 5
       Data: false
@@ -1147,7 +1146,7 @@ MonoBehaviour:
       Data: 49|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 3
+      Data: 0
     - Name: randomElement
       Entry: 5
       Data: false
@@ -1192,7 +1191,7 @@ MonoBehaviour:
       Data: 51|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 0
+      Data: 2
     - Name: randomElement
       Entry: 5
       Data: false
@@ -1237,7 +1236,7 @@ MonoBehaviour:
       Data: 53|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 3
+      Data: 2
     - Name: randomElement
       Entry: 5
       Data: false
@@ -1327,7 +1326,7 @@ MonoBehaviour:
       Data: 57|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 1
+      Data: 2
     - Name: randomElement
       Entry: 5
       Data: false
@@ -1444,7 +1443,7 @@ MonoBehaviour:
       Data: 62|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 0
+      Data: 3
     - Name: randomElement
       Entry: 5
       Data: false
@@ -1489,7 +1488,7 @@ MonoBehaviour:
       Data: 64|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: randomElement
       Entry: 5
       Data: false
@@ -1579,7 +1578,7 @@ MonoBehaviour:
       Data: 68|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 0
+      Data: 3
     - Name: randomElement
       Entry: 5
       Data: false
@@ -1744,7 +1743,7 @@ MonoBehaviour:
       Data: 75|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 3
+      Data: 0
     - Name: randomElement
       Entry: 5
       Data: false

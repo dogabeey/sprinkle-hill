@@ -71,7 +71,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -275,7 +275,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -323,7 +323,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -617,7 +617,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -2081,7 +2081,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -2375,7 +2375,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -2423,7 +2423,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -2627,7 +2627,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -2670,19 +2670,13 @@ MonoBehaviour:
   objectives:
   - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
     isProcedurallyGenerated: 0
-    scriptableObjectParameter: {fileID: 11400000, guid: afb7de669d097f54ab7742316eb3c3c1, type: 2}
+    scriptableObjectParameter: {fileID: 11400000, guid: 15add8ec82c964f4fa95e19e667720e0, type: 2}
     requiredCount: 6
     generatedCount: {x: 0, y: 0}
     isCompleted: 0
   - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
     isProcedurallyGenerated: 0
-    scriptableObjectParameter: {fileID: 11400000, guid: 4b8190d2fea24a34b9c37319a88d6b52, type: 2}
-    requiredCount: 6
-    generatedCount: {x: 0, y: 0}
-    isCompleted: 0
-  - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
-    isProcedurallyGenerated: 0
-    scriptableObjectParameter: {fileID: 11400000, guid: ce870fd5d06ef2244952ffd6faf955b6, type: 2}
+    scriptableObjectParameter: {fileID: 11400000, guid: d35d7301f52f6504a8cc2a157fc9a0b8, type: 2}
     requiredCount: 6
     generatedCount: {x: 0, y: 0}
     isCompleted: 0
@@ -2708,4 +2702,3 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 15add8ec82c964f4fa95e19e667720e0, type: 2}
   - {fileID: 11400000, guid: 6ba60f6e48ed9b54e881da3788fc5d7b, type: 2}
   - {fileID: 11400000, guid: d9774d8308604ca44bffaa11cb98af63, type: 2}
-  - {fileID: 11400000, guid: 2c060768e07cda04dabcaaa5a6beefdf, type: 2}

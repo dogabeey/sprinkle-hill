@@ -143,6 +143,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
+      propertyPath: levelEditors.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: proceduralGeneration.seed
       value: 0
       objectReference: {fileID: 0}
