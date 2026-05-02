@@ -33,6 +33,9 @@ namespace Game
         private void OnEnable()
         {
             UpdateSerializationDepths();
+            ResetTutorialSteps();
+
+            Debug.Log($"[Tutorial] OnEnable | Steps: {tutorialSteps?.Count ?? 0}");
 
             EventManager.StartListening(GameEvent.LEVEL_COMPLETED, OnLevelEnded);
             EventManager.StartListening(GameEvent.LEVEL_FAILED, OnLevelEnded);
@@ -43,6 +46,8 @@ namespace Game
 
         private void OnDisable()
         {
+            Debug.Log("[Tutorial] OnDisable");
+
             EventManager.StopListening(GameEvent.LEVEL_COMPLETED, OnLevelEnded);
             EventManager.StopListening(GameEvent.LEVEL_FAILED, OnLevelEnded);
             EventManager.StopListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
@@ -57,19 +62,25 @@ namespace Game
             if (_tutorialListenersRegistered)
                 return;
 
+            Debug.Log("[Tutorial] RegisterTutorialListeners");
+
             foreach (TutorialStep step in GetAllConfiguredSteps())
             {
                 TutorialStep captured = step;
 
                 Action<EventParam> onStart = e =>
                 {
-                    if (ParamMatches(e, captured.startEventExpectedParams, captured.startEventExpectedParamValues))
+                    bool matches = ParamMatches(e, captured.startEventExpectedParams, captured.startEventExpectedParamValues);
+                    Debug.Log($"[Tutorial] Start event received | Step: {GetStepDebugName(captured)} | Event: {captured.startEvent} | Matches: {matches}");
+                    if (matches)
                         StartTutorialStep(captured);
                 };
 
                 Action<EventParam> onComplete = e =>
                 {
-                    if (ParamMatches(e, captured.completionEventExpectedParams, captured.completionEventExpectedParamValues))
+                    bool matches = ParamMatches(e, captured.completionEventExpectedParams, captured.completionEventExpectedParamValues);
+                    Debug.Log($"[Tutorial] Completion event received | Step: {GetStepDebugName(captured)} | Event: {captured.completionEvent} | Matches: {matches}");
+                    if (matches)
                         CompleteTutorialStep(captured);
                 };
 
@@ -82,6 +93,7 @@ namespace Game
 
             EventManager.StartListening(GameEvent.HIGHLIGHT_UPDATED, OnHighlightUpdated);
             _tutorialListenersRegistered = true;
+            Debug.Log("[Tutorial] RegisterTutorialListeners completed");
         }
 
 #if UNITY_EDITOR
@@ -123,6 +135,8 @@ namespace Game
             if (!_tutorialListenersRegistered)
                 return;
 
+            Debug.Log("[Tutorial] UnregisterTutorialListeners");
+
             foreach (TutorialStep step in GetAllConfiguredSteps())
             {
                 if (_startListeners.TryGetValue(step, out Action<EventParam> onStart))
@@ -141,6 +155,7 @@ namespace Game
 
         private void OnLevelEnded(EventParam param)
         {
+            Debug.Log("[Tutorial] OnLevelEnded");
             _isLevelEnded = true;
             UnregisterTutorialListeners();
             EndAllTutorialSteps();
@@ -148,6 +163,7 @@ namespace Game
 
         private void OnLevelStarted(EventParam param)
         {
+            Debug.Log("[Tutorial] OnLevelStarted");
             _isLevelEnded = false;
             ResetTutorialSteps();
             RegisterTutorialListeners();
@@ -158,7 +174,7 @@ namespace Game
             foreach (TutorialStep step in GetAllConfiguredSteps())
             {
                 step.isStarted = false;
-                step.isCompleted = true;
+                step.isCompleted = false;
                 ClearTutorialAnimation(step);
             }
 
@@ -202,10 +218,44 @@ namespace Game
 
         private void StartTutorialStep(TutorialStep step)
         {
-            if (_isLevelEnded) return;
-            if (step == null || step.isCompleted || step.isStarted) return;
-            if (!IsStepEligibleForCurrentLevel(step)) return;
-            if (!IsStepEligibleForCurrentStage(step)) return;
+            if (_isLevelEnded)
+            {
+                Debug.Log($"[Tutorial] StartTutorialStep blocked (level ended) | Step: {GetStepDebugName(step)}");
+                return;
+            }
+
+            if (step == null)
+            {
+                Debug.Log("[Tutorial] StartTutorialStep blocked (step null)");
+                return;
+            }
+
+            if (step.isCompleted)
+            {
+                Debug.Log($"[Tutorial] StartTutorialStep blocked (already completed) | Step: {GetStepDebugName(step)}");
+                return;
+            }
+
+            if (step.isStarted)
+            {
+                Debug.Log($"[Tutorial] StartTutorialStep blocked (already started) | Step: {GetStepDebugName(step)}");
+                return;
+            }
+
+            if (!IsStepEligibleForCurrentLevel(step))
+            {
+                Debug.Log($"[Tutorial] StartTutorialStep blocked (level requirement mismatch) | Step: {GetStepDebugName(step)} | RequiredLevel: {step.requiredLevelIndex} | CurrentLevel: {(World.Instance != null ? World.Instance.lastPlayedLevelIndex : -999)}");
+                return;
+            }
+
+            if (!IsStepEligibleForCurrentStage(step))
+            {
+                int currentStage = World.Instance != null && World.Instance.CurrentLevel is LevelScene_Match3Game levelScene ? levelScene.CurrentStageIndex : -999;
+                Debug.Log($"[Tutorial] StartTutorialStep blocked (stage requirement mismatch) | Step: {GetStepDebugName(step)} | RequiredStage: {step.requiredStageIndex} | CurrentStage: {currentStage}");
+                return;
+            }
+
+            Debug.Log($"[Tutorial] StartTutorialStep STARTED | Step: {GetStepDebugName(step)}");
 
             step.isStarted = true;
             _activeStep = step;
@@ -222,13 +272,38 @@ namespace Game
             if (_activeStep == null || _activeStep.isCompleted)
                 return;
 
+            Debug.Log($"[Tutorial] OnHighlightUpdated | ActiveStep: {GetStepDebugName(_activeStep)}");
+
             PlayTutorialAnimation(_activeStep);
         }
 
         private void CompleteTutorialStep(TutorialStep step)
         {
-            if (_isLevelEnded) return;
-            if (step == null || !step.isStarted || step.isCompleted) return;
+            if (_isLevelEnded)
+            {
+                Debug.Log($"[Tutorial] CompleteTutorialStep blocked (level ended) | Step: {GetStepDebugName(step)}");
+                return;
+            }
+
+            if (step == null)
+            {
+                Debug.Log("[Tutorial] CompleteTutorialStep blocked (step null)");
+                return;
+            }
+
+            if (!step.isStarted)
+            {
+                Debug.Log($"[Tutorial] CompleteTutorialStep blocked (not started) | Step: {GetStepDebugName(step)}");
+                return;
+            }
+
+            if (step.isCompleted)
+            {
+                Debug.Log($"[Tutorial] CompleteTutorialStep blocked (already completed) | Step: {GetStepDebugName(step)}");
+                return;
+            }
+
+            Debug.Log($"[Tutorial] CompleteTutorialStep COMPLETED | Step: {GetStepDebugName(step)}");
 
             step.isCompleted = true;
             step.isStarted = false;
@@ -301,6 +376,8 @@ namespace Game
             GameObject[] targets = selector != null ? selector.HighlightedObjects : null;
             bool hasTargets = targets != null && targets.Length > 0;
 
+            Debug.Log($"[Tutorial] ShowOverlay | Step: {GetStepDebugName(step)} | HasTargets: {hasTargets} | TargetCount: {(targets != null ? targets.Length : 0)}");
+
             if (highlightOverlay != null)
             {
                 if (!hasTargets)
@@ -323,7 +400,10 @@ namespace Game
         {
             TutorialAnimation tutorialAnimation = step != null ? step.GetTutorialAnimation() : null;
             if (tutorialAnimation == null || tutorialAnimation.tutorialObject == null)
+            {
+                Debug.Log($"[Tutorial] PlayTutorialAnimation skipped | Step: {GetStepDebugName(step)} | Animation or tutorialObject is null");
                 return;
+            }
 
             ClearTutorialAnimation(step);
 
@@ -342,6 +422,7 @@ namespace Game
 
             tutorialAnimation.Initialize(step, animationInstance);
             tutorialAnimation.PlayAnim();
+            Debug.Log($"[Tutorial] PlayTutorialAnimation started | Step: {GetStepDebugName(step)}");
         }
 
         private void ClearTutorialAnimation(TutorialStep step)
@@ -423,6 +504,17 @@ namespace Game
                 return false;
 
             return true;
+        }
+
+        private static string GetStepDebugName(TutorialStep step)
+        {
+            if (step == null)
+                return "<null>";
+
+            if (!string.IsNullOrEmpty(step.Id))
+                return step.Id;
+
+            return step.name;
         }
     }
 
