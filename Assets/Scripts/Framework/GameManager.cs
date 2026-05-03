@@ -53,6 +53,10 @@ namespace Game
         [FoldoutGroup("Settings")]
         public bool showFeatureProgressScreen;
         [FoldoutGroup("Settings")]
+        public CurrencyModel cashCurrency;
+        [FoldoutGroup("Settings")]
+        public CurrencyModel premiumCurrency;
+        [FoldoutGroup("Settings")]
         public bool autoShuffleWhenOutOfPossibleMoves;
         [FoldoutGroup("Element Definitions")]
         public ElementData bombElementData;

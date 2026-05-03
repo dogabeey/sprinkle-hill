@@ -6,7 +6,7 @@ using UnityEngine.Rendering;
 
 namespace Game
 {
-    public abstract class Grid3D : SerializedMonoBehaviour, IBusyChecker
+    public abstract partial class Grid3D : SerializedMonoBehaviour, IBusyChecker
     {
         private LevelCreationMode levelCreationMode = LevelCreationMode.LevelEditor;
         private LevelEditor levelEditor;
@@ -484,6 +484,7 @@ namespace Game
             public Vector2Int coordinates;
             public CellType cellType;
             public GridElementInfo elementInfo;
+            public CellFeature cellFeature;
         }
 
         [System.Flags]

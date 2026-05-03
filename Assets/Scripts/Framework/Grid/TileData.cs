@@ -34,6 +34,8 @@ namespace Game
         public TileSpriteSet normalTileSprites;
         [FoldoutGroup("Tile Types")]
         public TileSpriteSet unbreakableWallTileSprites;
+        [FoldoutGroup("Tile Types")]
+        public TileSpriteSet waferBackgroundTielSprites;
 
         public GridCellController breakableWall;
         public GridCellController unbreakableWall;

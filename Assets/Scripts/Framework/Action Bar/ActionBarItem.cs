@@ -106,7 +106,7 @@ namespace Game
 
         public override Sprite actionBarIcon => GameManager.Instance.gfxManager.addTimeIcon;
 
-        public override CurrencyModel costCurrency => GameManager.Instance.gfxManager.cashCurrency;
+        public override CurrencyModel costCurrency => GameManager.Instance.cashCurrency;
 
         public override ParticleSystem actionSuccessParticle => GameManager.Instance.gfxManager.addTimePowerupTrailParticlePrefab;
 
@@ -158,7 +158,7 @@ namespace Game
 
         public override string ActionName => "Shuffle";
         public override Sprite actionBarIcon => GameManager.Instance.gfxManager.shuffleActionIcon;
-        public override CurrencyModel costCurrency => GameManager.Instance.gfxManager.premiumCurrency;
+        public override CurrencyModel costCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem actionSuccessParticle => GameManager.Instance.gfxManager.shufflePowerupTrailParticlePrefab;
         public override int StartingCount => 0;
         public override float BaseCost => 0;
@@ -211,7 +211,7 @@ namespace Game
     {
         public override string ActionName => "Bomb Placement";
         public override Sprite actionBarIcon => GameManager.Instance.gfxManager.bombElementIcon;
-        public override CurrencyModel costCurrency => GameManager.Instance.gfxManager.premiumCurrency;
+        public override CurrencyModel costCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem actionSuccessParticle => GameManager.Instance.gfxManager.bombPowerupTrailParticlePrefab;
         public override int StartingCount => 0;
         public override float BaseCost => 0;
@@ -254,7 +254,7 @@ namespace Game
     {
         public override string ActionName => "Place Disco Ball";
         public override Sprite actionBarIcon => GameManager.Instance.gfxManager.discoBallElementIcon;
-        public override CurrencyModel costCurrency => GameManager.Instance.gfxManager.premiumCurrency;
+        public override CurrencyModel costCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem actionSuccessParticle => GameManager.Instance.gfxManager.discoBallPowerupTrailParticlePrefab;
         public override int StartingCount => 0;
         public override float BaseCost => 0;
@@ -296,7 +296,7 @@ namespace Game
     {
         public override string ActionName => "Place Rocket";
         public override Sprite actionBarIcon => GameManager.Instance.gfxManager.rocketElementIcon;
-        public override CurrencyModel costCurrency => GameManager.Instance.gfxManager.premiumCurrency;
+        public override CurrencyModel costCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem actionSuccessParticle => GameManager.Instance.gfxManager.rocketPowerupTrailParticlePrefab;
         public override int StartingCount => 0;
         public override float BaseCost => 0;
