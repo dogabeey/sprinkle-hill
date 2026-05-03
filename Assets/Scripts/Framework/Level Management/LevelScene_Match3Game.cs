@@ -57,19 +57,6 @@ namespace Game
         public int sparklingPowerAfterXCombo = 3;
         [FoldoutGroup("Power Up Settings"), Range(0f, 1f)]
         public float sparklingAppearChance = 0.3f;
-        [FoldoutGroup("Power Up Settings")]
-        public ElementData bombElementData;
-        [FoldoutGroup("Power Up Settings")]
-        public ElementData rocketElementData;
-        [FoldoutGroup("Power Up Settings")]
-        public ElementData propellerElementData;
-        [FoldoutGroup("Power Up Settings")]
-        public ElementData discoBallElementData;
-
-        [FoldoutGroup("Special Element Settings")]
-        public ElementData cauldronElementData;
-        [FoldoutGroup("Special Element Settings")]
-        public ElementData garbageBagElementData;
 
         [FoldoutGroup("Stage Transition")]
         public TMP_Text stageCompletePopupTextPrefab;

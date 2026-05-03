@@ -62,16 +62,11 @@ public class ElementData : VisualizableScriptableObject
     {
         get
         {
-            string[] levelGuids = AssetDatabase.FindAssets("t:LevelScene_Match3Game");
-            for (int i = 0; i < levelGuids.Length; i++)
-            {
-                string path = AssetDatabase.GUIDToAssetPath(levelGuids[i]);
-                Game.LevelScene_Match3Game levelScene = AssetDatabase.LoadAssetAtPath<Game.LevelScene_Match3Game>(path);
-                if (levelScene != null && levelScene.cauldronElementData == this)
-                    return true;
-            }
+            Game.GameManager manager = Game.GameManager.Instance;
+            if (manager == null)
+                manager = UnityEngine.Object.FindAnyObjectByType<Game.GameManager>();
 
-            return false;
+            return manager != null && manager.cauldronElementData == this;
         }
     }
 #else

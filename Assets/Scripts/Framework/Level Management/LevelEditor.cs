@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
-
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -66,43 +65,12 @@ namespace Game
             if (data == null)
                 return false;
 
-            if (GameManager.Instance != null && GameManager.Instance.CurrentLevel is LevelScene_Match3Game runtimeLevel)
-                return runtimeLevel.cauldronElementData == data;
-
-#if UNITY_EDITOR
-            string[] levelGuids = AssetDatabase.FindAssets("t:LevelScene_Match3Game");
-            for (int i = 0; i < levelGuids.Length; i++)
-            {
-                string path = AssetDatabase.GUIDToAssetPath(levelGuids[i]);
-                LevelScene_Match3Game levelScene = AssetDatabase.LoadAssetAtPath<LevelScene_Match3Game>(path);
-                if (levelScene != null && levelScene.cauldronElementData == data)
-                    return true;
-            }
-#endif
-
-            return false;
+            return GameManager.Instance != null && GameManager.Instance.cauldronElementData == data;
         }
 
         private static bool IsGarbageBagElementData(ElementData data)
         {
-            if (data == null)
-                return false;
-
-            if (GameManager.Instance != null && GameManager.Instance.CurrentLevel is LevelScene_Match3Game runtimeLevel)
-                return runtimeLevel.garbageBagElementData == data;
-
-#if UNITY_EDITOR
-            string[] levelGuids = AssetDatabase.FindAssets("t:LevelScene_Match3Game");
-            for (int i = 0; i < levelGuids.Length; i++)
-            {
-                string path = AssetDatabase.GUIDToAssetPath(levelGuids[i]);
-                LevelScene_Match3Game levelScene = AssetDatabase.LoadAssetAtPath<LevelScene_Match3Game>(path);
-                if (levelScene != null && levelScene.garbageBagElementData == data)
-                    return true;
-            }
-#endif
-
-            return false;
+            return data != null && GameManager.Instance != null && GameManager.Instance.garbageBagElementData == data;
         }
 
         private static ElementPowerUpType ResolveElementPowerUpType(ElementData data)
@@ -789,7 +757,7 @@ namespace Game
                         Event.current.Use();
                     }
                 }
-                else if (Event.current.type == EventType.MouseDown && Event.current.button == 1)
+                else if ((Event.current.type == EventType.MouseDown && Event.current.button == 1) || Event.current.type == EventType.ContextClick)
                 {
                     GenericMenu menu = new GenericMenu();
 
@@ -907,12 +875,6 @@ namespace Game
         {
             if (capturedElementData == null)
                 return "Other Elements/";
-
-            if (GameManager.Instance != null && GameManager.Instance.CurrentLevel is LevelScene_Match3Game levelScene)
-            {
-                if (levelScene.cauldronElementData == capturedElementData || levelScene.garbageBagElementData == capturedElementData)
-                    return "Special Elements/";
-            }
 
             if (IsCauldronElementData(capturedElementData) || IsGarbageBagElementData(capturedElementData))
                 return "Special Elements/";

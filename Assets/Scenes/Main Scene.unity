@@ -4665,6 +4665,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 254586920}
     - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: bombElementData
+      value: 
+      objectReference: {fileID: 11400000, guid: 2f83e159c6b368646a1f9d8e7ec081e9, type: 2}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: tutorialManager
       value: 
       objectReference: {fileID: 387757602526732073}
@@ -4672,6 +4676,26 @@ PrefabInstance:
       propertyPath: actionBarManager
       value: 
       objectReference: {fileID: 698709064}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: rocketElementData
+      value: 
+      objectReference: {fileID: 11400000, guid: 56c62304f3d4a6c428379f3845a428a7, type: 2}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: cauldronElementData
+      value: 
+      objectReference: {fileID: 11400000, guid: f531cb99e5512e14fbf93538678a6278, type: 2}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: discoBallElementData
+      value: 
+      objectReference: {fileID: 11400000, guid: 24c241fb46e7d3447b4a3d140a9cda60, type: 2}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: propellerElementData
+      value: 
+      objectReference: {fileID: 11400000, guid: 154ee2fd4a3a356489c4482e8b443c06, type: 2}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: garbageBagElementData
+      value: 
+      objectReference: {fileID: 11400000, guid: 518bd858af96e224fb306e32e60f0080, type: 2}
     - target: {fileID: 7722314759461277707, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

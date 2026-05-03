@@ -164,8 +164,8 @@ namespace Game
                 {
                     return;
                 }
-                if (GameManager.Instance != null && GameManager.Instance.CurrentLevel is LevelScene_Match3Game levelScene &&
-                    draggedCell?.elementInfo?.elementData != null && levelScene.garbageBagElementData == draggedCell.elementInfo.elementData)
+                if (GameManager.Instance != null && draggedCell?.elementInfo?.elementData != null &&
+                    GameManager.Instance.garbageBagElementData == draggedCell.elementInfo.elementData)
                 {
                     return;
                 }
@@ -223,10 +223,9 @@ namespace Game
                 return;
             }
 
-            LevelScene_Match3Game currentLevel = GameManager.Instance != null ? GameManager.Instance.CurrentLevel as LevelScene_Match3Game : null;
-            if (currentLevel != null &&
-                ((fromCell?.elementInfo?.elementData != null && currentLevel.garbageBagElementData == fromCell.elementInfo.elementData) ||
-                 (toCell?.elementInfo?.elementData != null && currentLevel.garbageBagElementData == toCell.elementInfo.elementData)))
+            if (GameManager.Instance != null &&
+                ((fromCell?.elementInfo?.elementData != null && GameManager.Instance.garbageBagElementData == fromCell.elementInfo.elementData) ||
+                 (toCell?.elementInfo?.elementData != null && GameManager.Instance.garbageBagElementData == toCell.elementInfo.elementData)))
             {
                 CancelDrag();
                 return;

@@ -1069,8 +1069,8 @@ namespace Game
             if (grid.TryRevealHiddenBoxAt(pos))
                 return;
 
-            if (GameManager.Instance != null && GameManager.Instance.CurrentLevel is LevelScene_Match3Game levelScene &&
-                cell.elementInfo.elementData != null && levelScene.garbageBagElementData == cell.elementInfo.elementData)
+            if (GameManager.Instance != null &&
+                cell.elementInfo.elementData != null && GameManager.Instance.garbageBagElementData == cell.elementInfo.elementData)
                 return;
 
             if (IsSpecialPowerUp(cell.elementInfo.powerUpType))
@@ -1130,11 +1130,12 @@ namespace Game
 
         private ElementData ResolveVisualData(ElementData sourceData, ElementPowerUpType type)
         {
-            if (!(GameManager.Instance.CurrentLevel is LevelScene_Match3Game lvl)) return sourceData;
-            if (type == ElementPowerUpType.Bomb && lvl.bombElementData != null) return lvl.bombElementData;
-            if (IsRocket(type) && lvl.rocketElementData != null) return lvl.rocketElementData;
-            if (IsPropeller(type) && lvl.propellerElementData != null) return lvl.propellerElementData;
-            if (IsDiscoBall(type) && lvl.discoBallElementData != null) return lvl.discoBallElementData;
+            GameManager gm = GameManager.Instance;
+            if (gm == null) return sourceData;
+            if (type == ElementPowerUpType.Bomb && gm.bombElementData != null) return gm.bombElementData;
+            if (IsRocket(type) && gm.rocketElementData != null) return gm.rocketElementData;
+            if (IsPropeller(type) && gm.propellerElementData != null) return gm.propellerElementData;
+            if (IsDiscoBall(type) && gm.discoBallElementData != null) return gm.discoBallElementData;
             return sourceData;
         }
 

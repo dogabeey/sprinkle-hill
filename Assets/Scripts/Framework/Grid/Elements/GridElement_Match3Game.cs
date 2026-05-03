@@ -49,12 +49,12 @@ namespace Game
 
         private void RefreshCauldronVisual()
         {
-            LevelScene_Match3Game levelScene = GameManager.Instance != null ? GameManager.Instance.CurrentLevel as LevelScene_Match3Game : null;
+            GameManager gm = GameManager.Instance;
             bool isCauldron = elementInfo != null &&
                               elementInfo.powerUpType == ElementPowerUpType.Cauldron &&
                               elementInfo.elementData != null &&
-                              levelScene != null &&
-                              levelScene.cauldronElementData == elementInfo.elementData;
+                              gm != null &&
+                              gm.cauldronElementData == elementInfo.elementData;
 
             if (cauldronProgressBackground != null)
                 cauldronProgressBackground.gameObject.SetActive(isCauldron) ;

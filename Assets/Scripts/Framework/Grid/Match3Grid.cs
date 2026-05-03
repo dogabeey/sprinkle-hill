@@ -862,6 +862,7 @@ namespace Game
                    cell.elementInfo != null &&
                    !cell.elementInfo.isHidden &&
                    cell.elementInfo.powerUpType == ElementPowerUpType.None &&
+                   !IsGarbageBagData(cell.elementInfo.elementData) &&
                    cell.elementInfo.elementData == data;
         }
 
@@ -874,7 +875,8 @@ namespace Game
                 GridCell cell = GetCell(new Vector2Int(x, y));
                 if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null ||
                     cell.elementInfo.isHidden || PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType) ||
-                    IsMultiCellData(cell.elementInfo.elementData))
+                    IsMultiCellData(cell.elementInfo.elementData) ||
+                    IsGarbageBagData(cell.elementInfo.elementData))
                     return null;
                 return cell.elementInfo.elementData;
             }
@@ -1190,6 +1192,35 @@ namespace Game
                         GridCell targetCell = GetCell(targetPos);
                         if (targetCell == null) continue;
 
+                        if (IsGarbageBagData(movingInfo.elementData) && targetY == playableRows[playableRows.Count - 1])
+                        {
+                            NotifyGarbageBagCleaned(targetPos, movingInfo.elementData);
+                            readCell.elementInfo = null;
+                            targetCell.elementInfo = null;
+
+                            if (generatedTiles.TryGetValue(readPos, out GridCellController fromTile) &&
+                                generatedTiles.TryGetValue(targetPos, out GridCellController toTile) &&
+                                fromTile != null && toTile != null)
+                            {
+                                GridElement bagElement = fromTile.GetComponentInChildren<GridElement>();
+                                if (bagElement != null)
+                                {
+                                    bagElement.transform.SetParent(null, true);
+                                    float dropDist = Mathf.Max(0.5f, toTile.transform.localScale.y);
+                                    Vector3 endWorld = toTile.transform.position + Vector3.down * dropDist;
+                                    float worldDist = Vector3.Distance(bagElement.transform.position, endWorld);
+                                    float dropDur = fallSpeed > 0f ? worldDist / fallSpeed : 0.2f;
+                                    gravitySeq.Join(bagElement.transform.DOMove(endWorld, dropDur).SetEase(Ease.InQuad));
+                                    gravitySeq.Join(bagElement.transform.DOScale(0.92f, dropDur).SetEase(Ease.InQuad));
+                                    generatedElements.Remove(bagElement);
+                                    Destroy(bagElement.gameObject, dropDur + 0.05f);
+                                    hasTween = true;
+                                }
+                            }
+
+                            continue;
+                        }
+
                         if (targetPos != readPos)
                         {
                             readCell.elementInfo = null;
@@ -1412,13 +1443,14 @@ namespace Game
 
         private static bool IsGarbageBagData(ElementData data)
         {
-            LevelScene_Match3Game levelScene = GameManager.Instance != null ? GameManager.Instance.CurrentLevel as LevelScene_Match3Game : null;
-            return levelScene != null && data != null && levelScene.garbageBagElementData == data;
+            GameManager gm = GameManager.Instance;
+            return gm != null && data != null && gm.garbageBagElementData == data;
         }
 
         private bool IsCauldronData(ElementData data)
         {
-            return Match3Level != null && data != null && Match3Level.cauldronElementData == data;
+            GameManager gm = GameManager.Instance;
+            return gm != null && data != null && gm.cauldronElementData == data;
         }
 
         private static bool IsGarbageBagCell(GridCell cell)

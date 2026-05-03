@@ -54,6 +54,18 @@ namespace Game
         public bool showFeatureProgressScreen;
         [FoldoutGroup("Settings")]
         public bool autoShuffleWhenOutOfPossibleMoves;
+        [FoldoutGroup("Element Definitions")]
+        public ElementData bombElementData;
+        [FoldoutGroup("Element Definitions")]
+        public ElementData rocketElementData;
+        [FoldoutGroup("Element Definitions")]
+        public ElementData propellerElementData;
+        [FoldoutGroup("Element Definitions")]
+        public ElementData discoBallElementData;
+        [FoldoutGroup("Element Definitions")]
+        public ElementData cauldronElementData;
+        [FoldoutGroup("Element Definitions")]
+        public ElementData garbageBagElementData;
         [FoldoutGroup("References")]
         public List<World> worlds;
         [FoldoutGroup("References")]
