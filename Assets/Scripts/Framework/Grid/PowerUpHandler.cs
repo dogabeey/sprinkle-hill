@@ -1069,6 +1069,10 @@ namespace Game
             if (grid.TryRevealHiddenBoxAt(pos))
                 return;
 
+            if (GameManager.Instance != null && GameManager.Instance.CurrentLevel is LevelScene_Match3Game levelScene &&
+                cell.elementInfo.elementData != null && levelScene.garbageBagElementData == cell.elementInfo.elementData)
+                return;
+
             if (IsSpecialPowerUp(cell.elementInfo.powerUpType))
             {
                 grid.StartCoroutine(ActivateAt(pos, null));

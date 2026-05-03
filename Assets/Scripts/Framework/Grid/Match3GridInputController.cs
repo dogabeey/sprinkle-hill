@@ -164,6 +164,11 @@ namespace Game
                 {
                     return;
                 }
+                if (GameManager.Instance != null && GameManager.Instance.CurrentLevel is LevelScene_Match3Game levelScene &&
+                    draggedCell?.elementInfo?.elementData != null && levelScene.garbageBagElementData == draggedCell.elementInfo.elementData)
+                {
+                    return;
+                }
             }
 
             Vector2 dragDelta = (Vector2)Input.mousePosition - dragStartScreenPos;
@@ -213,6 +218,15 @@ namespace Game
             GridCell toCell = match3Grid.GetCellPublic(toPos);
             if ((fromCell?.elementInfo != null && fromCell.elementInfo.powerUpType == ElementPowerUpType.Cauldron) ||
                 (toCell?.elementInfo != null && toCell.elementInfo.powerUpType == ElementPowerUpType.Cauldron))
+            {
+                CancelDrag();
+                return;
+            }
+
+            LevelScene_Match3Game currentLevel = GameManager.Instance != null ? GameManager.Instance.CurrentLevel as LevelScene_Match3Game : null;
+            if (currentLevel != null &&
+                ((fromCell?.elementInfo?.elementData != null && currentLevel.garbageBagElementData == fromCell.elementInfo.elementData) ||
+                 (toCell?.elementInfo?.elementData != null && currentLevel.garbageBagElementData == toCell.elementInfo.elementData)))
             {
                 CancelDrag();
                 return;

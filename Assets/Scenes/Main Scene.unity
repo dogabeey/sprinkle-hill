@@ -1630,6 +1630,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6648657062745475262, guid: ee7080004ea30b945828efb7aa1a575c, type: 3}
+      propertyPath: cauldronElementData
+      value: 
+      objectReference: {fileID: 11400000, guid: f531cb99e5512e14fbf93538678a6278, type: 2}
+    - target: {fileID: 6648657062745475262, guid: ee7080004ea30b945828efb7aa1a575c, type: 3}
+      propertyPath: garbageBagElementData
+      value: 
+      objectReference: {fileID: 11400000, guid: 518bd858af96e224fb306e32e60f0080, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5470,11 +5478,15 @@ PrefabInstance:
       objectReference: {fileID: 1759594110}
     - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
       propertyPath: fireEvents.Array.size
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
       propertyPath: 'fireEvents.Array.data[2]'
       value: 1102
+      objectReference: {fileID: 0}
+    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: 'fireEvents.Array.data[3]'
+      value: 810
       objectReference: {fileID: 0}
     - target: {fileID: 5878624774752496449, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
       propertyPath: m_AnchoredPosition.x

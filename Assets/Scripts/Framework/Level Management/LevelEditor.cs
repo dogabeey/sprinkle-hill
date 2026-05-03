@@ -61,9 +61,53 @@ namespace Game
         private bool IsTimerLimit => levelLimitType == LevelLimitType.Timer;
         private bool IsMovesLimit => levelLimitType == LevelLimitType.Moves;
 
+        private static bool IsCauldronElementData(ElementData data)
+        {
+            if (data == null)
+                return false;
+
+            if (GameManager.Instance != null && GameManager.Instance.CurrentLevel is LevelScene_Match3Game runtimeLevel)
+                return runtimeLevel.cauldronElementData == data;
+
+#if UNITY_EDITOR
+            string[] levelGuids = AssetDatabase.FindAssets("t:LevelScene_Match3Game");
+            for (int i = 0; i < levelGuids.Length; i++)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(levelGuids[i]);
+                LevelScene_Match3Game levelScene = AssetDatabase.LoadAssetAtPath<LevelScene_Match3Game>(path);
+                if (levelScene != null && levelScene.cauldronElementData == data)
+                    return true;
+            }
+#endif
+
+            return false;
+        }
+
+        private static bool IsGarbageBagElementData(ElementData data)
+        {
+            if (data == null)
+                return false;
+
+            if (GameManager.Instance != null && GameManager.Instance.CurrentLevel is LevelScene_Match3Game runtimeLevel)
+                return runtimeLevel.garbageBagElementData == data;
+
+#if UNITY_EDITOR
+            string[] levelGuids = AssetDatabase.FindAssets("t:LevelScene_Match3Game");
+            for (int i = 0; i < levelGuids.Length; i++)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(levelGuids[i]);
+                LevelScene_Match3Game levelScene = AssetDatabase.LoadAssetAtPath<LevelScene_Match3Game>(path);
+                if (levelScene != null && levelScene.garbageBagElementData == data)
+                    return true;
+            }
+#endif
+
+            return false;
+        }
+
         private static ElementPowerUpType ResolveElementPowerUpType(ElementData data)
         {
-            return data != null && data.isCauldron ? ElementPowerUpType.Cauldron : ElementPowerUpType.None;
+            return IsCauldronElementData(data) ? ElementPowerUpType.Cauldron : ElementPowerUpType.None;
         }
 
         private static GridElementInfo CreateElementInfo(ElementData data)
@@ -861,9 +905,19 @@ namespace Game
 
         private string GetCategoryBasedOnElementType(ElementData capturedElementData)
         {
-            if (capturedElementData.isCauldron)
+            if (capturedElementData == null)
+                return "Other Elements/";
+
+            if (GameManager.Instance != null && GameManager.Instance.CurrentLevel is LevelScene_Match3Game levelScene)
+            {
+                if (levelScene.cauldronElementData == capturedElementData || levelScene.garbageBagElementData == capturedElementData)
+                    return "Special Elements/";
+            }
+
+            if (IsCauldronElementData(capturedElementData) || IsGarbageBagElementData(capturedElementData))
                 return "Special Elements/";
-            else return "Other Elements/";
+
+            return "Other Elements/";
         }
 #else
         private Grid3D.GridCell DrawGridCells(Rect rect, Grid3D.GridCell value)

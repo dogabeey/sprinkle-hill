@@ -205,7 +205,9 @@ namespace Game
         private int ResolveAnimationLayer()
         {
             ElementData data = elementInfo.elementData;
-            if (data == null || !data.isCauldron || data.elementAnimationsByProgress == null || data.elementAnimationsByProgress.Length == 0)
+            LevelScene_Match3Game levelScene = GameManager.Instance != null ? GameManager.Instance.CurrentLevel as LevelScene_Match3Game : null;
+            bool isCauldronElement = levelScene != null && levelScene.cauldronElementData == data;
+            if (data == null || !isCauldronElement || data.elementAnimationsByProgress == null || data.elementAnimationsByProgress.Length == 0)
                 return 0;
 
             int required = Mathf.Max(1, data.cauldronChargeRequired);

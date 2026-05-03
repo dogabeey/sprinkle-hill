@@ -17,6 +17,8 @@ namespace Game
         private int currentComboCount = 0;
         private PowerUpHandler powerUpHandler;
 
+        private LevelScene_Match3Game Match3Level => GameManager.Instance != null ? GameManager.Instance.CurrentLevel as LevelScene_Match3Game : null;
+
         // ------------------------------------------------------------------
         //  Public accessors used by PowerUpHandler & helpers
         // ------------------------------------------------------------------
@@ -150,6 +152,9 @@ namespace Game
             if (cell?.elementInfo == null || cell.elementInfo.powerUpType != ElementPowerUpType.Cauldron)
                 return false;
 
+            if (!IsCauldronData(cell.elementInfo.elementData))
+                return false;
+
             int required = Mathf.Max(1, cell.elementInfo.elementData != null ? cell.elementInfo.elementData.cauldronChargeRequired : 1);
             return cell.elementInfo.cauldronProgress >= required;
         }
@@ -215,6 +220,9 @@ namespace Game
                 }
                 yield break;
             }
+
+            if (IsGarbageBagCell(firstCell) || IsGarbageBagCell(secondCell))
+                yield break;
 
             if (IsMultiCellElementAnchor(first) || IsMultiCellElementAnchor(second))
                 yield break;
@@ -436,6 +444,9 @@ namespace Game
                     if (cell.cellType != CellType.Normal || cell.elementInfo == null) continue;
 
                     if (TryRevealHiddenBoxAt(pos))
+                        continue;
+
+                    if (IsGarbageBagData(cell.elementInfo.elementData))
                         continue;
 
                     if (PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType))
@@ -1112,7 +1123,7 @@ namespace Game
                 // Fallback: scan instantiated elements
                 foreach (GridElement el in generatedElements)
                     if (el != null && el.elementInfo != null && el.elementInfo.elementData != null &&
-                        !el.elementInfo.elementData.isCauldron &&
+                        !IsCauldronData(el.elementInfo.elementData) &&
                         el.elementInfo.powerUpType == ElementPowerUpType.None && !elementPool.Contains(el.elementInfo.elementData))
                         elementPool.Add(el.elementInfo.elementData);
             }
@@ -1147,6 +1158,31 @@ namespace Game
                         GridCell readCell = GetCell(readPos);
                         GridElementInfo movingInfo = readCell?.elementInfo;
                         if (movingInfo?.elementData == null) continue;
+
+                    if (IsGarbageBagData(movingInfo.elementData) && readY == playableRows[playableRows.Count - 1])
+                    {
+                        NotifyGarbageBagCleaned(readPos, movingInfo.elementData);
+                        readCell.elementInfo = null;
+
+                        if (generatedTiles.TryGetValue(readPos, out GridCellController bagTile) && bagTile != null)
+                        {
+                            GridElement bagElement = bagTile.GetComponentInChildren<GridElement>();
+                            if (bagElement != null)
+                            {
+                                bagElement.transform.SetParent(null, true);
+                                float dropDist = Mathf.Max(0.5f, bagTile.transform.localScale.y);
+                                float dropDur = fallSpeed > 0f ? dropDist / fallSpeed : 0.2f;
+                                gravitySeq.Join(bagElement.transform.DOMove(bagElement.transform.position + Vector3.down * dropDist, dropDur).SetEase(Ease.InQuad));
+                                gravitySeq.Join(bagElement.transform.DOScale(0.92f, dropDur).SetEase(Ease.InQuad));
+                                generatedElements.Remove(bagElement);
+                                Destroy(bagElement.gameObject, dropDur + 0.05f);
+                                hasTween = true;
+                            }
+                        }
+
+                        continue;
+                    }
+
                         if (highestExisting == -1) highestExisting = readIndex;
 
                         int targetY = playableRows[writeIndex];
@@ -1273,6 +1309,9 @@ namespace Game
                         if (TryRevealHiddenBoxAt(pos))
                             continue;
 
+                        if (IsGarbageBagData(cell.elementInfo.elementData))
+                            continue;
+
                         if (PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType))
                         {
                             StartCoroutine(powerUpHandler.ActivateAt(pos, null));
@@ -1371,6 +1410,30 @@ namespace Game
             return cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron;
         }
 
+        private static bool IsGarbageBagData(ElementData data)
+        {
+            LevelScene_Match3Game levelScene = GameManager.Instance != null ? GameManager.Instance.CurrentLevel as LevelScene_Match3Game : null;
+            return levelScene != null && data != null && levelScene.garbageBagElementData == data;
+        }
+
+        private bool IsCauldronData(ElementData data)
+        {
+            return Match3Level != null && data != null && Match3Level.cauldronElementData == data;
+        }
+
+        private static bool IsGarbageBagCell(GridCell cell)
+        {
+            return cell != null && cell.cellType == CellType.Normal && cell.elementInfo != null && IsGarbageBagData(cell.elementInfo.elementData);
+        }
+
+        private static void NotifyGarbageBagCleaned(Vector2Int pos, ElementData data)
+        {
+            EventManager.TriggerEvent(GameEvent.GARBAGE_CLEANED, new EventParam(
+                vectorList: new Vector3[] { new Vector3(pos.x, pos.y, 0f) },
+                paramScriptable: data
+            ));
+        }
+
         private void NormalizeSpecialElementInfo(GridCell cell)
         {
             if (cell?.elementInfo == null)
@@ -1380,7 +1443,7 @@ namespace Game
             if (data == null)
                 return;
 
-            if (data.isCauldron)
+            if (IsCauldronData(data))
             {
                 cell.elementInfo.powerUpType = ElementPowerUpType.Cauldron;
                 if (cell.elementInfo.cauldronProgress < 0)
@@ -1396,7 +1459,7 @@ namespace Game
         private List<ElementData> BuildElementPool()
         {
             List<ElementData> configuredPool = GetConfiguredElementPool();
-            configuredPool.RemoveAll(d => d == null || d.isCauldron || IsMultiCellData(d));
+            configuredPool.RemoveAll(d => d == null || IsCauldronData(d) || IsMultiCellData(d));
             if (configuredPool.Count > 0)
             {
                 return configuredPool;
@@ -1408,7 +1471,7 @@ namespace Game
                 {
                     GridCell cell = GetCell(new Vector2Int(x, y));
                     ElementData data = cell?.elementInfo?.elementData;
-                    if (data != null && !data.isCauldron && !IsMultiCellData(data) && cell.elementInfo.powerUpType == ElementPowerUpType.None && !pool.Contains(data))
+                    if (data != null && !IsCauldronData(data) && !IsMultiCellData(data) && cell.elementInfo.powerUpType == ElementPowerUpType.None && !pool.Contains(data))
                         pool.Add(data);
                 }
             return pool;
@@ -1446,6 +1509,7 @@ namespace Game
                    cell.elementInfo != null &&
                    cell.elementInfo.elementData != null &&
                    !IsMultiCellData(cell.elementInfo.elementData) &&
+                   !IsGarbageBagData(cell.elementInfo.elementData) &&
                    !cell.elementInfo.isHidden &&
                    cell.elementInfo.powerUpType == ElementPowerUpType.None;
         }

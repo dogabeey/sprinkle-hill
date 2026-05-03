@@ -66,6 +66,11 @@ namespace Game
         [FoldoutGroup("Power Up Settings")]
         public ElementData discoBallElementData;
 
+        [FoldoutGroup("Special Element Settings")]
+        public ElementData cauldronElementData;
+        [FoldoutGroup("Special Element Settings")]
+        public ElementData garbageBagElementData;
+
         [FoldoutGroup("Stage Transition")]
         public TMP_Text stageCompletePopupTextPrefab;
 

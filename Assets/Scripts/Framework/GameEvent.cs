@@ -57,6 +57,7 @@ public enum GameEvent
     BREAKABLE_WALL_CREATED = 807,
     HIDDEN_BOX_CREATED = 808,
     HIDDEN_BOX_REVEALED = 810,
+    GARBAGE_CLEANED = 811,
 
     // Ad Events
     AD_SHOWN = 900,
