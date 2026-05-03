@@ -357,6 +357,44 @@ namespace Game
         }
 
 #if UNITY_EDITOR
+        private void ShowElementInfoMenu(Grid3D.GridCell cell)
+        {
+            if (cell == null || cell.elementInfo == null)
+                return;
+
+            GridElementInfo info = cell.elementInfo;
+            GenericMenu menu = new GenericMenu();
+
+            menu.AddDisabledItem(new GUIContent("Element Info"));
+            menu.AddDisabledItem(new GUIContent($"Element Data: {(info.elementData != null ? info.elementData.name : "<none>")}"));
+            menu.AddSeparator("");
+
+            menu.AddItem(new GUIContent("Random Element"), info.randomElement, () =>
+            {
+                info.randomElement = !info.randomElement;
+                if (info.randomElement)
+                {
+                    info.powerUpType = ElementPowerUpType.None;
+                    info.cauldronProgress = 0;
+                }
+                MarkDirty();
+            });
+
+            menu.AddItem(new GUIContent("Sparkling"), info.isSparkling, () =>
+            {
+                info.isSparkling = !info.isSparkling;
+                MarkDirty();
+            });
+
+            menu.AddItem(new GUIContent("Hidden"), info.isHidden, () =>
+            {
+                info.isHidden = !info.isHidden;
+                MarkDirty();
+            });
+
+            menu.ShowAsContext();
+        }
+
         [Button]
         public void InitializeArray()
         {
@@ -522,6 +560,10 @@ namespace Game
             Color breakableWallColor = new Color(1f, 0.5f, 0.2f, 0.8f);
             Color unbreakableWallColor = new Color(0.35f, 0.35f, 0.35f, 0.9f);
             Rect elementRect = new Rect(rect.x + rect.width * 0.1f, rect.y + rect.height * 0.1f, rect.width * 0.8f, rect.height * 0.8f);
+            float indicatorSize = Mathf.Min(rect.width, rect.height) * 0.26f;
+            float indicatorPadding = Mathf.Min(rect.width, rect.height) * 0.05f;
+            Rect hiddenIndicatorRect = new Rect(rect.x + indicatorPadding, rect.y + indicatorPadding, indicatorSize, indicatorSize);
+            Rect sparklingIndicatorRect = new Rect(hiddenIndicatorRect.xMax + indicatorPadding * 0.6f, rect.y + indicatorPadding, indicatorSize, indicatorSize);
 
             switch (value.cellType)
             {
@@ -569,6 +611,49 @@ namespace Game
                 }
             }
 
+            if (value.cellType == Grid3D.CellType.Normal && value.elementInfo != null)
+            {
+                Gfx gfx = GameManager.Instance != null ? GameManager.Instance.gfxManager : null;
+
+                if (value.elementInfo.isHidden)
+                {
+                    Sprite hiddenIcon = gfx != null ? gfx.hiddenIndicatorIcon : null;
+                    if (hiddenIcon != null && hiddenIcon.texture != null)
+                    {
+                        Rect hiddenSpriteRect = hiddenIcon.textureRect;
+                        Rect hiddenUv = new Rect(
+                            hiddenSpriteRect.x / hiddenIcon.texture.width,
+                            hiddenSpriteRect.y / hiddenIcon.texture.height,
+                            hiddenSpriteRect.width / hiddenIcon.texture.width,
+                            hiddenSpriteRect.height / hiddenIcon.texture.height);
+                        GUI.DrawTextureWithTexCoords(hiddenIndicatorRect, hiddenIcon.texture, hiddenUv, true);
+                    }
+                    else
+                    {
+                        EditorGUI.LabelField(hiddenIndicatorRect, "H", EditorStyles.whiteMiniLabel);
+                    }
+                }
+
+                if (value.elementInfo.isSparkling)
+                {
+                    Sprite sparklingIcon = gfx != null ? gfx.sparklingIndicatorIcon : null;
+                    if (sparklingIcon != null && sparklingIcon.texture != null)
+                    {
+                        Rect sparklingSpriteRect = sparklingIcon.textureRect;
+                        Rect sparklingUv = new Rect(
+                            sparklingSpriteRect.x / sparklingIcon.texture.width,
+                            sparklingSpriteRect.y / sparklingIcon.texture.height,
+                            sparklingSpriteRect.width / sparklingIcon.texture.width,
+                            sparklingSpriteRect.height / sparklingIcon.texture.height);
+                        GUI.DrawTextureWithTexCoords(sparklingIndicatorRect, sparklingIcon.texture, sparklingUv, true);
+                    }
+                    else
+                    {
+                        EditorGUI.LabelField(sparklingIndicatorRect, "S", EditorStyles.whiteMiniLabel);
+                    }
+                }
+            }
+
             if (rect.Contains(Event.current.mousePosition))
             {
                 if (Event.current.type == EventType.KeyDown)
@@ -603,6 +688,12 @@ namespace Game
                             ClearElementsIntersectingArea(cellPos, Vector2Int.one);
                         value.cellType = Grid3D.CellType.UnbreakableWall;
                         value.elementInfo = null;
+                        MarkDirty();
+                        Event.current.Use();
+                    }
+                    else if (Event.current.keyCode == KeyCode.H)
+                    {
+                        value.elementInfo.isHidden = !value.elementInfo.isHidden;
                         MarkDirty();
                         Event.current.Use();
                     }
@@ -642,6 +733,14 @@ namespace Game
                             MarkDirty();
                         }
 
+                        Event.current.Use();
+                    }
+                }
+                else if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
+                {
+                    if (value.cellType == Grid3D.CellType.Normal && value.elementInfo != null)
+                    {
+                        ShowElementInfoMenu(value);
                         Event.current.Use();
                     }
                 }
