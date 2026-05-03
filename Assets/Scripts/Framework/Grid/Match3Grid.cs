@@ -434,6 +434,16 @@ namespace Game
                     if (cell == null) continue;
                     if (cell.cellType == CellType.BreakableWall) { wallsToBreak.Add(pos); continue; }
                     if (cell.cellType != CellType.Normal || cell.elementInfo == null) continue;
+
+                    if (TryRevealHiddenBoxAt(pos))
+                        continue;
+
+                    if (PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType))
+                    {
+                        StartCoroutine(powerUpHandler.ActivateAt(pos, null));
+                        continue;
+                    }
+
                     if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron) continue;
 
                     NotifyElementCleared(pos);
@@ -1260,6 +1270,15 @@ namespace Game
 
                     if (cell.cellType == CellType.Normal && cell.elementInfo != null)
                     {
+                        if (TryRevealHiddenBoxAt(pos))
+                            continue;
+
+                        if (PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType))
+                        {
+                            StartCoroutine(powerUpHandler.ActivateAt(pos, null));
+                            continue;
+                        }
+
                         NotifyElementCleared(pos);
                         cell.elementInfo = null;
 
@@ -1301,6 +1320,16 @@ namespace Game
 
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
             yield return StartCoroutine(ResolveBoardAfterSpecialClear());
+        }
+
+        public bool TryRevealHiddenBoxAt(Vector2Int pos)
+        {
+            GridCell cell = GetCell(pos);
+            if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null || !cell.elementInfo.isHidden)
+                return false;
+
+            RevealHiddenElement(pos);
+            return true;
         }
 
         private Vector3 GetElementCoverageCenterWorld(Vector2Int anchorPos, ElementData data)

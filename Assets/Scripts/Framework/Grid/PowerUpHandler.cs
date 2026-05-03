@@ -596,15 +596,7 @@ namespace Game
 
             public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
             {
-                if (swappedElementData == null)
-                    return Empty();
-
                 return handler.ActivateDiscoBall(pos, swappedElementData);
-            }
-
-            private static IEnumerator Empty()
-            {
-                yield break;
             }
         }
 
@@ -1073,6 +1065,16 @@ namespace Game
             Grid3D.GridCell cell = grid.GetCellPublic(pos);
             if (cell == null) return;
             if (cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null) return;
+
+            if (grid.TryRevealHiddenBoxAt(pos))
+                return;
+
+            if (IsSpecialPowerUp(cell.elementInfo.powerUpType))
+            {
+                grid.StartCoroutine(ActivateAt(pos, null));
+                return;
+            }
+
             if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron) return;
 
             grid.NotifyElementCleared(pos);
