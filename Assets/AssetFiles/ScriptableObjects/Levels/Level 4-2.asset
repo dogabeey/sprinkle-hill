@@ -15,7 +15,10 @@ MonoBehaviour:
   serializationData:
     SerializedFormat: 2
     SerializedBytes: 
-    ReferencedUnityObjects: []
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 15add8ec82c964f4fa95e19e667720e0, type: 2}
+    - {fileID: 11400000, guid: 0aff893b628e16b449d95f9a8befead9, type: 2}
+    - {fileID: 11400000, guid: 2c060768e07cda04dabcaaa5a6beefdf, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -277,11 +280,11 @@ MonoBehaviour:
       Entry: 7
       Data: 12|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: randomElement
       Entry: 5
-      Data: true
+      Data: false
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -322,11 +325,11 @@ MonoBehaviour:
       Entry: 7
       Data: 14|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: randomElement
       Entry: 5
-      Data: true
+      Data: false
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -467,7 +470,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -512,7 +515,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -557,7 +560,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -602,7 +605,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -647,7 +650,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -692,7 +695,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -727,11 +730,11 @@ MonoBehaviour:
       Entry: 7
       Data: 32|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 1
     - Name: randomElement
       Entry: 5
-      Data: true
+      Data: false
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -827,7 +830,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -872,7 +875,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -917,7 +920,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -962,7 +965,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -1007,7 +1010,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -1052,7 +1055,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -1087,11 +1090,11 @@ MonoBehaviour:
       Entry: 7
       Data: 48|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: randomElement
       Entry: 5
-      Data: true
+      Data: false
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1187,7 +1190,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -1232,7 +1235,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -1277,7 +1280,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -1322,7 +1325,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -1367,7 +1370,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -1412,7 +1415,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -1447,11 +1450,11 @@ MonoBehaviour:
       Entry: 7
       Data: 64|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 1
     - Name: randomElement
       Entry: 5
-      Data: true
+      Data: false
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1547,7 +1550,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -1592,7 +1595,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -1637,7 +1640,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -1682,7 +1685,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -1727,7 +1730,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -1772,7 +1775,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -1807,11 +1810,11 @@ MonoBehaviour:
       Entry: 7
       Data: 80|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 1
     - Name: randomElement
       Entry: 5
-      Data: true
+      Data: false
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1907,7 +1910,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -1952,7 +1955,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -1997,7 +2000,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -2042,7 +2045,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -2087,7 +2090,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -2132,7 +2135,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -2167,11 +2170,11 @@ MonoBehaviour:
       Entry: 7
       Data: 96|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 2
     - Name: randomElement
       Entry: 5
-      Data: true
+      Data: false
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -2267,7 +2270,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -2312,7 +2315,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -2357,7 +2360,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -2402,7 +2405,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -2447,7 +2450,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -2492,7 +2495,7 @@ MonoBehaviour:
       Data: false
     - Name: isHidden
       Entry: 5
-      Data: false
+      Data: true
     - Name: powerUpType
       Entry: 3
       Data: 0
@@ -2527,11 +2530,11 @@ MonoBehaviour:
       Entry: 7
       Data: 112|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 1
     - Name: randomElement
       Entry: 5
-      Data: true
+      Data: false
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -2920,22 +2923,11 @@ MonoBehaviour:
   levelCreationMode: 0
   gridSize: {x: 8, y: 8}
   objectives:
-  - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
+  - objectiveType: {fileID: 11400000, guid: 2924a1c735ccd1f41ad2be98faceb972, type: 2}
     isProcedurallyGenerated: 0
-    scriptableObjectParameter: {fileID: 11400000, guid: 5f772a775fbc8914ea43012dba006383, type: 2}
-    requiredCount: 16
-    generatedCount: {x: 0, y: 0}
-    isCompleted: 0
-  - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
-    isProcedurallyGenerated: 0
-    scriptableObjectParameter: {fileID: 11400000, guid: f006bee3086de89498bb86a23191f83c, type: 2}
-    requiredCount: 20
-    generatedCount: {x: 0, y: 0}
-    isCompleted: 0
-  - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
-    isProcedurallyGenerated: 0
-    scriptableObjectParameter: {fileID: 11400000, guid: 4fe8a0c53d743b842b064651e77b0934, type: 2}
-    requiredCount: 25
+    autoCountRequiredCount: 1
+    scriptableObjectParameter: {fileID: 0}
+    requiredCount: 0
     generatedCount: {x: 0, y: 0}
     isCompleted: 0
   specialWinEvent: 0

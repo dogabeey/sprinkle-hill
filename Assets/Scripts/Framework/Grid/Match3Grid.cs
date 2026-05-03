@@ -838,6 +838,14 @@ namespace Game
                             paramScriptable: cell.elementInfo.elementData
                         ));
                     }
+
+                    if (IsGarbageBagData(cell.elementInfo.elementData))
+                    {
+                        EventManager.TriggerEvent(GameEvent.GARBAGE_CREATED, new EventParam(
+                            vectorList: new Vector3[] { new Vector3(cell.coordinates.x, cell.coordinates.y, 0f) },
+                            paramScriptable: cell.elementInfo.elementData
+                        ));
+                    }
                 }
             }
 
@@ -1173,7 +1181,7 @@ namespace Game
                             {
                                 bagElement.transform.SetParent(null, true);
                                 float dropDist = Mathf.Max(0.5f, bagTile.transform.localScale.y);
-                                float dropDur = fallSpeed > 0f ? dropDist / fallSpeed : 0.2f;
+                                float dropDur = 0f;
                                 gravitySeq.Join(bagElement.transform.DOMove(bagElement.transform.position + Vector3.down * dropDist, dropDur).SetEase(Ease.InQuad));
                                 gravitySeq.Join(bagElement.transform.DOScale(0.92f, dropDur).SetEase(Ease.InQuad));
                                 generatedElements.Remove(bagElement);
@@ -1208,8 +1216,8 @@ namespace Game
                                     bagElement.transform.SetParent(null, true);
                                     float dropDist = Mathf.Max(0.5f, toTile.transform.localScale.y);
                                     Vector3 endWorld = toTile.transform.position + Vector3.down * dropDist;
-                                    float worldDist = Vector3.Distance(bagElement.transform.position, endWorld);
-                                    float dropDur = fallSpeed > 0f ? worldDist / fallSpeed : 0.2f;
+                                    float regularFallDist = Vector3.Distance(bagElement.transform.position, toTile.transform.position);
+                                    float dropDur = fallSpeed > 0f ? regularFallDist / fallSpeed : 0.2f;
                                     gravitySeq.Join(bagElement.transform.DOMove(endWorld, dropDur).SetEase(Ease.InQuad));
                                     gravitySeq.Join(bagElement.transform.DOScale(0.92f, dropDur).SetEase(Ease.InQuad));
                                     generatedElements.Remove(bagElement);

@@ -2208,8 +2208,9 @@ MonoBehaviour:
   objectives:
   - objectiveType: {fileID: 11400000, guid: bc27c85d73dea714589531fcf14549f0, type: 2}
     isProcedurallyGenerated: 0
+    autoCountRequiredCount: 1
     scriptableObjectParameter: {fileID: 0}
-    requiredCount: 28
+    requiredCount: 0
     generatedCount: {x: 0, y: 0}
     isCompleted: 0
   specialWinEvent: 0

@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectiveTypeName: Element Collection
   description: Break %c walls.
+  creationCountEvent: 807
   completionEvent: 801
   objectiveTypeSprite: {fileID: 1909799903, guid: cca08bb4584b9214bb9e96f1234a95f0, type: 3}
