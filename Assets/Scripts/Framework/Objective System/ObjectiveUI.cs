@@ -36,6 +36,7 @@ public class UpperPanelUI : UIElement
     {
         base.OnEnable();
         EventManager.StartListening(GameEvent.OBJECTIVES_INITIALIZED, OnObjectivesInitialized);
+        InstantiateObjectiveNodes();
     }
 
     protected override void OnDisable()
@@ -52,7 +53,20 @@ public class UpperPanelUI : UIElement
     }
     public override void DrawUI()
     {
+        EnsureObjectiveNodesSynced();
         UpdateObjectiveNodes();
+    }
+
+    private void EnsureObjectiveNodesSynced()
+    {
+        int activeCount = objectiveManager != null && objectiveManager.activeObjectives != null
+            ? objectiveManager.activeObjectives.Count
+            : 0;
+
+        if (objectiveNodes.Count != activeCount)
+        {
+            InstantiateObjectiveNodes();
+        }
     }
 
     private void InstantiateObjectiveNodes()

@@ -2923,7 +2923,14 @@ MonoBehaviour:
   levelDifficulty: 1
   levelCreationMode: 0
   gridSize: {x: 8, y: 8}
-  objectives: []
+  objectives:
+  - objectiveType: {fileID: 11400000, guid: 2924a1c735ccd1f41ad2be98faceb972, type: 2}
+    isProcedurallyGenerated: 0
+    autoCountRequiredCount: 1
+    scriptableObjectParameter: {fileID: 0}
+    requiredCount: 0
+    generatedCount: {x: 0, y: 0}
+    isCompleted: 0
   specialWinEvent: 0
   targetElement: {fileID: 0}
   levelLimitType: 1

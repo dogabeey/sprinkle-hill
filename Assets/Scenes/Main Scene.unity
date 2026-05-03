@@ -5468,6 +5468,14 @@ PrefabInstance:
       propertyPath: objectiveManager
       value: 
       objectReference: {fileID: 1759594110}
+    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: fireEvents.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: 'fireEvents.Array.data[2]'
+      value: 1102
+      objectReference: {fileID: 0}
     - target: {fileID: 5878624774752496449, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -30.000015

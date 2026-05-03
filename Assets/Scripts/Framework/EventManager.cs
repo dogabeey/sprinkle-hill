@@ -173,6 +173,7 @@ public class EventManager : ScriptableObject, IManager
     public static void TriggerEvent(GameEvent eventName)
     {
         TriggerEvent(eventName.ToString());
+        Debug.Log($"Event triggered: {eventName}");
     }
 
     public static void TriggerEvent(string eventName, EventParam eventParam)

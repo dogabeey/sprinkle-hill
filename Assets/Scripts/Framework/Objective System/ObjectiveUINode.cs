@@ -23,7 +23,8 @@ public class ObjectiveUINode : MonoBehaviour
     }
     public void UpdateNode(int currentCount)
     {
-        countText.text = currentCount <= 0 ? string.Empty : currentCount.ToString();
-        checkmarkIcon.enabled = currentCount <= 0;
+        bool isCompleted = referenceObjective != null && referenceObjective.isCompleted;
+        countText.text = isCompleted ? string.Empty : Mathf.Max(0, currentCount).ToString();
+        checkmarkIcon.enabled = isCompleted;
     }
 }

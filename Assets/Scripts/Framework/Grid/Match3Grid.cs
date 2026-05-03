@@ -809,6 +809,14 @@ namespace Game
                     generatedElements.Add(element);
                     element.InitElement(this, element.elementInfo);
                     powerUpHandler.ApplySortingBoost(element, cell.elementInfo.powerUpType == ElementPowerUpType.Bomb);
+
+                    if (cell.elementInfo.isHidden)
+                    {
+                        EventManager.TriggerEvent(GameEvent.HIDDEN_BOX_CREATED, new EventParam(
+                            vectorList: new Vector3[] { new Vector3(cell.coordinates.x, cell.coordinates.y, 0f) },
+                            paramScriptable: cell.elementInfo.elementData
+                        ));
+                    }
                 }
             }
 

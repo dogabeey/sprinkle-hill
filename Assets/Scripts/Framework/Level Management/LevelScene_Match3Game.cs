@@ -519,6 +519,7 @@ namespace Game
                 {
                     objectiveType = objective.objectiveType,
                     isProcedurallyGenerated = objective.isProcedurallyGenerated,
+                    autoCountRequiredCount = objective.autoCountRequiredCount,
                     scriptableObjectParameter = scriptableParameter,
                     requiredCount = requiredCount,
                     initialRequiredCount = requiredCount,
