@@ -117,6 +117,13 @@ namespace Game
                             Vector2Int coordinates = new Vector2Int(i, j);
                             cellController.Bind(coordinates);
                             generatedTileDict.Add(coordinates, cellController);
+
+                            if (isBreakableWall)
+                            {
+                                EventManager.TriggerEvent(GameEvent.BREAKABLE_WALL_CREATED, new EventParam(
+                                    vectorList: new Vector3[] { new Vector3(coordinates.x, coordinates.y, 0f) }
+                                ));
+                            }
                         }
                     }
                 }

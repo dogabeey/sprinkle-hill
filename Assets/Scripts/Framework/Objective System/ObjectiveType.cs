@@ -20,6 +20,9 @@ public class ObjectiveType : ScriptableObject
     [Tooltip("Use %o for the objective's display name and %c for the count of the objective.")]
     [TextArea]
     public string description;
+    [Tooltip("This is used to count the required objectives without putting a number manually. For example, if completion event is to collect certain amount of hidden boxes, you can set the creation event to the event that creates the hidden boxes and use this parameter to count how many hidden boxes are created in the level.")]
+    public GameEvent creationCountEvent;
+    [Tooltip("Indicates which game event will reduce the number of required objectives when triggered. This is the main event that will be listened to for this objective.")]
     public GameEvent completionEvent;
     public Sprite objectiveTypeSprite; // This is fallback sprite used when the objective's scriptable object parameter doesn't exist or doesn't have a sprite.
 

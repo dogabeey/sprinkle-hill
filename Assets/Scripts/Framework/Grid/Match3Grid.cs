@@ -1023,6 +1023,11 @@ namespace Game
             cell.elementInfo.isHidden = false;
             GridElement element = GetElementAt(pos);
             if (element != null) element.InitElement(this, cell.elementInfo);
+
+            EventManager.TriggerEvent(GameEvent.HIDDEN_BOX_REVEALED, new EventParam(
+                vectorList: new Vector3[] { new Vector3(pos.x, pos.y, 0f) },
+                paramScriptable: cell.elementInfo.elementData
+            ));
         }
 
         public IEnumerator BreakWallAt(Vector2Int wallPos)

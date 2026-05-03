@@ -43,6 +43,7 @@ namespace Game
             "E: Set cell to Empty\n" +
             "N: Set cell to Normal\n" +
             "B: Set cell to Breakable Wall\n" +
+            "H: Toggle Hidden Element\n" +
             "U: Set cell to Unbreakable Wall\n" +
             "R: Toggle random element marker\n" +
             "Ctrl+R: Assign random element from pool\n" +
