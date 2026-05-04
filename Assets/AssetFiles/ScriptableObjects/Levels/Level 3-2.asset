@@ -51,6 +51,12 @@ MonoBehaviour:
     - Name: elementInfo
       Entry: 6
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -73,6 +79,12 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: 
@@ -120,6 +132,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -164,6 +182,12 @@ MonoBehaviour:
       Data: 0
     - Name: 
       Entry: 8
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
@@ -210,6 +234,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -255,6 +285,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -277,6 +313,12 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: 
@@ -303,6 +345,12 @@ MonoBehaviour:
     - Name: elementInfo
       Entry: 6
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -325,6 +373,12 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: 
@@ -372,6 +426,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -416,6 +476,12 @@ MonoBehaviour:
       Data: 0
     - Name: 
       Entry: 8
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
@@ -462,6 +528,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -506,6 +578,12 @@ MonoBehaviour:
       Data: 0
     - Name: 
       Entry: 8
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
@@ -552,6 +630,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -576,6 +660,12 @@ MonoBehaviour:
     - Name: elementInfo
       Entry: 6
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -598,6 +688,12 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: 
@@ -645,6 +741,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -689,6 +791,12 @@ MonoBehaviour:
       Data: 0
     - Name: 
       Entry: 8
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
@@ -735,6 +843,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -779,6 +893,12 @@ MonoBehaviour:
       Data: 0
     - Name: 
       Entry: 8
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
@@ -825,6 +945,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -870,6 +996,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -892,6 +1024,12 @@ MonoBehaviour:
       Entry: 3
       Data: 2
     - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: 
@@ -918,6 +1056,12 @@ MonoBehaviour:
     - Name: elementInfo
       Entry: 6
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -940,6 +1084,12 @@ MonoBehaviour:
       Entry: 3
       Data: 2
     - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: 
@@ -966,6 +1116,12 @@ MonoBehaviour:
     - Name: elementInfo
       Entry: 6
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -988,6 +1144,12 @@ MonoBehaviour:
       Entry: 3
       Data: 2
     - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: 
@@ -1014,6 +1176,12 @@ MonoBehaviour:
     - Name: elementInfo
       Entry: 6
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1036,6 +1204,12 @@ MonoBehaviour:
       Entry: 3
       Data: 2
     - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: 
@@ -1062,6 +1236,12 @@ MonoBehaviour:
     - Name: elementInfo
       Entry: 6
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1084,6 +1264,12 @@ MonoBehaviour:
       Entry: 3
       Data: 2
     - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: 
@@ -1110,6 +1296,12 @@ MonoBehaviour:
     - Name: elementInfo
       Entry: 6
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1132,6 +1324,12 @@ MonoBehaviour:
       Entry: 3
       Data: 2
     - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: 
@@ -1158,6 +1356,12 @@ MonoBehaviour:
     - Name: elementInfo
       Entry: 6
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1180,6 +1384,12 @@ MonoBehaviour:
       Entry: 3
       Data: 2
     - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: 
@@ -1206,6 +1416,12 @@ MonoBehaviour:
     - Name: elementInfo
       Entry: 6
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1228,6 +1444,12 @@ MonoBehaviour:
       Entry: 3
       Data: 2
     - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: 
@@ -1254,6 +1476,12 @@ MonoBehaviour:
     - Name: elementInfo
       Entry: 6
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1278,6 +1506,12 @@ MonoBehaviour:
     - Name: elementInfo
       Entry: 6
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1300,6 +1534,12 @@ MonoBehaviour:
       Entry: 3
       Data: 2
     - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: 
@@ -1347,6 +1587,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1391,6 +1637,12 @@ MonoBehaviour:
       Data: 0
     - Name: 
       Entry: 8
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
@@ -1437,6 +1689,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1481,6 +1739,12 @@ MonoBehaviour:
       Data: 0
     - Name: 
       Entry: 8
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
@@ -1527,6 +1791,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1572,6 +1842,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1594,6 +1870,12 @@ MonoBehaviour:
       Entry: 3
       Data: 2
     - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: 
@@ -1620,6 +1902,12 @@ MonoBehaviour:
     - Name: elementInfo
       Entry: 6
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1642,6 +1930,12 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: 
@@ -1689,6 +1983,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1733,6 +2033,12 @@ MonoBehaviour:
       Data: 0
     - Name: 
       Entry: 8
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
@@ -1779,6 +2085,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1823,6 +2135,12 @@ MonoBehaviour:
       Data: 0
     - Name: 
       Entry: 8
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
@@ -1869,6 +2187,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1891,6 +2215,12 @@ MonoBehaviour:
       Entry: 3
       Data: 2
     - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: 
@@ -1917,6 +2247,12 @@ MonoBehaviour:
     - Name: elementInfo
       Entry: 6
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1941,6 +2277,12 @@ MonoBehaviour:
     - Name: elementInfo
       Entry: 6
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -1963,6 +2305,12 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: 
@@ -2010,6 +2358,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -2054,6 +2408,12 @@ MonoBehaviour:
       Data: 0
     - Name: 
       Entry: 8
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
       Data: 
     - Name: 
       Entry: 8
@@ -2100,6 +2460,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -2145,6 +2511,12 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -2169,6 +2541,12 @@ MonoBehaviour:
     - Name: elementInfo
       Entry: 6
       Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
     - Name: 
       Entry: 8
       Data: 
@@ -2191,6 +2569,12 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: 
