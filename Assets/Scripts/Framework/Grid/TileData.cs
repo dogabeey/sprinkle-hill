@@ -240,7 +240,6 @@ namespace Game
             if (isBreakableWall)
             {
                 string conditionName = sourceCell.breakableWallElementCondition != null ? sourceCell.breakableWallElementCondition.name : "<none>";
-                Debug.Log($"[BreakableWallOverride] RefreshTileSprites() at {coordinates} | condition={conditionName}");
             }
 
             ApplyBreakableWallOverrideSprite(cellController, sourceCell);
@@ -252,13 +251,11 @@ namespace Game
         {
             if (cellController == null || sourceCell == null)
             {
-                Debug.Log("[BreakableWallOverride] Apply aborted: cellController or sourceCell is null.");
                 return;
             }
 
             if (sourceCell.cellType != Grid3D.CellType.BreakableWall)
             {
-                Debug.Log($"[BreakableWallOverride] Apply skipped: cell is not breakable wall at {sourceCell.coordinates} ({sourceCell.cellType}).");
                 return;
             }
 
@@ -266,7 +263,6 @@ namespace Game
             if (conditionedElement == null || conditionedElement.breakableWallOverride == null)
             {
                 string conditionName = conditionedElement != null ? conditionedElement.name : "<none>";
-                Debug.Log($"[BreakableWallOverride] Apply skipped at {sourceCell.coordinates}: condition element or override sprite missing. condition={conditionName}");
                 return;
             }
 
@@ -276,12 +272,10 @@ namespace Game
 
             if (targetRenderer == null)
             {
-                Debug.Log($"[BreakableWallOverride] Apply failed at {sourceCell.coordinates}: no SpriteRenderer found on cell controller {cellController.name}.");
                 return;
             }
 
             targetRenderer.sprite = conditionedElement.breakableWallOverride;
-            Debug.Log($"[BreakableWallOverride] Apply success at {sourceCell.coordinates}: sprite set to '{conditionedElement.breakableWallOverride.name}' from element '{conditionedElement.name}'.");
         }
 
         private Sprite DetermineTileType(bool[,] createData, int x, int y, DrawStartingCorner drawStartingCorner, Grid3D.GridCell[,] gridCells = null, WallSideOverrides wallSideOverrides = WallSideOverrides.None)

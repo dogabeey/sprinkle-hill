@@ -746,6 +746,8 @@ namespace Game
         private Vector2Int PickPropellerTargetPosition(Vector2Int origin)
         {
             List<Vector2Int> breakableAdjacent = new List<Vector2Int>();
+            List<Vector2Int> hiddenElements = new List<Vector2Int>();
+            List<Vector2Int> waferCells = new List<Vector2Int>();
             List<Vector2Int> normalCandidates = new List<Vector2Int>();
             Vector2Int[] offsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
 
@@ -761,6 +763,7 @@ namespace Game
                     if (cell == null || cell.cellType != Grid3D.CellType.Normal)
                         continue;
 
+                    // Check if adjacent to breakable wall (highest priority)
                     bool nearBreakable = false;
                     for (int i = 0; i < offsets.Length; i++)
                     {
@@ -772,13 +775,37 @@ namespace Game
                         }
                     }
 
-                    if (nearBreakable) breakableAdjacent.Add(pos);
-                    else if (cell.elementInfo != null) normalCandidates.Add(pos);
+                    if (nearBreakable)
+                    {
+                        breakableAdjacent.Add(pos);
+                    }
+                    else if (cell.elementInfo != null)
+                    {
+                        // Check for hidden elements (second priority)
+                        if (cell.elementInfo.isHidden)
+                        {
+                            hiddenElements.Add(pos);
+                        }
+                        // Check for wafer features (third priority)
+                        else if (cell.cellFeature != null)
+                        {
+                            waferCells.Add(pos);
+                        }
+                        else
+                        {
+                            normalCandidates.Add(pos);
+                        }
+                    }
                 }
             }
 
+            // Priority: Breakable Walls -> Hidden Elements -> Wafer Features -> Normal Cells
             if (breakableAdjacent.Count > 0)
                 return breakableAdjacent[Random.Range(0, breakableAdjacent.Count)];
+            if (hiddenElements.Count > 0)
+                return hiddenElements[Random.Range(0, hiddenElements.Count)];
+            if (waferCells.Count > 0)
+                return waferCells[Random.Range(0, waferCells.Count)];
             if (normalCandidates.Count > 0)
                 return normalCandidates[Random.Range(0, normalCandidates.Count)];
             return origin;
