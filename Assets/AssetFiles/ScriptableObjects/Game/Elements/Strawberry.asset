@@ -15,12 +15,12 @@ MonoBehaviour:
   displayName: Strawberry
   displayColor: {r: 1, g: 0.042452812, b: 0.042452812, a: 0}
   displayIcon: {fileID: 1038001037, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
+  breakableWallOverride: {fileID: -2113816928, guid: d773595130d903044a6b836c8069db57, type: 3}
   elementMesh: {fileID: 0}
   elementMaterial: {fileID: 0}
   gridCoverage: {x: 1, y: 1}
   defaultIdleAnimation: idle
   animationController: {fileID: 0}
-  isCauldron: 0
   cauldronChargeRequired: 8
   cauldronChargeRadius: 1
   cauldronExplosionParticle: {fileID: 0}
