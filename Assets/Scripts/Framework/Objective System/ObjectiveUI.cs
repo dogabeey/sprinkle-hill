@@ -50,6 +50,7 @@ public class UpperPanelUI : UIElement
         InstantiateObjectiveNodes();
         StartCoroutine(SetObjectiveTargetCoroutine());
         StartCoroutine(UpdateTimerCoroutine());
+        Debug.Log("UpperPanelUI: InitUI called, timer coroutine started.");
     }
     public override void DrawUI()
     {
@@ -111,11 +112,22 @@ public class UpperPanelUI : UIElement
 
     public IEnumerator UpdateTimerCoroutine()
     {
+        Debug.Log("UpperPanelUI: UpdateTimerCoroutine started, waiting for CurrentLevel...");
         yield return new WaitUntil(() => GameManager.Instance.CurrentLevel != null);
         LevelScene_Match3Game levelScene = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
 
+        if (levelScene == null)
+        {
+            Debug.LogError("UpperPanelUI: CurrentLevel is not a LevelScene_Match3Game. Timer/moves display will not work.");
+            yield break;
+        }
+
+        Debug.Log($"UpperPanelUI: Level scene found. Limit type: {levelScene.levelLimitType}, Initial moves: {levelScene.moves}, Initial timer: {levelScene.timer}");
+
         while (true)
         {
+            int timer = levelScene.timer;
+            // 
             if (levelScene.levelLimitType == LevelEditor.LevelLimitType.Moves)
             {
                 timerHeaderText.text = "Move";
@@ -125,17 +137,17 @@ public class UpperPanelUI : UIElement
             else
             {
                 timerHeaderText.text = "Time";
-                int timer = levelScene.timer;
-                if (timer == -1)
-                {
-                    timerText.text = "∞";
-                    timerText.enableAutoSizing = true;
-                }
-                else
-                {
-                    timerText.enableAutoSizing = false;
-                    timerText.text = Mathf.Max(0, timer).ToString();
-                }
+            }
+
+            if (timer == -1)
+            {
+                timerText.text = "∞";
+                timerText.enableAutoSizing = true;
+            }
+            else
+            {
+                timerText.enableAutoSizing = false;
+                timerText.text = Mathf.Max(0, timer).ToString();
             }
 
             if (levelScene.isEnded)
