@@ -14,6 +14,12 @@ namespace Game
         public Transform stageIndicatorContainer;
 
         internal LevelScene_Match3Game currentLevel;
+
+        private void Start()
+        {
+            
+        }
+
         public override void InitUI()
         {
             currentLevel = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
@@ -37,6 +43,7 @@ namespace Game
             float currentFillAmount = fillImage.fillAmount;
 
             ObjectiveManager objectiveManager = ObjectiveManager.Instance;
+            currentLevel = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
             int totalStages = currentLevel.levelEditors.Count;
             float totalObjectives = objectiveManager.GetTotalInitialObjectives();
             float remainingObjectives = objectiveManager.GetTotalRemainingObjectives();
