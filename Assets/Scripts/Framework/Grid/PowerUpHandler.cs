@@ -993,6 +993,10 @@ namespace Game
             {
                 Grid3D.GridCell cell = grid.GetCellPublic(current);
                 if (cell == null) break;
+
+                if (cell.cellType == Grid3D.CellType.UnbreakableWall)
+                    break;
+
                 cells.Add(current);
                 current += direction;
             }
