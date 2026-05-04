@@ -951,13 +951,35 @@ namespace Game
 
             HashSet<Vector2Int> walls = new HashSet<Vector2Int>();
             CollectAdjacentWalls(rocketPos, walls);
-            foreach (Vector2Int cell in rightCells) CollectAdjacentWalls(cell, walls);
-            foreach (Vector2Int cell in leftCells) CollectAdjacentWalls(cell, walls);
-            foreach (Vector2Int cell in upCells) CollectAdjacentWalls(cell, walls);
-            foreach (Vector2Int cell in downCells) CollectAdjacentWalls(cell, walls);
+            CollectAffectedWallsForRocketLine(rightCells, walls);
+            CollectAffectedWallsForRocketLine(leftCells, walls);
+            CollectAffectedWallsForRocketLine(upCells, walls);
+            CollectAffectedWallsForRocketLine(downCells, walls);
 
             yield return grid.StartCoroutine(grid.BreakWallsSimultaneous(walls));
             yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
+        }
+
+        private void CollectAffectedWallsForRocketLine(List<Vector2Int> lineCells, HashSet<Vector2Int> walls)
+        {
+            if (lineCells == null)
+                return;
+
+            for (int i = 0; i < lineCells.Count; i++)
+            {
+                Vector2Int pos = lineCells[i];
+                Grid3D.GridCell cell = grid.GetCellPublic(pos);
+                if (cell == null)
+                    continue;
+
+                if (cell.cellType == Grid3D.CellType.BreakableWall)
+                {
+                    walls.Add(pos);
+                    continue;
+                }
+
+                CollectAdjacentWalls(pos, walls);
+            }
         }
 
         private List<Vector2Int> CollectLineCells(Vector2Int origin, Vector2Int direction)
