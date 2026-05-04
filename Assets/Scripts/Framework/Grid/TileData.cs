@@ -157,6 +157,83 @@ namespace Game
             return generatedTileDict;
         }
 
+        public void RefreshTileSprites(Dictionary<Vector2Int, GridCellController> generatedTileDict, Grid3D.GridCell[,] gridCells, Vector2Int center, DrawStartingCorner drawStartingCorner = DrawStartingCorner.TopLeft, bool includeNeighbors = true)
+        {
+            if (generatedTileDict == null || gridCells == null)
+                return;
+
+            bool[,] createData = BuildCreateData(gridCells);
+            ApplyTileSpritesAt(generatedTileDict, gridCells, createData, center.x, center.y, drawStartingCorner);
+
+            if (!includeNeighbors)
+                return;
+
+            for (int dx = -1; dx <= 1; dx++)
+            {
+                for (int dy = -1; dy <= 1; dy++)
+                {
+                    if (dx == 0 && dy == 0)
+                        continue;
+
+                    ApplyTileSpritesAt(generatedTileDict, gridCells, createData, center.x + dx, center.y + dy, drawStartingCorner);
+                }
+            }
+        }
+
+        private bool[,] BuildCreateData(Grid3D.GridCell[,] gridCells)
+        {
+            int width = gridCells.GetLength(0);
+            int height = gridCells.GetLength(1);
+            bool[,] createData = new bool[width, height];
+
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    Grid3D.GridCell cell = gridCells[x, y];
+                    createData[x, y] = cell != null && cell.cellType != Grid3D.CellType.Empty;
+                }
+            }
+
+            return createData;
+        }
+
+        private void ApplyTileSpritesAt(Dictionary<Vector2Int, GridCellController> generatedTileDict, Grid3D.GridCell[,] gridCells, bool[,] createData, int x, int y, DrawStartingCorner drawStartingCorner)
+        {
+            if (x < 0 || y < 0 || x >= gridCells.GetLength(0) || y >= gridCells.GetLength(1))
+                return;
+
+            Vector2Int coordinates = new Vector2Int(x, y);
+            if (!generatedTileDict.TryGetValue(coordinates, out GridCellController cellController) || cellController == null)
+                return;
+
+            Grid3D.GridCell sourceCell = gridCells[x, y];
+            if (sourceCell == null)
+                return;
+
+            bool isBreakableWall = sourceCell.cellType == Grid3D.CellType.BreakableWall;
+            bool isUnbreakableWall = sourceCell.cellType == Grid3D.CellType.UnbreakableWall;
+
+            if (!isBreakableWall)
+            {
+                TileSpriteSet selectedSet = isUnbreakableWall && unbreakableWallTileSprites != null
+                    ? unbreakableWallTileSprites
+                    : normalTileSprites;
+
+                Sprite tileSprite = DetermineTileType(createData, x, y, drawStartingCorner, gridCells);
+                if (cellController.gridSprite != null)
+                {
+                    cellController.gridSprite.sprite = FallbackToErrorTile(tileSprite);
+                    Color currentColor = cellController.gridSprite.color;
+                    cellController.gridSprite.color = selectedSet != null
+                        ? selectedSet.GetColorForTile(coordinates, currentColor)
+                        : currentColor;
+                }
+            }
+
+            ApplyFeatureSprite(cellController, gridCells, x, y, drawStartingCorner);
+        }
+
         private Sprite DetermineTileType(bool[,] createData, int x, int y, DrawStartingCorner drawStartingCorner, Grid3D.GridCell[,] gridCells = null, WallSideOverrides wallSideOverrides = WallSideOverrides.None)
         {
             Grid3D.GridCell sourceCell = gridCells != null &&

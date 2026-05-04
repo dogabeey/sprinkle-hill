@@ -1163,6 +1163,12 @@ namespace Game
             }
 
             cell.cellType = CellType.Normal;
+
+            if (tileGenerationData != null)
+            {
+                tileGenerationData.RefreshTileSprites(generatedTiles, gridCells, wallPos);
+            }
+
             EventManager.TriggerEvent(GameEvent.BREAKABLE_WALL_DESTROYED,
                 new EventParam(vectorList: new Vector3[] { new Vector3(wallPos.x, wallPos.y, 0f) }));
         }
