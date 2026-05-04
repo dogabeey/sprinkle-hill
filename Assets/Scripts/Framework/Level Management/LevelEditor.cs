@@ -141,6 +141,150 @@ namespace Game
             return true;
         }
 
+        private void ApplyElementSelectionToCell(Grid3D.GridCell cell, ElementData selectedElement)
+        {
+            if (cell == null)
+                return;
+
+            if (cell.cellType == Grid3D.CellType.BreakableWall)
+            {
+                cell.breakableWallElementCondition = selectedElement;
+                MarkDirty();
+                return;
+            }
+
+            if (selectedElement == null)
+                return;
+
+            if (TryGetCellCoordinates(cell, out Vector2Int cellPos))
+                PlaceElementAt(cellPos, selectedElement);
+            else
+            {
+                cell.cellType = Grid3D.CellType.Normal;
+                cell.elementInfo = CreateElementInfo(selectedElement);
+            }
+
+            MarkDirty();
+        }
+
+        private void ShowElementSelectionMenu(Grid3D.GridCell cell, bool includeCellFeatureItems)
+        {
+            GenericMenu menu = new GenericMenu();
+            bool isBreakableWall = cell != null && cell.cellType == Grid3D.CellType.BreakableWall;
+            WaferFeature waferFeature = GameManager.Instance != null ? GameManager.Instance.waferFeature : null;
+
+            if (includeCellFeatureItems)
+            {
+                menu.AddItem(new GUIContent("Cell Feature/None"), cell.cellFeature == null, () =>
+                {
+                    cell.cellFeature = null;
+                    MarkDirty();
+                });
+                if (waferFeature != null)
+                {
+                    menu.AddItem(new GUIContent($"Cell Feature/{waferFeature.name}"), cell.cellFeature == waferFeature, () =>
+                    {
+                        cell.cellType = Grid3D.CellType.Normal;
+                        cell.cellFeature = waferFeature;
+                        cell.breakableWallElementCondition = null;
+                        MarkDirty();
+                    });
+                }
+
+                menu.AddSeparator("");
+            }
+
+            if (isBreakableWall)
+            {
+                menu.AddItem(new GUIContent("Break Condition/Clear"), cell.breakableWallElementCondition == null, () =>
+                {
+                    cell.breakableWallElementCondition = null;
+                    MarkDirty();
+                });
+
+                HashSet<ElementData> addedElements = new HashSet<ElementData>();
+                if (elementPool != null)
+                {
+                    for (int i = 0; i < elementPool.Count; i++)
+                    {
+                        ElementData pooledElement = elementPool[i];
+                        if (pooledElement == null || !addedElements.Add(pooledElement))
+                            continue;
+
+                        ElementData capturedPooledElement = pooledElement;
+                        bool isSelected = cell.breakableWallElementCondition == capturedPooledElement;
+                        menu.AddItem(new GUIContent($"Break Condition/{capturedPooledElement.name}"), isSelected, () =>
+                        {
+                            cell.breakableWallElementCondition = capturedPooledElement;
+                            MarkDirty();
+                        });
+                    }
+                }
+
+                menu.ShowAsContext();
+                return;
+            }
+
+            if (elementPool != null && elementPool.Count > 0)
+            {
+                menu.AddItem(new GUIContent("Random Element (Pool)"), false, () =>
+                {
+                    ElementData randomElement = elementPool[Random.Range(0, elementPool.Count)];
+                    ApplyElementSelectionToCell(cell, randomElement);
+                });
+                menu.AddSeparator("");
+            }
+
+            string[] elementGuids = AssetDatabase.FindAssets("t:ElementData");
+            HashSet<ElementData> poolSet = new HashSet<ElementData>();
+            if (elementPool != null)
+            {
+                for (int i = 0; i < elementPool.Count; i++)
+                {
+                    if (elementPool[i] != null)
+                        poolSet.Add(elementPool[i]);
+                }
+            }
+
+            bool addedPoolElements = false;
+            for (int i = 0; i < elementPool.Count; i++)
+            {
+                ElementData pooledElement = elementPool[i];
+                if (pooledElement == null)
+                    continue;
+
+                ElementData capturedPooledElement = pooledElement;
+                menu.AddItem(new GUIContent($"{capturedPooledElement.name} {capturedPooledElement.gridCoverage.x}x{capturedPooledElement.gridCoverage.y}"), false, () =>
+                {
+                    ApplyElementSelectionToCell(cell, capturedPooledElement);
+                });
+                addedPoolElements = true;
+            }
+
+            if (addedPoolElements)
+                menu.AddSeparator("");
+
+            foreach (string guid in elementGuids)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                ElementData elementData = AssetDatabase.LoadAssetAtPath<ElementData>(path);
+                if (elementData != null)
+                {
+                    if (poolSet.Contains(elementData))
+                        continue;
+
+                    ElementData capturedElementData = elementData;
+                    string category = GetCategoryBasedOnElementType(capturedElementData);
+                    menu.AddItem(new GUIContent(category + elementData.name), false, () =>
+                    {
+                        ApplyElementSelectionToCell(cell, capturedElementData);
+                    });
+                }
+            }
+
+            menu.ShowAsContext();
+        }
+
         private ElementData ResolveRandomRuntimeElement(Grid3D.GridCell[,] runtimeCells, int x, int y)
         {
             if (elementPool == null || elementPool.Count == 0)
@@ -510,7 +654,8 @@ namespace Game
                         coordinates = new Vector2Int(x, y),
                         cellType = cellType,
                         elementInfo = elementInfo,
-                        cellFeature = sourceCell != null ? sourceCell.cellFeature : null
+                        cellFeature = sourceCell != null ? sourceCell.cellFeature : null,
+                        breakableWallElementCondition = sourceCell != null ? sourceCell.breakableWallElementCondition : null
                     };
                 }
             }
@@ -604,6 +749,17 @@ namespace Game
             {
                 value.elementInfo = null;
                 value.cellFeature = null;
+            }
+
+            if (value.cellType == Grid3D.CellType.BreakableWall && value.breakableWallElementCondition != null)
+            {
+                GUIStyle conditionStyle = new GUIStyle(EditorStyles.boldLabel)
+                {
+                    alignment = TextAnchor.LowerCenter,
+                    fontSize = Mathf.Max(8, Mathf.RoundToInt(rect.height * 0.16f))
+                };
+                conditionStyle.normal.textColor = Color.white;
+                EditorGUI.LabelField(new Rect(rect.x + 1f, rect.yMax - indicatorSize - 1f, rect.width - 2f, indicatorSize), $"[{value.breakableWallElementCondition.name}]", conditionStyle);
             }
             if (value.cellType == Grid3D.CellType.Normal && value.cellFeature != null)
             {
@@ -715,6 +871,7 @@ namespace Game
                         if (TryGetCellCoordinates(value, out Vector2Int cellPos))
                             ClearElementsIntersectingArea(cellPos, Vector2Int.one);
                         value.cellType = Grid3D.CellType.BreakableWall;
+                        value.breakableWallElementCondition = null;
                         value.elementInfo = null;
                         value.cellFeature = null;
                         MarkDirty();
@@ -725,6 +882,7 @@ namespace Game
                         if (TryGetCellCoordinates(value, out Vector2Int cellPos))
                             ClearElementsIntersectingArea(cellPos, Vector2Int.one);
                         value.cellType = Grid3D.CellType.UnbreakableWall;
+                        value.breakableWallElementCondition = null;
                         value.elementInfo = null;
                         value.cellFeature = null;
                         MarkDirty();
@@ -782,106 +940,15 @@ namespace Game
                         ShowElementInfoMenu(value);
                         Event.current.Use();
                     }
+                    else if (value.cellType == Grid3D.CellType.BreakableWall)
+                    {
+                        ShowElementSelectionMenu(value, false);
+                        Event.current.Use();
+                    }
                 }
                 else if ((Event.current.type == EventType.MouseDown && Event.current.button == 1) || Event.current.type == EventType.ContextClick)
                 {
-                    GenericMenu menu = new GenericMenu();
-
-                    menu.AddItem(new GUIContent("Cell Feature/None"), value.cellFeature == null, () =>
-                    {
-                        value.cellFeature = null;
-                        MarkDirty();
-                    });
-                    menu.AddItem(new GUIContent($"Cell Feature/{waferFeature.name}"), value.cellFeature == waferFeature, () =>
-                    {
-                        value.cellType = Grid3D.CellType.Normal;
-                        value.cellFeature = waferFeature;
-                        MarkDirty();
-                    });
-
-                    menu.AddSeparator("");
-
-                    if (elementPool != null && elementPool.Count > 0)
-                    {
-                        menu.AddItem(new GUIContent("Random Element (Pool)"), false, () =>
-                        {
-                            ElementData randomElement = elementPool[Random.Range(0, elementPool.Count)];
-                            if (randomElement != null)
-                            {
-                                if (TryGetCellCoordinates(value, out Vector2Int cellPos))
-                                    PlaceElementAt(cellPos, randomElement);
-                                else
-                                {
-                                    value.cellType = Grid3D.CellType.Normal;
-                                    value.elementInfo = CreateElementInfo(randomElement);
-                                }
-                                MarkDirty();
-                            }
-                        });
-                        menu.AddSeparator("");
-                    }
-
-                    string[] elementGuids = AssetDatabase.FindAssets("t:ElementData");
-                    HashSet<ElementData> poolSet = new HashSet<ElementData>();
-                    if (elementPool != null)
-                    {
-                        for (int i = 0; i < elementPool.Count; i++)
-                        {
-                            if (elementPool[i] != null)
-                                poolSet.Add(elementPool[i]);
-                        }
-                    }
-
-                    bool addedPoolElements = false;
-                    for (int i = 0; i < elementPool.Count; i++)
-                    {
-                        ElementData pooledElement = elementPool[i];
-                        if (pooledElement == null)
-                            continue;
-
-                        ElementData capturedPooledElement = pooledElement;
-                        menu.AddItem(new GUIContent($"{capturedPooledElement.name} {capturedPooledElement.gridCoverage.x}x{capturedPooledElement.gridCoverage.y}"), false, () =>
-                        {
-                            if (TryGetCellCoordinates(value, out Vector2Int cellPos))
-                                PlaceElementAt(cellPos, capturedPooledElement);
-                            else
-                            {
-                                value.cellType = Grid3D.CellType.Normal;
-                                value.elementInfo = CreateElementInfo(capturedPooledElement);
-                            }
-                            MarkDirty();
-                        });
-                        addedPoolElements = true;
-                    }
-
-                    if (addedPoolElements)
-                        menu.AddSeparator("");
-
-                    foreach (string guid in elementGuids)
-                    {
-                        string path = AssetDatabase.GUIDToAssetPath(guid);
-                        ElementData elementData = AssetDatabase.LoadAssetAtPath<ElementData>(path);
-                        if (elementData != null)
-                        {
-                            if (poolSet.Contains(elementData))
-                                continue;
-
-                            ElementData capturedElementData = elementData;  
-                            string category = GetCategoryBasedOnElementType(capturedElementData);
-                            menu.AddItem(new GUIContent(category + elementData.name), false, () =>
-                            {
-                                if (TryGetCellCoordinates(value, out Vector2Int cellPos))
-                                    PlaceElementAt(cellPos, capturedElementData);
-                                else
-                                {
-                                    value.cellType = Grid3D.CellType.Normal;
-                                    value.elementInfo = CreateElementInfo(capturedElementData);
-                                }
-                                MarkDirty();
-                            });
-                        }
-                    }
-                    menu.ShowAsContext();
+                    ShowElementSelectionMenu(value, true);
                     Event.current.Use();
                 }
             }

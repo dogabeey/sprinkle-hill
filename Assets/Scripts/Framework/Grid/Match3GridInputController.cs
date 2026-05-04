@@ -407,7 +407,7 @@ namespace Game
             bombAction.CurrentCount--;
             yield return StartCoroutine(bombAction.BombThrowAnim(match3Grid.GetCellPositionInGrid(center)));
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: "Bomb Placement"));
-            yield return StartCoroutine(match3Grid.ClearAreaAt(center, 1));
+            yield return StartCoroutine(match3Grid.ClearAreaAt(center, 1, false));
             yield return StartCoroutine(match3Grid.ApplyGravityPublic());
             isProcessing = false;
             idleTimer = 0f;

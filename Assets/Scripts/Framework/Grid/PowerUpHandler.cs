@@ -879,7 +879,7 @@ namespace Game
 
             grid.TriggerCellFeatureMatchedOverAt(bombPos);
             bombCell.elementInfo = null;
-            yield return grid.StartCoroutine(grid.ClearAreaAt(bombPos, 1));
+            yield return grid.StartCoroutine(grid.ClearAreaAt(bombPos, 1, false));
             yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
         }
 
@@ -974,6 +974,9 @@ namespace Game
 
                 if (cell.cellType == Grid3D.CellType.BreakableWall)
                 {
+                    if (cell.breakableWallElementCondition != null)
+                        continue;
+
                     walls.Add(pos);
                     continue;
                 }
@@ -1003,7 +1006,7 @@ namespace Game
             {
                 Vector2Int adj = pos + offsets[i];
                 Grid3D.GridCell cell = grid.GetCellPublic(adj);
-                if (cell != null && cell.cellType == Grid3D.CellType.BreakableWall)
+                if (cell != null && cell.cellType == Grid3D.CellType.BreakableWall && cell.breakableWallElementCondition == null)
                     walls.Add(adj);
             }
         }

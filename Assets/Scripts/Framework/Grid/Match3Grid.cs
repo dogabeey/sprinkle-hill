@@ -452,7 +452,7 @@ namespace Game
         // ------------------------------------------------------------------
         //  Area clear (used by bomb)
         // ------------------------------------------------------------------
-        public IEnumerator ClearAreaAt(Vector2Int center, int radius)
+        public IEnumerator ClearAreaAt(Vector2Int center, int radius, bool allowConditionedBreakableWalls = true)
         {
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
 
@@ -463,7 +463,12 @@ namespace Game
                     Vector2Int pos = new Vector2Int(x, y);
                     GridCell cell = GetCell(pos);
                     if (cell == null) continue;
-                    if (cell.cellType == CellType.BreakableWall) { wallsToBreak.Add(pos); continue; }
+                    if (cell.cellType == CellType.BreakableWall)
+                    {
+                        if (allowConditionedBreakableWalls || cell.breakableWallElementCondition == null)
+                            wallsToBreak.Add(pos);
+                        continue;
+                    }
                     if (cell.cellType != CellType.Normal || cell.elementInfo == null) continue;
 
                     TriggerCellFeatureMatchedOverAt(pos);
@@ -1039,6 +1044,7 @@ namespace Game
                     GridCell cell = GetCell(pos);
                     if (cell?.elementInfo == null) continue;
                     if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron) continue;
+                    ElementData destroyedElementData = cell.elementInfo.elementData;
 
                     GridElement matchedElement = GetElementAt(pos);
                     TriggerCellFeatureMatchedOverAt(pos);
@@ -1071,9 +1077,11 @@ namespace Game
 
                     foreach (Vector2Int offset in adjacentOffsets)
                     {
-                        GridCell adj = GetCell(pos + offset);
+                        Vector2Int adjacentPos = pos + offset;
+                        GridCell adj = GetCell(adjacentPos);
                         if (adj == null) continue;
-                        if (adj.cellType == CellType.BreakableWall) wallsToBreak.Add(pos + offset);
+                        if (adj.cellType == CellType.BreakableWall && CanBreakWallWithElement(adj, destroyedElementData))
+                            wallsToBreak.Add(adjacentPos);
                         if (adj.cellType == CellType.Normal && adj.elementInfo != null && adj.elementInfo.isHidden) hiddenToReveal.Add(pos + offset);
                     }
 
@@ -1171,6 +1179,18 @@ namespace Game
 
             EventManager.TriggerEvent(GameEvent.BREAKABLE_WALL_DESTROYED,
                 new EventParam(vectorList: new Vector3[] { new Vector3(wallPos.x, wallPos.y, 0f) }));
+        }
+
+        private bool CanBreakWallWithElement(GridCell wallCell, ElementData destroyedElementData)
+        {
+            if (wallCell == null || wallCell.cellType != CellType.BreakableWall)
+                return false;
+
+            ElementData requiredElement = wallCell.breakableWallElementCondition;
+            if (requiredElement == null)
+                return true;
+
+            return destroyedElementData == requiredElement;
         }
 
         public IEnumerator BreakWallsSimultaneous(HashSet<Vector2Int> wallPositions)

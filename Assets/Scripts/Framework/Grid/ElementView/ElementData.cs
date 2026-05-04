@@ -18,6 +18,8 @@ public class VisualizableScriptableObject : ScriptableObject
 [CreateAssetMenu(fileName = "ElementVisualData", menuName = "Game/Element Data...")]
 public class ElementData : VisualizableScriptableObject
 {
+    [FoldoutGroup("General")]
+    public Sprite breakableWallOverride;
     public Mesh elementMesh;
     public Material elementMaterial;
     public Vector2Int gridCoverage = Vector2Int.one;
