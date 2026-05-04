@@ -135,8 +135,57 @@ namespace Game
                     }
                 }
             }
+
             position = default;
             return false;
+        }
+
+        private void TriggerCellFeaturesForMatchedGroups(List<List<Vector2Int>> matchedGroups)
+        {
+            if (matchedGroups == null || matchedGroups.Count == 0)
+                return;
+
+            HashSet<Vector2Int> allMatchedPositions = new HashSet<Vector2Int>();
+            for (int i = 0; i < matchedGroups.Count; i++)
+            {
+                List<Vector2Int> group = matchedGroups[i];
+                if (group == null)
+                    continue;
+
+                for (int j = 0; j < group.Count; j++)
+                    allMatchedPositions.Add(group[j]);
+            }
+
+            if (allMatchedPositions.Count == 0)
+                return;
+
+            Vector2Int[] adjacentOffsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            HashSet<Vector2Int> adjacentProcessed = new HashSet<Vector2Int>();
+
+            foreach (Vector2Int matchedPos in allMatchedPositions)
+            {
+                GridCell matchedCell = GetCell(matchedPos);
+                GridElement matchedElement = GetElementAt(matchedPos);
+
+                if (matchedCell?.cellFeature != null)
+                    matchedCell.cellFeature.OnElementMatchedOverTheCell(matchedCell, matchedElement);
+
+                for (int i = 0; i < adjacentOffsets.Length; i++)
+                {
+                    Vector2Int adjacentPos = matchedPos + adjacentOffsets[i];
+                    if (!adjacentProcessed.Add(adjacentPos))
+                        continue;
+
+                    if (allMatchedPositions.Contains(adjacentPos))
+                        continue;
+
+                    GridCell adjacentCell = GetCell(adjacentPos);
+                    if (adjacentCell?.cellFeature == null)
+                        continue;
+
+                    adjacentCell.cellFeature.OnElementMatchedAdjacentToTheCell(adjacentCell, matchedCell, matchedElement);
+                }
+            }
         }
 
         public static bool AreAdjacent(Vector2Int a, Vector2Int b)
@@ -325,6 +374,8 @@ namespace Game
                     EventManager.TriggerEvent(GameEvent.ELEMENT_MATCHED, new EventParam(
                         paramScriptable: GetCell(group[0])?.elementInfo?.elementData, paramInt: group.Count));
 
+                TriggerCellFeaturesForMatchedGroups(matchedGroups);
+
                 // Clear
                 yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions));
 
@@ -398,6 +449,8 @@ namespace Game
                 foreach (var group in matchedGroups)
                     EventManager.TriggerEvent(GameEvent.ELEMENT_MATCHED, new EventParam(
                         paramScriptable: GetCell(group[0])?.elementInfo?.elementData, paramInt: group.Count));
+
+                TriggerCellFeaturesForMatchedGroups(matchedGroups);
 
                 yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions));
 
@@ -806,7 +859,13 @@ namespace Game
                 for (int y = 0; y < gridSize.y; y++)
                 {
                     GridCell cell = gridCells[x, y];
-                    if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo?.elementData == null)
+                    bool acceptsElements = cell?.cellFeature == null || cell.cellFeature.AcceptElements;
+                    if (cell != null && cell.cellType == CellType.Normal && !acceptsElements)
+                    {
+                        cell.elementInfo = null;
+                    }
+
+                    if (cell == null || cell.cellType != CellType.Normal || !acceptsElements || cell.elementInfo?.elementData == null)
                         continue;
 
                     NormalizeSpecialElementInfo(cell);
@@ -1527,10 +1586,17 @@ namespace Game
                 GridCell cell = GetCell(pos);
                 if (cell != null && cell.cellType == CellType.Normal)
                 {
+                    bool acceptsElements = cell.cellFeature == null || cell.cellFeature.AcceptElements;
+                    if (!acceptsElements)
+                    {
+                        if (current.Count > 0) { sections.Add(new List<int>(current)); current.Clear(); }
+                        continue;
+                    }
+
                     if (IsCellCoveredByMultiCellElement(pos))
                         continue;
 
-                    if (!IsCauldronCell(cell))
+                    if (!IsCauldronCell(cell) && acceptsElements)
                         current.Add(y);
                 }
                 else

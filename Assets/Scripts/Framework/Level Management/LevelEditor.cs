@@ -47,7 +47,7 @@ namespace Game
             "R: Toggle random element marker\n" +
             "Ctrl+R: Assign random element from pool\n" +
             "1-9: Assign element by indexed asset list\n" +
-            "Right Click: Open element selection menu";
+            "Right Click: Open element/cell feature menu";
 
         [HideIf(nameof(UseProcedural))]
         [TableMatrix(DrawElementMethod = nameof(DrawGridCells), SquareCells = true)]
@@ -507,7 +507,8 @@ namespace Game
                     {
                         coordinates = new Vector2Int(x, y),
                         cellType = cellType,
-                        elementInfo = elementInfo
+                        elementInfo = elementInfo,
+                        cellFeature = sourceCell != null ? sourceCell.cellFeature : null
                     };
                 }
             }
@@ -577,6 +578,7 @@ namespace Game
             float indicatorPadding = Mathf.Min(rect.width, rect.height) * 0.05f;
             Rect hiddenIndicatorRect = new Rect(rect.x + indicatorPadding, rect.y + indicatorPadding, indicatorSize, indicatorSize);
             Rect sparklingIndicatorRect = new Rect(hiddenIndicatorRect.xMax + indicatorPadding * 0.6f, rect.y + indicatorPadding, indicatorSize, indicatorSize);
+            Rect featureIndicatorRect = new Rect(rect.x + indicatorPadding, rect.yMax - indicatorSize - indicatorPadding, indicatorSize * 1.5f, indicatorSize);
 
             switch (value.cellType)
             {
@@ -597,6 +599,7 @@ namespace Game
             if (value.cellType != Grid3D.CellType.Normal)
             {
                 value.elementInfo = null;
+                value.cellFeature = null;
             }
 
             if (value.elementInfo != null && value.elementInfo.randomElement)
@@ -608,6 +611,11 @@ namespace Game
                 };
                 questionStyle.normal.textColor = Color.white;
                 EditorGUI.LabelField(rect, "?", questionStyle);
+            }
+
+            if (value.cellType == Grid3D.CellType.Normal && value.cellFeature != null)
+            {
+                GUI.DrawTexture(rect, value.cellFeature.featureIcon != null ? value.cellFeature.featureIcon.texture : Texture2D.whiteTexture);
             }
             else if (value.elementInfo != null && value.elementInfo.elementData != null)
             {
@@ -677,6 +685,7 @@ namespace Game
                             ClearElementsIntersectingArea(cellPos, Vector2Int.one);
                         value.cellType = Grid3D.CellType.Empty;
                         value.elementInfo = null;
+                        value.cellFeature = null;
                         MarkDirty();
                         Event.current.Use();
                     }
@@ -692,6 +701,7 @@ namespace Game
                             ClearElementsIntersectingArea(cellPos, Vector2Int.one);
                         value.cellType = Grid3D.CellType.BreakableWall;
                         value.elementInfo = null;
+                        value.cellFeature = null;
                         MarkDirty();
                         Event.current.Use();
                     }
@@ -701,6 +711,7 @@ namespace Game
                             ClearElementsIntersectingArea(cellPos, Vector2Int.one);
                         value.cellType = Grid3D.CellType.UnbreakableWall;
                         value.elementInfo = null;
+                        value.cellFeature = null;
                         MarkDirty();
                         Event.current.Use();
                     }
@@ -760,6 +771,21 @@ namespace Game
                 else if ((Event.current.type == EventType.MouseDown && Event.current.button == 1) || Event.current.type == EventType.ContextClick)
                 {
                     GenericMenu menu = new GenericMenu();
+
+                    menu.AddItem(new GUIContent("Cell Feature/None"), value.cellFeature == null, () =>
+                    {
+                        value.cellFeature = null;
+                        MarkDirty();
+                    });
+                    WaferFeature waferFeature = GameManager.Instance.waferFeature;
+                    menu.AddItem(new GUIContent($"Cell Feature/{waferFeature.name}"), value.cellFeature == waferFeature, () =>
+                    {
+                        value.cellType = Grid3D.CellType.Normal;
+                        value.cellFeature = waferFeature;
+                        MarkDirty();
+                    });
+
+                    menu.AddSeparator("");
 
                     if (elementPool != null && elementPool.Count > 0)
                     {
@@ -870,7 +896,7 @@ namespace Game
 
             return value;
         }
-
+#endif
         private string GetCategoryBasedOnElementType(ElementData capturedElementData)
         {
             if (capturedElementData == null)
@@ -881,11 +907,5 @@ namespace Game
 
             return "Other Elements/";
         }
-#else
-        private Grid3D.GridCell DrawGridCells(Rect rect, Grid3D.GridCell value)
-        {
-            return value;
-        }
-#endif
     }
 }

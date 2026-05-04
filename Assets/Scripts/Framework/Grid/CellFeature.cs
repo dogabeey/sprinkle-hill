@@ -13,6 +13,8 @@ namespace Game
         /// Visual representation of the cell feature in the cell.
         /// </summary>
         public TileSpriteSet tileSpriteSet;
+        public Sprite featureIcon;
+
         /// <summary>
         /// Indicates whether this cell feature can accept elements to fall into it. If false, the cel this feature is assigned to will act as empty.
         /// </summary>
@@ -32,11 +34,14 @@ namespace Game
 
         public override void OnElementMatchedOverTheCell(Grid3D.GridCell cell, GridElement element)
         {
-            // TO BE IMPLEMENTED
+            if (cell == null)
+                return;
+
+            cell.cellFeature = null;
         }
         public override void OnElementMatchedAdjacentToTheCell(Grid3D.GridCell thisCell, Grid3D.GridCell matchedCell, GridElement element)
         {
-            // TO BE IMPLEMENTED
+            // Wafer is only affected by matches directly over its own cell.
         }
     }
 }

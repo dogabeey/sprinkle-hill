@@ -75,17 +75,15 @@ namespace Game
                                 break;
                         }
 
-                        bool isBreakableWall = gridCells != null &&
-                                               i < gridCells.GetLength(0) &&
-                                               j < gridCells.GetLength(1) &&
-                                               gridCells[i, j] != null &&
-                                               gridCells[i, j].cellType == Grid3D.CellType.BreakableWall;
+                        Grid3D.GridCell sourceCell = gridCells != null &&
+                                                i < gridCells.GetLength(0) &&
+                                                j < gridCells.GetLength(1)
+                            ? gridCells[i, j]
+                            : null;
 
-                        bool isUnbreakableWall = gridCells != null &&
-                                                 i < gridCells.GetLength(0) &&
-                                                 j < gridCells.GetLength(1) &&
-                                                 gridCells[i, j] != null &&
-                                                 gridCells[i, j].cellType == Grid3D.CellType.UnbreakableWall;
+                        bool isBreakableWall = sourceCell != null && sourceCell.cellType == Grid3D.CellType.BreakableWall;
+
+                        bool isUnbreakableWall = sourceCell != null && sourceCell.cellType == Grid3D.CellType.UnbreakableWall;
 
                         GridCellController tilePrefab = isBreakableWall
                             ? (breakableWall != null ? breakableWall : normalCell)
@@ -99,7 +97,9 @@ namespace Game
 
                             if (!isBreakableWall)
                             {
-                                TileSpriteSet selectedSet = isUnbreakableWall && unbreakableWallTileSprites != null
+                                TileSpriteSet selectedSet = sourceCell?.cellFeature != null && sourceCell.cellFeature.tileSpriteSet != null
+                                    ? sourceCell.cellFeature.tileSpriteSet
+                                    : isUnbreakableWall && unbreakableWallTileSprites != null
                                     ? unbreakableWallTileSprites
                                     : normalTileSprites;
 
@@ -151,17 +151,15 @@ namespace Game
 
         private Sprite DetermineTileType(bool[,] createData, int x, int y, DrawStartingCorner drawStartingCorner, Grid3D.GridCell[,] gridCells = null, WallSideOverrides wallSideOverrides = WallSideOverrides.None)
         {
-            bool isBreakableWall = gridCells != null &&
-                                   x < gridCells.GetLength(0) &&
-                                   y < gridCells.GetLength(1) &&
-                                   gridCells[x, y] != null &&
-                                   gridCells[x, y].cellType == Grid3D.CellType.BreakableWall;
+            Grid3D.GridCell sourceCell = gridCells != null &&
+                                         x < gridCells.GetLength(0) &&
+                                         y < gridCells.GetLength(1)
+                ? gridCells[x, y]
+                : null;
 
-            bool isUnbreakableWall = gridCells != null &&
-                                     x < gridCells.GetLength(0) &&
-                                     y < gridCells.GetLength(1) &&
-                                     gridCells[x, y] != null &&
-                                     gridCells[x, y].cellType == Grid3D.CellType.UnbreakableWall;
+            bool isBreakableWall = sourceCell != null && sourceCell.cellType == Grid3D.CellType.BreakableWall;
+
+            bool isUnbreakableWall = sourceCell != null && sourceCell.cellType == Grid3D.CellType.UnbreakableWall;
 
             if (isBreakableWall)
             {
@@ -213,7 +211,9 @@ namespace Game
                     break;
             }
 
-            TileSpriteSet selectedSet = isUnbreakableWall && unbreakableWallTileSprites != null
+            TileSpriteSet selectedSet = sourceCell?.cellFeature != null && sourceCell.cellFeature.tileSpriteSet != null
+                ? sourceCell.cellFeature.tileSpriteSet
+                : isUnbreakableWall && unbreakableWallTileSprites != null
                 ? unbreakableWallTileSprites
                 : normalTileSprites;
 
