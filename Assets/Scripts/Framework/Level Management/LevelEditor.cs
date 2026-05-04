@@ -50,7 +50,9 @@ namespace Game
             "Right Click: Open element/cell feature menu";
 
         [HideIf(nameof(UseProcedural))]
+#if UNITY_EDITOR
         [TableMatrix(DrawElementMethod = nameof(DrawGridCells), SquareCells = true)]
+#endif
         [OdinSerialize] private Grid3D.GridCell[,] gridCells;
 
         public Vector2Int GridSize => gridSize;

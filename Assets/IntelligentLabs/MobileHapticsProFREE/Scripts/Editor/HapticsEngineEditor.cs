@@ -5,6 +5,7 @@ using UnityEditor;
 
 namespace MobileHapticsProFreeEdition
 {
+#if UNITY_EDITOR
     [CustomEditor(typeof(GameHaptics))]
     public class HapticsEngineEditor : Editor
     {
@@ -37,4 +38,5 @@ namespace MobileHapticsProFreeEdition
             }
         }
     }
+#endif
 }

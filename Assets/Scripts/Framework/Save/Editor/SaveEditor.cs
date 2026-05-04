@@ -18,8 +18,9 @@ namespace Game
         {
 
         }
-
+#if UNITY_EDITOR
         [MenuItem("Tools/Clear Save Games")]
+#endif
         static void ClearSaves()
         {
             string savePath = SaveManager.Instance.GetSaveFilePath(true) ;
