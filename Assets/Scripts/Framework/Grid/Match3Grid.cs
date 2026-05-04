@@ -140,58 +140,6 @@ namespace Game
             return false;
         }
 
-        private void TriggerCellFeaturesForMatchedGroups(List<List<Vector2Int>> matchedGroups)
-        {
-            if (matchedGroups == null || matchedGroups.Count == 0)
-                return;
-
-            HashSet<Vector2Int> allMatchedPositions = new HashSet<Vector2Int>();
-            for (int i = 0; i < matchedGroups.Count; i++)
-            {
-                List<Vector2Int> group = matchedGroups[i];
-                if (group == null)
-                    continue;
-
-                for (int j = 0; j < group.Count; j++)
-                    allMatchedPositions.Add(group[j]);
-            }
-
-            if (allMatchedPositions.Count == 0)
-                return;
-
-            Vector2Int[] adjacentOffsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
-            HashSet<Vector2Int> adjacentProcessed = new HashSet<Vector2Int>();
-
-            foreach (Vector2Int matchedPos in allMatchedPositions)
-            {
-                GridCell matchedCell = GetCell(matchedPos);
-                GridElement matchedElement = GetElementAt(matchedPos);
-
-                if (matchedCell?.cellFeature != null)
-                {
-                    matchedCell.cellFeature.OnElementMatchedOverTheCell(matchedCell, matchedElement);
-                    RefreshCellFeatureVisual(matchedPos);
-                }
-
-                for (int i = 0; i < adjacentOffsets.Length; i++)
-                {
-                    Vector2Int adjacentPos = matchedPos + adjacentOffsets[i];
-                    if (!adjacentProcessed.Add(adjacentPos))
-                        continue;
-
-                    if (allMatchedPositions.Contains(adjacentPos))
-                        continue;
-
-                    GridCell adjacentCell = GetCell(adjacentPos);
-                    if (adjacentCell?.cellFeature == null)
-                        continue;
-
-                    adjacentCell.cellFeature.OnElementMatchedAdjacentToTheCell(adjacentCell, matchedCell, matchedElement);
-                    RefreshCellFeatureVisual(adjacentPos);
-                }
-            }
-        }
-
         private void RefreshCellFeatureVisual(Vector2Int pos)
         {
             if (tileGenerationData == null)
@@ -400,8 +348,6 @@ namespace Game
                     EventManager.TriggerEvent(GameEvent.ELEMENT_MATCHED, new EventParam(
                         paramScriptable: GetCell(group[0])?.elementInfo?.elementData, paramInt: group.Count));
 
-                TriggerCellFeaturesForMatchedGroups(matchedGroups);
-
                 // Clear
                 yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions));
 
@@ -475,8 +421,6 @@ namespace Game
                 foreach (var group in matchedGroups)
                     EventManager.TriggerEvent(GameEvent.ELEMENT_MATCHED, new EventParam(
                         paramScriptable: GetCell(group[0])?.elementInfo?.elementData, paramInt: group.Count));
-
-                TriggerCellFeaturesForMatchedGroups(matchedGroups);
 
                 yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions));
 
@@ -624,6 +568,7 @@ namespace Game
                 yield return StartCoroutine(AnimateSparklingTrails(sparklingPos, convertedPositions, sparklingElementData));
 
             // Destroy sparkling element
+            TriggerCellFeatureMatchedOverAt(sparklingPos);
             sparklingCell.elementInfo = null;
             GridElement toDestroy = GetElementAt(sparklingPos);
             if (toDestroy != null) StartCoroutine(toDestroy.DestroyElement());
@@ -1060,6 +1005,21 @@ namespace Game
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
             HashSet<Vector2Int> hiddenToReveal = new HashSet<Vector2Int>();
             Vector2Int[] adjacentOffsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            HashSet<Vector2Int> allMatchedPositions = new HashSet<Vector2Int>();
+            HashSet<Vector2Int> adjacentFeatureProcessed = new HashSet<Vector2Int>();
+
+            if (matchedPositions != null)
+            {
+                for (int i = 0; i < matchedPositions.Count; i++)
+                {
+                    List<Vector2Int> group = matchedPositions[i];
+                    if (group == null)
+                        continue;
+
+                    for (int j = 0; j < group.Count; j++)
+                        allMatchedPositions.Add(group[j]);
+                }
+            }
 
             foreach (var group in matchedPositions)
             {
@@ -1080,9 +1040,29 @@ namespace Game
                     if (cell?.elementInfo == null) continue;
                     if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron) continue;
 
+                    GridElement matchedElement = GetElementAt(pos);
+                    TriggerCellFeatureMatchedOverAt(pos);
+
+                    for (int i = 0; i < adjacentOffsets.Length; i++)
+                    {
+                        Vector2Int adjacentPos = pos + adjacentOffsets[i];
+                        if (!adjacentFeatureProcessed.Add(adjacentPos))
+                            continue;
+
+                        if (allMatchedPositions.Contains(adjacentPos))
+                            continue;
+
+                        GridCell adjacentCell = GetCell(adjacentPos);
+                        if (adjacentCell?.cellFeature == null)
+                            continue;
+
+                        adjacentCell.cellFeature.OnElementMatchedAdjacentToTheCell(adjacentCell, cell, matchedElement);
+                        RefreshCellFeatureVisual(adjacentPos);
+                    }
+
                     NotifyElementCleared(pos);
                     cell.elementInfo = null;
-                    GridElement element = GetElementAt(pos);
+                    GridElement element = matchedElement;
                     if (element != null)
                     {
                         if (mergeTarget.HasValue) StartCoroutine(MergeElementIntoTarget(element, mergeTarget.Value));
@@ -1258,6 +1238,7 @@ namespace Game
 
                     if (IsGarbageBagData(movingInfo.elementData) && readY == playableRows[playableRows.Count - 1])
                     {
+                        TriggerCellFeatureMatchedOverAt(readPos);
                         NotifyGarbageBagCleaned(readPos, movingInfo.elementData);
                         readCell.elementInfo = null;
 
@@ -1289,6 +1270,7 @@ namespace Game
 
                         if (IsGarbageBagData(movingInfo.elementData) && targetY == playableRows[playableRows.Count - 1])
                         {
+                            TriggerCellFeatureMatchedOverAt(readPos);
                             NotifyGarbageBagCleaned(targetPos, movingInfo.elementData);
                             readCell.elementInfo = null;
                             targetCell.elementInfo = null;
@@ -1413,6 +1395,7 @@ namespace Game
                 Destroy(fx.gameObject, fx.main.duration + fx.main.startLifetime.constantMax + 0.2f);
             }
 
+            TriggerCellFeatureMatchedOverAt(cauldronPos);
             cauldronCell.elementInfo = null;
 
             Sequence clearSeq = DOTween.Sequence();

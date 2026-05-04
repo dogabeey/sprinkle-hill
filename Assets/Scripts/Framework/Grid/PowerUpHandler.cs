@@ -647,6 +647,7 @@ namespace Game
             }
 
             // Remove logical occupancy, keep visual until trail animation finishes.
+            grid.TriggerCellFeatureMatchedOverAt(discoBallPos);
             discoBallCell.elementInfo = null;
 
             // Collect all eligible normal cells (excluding disco ball's old position)
@@ -736,6 +737,7 @@ namespace Game
                 grid.StartCoroutine(propellerElement.DestroyElement());
             }
 
+            grid.TriggerCellFeatureMatchedOverAt(propellerPos);
             propellerCell.elementInfo = null;
             yield return grid.StartCoroutine(grid.ClearAreaAt(targetPos, 0));
             yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
@@ -875,6 +877,7 @@ namespace Game
                 PlayBombImpactEffects(impactWorldPos);
             }
 
+            grid.TriggerCellFeatureMatchedOverAt(bombPos);
             bombCell.elementInfo = null;
             yield return grid.StartCoroutine(grid.ClearAreaAt(bombPos, 1));
             yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
@@ -887,6 +890,7 @@ namespace Game
             PlayEffect(ConstantManager.SOUNDS.EFFECTS.ROCKET);
 
             GridElement rocketElement = grid.GetElementAt(rocketPos);
+            grid.TriggerCellFeatureMatchedOverAt(rocketPos);
             grid.GetCellPublic(rocketPos).elementInfo = null;
 
             Vector3 originWorld = grid.GetWorldPosition(rocketPos);
