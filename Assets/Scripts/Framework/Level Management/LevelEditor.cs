@@ -580,6 +580,8 @@ namespace Game
             Rect sparklingIndicatorRect = new Rect(hiddenIndicatorRect.xMax + indicatorPadding * 0.6f, rect.y + indicatorPadding, indicatorSize, indicatorSize);
             Rect featureIndicatorRect = new Rect(rect.x + indicatorPadding, rect.yMax - indicatorSize - indicatorPadding, indicatorSize * 1.5f, indicatorSize);
 
+            WaferFeature waferFeature = GameManager.Instance.waferFeature;
+
             switch (value.cellType)
             {
                 case Grid3D.CellType.Normal:
@@ -680,6 +682,16 @@ namespace Game
             {
                 if (Event.current.type == EventType.KeyDown)
                 {
+                    if (Event.current.shift)
+                    {
+                        if(Event.current.keyCode == KeyCode.Z)
+                            {
+                            value.cellType = Grid3D.CellType.Normal;
+                            value.cellFeature = value.cellFeature == waferFeature ? null : waferFeature;
+                            MarkDirty();
+                        }
+                        Event.current.Use();
+                    }
                     if (Event.current.keyCode == KeyCode.E)
                     {
                         if (TryGetCellCoordinates(value, out Vector2Int cellPos))
@@ -778,7 +790,6 @@ namespace Game
                         value.cellFeature = null;
                         MarkDirty();
                     });
-                    WaferFeature waferFeature = GameManager.Instance.waferFeature;
                     menu.AddItem(new GUIContent($"Cell Feature/{waferFeature.name}"), value.cellFeature == waferFeature, () =>
                     {
                         value.cellType = Grid3D.CellType.Normal;
@@ -869,28 +880,6 @@ namespace Game
                         }
                     }
                     menu.ShowAsContext();
-                    Event.current.Use();
-                }
-                else if (Event.current.type == EventType.KeyDown && Event.current.keyCode >= KeyCode.Alpha1 && Event.current.keyCode <= KeyCode.Alpha9)
-                {
-                    int index = Event.current.keyCode - KeyCode.Alpha1;
-                    string[] elementGuids = AssetDatabase.FindAssets("t:ElementData");
-                    if (index < elementGuids.Length)
-                    {
-                        string path = AssetDatabase.GUIDToAssetPath(elementGuids[index]);
-                        ElementData elementData = AssetDatabase.LoadAssetAtPath<ElementData>(path);
-                        if (elementData != null)
-                        {
-                            if (TryGetCellCoordinates(value, out Vector2Int cellPos))
-                                PlaceElementAt(cellPos, elementData);
-                            else
-                            {
-                                value.cellType = Grid3D.CellType.Normal;
-                                value.elementInfo = CreateElementInfo(elementData);
-                            }
-                            MarkDirty();
-                        }
-                    }
                     Event.current.Use();
                 }
             }

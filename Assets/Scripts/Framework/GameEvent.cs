@@ -59,6 +59,8 @@ public enum GameEvent
     GARBAGE_CREATED = 809,
     HIDDEN_BOX_REVEALED = 810,
     GARBAGE_CLEANED = 811,
+    WAFER_CREATED = 812,
+    WAFER_CLEARED = 813,
 
     // Ad Events
     AD_SHOWN = 900,

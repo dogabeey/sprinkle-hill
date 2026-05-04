@@ -126,6 +126,14 @@ namespace Game
                                     vectorList: new Vector3[] { new Vector3(coordinates.x, coordinates.y, 0f) }
                                 ));
                             }
+
+                            if (sourceCell != null && sourceCell.cellFeature is WaferFeature)
+                            {
+                                EventManager.TriggerEvent(GameEvent.WAFER_CREATED, new EventParam(
+                                    vectorList: new Vector3[] { new Vector3(coordinates.x, coordinates.y, 0f) },
+                                    paramScriptable: sourceCell.cellFeature
+                                ));
+                            }
                         }
                     }
                 }

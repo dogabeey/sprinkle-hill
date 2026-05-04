@@ -16,7 +16,6 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 11400000, guid: 518bd858af96e224fb306e32e60f0080, type: 2}
     - {fileID: 11400000, guid: 9a0a4a3b932d9dd48b6c09ede6bf2324, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
@@ -54,11 +53,11 @@ MonoBehaviour:
       Entry: 7
       Data: 2|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -246,11 +245,11 @@ MonoBehaviour:
       Entry: 7
       Data: 10|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -438,11 +437,11 @@ MonoBehaviour:
       Entry: 7
       Data: 18|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -630,11 +629,11 @@ MonoBehaviour:
       Entry: 7
       Data: 26|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -822,11 +821,11 @@ MonoBehaviour:
       Entry: 7
       Data: 34|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1014,11 +1013,11 @@ MonoBehaviour:
       Entry: 7
       Data: 42|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1206,11 +1205,11 @@ MonoBehaviour:
       Entry: 7
       Data: 50|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1398,11 +1397,11 @@ MonoBehaviour:
       Entry: 7
       Data: 58|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1419,8 +1418,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1467,8 +1466,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1590,11 +1589,11 @@ MonoBehaviour:
       Entry: 7
       Data: 66|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1782,11 +1781,11 @@ MonoBehaviour:
       Entry: 7
       Data: 74|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1803,8 +1802,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1852,7 +1851,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 1
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1974,11 +1973,11 @@ MonoBehaviour:
       Entry: 7
       Data: 82|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -2166,11 +2165,11 @@ MonoBehaviour:
       Entry: 7
       Data: 90|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -2358,11 +2357,11 @@ MonoBehaviour:
       Entry: 7
       Data: 98|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -2550,11 +2549,11 @@ MonoBehaviour:
       Entry: 7
       Data: 106|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -2742,11 +2741,11 @@ MonoBehaviour:
       Entry: 7
       Data: 114|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -2934,11 +2933,11 @@ MonoBehaviour:
       Entry: 7
       Data: 122|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false

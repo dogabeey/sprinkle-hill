@@ -37,6 +37,13 @@ namespace Game
             if (cell == null)
                 return;
 
+            EventManager.TriggerEvent(GameEvent.WAFER_CLEARED, new EventParam(
+                paramScriptable: this,
+                vectorList: cell != null
+                    ? new Vector3[] { new Vector3(cell.coordinates.x, cell.coordinates.y, 0f) }
+                    : null
+            ));
+
             cell.cellFeature = null;
         }
         public override void OnElementMatchedAdjacentToTheCell(Grid3D.GridCell thisCell, Grid3D.GridCell matchedCell, GridElement element)
