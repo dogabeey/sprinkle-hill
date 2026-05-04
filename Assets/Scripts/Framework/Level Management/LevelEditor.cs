@@ -601,6 +601,10 @@ namespace Game
                 value.elementInfo = null;
                 value.cellFeature = null;
             }
+            if (value.cellType == Grid3D.CellType.Normal && value.cellFeature != null)
+            {
+                GUI.DrawTexture(rect, value.cellFeature.featureIcon != null ? value.cellFeature.featureIcon.texture : Texture2D.whiteTexture);
+            }
 
             if (value.elementInfo != null && value.elementInfo.randomElement)
             {
@@ -613,11 +617,8 @@ namespace Game
                 EditorGUI.LabelField(rect, "?", questionStyle);
             }
 
-            if (value.cellType == Grid3D.CellType.Normal && value.cellFeature != null)
-            {
-                GUI.DrawTexture(rect, value.cellFeature.featureIcon != null ? value.cellFeature.featureIcon.texture : Texture2D.whiteTexture);
-            }
-            else if (value.elementInfo != null && value.elementInfo.elementData != null)
+
+            if (value.elementInfo != null && value.elementInfo.elementData != null)
             {
                 Sprite icon = value.elementInfo.elementData.displayIcon;
                 if (icon != null && icon.texture != null)

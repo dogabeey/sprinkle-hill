@@ -168,7 +168,10 @@ namespace Game
                 GridElement matchedElement = GetElementAt(matchedPos);
 
                 if (matchedCell?.cellFeature != null)
+                {
                     matchedCell.cellFeature.OnElementMatchedOverTheCell(matchedCell, matchedElement);
+                    RefreshCellFeatureVisual(matchedPos);
+                }
 
                 for (int i = 0; i < adjacentOffsets.Length; i++)
                 {
@@ -184,8 +187,20 @@ namespace Game
                         continue;
 
                     adjacentCell.cellFeature.OnElementMatchedAdjacentToTheCell(adjacentCell, matchedCell, matchedElement);
+                    RefreshCellFeatureVisual(adjacentPos);
                 }
             }
+        }
+
+        private void RefreshCellFeatureVisual(Vector2Int pos)
+        {
+            if (tileGenerationData == null)
+                return;
+
+            if (!generatedTiles.TryGetValue(pos, out GridCellController tile) || tile == null)
+                return;
+
+            tileGenerationData.ApplyFeatureSprite(tile, gridCells, pos.x, pos.y, TileData.DrawStartingCorner.TopLeft);
         }
 
         public static bool AreAdjacent(Vector2Int a, Vector2Int b)

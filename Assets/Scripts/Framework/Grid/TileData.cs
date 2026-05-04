@@ -97,9 +97,7 @@ namespace Game
 
                             if (!isBreakableWall)
                             {
-                                TileSpriteSet selectedSet = sourceCell?.cellFeature != null && sourceCell.cellFeature.tileSpriteSet != null
-                                    ? sourceCell.cellFeature.tileSpriteSet
-                                    : isUnbreakableWall && unbreakableWallTileSprites != null
+                                TileSpriteSet selectedSet = isUnbreakableWall && unbreakableWallTileSprites != null
                                     ? unbreakableWallTileSprites
                                     : normalTileSprites;
 
@@ -113,6 +111,8 @@ namespace Game
                                         : currentColor;
                                 }
                             }
+
+                            ApplyFeatureSprite(cellController, gridCells, i, j, drawStartingCorner);
 
                             generatedObjects.Add(cellController.gameObject);
 
@@ -211,9 +211,7 @@ namespace Game
                     break;
             }
 
-            TileSpriteSet selectedSet = sourceCell?.cellFeature != null && sourceCell.cellFeature.tileSpriteSet != null
-                ? sourceCell.cellFeature.tileSpriteSet
-                : isUnbreakableWall && unbreakableWallTileSprites != null
+            TileSpriteSet selectedSet = isUnbreakableWall && unbreakableWallTileSprites != null
                 ? unbreakableWallTileSprites
                 : normalTileSprites;
 
@@ -248,6 +246,129 @@ namespace Game
             if (up && down && left && right && upLeft && upRight && downLeft && downRight) return ResolveSprite(selectedSet != null ? selectedSet.singleInnerTile : null);
 
             return ResolveSprite(selectedSet != null ? selectedSet.errorTile : null);
+        }
+
+        public void ApplyFeatureSprite(GridCellController cellController, Grid3D.GridCell[,] gridCells, int x, int y, DrawStartingCorner drawStartingCorner)
+        {
+            if (cellController == null || cellController.featureSprite == null)
+                return;
+
+            Grid3D.GridCell sourceCell = gridCells != null &&
+                                         x >= 0 && y >= 0 &&
+                                         x < gridCells.GetLength(0) &&
+                                         y < gridCells.GetLength(1)
+                ? gridCells[x, y]
+                : null;
+
+            CellFeature feature = sourceCell != null ? sourceCell.cellFeature : null;
+            TileSpriteSet featureSet = feature != null ? feature.tileSpriteSet : null;
+
+            if (feature == null || featureSet == null)
+            {
+                cellController.featureSprite.sprite = null;
+                cellController.featureSprite.enabled = false;
+                return;
+            }
+
+            Sprite featureSprite = DetermineFeatureTileType(gridCells, x, y, drawStartingCorner, feature, featureSet);
+            cellController.featureSprite.sprite = featureSprite;
+            cellController.featureSprite.enabled = featureSprite != null;
+
+            Color currentColor = cellController.featureSprite.color;
+            cellController.featureSprite.color = featureSet.GetColorForTile(new Vector2Int(x, y), currentColor);
+        }
+
+        private Sprite DetermineFeatureTileType(Grid3D.GridCell[,] gridCells, int x, int y, DrawStartingCorner drawStartingCorner, CellFeature feature, TileSpriteSet selectedSet)
+        {
+            bool up = false, down = false, left = false, right = false, upLeft = false, upRight = false, downLeft = false, downRight = false;
+
+            switch (drawStartingCorner)
+            {
+                case DrawStartingCorner.TopLeft:
+                    up = HasMatchingFeature(gridCells, x, y - 1, feature);
+                    down = HasMatchingFeature(gridCells, x, y + 1, feature);
+                    left = HasMatchingFeature(gridCells, x - 1, y, feature);
+                    right = HasMatchingFeature(gridCells, x + 1, y, feature);
+                    upLeft = HasMatchingFeature(gridCells, x - 1, y - 1, feature);
+                    upRight = HasMatchingFeature(gridCells, x + 1, y - 1, feature);
+                    downLeft = HasMatchingFeature(gridCells, x - 1, y + 1, feature);
+                    downRight = HasMatchingFeature(gridCells, x + 1, y + 1, feature);
+                    break;
+                case DrawStartingCorner.TopRight:
+                    up = HasMatchingFeature(gridCells, x, y - 1, feature);
+                    down = HasMatchingFeature(gridCells, x, y + 1, feature);
+                    right = HasMatchingFeature(gridCells, x - 1, y, feature);
+                    left = HasMatchingFeature(gridCells, x + 1, y, feature);
+                    upRight = HasMatchingFeature(gridCells, x - 1, y - 1, feature);
+                    upLeft = HasMatchingFeature(gridCells, x + 1, y - 1, feature);
+                    downRight = HasMatchingFeature(gridCells, x - 1, y + 1, feature);
+                    downLeft = HasMatchingFeature(gridCells, x + 1, y + 1, feature);
+                    break;
+                case DrawStartingCorner.BottomLeft:
+                    up = HasMatchingFeature(gridCells, x, y + 1, feature);
+                    down = HasMatchingFeature(gridCells, x, y - 1, feature);
+                    left = HasMatchingFeature(gridCells, x - 1, y, feature);
+                    right = HasMatchingFeature(gridCells, x + 1, y, feature);
+                    downLeft = HasMatchingFeature(gridCells, x - 1, y - 1, feature);
+                    downRight = HasMatchingFeature(gridCells, x + 1, y - 1, feature);
+                    upLeft = HasMatchingFeature(gridCells, x - 1, y + 1, feature);
+                    upRight = HasMatchingFeature(gridCells, x + 1, y + 1, feature);
+                    break;
+                case DrawStartingCorner.BottomRight:
+                    up = HasMatchingFeature(gridCells, x, y + 1, feature);
+                    down = HasMatchingFeature(gridCells, x, y - 1, feature);
+                    right = HasMatchingFeature(gridCells, x - 1, y, feature);
+                    left = HasMatchingFeature(gridCells, x + 1, y, feature);
+                    downRight = HasMatchingFeature(gridCells, x - 1, y - 1, feature);
+                    downLeft = HasMatchingFeature(gridCells, x + 1, y - 1, feature);
+                    upRight = HasMatchingFeature(gridCells, x - 1, y + 1, feature);
+                    upLeft = HasMatchingFeature(gridCells, x + 1, y + 1, feature);
+                    break;
+            }
+
+            if (!up && !left && right && down) return ResolveSprite(selectedSet.topLeftCorner);
+            if (!up && !right && left && down) return ResolveSprite(selectedSet.topRightCorner);
+            if (!down && !left && right && up) return ResolveSprite(selectedSet.bottomLeftCorner);
+            if (!down && !right && left && up) return ResolveSprite(selectedSet.bottomRightCorner);
+            if (!up && down && left && right) return ResolveSprite(selectedSet.topEdge);
+            if (!down && up && left && right) return ResolveSprite(selectedSet.bottomEdge);
+            if (!left && right && up && down) return ResolveSprite(selectedSet.leftEdge);
+            if (!right && left && up && down) return ResolveSprite(selectedSet.rightEdge);
+            if (!up && down && !left && !right) return ResolveSprite(selectedSet.topTip);
+            if (!down && up && !left && !right) return ResolveSprite(selectedSet.bottomTip);
+            if (!left && right && !up && !down) return ResolveSprite(selectedSet.leftTip);
+            if (!right && left && !up && !down) return ResolveSprite(selectedSet.rightTip);
+            if (!left && !right && up && down) return ResolveSprite(selectedSet.verticalTile);
+            if (!up && !down && left && right) return ResolveSprite(selectedSet.horizontalTile);
+            if (!upLeft && !downLeft && up && down && left) return ResolveSprite(selectedSet.verticalWithLeftConnectionTile);
+            if (!upRight && !downRight && up && down && right) return ResolveSprite(selectedSet.verticalWithRightConnectionTile);
+            if (!upLeft && !upRight && left && right && up) return ResolveSprite(selectedSet.horizontalWithUpConnectionTile);
+            if (!downLeft && !downRight && left && right && down) return ResolveSprite(selectedSet.horizontalWithDownConnectionTile);
+            if (up && down && left && right && !upLeft && !upRight && !downLeft && !downRight) return ResolveSprite(selectedSet.onlyVerticalAndHorizontalConnectionTile);
+            if (up && !down && left && !right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedSet.upperAndLeftTile);
+            if (up && !down && !left && right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedSet.upperAndRightTile);
+            if (!up && down && left && !right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedSet.lowerAndLeftTile);
+            if (!up && down && !left && right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedSet.lowerAndRightTile);
+            if (!up && !down && !left && !right) return ResolveSprite(selectedSet.singleTileStandalone);
+            if (!upLeft && upRight && downLeft && downRight) return ResolveSprite(selectedSet.topLeftConvexCorner);
+            if (!upRight && upLeft && downLeft && downRight) return ResolveSprite(selectedSet.topRightConvexCorner);
+            if (!downLeft && upLeft && upRight && downRight) return ResolveSprite(selectedSet.bottomLeftConvexCorner);
+            if (!downRight && upLeft && upRight && downLeft) return ResolveSprite(selectedSet.bottomRightConvexCorner);
+            if (up && down && left && right && upLeft && upRight && downLeft && downRight) return ResolveSprite(selectedSet.singleInnerTile);
+
+            return ResolveSprite(selectedSet.errorTile);
+        }
+
+        private bool HasMatchingFeature(Grid3D.GridCell[,] gridCells, int x, int y, CellFeature feature)
+        {
+            if (feature == null || gridCells == null)
+                return false;
+
+            if (x < 0 || y < 0 || x >= gridCells.GetLength(0) || y >= gridCells.GetLength(1))
+                return false;
+
+            Grid3D.GridCell cell = gridCells[x, y];
+            return cell != null && cell.cellFeature == feature;
         }
 
         public static GameObject CombineMeshes<T>(List<T> sources, Transform parent, string objectName, ShadowCastingMode shadowCastingMode = ShadowCastingMode.On) where T : Component
