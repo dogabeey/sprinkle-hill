@@ -1246,6 +1246,7 @@ namespace Game
             for (int x = 0; x < gridSize.x; x++)
             {
                 List<List<int>> sections = BuildColumnSections(x);
+                int bottomMostNormalY = GetBottomMostNormalCellY(x);
 
                 foreach (List<int> playableRows in sections)
                 {
@@ -1262,7 +1263,7 @@ namespace Game
                         GridElementInfo movingInfo = readCell?.elementInfo;
                         if (movingInfo?.elementData == null) continue;
 
-                    if (IsGarbageBagData(movingInfo.elementData) && readY == playableRows[playableRows.Count - 1])
+                    if (IsGarbageBagData(movingInfo.elementData) && readY == bottomMostNormalY)
                     {
                         TriggerCellFeatureMatchedOverAt(readPos);
                         NotifyGarbageBagCleaned(readPos, movingInfo.elementData);
@@ -1294,7 +1295,7 @@ namespace Game
                         GridCell targetCell = GetCell(targetPos);
                         if (targetCell == null) continue;
 
-                        if (IsGarbageBagData(movingInfo.elementData) && targetY == playableRows[playableRows.Count - 1])
+                        if (IsGarbageBagData(movingInfo.elementData) && targetY == bottomMostNormalY)
                         {
                             TriggerCellFeatureMatchedOverAt(readPos);
                             NotifyGarbageBagCleaned(targetPos, movingInfo.elementData);
@@ -1613,6 +1614,31 @@ namespace Game
                         pool.Add(data);
                 }
             return pool;
+        }
+
+        private int GetBottomMostNormalCellY(int x)
+        {
+            for (int y = gridSize.y - 1; y >= 0; y--)
+            {
+                Vector2Int pos = new Vector2Int(x, y);
+                GridCell cell = GetCell(pos);
+                if (cell == null || cell.cellType != CellType.Normal)
+                    continue;
+
+                bool acceptsElements = cell.cellFeature == null || cell.cellFeature.AcceptElements;
+                if (!acceptsElements)
+                    continue;
+
+                if (IsCellCoveredByMultiCellElement(pos))
+                    continue;
+
+                if (IsCauldronCell(cell))
+                    continue;
+
+                return y;
+            }
+
+            return -1;
         }
 
         private List<List<int>> BuildColumnSections(int x)
