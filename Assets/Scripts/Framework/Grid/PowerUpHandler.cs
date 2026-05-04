@@ -1066,6 +1066,8 @@ namespace Game
             if (cell == null) return;
             if (cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null) return;
 
+            grid.TriggerCellFeatureMatchedOverAt(pos);
+
             if (grid.TryRevealHiddenBoxAt(pos))
                 return;
 

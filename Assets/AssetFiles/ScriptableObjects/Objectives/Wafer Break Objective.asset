@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectiveTypeName: Hidden Box
   description: Reveal %c hidden boxes
-  creationCountEvent: 808
-  completionEvent: 810
-  objectiveTypeSprite: {fileID: -622759365, guid: a46309d38df06264b96c750375a58bd1, type: 3}
+  creationCountEvent: 812
+  completionEvent: 813
+  objectiveTypeSprite: {fileID: 444081177, guid: f941be62a76a51541b0868c1b6a6d8ff, type: 3}

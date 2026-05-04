@@ -203,6 +203,17 @@ namespace Game
             tileGenerationData.ApplyFeatureSprite(tile, gridCells, pos.x, pos.y, TileData.DrawStartingCorner.TopLeft);
         }
 
+        public void TriggerCellFeatureMatchedOverAt(Vector2Int pos)
+        {
+            GridCell cell = GetCell(pos);
+            if (cell?.cellFeature == null)
+                return;
+
+            GridElement element = GetElementAt(pos);
+            cell.cellFeature.OnElementMatchedOverTheCell(cell, element);
+            RefreshCellFeatureVisual(pos);
+        }
+
         public static bool AreAdjacent(Vector2Int a, Vector2Int b)
         {
             return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) == 1;
@@ -510,6 +521,8 @@ namespace Game
                     if (cell == null) continue;
                     if (cell.cellType == CellType.BreakableWall) { wallsToBreak.Add(pos); continue; }
                     if (cell.cellType != CellType.Normal || cell.elementInfo == null) continue;
+
+                    TriggerCellFeatureMatchedOverAt(pos);
 
                     if (TryRevealHiddenBoxAt(pos))
                         continue;
@@ -1419,6 +1432,8 @@ namespace Game
 
                     if (cell.cellType == CellType.Normal && cell.elementInfo != null)
                     {
+                        TriggerCellFeatureMatchedOverAt(pos);
+
                         if (TryRevealHiddenBoxAt(pos))
                             continue;
 
