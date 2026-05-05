@@ -169,6 +169,7 @@ namespace Game
             MarkDirty();
         }
 
+ #if UNITY_EDITOR
         private void ShowElementSelectionMenu(Grid3D.GridCell cell, bool includeCellFeatureItems)
         {
             GenericMenu menu = new GenericMenu();
@@ -297,6 +298,7 @@ namespace Game
 
             menu.ShowAsContext();
         }
+ #endif
 
         private ElementData ResolveRandomRuntimeElement(Grid3D.GridCell[,] runtimeCells, int x, int y)
         {
@@ -617,9 +619,16 @@ namespace Game
             NormalizeMultiCellCoverage();
             MarkDirty();
         }
+#endif
+
+#if UNITY_EDITOR
         private void MarkDirty()
         {
             EditorUtility.SetDirty(this);
+        }
+#else
+        private void MarkDirty()
+        {
         }
 #endif
 
