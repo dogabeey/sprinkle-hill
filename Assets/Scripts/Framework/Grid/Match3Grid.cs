@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using MobileHapticsProFreeEdition;
 using UnityEngine;
@@ -13,6 +14,35 @@ namespace Game
     /// </summary>
     public class Match3Grid : Grid3D
     {
+        private struct GlassGroupId
+        {
+            public GlassFeature feature;
+            public int groupIndex;
+
+            public GlassGroupId(GlassFeature feature, int groupIndex)
+            {
+                this.feature = feature;
+                this.groupIndex = groupIndex;
+            }
+
+            public override int GetHashCode()
+            {
+                int featureHash = feature != null ? feature.GetInstanceID() : 0;
+                unchecked
+                {
+                    return (featureHash * 397) ^ groupIndex;
+                }
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (!(obj is GlassGroupId other))
+                    return false;
+
+                return feature == other.feature && groupIndex == other.groupIndex;
+            }
+        }
+
         private const string MatchRewardCurrencyId = "cash";
         private int currentComboCount = 0;
         private PowerUpHandler powerUpHandler;
@@ -116,7 +146,10 @@ namespace Game
             powerUpHandler = new PowerUpHandler(this);
         }
 
-        public override void PostInit() { }
+        public override void PostInit()
+        {
+            RefreshAllGlassDamageIndicators();
+        }
 
         // ------------------------------------------------------------------
         //  Position helpers
@@ -140,6 +173,20 @@ namespace Game
             return false;
         }
 
+        private void CollectGlassGroupAt(Vector2Int pos, HashSet<GlassGroupId> groups)
+        {
+            GridCell cell = GetCell(pos);
+            if (TryGetGlassGroupId(cell, out GlassGroupId groupId))
+                groups.Add(groupId);
+        }
+
+        private void CollectAdjacentGlassGroups(Vector2Int center, HashSet<GlassGroupId> groups)
+        {
+            Vector2Int[] adjacentOffsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            for (int i = 0; i < adjacentOffsets.Length; i++)
+                CollectGlassGroupAt(center + adjacentOffsets[i], groups);
+        }
+
         private void RefreshCellFeatureVisual(Vector2Int pos)
         {
             if (tileGenerationData == null)
@@ -149,6 +196,217 @@ namespace Game
                 return;
 
             tileGenerationData.ApplyFeatureSprite(tile, gridCells, pos.x, pos.y, TileData.DrawStartingCorner.TopLeft);
+
+            if (tile.damageIndicator != null)
+            {
+                tile.damageIndicator.enabled = false;
+                tile.damageIndicator.sprite = null;
+            }
+
+            RefreshAllGlassDamageIndicators();
+        }
+
+        private bool TryGetGlassGroupId(GridCell cell, out GlassGroupId id)
+        {
+            if (cell != null && cell.cellFeature is GlassFeature glassFeature)
+            {
+                id = new GlassGroupId(glassFeature, cell.cellFeatureGroupIndex);
+                return true;
+            }
+
+            id = default;
+            return false;
+        }
+
+        private Dictionary<GlassGroupId, List<Vector2Int>> BuildGlassGroups()
+        {
+            Dictionary<GlassGroupId, List<Vector2Int>> groups = new Dictionary<GlassGroupId, List<Vector2Int>>();
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    GridCell cell = GetCell(pos);
+                    if (!TryGetGlassGroupId(cell, out GlassGroupId groupId))
+                        continue;
+
+                    if (!groups.TryGetValue(groupId, out List<Vector2Int> positions))
+                    {
+                        positions = new List<Vector2Int>();
+                        groups[groupId] = positions;
+                    }
+
+                    positions.Add(pos);
+                }
+            }
+
+            return groups;
+        }
+
+        private int ResolveGlassGroupMaxHealth(GlassGroupId groupId, List<Vector2Int> groupCells)
+        {
+            int maxHealth = Mathf.Max(1, groupId.feature != null ? groupId.feature.defaultGroupHealth : 1);
+            for (int i = 0; i < groupCells.Count; i++)
+            {
+                GridCell cell = GetCell(groupCells[i]);
+                if (cell == null)
+                    continue;
+
+                if (cell.cellFeatureGroupHealth > maxHealth)
+                    maxHealth = cell.cellFeatureGroupHealth;
+            }
+
+            return Mathf.Max(1, maxHealth);
+        }
+
+        private int ResolveGlassGroupCurrentHealth(int maxHealth, List<Vector2Int> groupCells)
+        {
+            int currentHealth = maxHealth;
+            for (int i = 0; i < groupCells.Count; i++)
+            {
+                GridCell cell = GetCell(groupCells[i]);
+                if (cell == null)
+                    continue;
+
+                int cellHealth = cell.cellFeatureGroupHealth > 0 ? cell.cellFeatureGroupHealth : maxHealth;
+                if (cellHealth < currentHealth)
+                    currentHealth = cellHealth;
+            }
+
+            return Mathf.Clamp(currentHealth, 0, maxHealth);
+        }
+
+        private void RefreshAllGlassDamageIndicators()
+        {
+            foreach (var tile in generatedTiles.Values)
+            {
+                if (tile == null || tile.damageIndicator == null)
+                    continue;
+
+                tile.damageIndicator.enabled = false;
+                tile.damageIndicator.sprite = null;
+            }
+
+            Dictionary<GlassGroupId, List<Vector2Int>> groups = BuildGlassGroups();
+            foreach (var groupKvp in groups)
+            {
+                GlassGroupId groupId = groupKvp.Key;
+                List<Vector2Int> groupCells = groupKvp.Value;
+                if (groupCells == null || groupCells.Count == 0)
+                    continue;
+
+                bool hasImprisonedElement = false;
+                for (int i = 0; i < groupCells.Count; i++)
+                {
+                    GridCell groupCell = GetCell(groupCells[i]);
+                    if (groupCell?.elementInfo?.elementData != null)
+                    {
+                        hasImprisonedElement = true;
+                        break;
+                    }
+                }
+
+                if (!hasImprisonedElement)
+                    continue;
+
+                int maxHealth = ResolveGlassGroupMaxHealth(groupId, groupCells);
+                int currentHealth = ResolveGlassGroupCurrentHealth(maxHealth, groupCells);
+                int missingHealth = Mathf.Clamp(maxHealth - currentHealth, 0, maxHealth);
+                Sprite damageSprite = groupId.feature != null ? groupId.feature.GetDamageSprite(missingHealth) : null;
+                if (damageSprite == null)
+                    continue;
+
+                int minX = groupCells.Min(p => p.x);
+                int maxX = groupCells.Max(p => p.x);
+                int minY = groupCells.Min(p => p.y);
+                int maxY = groupCells.Max(p => p.y);
+
+                Vector2[] farCorners =
+                {
+                    new Vector2(minX, minY),
+                    new Vector2(minX, maxY),
+                    new Vector2(maxX, minY),
+                    new Vector2(maxX, maxY)
+                };
+
+                HashSet<Vector2Int> selectedCells = new HashSet<Vector2Int>();
+                for (int i = 0; i < farCorners.Length; i++)
+                {
+                    Vector2 corner = farCorners[i];
+                    float bestDistance = float.MaxValue;
+                    Vector2Int bestPos = groupCells[0];
+
+                    for (int p = 0; p < groupCells.Count; p++)
+                    {
+                        Vector2Int cellPos = groupCells[p];
+                        float distance = (new Vector2(cellPos.x, cellPos.y) - corner).sqrMagnitude;
+                        if (distance < bestDistance)
+                        {
+                            bestDistance = distance;
+                            bestPos = cellPos;
+                        }
+                    }
+
+                    selectedCells.Add(bestPos);
+                }
+
+                foreach (Vector2Int pos in selectedCells)
+                {
+                    if (!generatedTiles.TryGetValue(pos, out GridCellController tile) || tile == null || tile.damageIndicator == null)
+                        continue;
+
+                    tile.damageIndicator.sprite = damageSprite;
+                    tile.damageIndicator.sortingOrder = groupId.feature.spriteLayerIndex + 1;
+                    tile.damageIndicator.enabled = true;
+                }
+            }
+        }
+
+        private void DamageGlassGroupsForMatch(HashSet<GlassGroupId> groupsToDamage)
+        {
+            if (groupsToDamage == null || groupsToDamage.Count == 0)
+                return;
+
+            Dictionary<GlassGroupId, List<Vector2Int>> groups = BuildGlassGroups();
+            foreach (GlassGroupId groupId in groupsToDamage)
+            {
+                if (!groups.TryGetValue(groupId, out List<Vector2Int> groupCells) || groupCells.Count == 0)
+                    continue;
+
+                int maxHealth = ResolveGlassGroupMaxHealth(groupId, groupCells);
+                int currentHealth = ResolveGlassGroupCurrentHealth(maxHealth, groupCells);
+                int nextHealth = currentHealth - 1;
+
+                if (nextHealth <= 0)
+                {
+                    for (int i = 0; i < groupCells.Count; i++)
+                    {
+                        Vector2Int pos = groupCells[i];
+                        GridCell cell = GetCell(pos);
+                        if (cell == null)
+                            continue;
+
+                        cell.cellFeature = null;
+                        cell.cellFeatureGroupIndex = 0;
+                        cell.cellFeatureGroupHealth = 0;
+                        RefreshCellFeatureVisual(pos);
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i < groupCells.Count; i++)
+                    {
+                        GridCell cell = GetCell(groupCells[i]);
+                        if (cell == null)
+                            continue;
+
+                        cell.cellFeatureGroupHealth = nextHealth;
+                    }
+                }
+            }
+
+            RefreshAllGlassDamageIndicators();
         }
 
         public void TriggerCellFeatureMatchedOverAt(Vector2Int pos)
@@ -473,6 +731,7 @@ namespace Game
         public IEnumerator ClearAreaAt(Vector2Int center, int radius, bool allowConditionedBreakableWalls = true)
         {
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
+            HashSet<GlassGroupId> glassGroupsToDamage = new HashSet<GlassGroupId>();
 
             for (int x = center.x - radius; x <= center.x + radius; x++)
             {
@@ -489,13 +748,16 @@ namespace Game
                     }
                     if (cell.cellType != CellType.Normal || cell.elementInfo == null) continue;
 
-                    bool hadGlassFeature = cell.cellFeature is GlassFeature;
+                    if (cell.cellFeature is GlassFeature)
+                    {
+                        CollectGlassGroupAt(pos, glassGroupsToDamage);
+                        continue;
+                    }
+
                     GridElement matchedElement = GetElementAt(pos);
                     TriggerCellFeatureMatchedOverAt(pos);
+                    CollectAdjacentGlassGroups(pos, glassGroupsToDamage);
                     TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
-
-                    if (hadGlassFeature)
-                        continue;
 
                     if (TryRevealHiddenBoxAt(pos))
                         continue;
@@ -519,6 +781,8 @@ namespace Game
 
             //GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is BombPlacementAction).CurrentCount--;
             yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
+
+            DamageGlassGroupsForMatch(glassGroupsToDamage);
 
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
@@ -852,9 +1116,38 @@ namespace Game
         protected override void GenerateElements()
         {
             EnsureGridCells();
+            Dictionary<GlassGroupId, int> resolvedGroupHealth = new Dictionary<GlassGroupId, int>();
             for (int x = 0; x < gridSize.x; x++)
                 for (int y = 0; y < gridSize.y; y++)
-                    NormalizeSpecialElementInfo(GetCell(new Vector2Int(x, y)));
+                {
+                    GridCell cell = GetCell(new Vector2Int(x, y));
+                    NormalizeSpecialElementInfo(cell);
+
+                    if (!TryGetGlassGroupId(cell, out GlassGroupId groupId))
+                        continue;
+
+                    int configuredHealth = cell.cellFeatureGroupHealth;
+                    if (configuredHealth <= 0)
+                        configuredHealth = Mathf.Max(1, groupId.feature != null ? groupId.feature.defaultGroupHealth : 1);
+
+                    if (resolvedGroupHealth.TryGetValue(groupId, out int existingHealth))
+                        resolvedGroupHealth[groupId] = Mathf.Min(existingHealth, configuredHealth);
+                    else
+                        resolvedGroupHealth[groupId] = configuredHealth;
+                }
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    GridCell cell = GetCell(new Vector2Int(x, y));
+                    if (!TryGetGlassGroupId(cell, out GlassGroupId groupId))
+                        continue;
+
+                    if (resolvedGroupHealth.TryGetValue(groupId, out int groupHealth))
+                        cell.cellFeatureGroupHealth = groupHealth;
+                }
+            }
 
             List<ElementData> elementPool = BuildElementPool();
 
@@ -888,6 +1181,9 @@ namespace Game
 
                     if (!generatedTiles.TryGetValue(cell.coordinates, out GridCellController tile)) continue;
 
+                    if (cell.cellFeature is GlassFeature && cell.elementInfo?.elementData == null)
+                        continue;
+
                     GridElement element = Instantiate(gridElementPrefab, tile.transform.position, Quaternion.identity, tile.transform);
                     element.elementInfo = cell.elementInfo;
                     generatedElements.Add(element);
@@ -914,6 +1210,8 @@ namespace Game
 
             if (!UseLevelEditor)
                 EnsureAtLeastOneMoveAvailable(elementPool);
+
+            RefreshAllGlassDamageIndicators();
         }
 
         // ------------------------------------------------------------------
@@ -1040,6 +1338,7 @@ namespace Game
             Vector2Int[] adjacentOffsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
             HashSet<Vector2Int> allMatchedPositions = new HashSet<Vector2Int>();
             HashSet<Vector2Int> adjacentFeatureProcessed = new HashSet<Vector2Int>();
+            HashSet<GlassGroupId> glassGroupsToDamage = new HashSet<GlassGroupId>();
 
             if (matchedPositions != null)
             {
@@ -1075,11 +1374,13 @@ namespace Game
                     ElementData destroyedElementData = cell.elementInfo.elementData;
 
                     GridElement matchedElement = GetElementAt(pos);
-                    bool hadGlassFeature = cell.cellFeature is GlassFeature;
-                    TriggerCellFeatureMatchedOverAt(pos);
-
-                    if (hadGlassFeature)
+                    if (cell.cellFeature is GlassFeature)
+                    {
+                        CollectGlassGroupAt(pos, glassGroupsToDamage);
                         continue;
+                    }
+
+                    TriggerCellFeatureMatchedOverAt(pos);
 
                     for (int i = 0; i < adjacentOffsets.Length; i++)
                     {
@@ -1093,6 +1394,12 @@ namespace Game
                         GridCell adjacentCell = GetCell(adjacentPos);
                         if (adjacentCell?.cellFeature == null)
                             continue;
+
+                        if (adjacentCell.cellFeature is GlassFeature)
+                        {
+                            CollectGlassGroupAt(adjacentPos, glassGroupsToDamage);
+                            continue;
+                        }
 
                         adjacentCell.cellFeature.OnElementMatchedAdjacentToTheCell(adjacentCell, cell, matchedElement);
                         RefreshCellFeatureVisual(adjacentPos);
@@ -1122,6 +1429,8 @@ namespace Game
 
                 yield return new WaitForSeconds(cm.matchClearDelay);
             }
+
+            DamageGlassGroupsForMatch(glassGroupsToDamage);
 
             foreach (Vector2Int rp in hiddenToReveal) RevealHiddenElement(rp);
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
@@ -1441,6 +1750,8 @@ namespace Game
             if (cauldronCell?.elementInfo == null || cauldronCell.elementInfo.powerUpType != ElementPowerUpType.Cauldron)
                 yield break;
 
+            HashSet<GlassGroupId> glassGroupsToDamage = new HashSet<GlassGroupId>();
+
             GridElement cauldronElement = GetElementAt(cauldronPos);
             Vector3 center = GetElementCoverageCenterWorld(cauldronPos, cauldronCell.elementInfo.elementData);
 
@@ -1474,11 +1785,14 @@ namespace Game
 
                     if (cell.cellType == CellType.Normal && cell.elementInfo != null)
                     {
-                        bool hadGlassFeature = cell.cellFeature is GlassFeature;
-                        TriggerCellFeatureMatchedOverAt(pos);
-
-                        if (hadGlassFeature)
+                        if (cell.cellFeature is GlassFeature)
+                        {
+                            CollectGlassGroupAt(pos, glassGroupsToDamage);
                             continue;
+                        }
+
+                        TriggerCellFeatureMatchedOverAt(pos);
+                        CollectAdjacentGlassGroups(pos, glassGroupsToDamage);
 
                         if (TryRevealHiddenBoxAt(pos))
                             continue;
@@ -1519,6 +1833,8 @@ namespace Game
                 clearSeq.Join(cauldronElement.transform.DOScale(0f, 0.22f).SetEase(Ease.InBack));
                 hasTween = true;
             }
+
+            DamageGlassGroupsForMatch(glassGroupsToDamage);
 
             if (hasTween)
                 yield return clearSeq.WaitForCompletion();
@@ -1665,6 +1981,9 @@ namespace Game
                 if (!acceptsElements)
                     continue;
 
+                if (cell.cellFeature is GlassFeature)
+                    continue;
+
                 if (IsCellCoveredByMultiCellElement(pos))
                     continue;
 
@@ -1693,6 +2012,9 @@ namespace Game
                         if (current.Count > 0) { sections.Add(new List<int>(current)); current.Clear(); }
                         continue;
                     }
+
+                    if (cell.cellFeature is GlassFeature)
+                        continue;
 
                     if (IsCellCoveredByMultiCellElement(pos))
                         continue;

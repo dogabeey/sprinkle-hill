@@ -15,3 +15,15 @@ MonoBehaviour:
   tileSpriteSet: {fileID: 11400000, guid: 9712bc8a119975a4fa5e866d3dabf47f, type: 2}
   featureIcon: {fileID: -205259008, guid: a46309d38df06264b96c750375a58bd1, type: 3}
   spriteLayerIndex: 4
+  defaultGroupHealth: 1
+  damageSprites:
+  - missingHealth: 0
+    sprite: {fileID: 0}
+  - missingHealth: 1
+    sprite: {fileID: 0}
+  - missingHealth: 2
+    sprite: {fileID: 0}
+  - missingHealth: 3
+    sprite: {fileID: 0}
+  - missingHealth: 4
+    sprite: {fileID: 0}

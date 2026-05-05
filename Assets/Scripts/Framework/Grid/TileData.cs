@@ -399,7 +399,8 @@ namespace Game
                 return;
             }
 
-            Sprite featureSprite = DetermineFeatureTileType(gridCells, x, y, drawStartingCorner, feature, featureSet);
+            int featureGroupIndex = sourceCell != null ? sourceCell.cellFeatureGroupIndex : 0;
+            Sprite featureSprite = DetermineFeatureTileType(gridCells, x, y, drawStartingCorner, feature, featureGroupIndex, featureSet);
             cellController.featureSprite.sprite = featureSprite;
             cellController.featureSprite.enabled = featureSprite != null;
             cellController.featureSprite.sortingOrder = feature.spriteLayerIndex;
@@ -408,51 +409,51 @@ namespace Game
             cellController.featureSprite.color = featureSet.GetColorForTile(new Vector2Int(x, y), currentColor);
         }
 
-        private Sprite DetermineFeatureTileType(Grid3D.GridCell[,] gridCells, int x, int y, DrawStartingCorner drawStartingCorner, CellFeature feature, TileSpriteSet selectedSet)
+        private Sprite DetermineFeatureTileType(Grid3D.GridCell[,] gridCells, int x, int y, DrawStartingCorner drawStartingCorner, CellFeature feature, int featureGroupIndex, TileSpriteSet selectedSet)
         {
             bool up = false, down = false, left = false, right = false, upLeft = false, upRight = false, downLeft = false, downRight = false;
 
             switch (drawStartingCorner)
             {
                 case DrawStartingCorner.TopLeft:
-                    up = HasMatchingFeature(gridCells, x, y - 1, feature);
-                    down = HasMatchingFeature(gridCells, x, y + 1, feature);
-                    left = HasMatchingFeature(gridCells, x - 1, y, feature);
-                    right = HasMatchingFeature(gridCells, x + 1, y, feature);
-                    upLeft = HasMatchingFeature(gridCells, x - 1, y - 1, feature);
-                    upRight = HasMatchingFeature(gridCells, x + 1, y - 1, feature);
-                    downLeft = HasMatchingFeature(gridCells, x - 1, y + 1, feature);
-                    downRight = HasMatchingFeature(gridCells, x + 1, y + 1, feature);
+                    up = HasMatchingFeature(gridCells, x, y - 1, feature, featureGroupIndex);
+                    down = HasMatchingFeature(gridCells, x, y + 1, feature, featureGroupIndex);
+                    left = HasMatchingFeature(gridCells, x - 1, y, feature, featureGroupIndex);
+                    right = HasMatchingFeature(gridCells, x + 1, y, feature, featureGroupIndex);
+                    upLeft = HasMatchingFeature(gridCells, x - 1, y - 1, feature, featureGroupIndex);
+                    upRight = HasMatchingFeature(gridCells, x + 1, y - 1, feature, featureGroupIndex);
+                    downLeft = HasMatchingFeature(gridCells, x - 1, y + 1, feature, featureGroupIndex);
+                    downRight = HasMatchingFeature(gridCells, x + 1, y + 1, feature, featureGroupIndex);
                     break;
                 case DrawStartingCorner.TopRight:
-                    up = HasMatchingFeature(gridCells, x, y - 1, feature);
-                    down = HasMatchingFeature(gridCells, x, y + 1, feature);
-                    right = HasMatchingFeature(gridCells, x - 1, y, feature);
-                    left = HasMatchingFeature(gridCells, x + 1, y, feature);
-                    upRight = HasMatchingFeature(gridCells, x - 1, y - 1, feature);
-                    upLeft = HasMatchingFeature(gridCells, x + 1, y - 1, feature);
-                    downRight = HasMatchingFeature(gridCells, x - 1, y + 1, feature);
-                    downLeft = HasMatchingFeature(gridCells, x + 1, y + 1, feature);
+                    up = HasMatchingFeature(gridCells, x, y - 1, feature, featureGroupIndex);
+                    down = HasMatchingFeature(gridCells, x, y + 1, feature, featureGroupIndex);
+                    right = HasMatchingFeature(gridCells, x - 1, y, feature, featureGroupIndex);
+                    left = HasMatchingFeature(gridCells, x + 1, y, feature, featureGroupIndex);
+                    upRight = HasMatchingFeature(gridCells, x - 1, y - 1, feature, featureGroupIndex);
+                    upLeft = HasMatchingFeature(gridCells, x + 1, y - 1, feature, featureGroupIndex);
+                    downRight = HasMatchingFeature(gridCells, x - 1, y + 1, feature, featureGroupIndex);
+                    downLeft = HasMatchingFeature(gridCells, x + 1, y + 1, feature, featureGroupIndex);
                     break;
                 case DrawStartingCorner.BottomLeft:
-                    up = HasMatchingFeature(gridCells, x, y + 1, feature);
-                    down = HasMatchingFeature(gridCells, x, y - 1, feature);
-                    left = HasMatchingFeature(gridCells, x - 1, y, feature);
-                    right = HasMatchingFeature(gridCells, x + 1, y, feature);
-                    downLeft = HasMatchingFeature(gridCells, x - 1, y - 1, feature);
-                    downRight = HasMatchingFeature(gridCells, x + 1, y - 1, feature);
-                    upLeft = HasMatchingFeature(gridCells, x - 1, y + 1, feature);
-                    upRight = HasMatchingFeature(gridCells, x + 1, y + 1, feature);
+                    up = HasMatchingFeature(gridCells, x, y + 1, feature, featureGroupIndex);
+                    down = HasMatchingFeature(gridCells, x, y - 1, feature, featureGroupIndex);
+                    left = HasMatchingFeature(gridCells, x - 1, y, feature, featureGroupIndex);
+                    right = HasMatchingFeature(gridCells, x + 1, y, feature, featureGroupIndex);
+                    downLeft = HasMatchingFeature(gridCells, x - 1, y - 1, feature, featureGroupIndex);
+                    downRight = HasMatchingFeature(gridCells, x + 1, y - 1, feature, featureGroupIndex);
+                    upLeft = HasMatchingFeature(gridCells, x - 1, y + 1, feature, featureGroupIndex);
+                    upRight = HasMatchingFeature(gridCells, x + 1, y + 1, feature, featureGroupIndex);
                     break;
                 case DrawStartingCorner.BottomRight:
-                    up = HasMatchingFeature(gridCells, x, y + 1, feature);
-                    down = HasMatchingFeature(gridCells, x, y - 1, feature);
-                    right = HasMatchingFeature(gridCells, x - 1, y, feature);
-                    left = HasMatchingFeature(gridCells, x + 1, y, feature);
-                    downRight = HasMatchingFeature(gridCells, x - 1, y - 1, feature);
-                    downLeft = HasMatchingFeature(gridCells, x + 1, y - 1, feature);
-                    upRight = HasMatchingFeature(gridCells, x - 1, y + 1, feature);
-                    upLeft = HasMatchingFeature(gridCells, x + 1, y + 1, feature);
+                    up = HasMatchingFeature(gridCells, x, y + 1, feature, featureGroupIndex);
+                    down = HasMatchingFeature(gridCells, x, y - 1, feature, featureGroupIndex);
+                    right = HasMatchingFeature(gridCells, x - 1, y, feature, featureGroupIndex);
+                    left = HasMatchingFeature(gridCells, x + 1, y, feature, featureGroupIndex);
+                    downRight = HasMatchingFeature(gridCells, x - 1, y - 1, feature, featureGroupIndex);
+                    downLeft = HasMatchingFeature(gridCells, x + 1, y - 1, feature, featureGroupIndex);
+                    upRight = HasMatchingFeature(gridCells, x - 1, y + 1, feature, featureGroupIndex);
+                    upLeft = HasMatchingFeature(gridCells, x + 1, y + 1, feature, featureGroupIndex);
                     break;
             }
 
@@ -489,7 +490,7 @@ namespace Game
             return ResolveSprite(selectedSet.errorTile);
         }
 
-        private bool HasMatchingFeature(Grid3D.GridCell[,] gridCells, int x, int y, CellFeature feature)
+        private bool HasMatchingFeature(Grid3D.GridCell[,] gridCells, int x, int y, CellFeature feature, int groupIndex)
         {
             if (feature == null || gridCells == null)
                 return false;
@@ -498,7 +499,7 @@ namespace Game
                 return false;
 
             Grid3D.GridCell cell = gridCells[x, y];
-            return cell != null && cell.cellFeature == feature;
+            return cell != null && cell.cellFeature == feature && cell.cellFeatureGroupIndex == groupIndex;
         }
 
         public static GameObject CombineMeshes<T>(List<T> sources, Transform parent, string objectName, ShadowCastingMode shadowCastingMode = ShadowCastingMode.On) where T : Component

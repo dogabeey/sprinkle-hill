@@ -46,10 +46,105 @@ namespace Game
             "U: Set cell to Unbreakable Wall\n" +
             "Shift+Z: Toggle Wafer Feature\n" +
             "Shift+X: Toggle Glass Feature\n" +
+            "0-9: Set Glass Group Index (while hovering a glass cell)\n" +
+            "Shift+0-9: Set Glass Group Health (while hovering a glass cell)\n" +
             "R: Toggle random element marker\n" +
             "Ctrl+R: Assign random element from pool\n" +
-            "1-9: Assign element by indexed asset list\n" +
             "Right Click: Open element/cell feature menu";
+
+        private static bool TryGetNumericShortcutValue(KeyCode keyCode, out int value)
+        {
+            switch (keyCode)
+            {
+                case KeyCode.Alpha0:
+                case KeyCode.Keypad0:
+                    value = 0;
+                    return true;
+                case KeyCode.Alpha1:
+                case KeyCode.Keypad1:
+                    value = 1;
+                    return true;
+                case KeyCode.Alpha2:
+                case KeyCode.Keypad2:
+                    value = 2;
+                    return true;
+                case KeyCode.Alpha3:
+                case KeyCode.Keypad3:
+                    value = 3;
+                    return true;
+                case KeyCode.Alpha4:
+                case KeyCode.Keypad4:
+                    value = 4;
+                    return true;
+                case KeyCode.Alpha5:
+                case KeyCode.Keypad5:
+                    value = 5;
+                    return true;
+                case KeyCode.Alpha6:
+                case KeyCode.Keypad6:
+                    value = 6;
+                    return true;
+                case KeyCode.Alpha7:
+                case KeyCode.Keypad7:
+                    value = 7;
+                    return true;
+                case KeyCode.Alpha8:
+                case KeyCode.Keypad8:
+                    value = 8;
+                    return true;
+                case KeyCode.Alpha9:
+                case KeyCode.Keypad9:
+                    value = 9;
+                    return true;
+                default:
+                    value = 0;
+                    return false;
+            }
+        }
+
+        private void SetGlassGroupHealthForAllCells(GlassFeature feature, int groupIndex, int health)
+        {
+            EnsureGridCells();
+            int normalizedHealth = Mathf.Max(1, health);
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    Grid3D.GridCell cell = gridCells[x, y];
+                    if (cell?.cellFeature != feature)
+                        continue;
+
+                    if (cell.cellFeatureGroupIndex != groupIndex)
+                        continue;
+
+                    cell.cellFeatureGroupHealth = normalizedHealth;
+                }
+            }
+        }
+
+        private int ResolveExistingGlassGroupHealth(GlassFeature feature, int groupIndex)
+        {
+            EnsureGridCells();
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    Grid3D.GridCell cell = gridCells[x, y];
+                    if (cell?.cellFeature != feature)
+                        continue;
+
+                    if (cell.cellFeatureGroupIndex != groupIndex)
+                        continue;
+
+                    if (cell.cellFeatureGroupHealth > 0)
+                        return cell.cellFeatureGroupHealth;
+                }
+            }
+
+            return feature != null ? Mathf.Max(1, feature.defaultGroupHealth) : 1;
+        }
 
         [HideIf(nameof(UseProcedural))]
 #if UNITY_EDITOR
@@ -182,6 +277,8 @@ namespace Game
                 menu.AddItem(new GUIContent("Cell Feature/None"), cell.cellFeature == null, () =>
                 {
                     cell.cellFeature = null;
+                    cell.cellFeatureGroupIndex = 0;
+                    cell.cellFeatureGroupHealth = 0;
                     MarkDirty();
                 });
                 if (waferFeature != null)
@@ -190,6 +287,8 @@ namespace Game
                     {
                         cell.cellType = Grid3D.CellType.Normal;
                         cell.cellFeature = waferFeature;
+                        cell.cellFeatureGroupIndex = 0;
+                        cell.cellFeatureGroupHealth = 0;
                         cell.breakableWallElementCondition = null;
                         MarkDirty();
                     });
@@ -200,6 +299,7 @@ namespace Game
                     {
                         cell.cellType = Grid3D.CellType.Normal;
                         cell.cellFeature = glassFeature;
+                        cell.cellFeatureGroupHealth = Mathf.Max(1, cell.cellFeatureGroupHealth > 0 ? cell.cellFeatureGroupHealth : glassFeature.defaultGroupHealth);
                         cell.breakableWallElementCondition = null;
                         MarkDirty();
                     });
@@ -677,7 +777,9 @@ namespace Game
                         cellType = cellType,
                         elementInfo = elementInfo,
                         cellFeature = sourceCell != null ? sourceCell.cellFeature : null,
-                        breakableWallElementCondition = sourceCell != null ? sourceCell.breakableWallElementCondition : null
+                        breakableWallElementCondition = sourceCell != null ? sourceCell.breakableWallElementCondition : null,
+                        cellFeatureGroupIndex = sourceCell != null ? sourceCell.cellFeatureGroupIndex : 0,
+                        cellFeatureGroupHealth = sourceCell != null ? sourceCell.cellFeatureGroupHealth : 0
                     };
                 }
             }
@@ -800,6 +902,27 @@ namespace Game
                 {
                     GUI.DrawTexture(rect, Texture2D.whiteTexture);
                 }
+
+                if (value.cellFeature is GlassFeature glassInCell)
+                {
+                    GUIStyle groupStyle = new GUIStyle(EditorStyles.boldLabel)
+                    {
+                        alignment = TextAnchor.UpperRight,
+                        fontSize = Mathf.Max(8, Mathf.RoundToInt(rect.height * 0.22f))
+                    };
+                    groupStyle.normal.textColor = Color.green;
+                    EditorGUI.LabelField(new Rect(rect.x + 1f, rect.y + 1f, rect.width - 3f, indicatorSize), $"G{value.cellFeatureGroupIndex}", groupStyle);
+
+                    int effectiveHealth = value.cellFeatureGroupHealth > 0 ? value.cellFeatureGroupHealth : Mathf.Max(1, glassInCell.defaultGroupHealth);
+                    GUIStyle healthStyle = new GUIStyle(EditorStyles.boldLabel)
+                    {
+                        
+                        alignment = TextAnchor.LowerLeft,
+                        fontSize = Mathf.Max(8, Mathf.RoundToInt(rect.height * 0.2f))
+                    };
+                    healthStyle.normal.textColor = Color.red;
+                    EditorGUI.LabelField(new Rect(rect.x + 2f, rect.y + rect.height - indicatorSize - 2f, rect.width - 3f, indicatorSize), $"H{effectiveHealth}", healthStyle);
+                }
             }
 
             if (value.elementInfo != null && value.elementInfo.randomElement)
@@ -878,18 +1001,53 @@ namespace Game
                 {
                     if (Event.current.shift)
                     {
+                        bool consumedShiftShortcut = false;
                         if(Event.current.keyCode == KeyCode.Z)
                             {
                             value.cellType = Grid3D.CellType.Normal;
                             value.cellFeature = value.cellFeature == waferFeature ? null : waferFeature;
                             MarkDirty();
+                            consumedShiftShortcut = true;
                         }
                         else if (Event.current.keyCode == KeyCode.X)
                         {
                             value.cellType = Grid3D.CellType.Normal;
-                            value.cellFeature = value.cellFeature == glassFeature ? null : glassFeature;
+                            bool disableGlass = value.cellFeature == glassFeature;
+                            value.cellFeature = disableGlass ? null : glassFeature;
+                            if (disableGlass)
+                            {
+                                value.cellFeatureGroupIndex = 0;
+                                value.cellFeatureGroupHealth = 0;
+                            }
+                            else if (glassFeature != null)
+                            {
+                                value.cellFeatureGroupHealth = Mathf.Max(1, value.cellFeatureGroupHealth > 0 ? value.cellFeatureGroupHealth : glassFeature.defaultGroupHealth);
+                            }
                             MarkDirty();
+                            consumedShiftShortcut = true;
                         }
+
+                        if (!consumedShiftShortcut && value.cellFeature is GlassFeature glassForHealth && TryGetNumericShortcutValue(Event.current.keyCode, out int healthValue))
+                        {
+                            value.cellType = Grid3D.CellType.Normal;
+                            value.cellFeature = glassForHealth;
+                            int normalizedHealth = Mathf.Max(1, healthValue);
+                            value.cellFeatureGroupHealth = normalizedHealth;
+                            SetGlassGroupHealthForAllCells(glassForHealth, value.cellFeatureGroupIndex, normalizedHealth);
+                            MarkDirty();
+                            consumedShiftShortcut = true;
+                        }
+
+                        if (consumedShiftShortcut)
+                            Event.current.Use();
+                    }
+                    if (!Event.current.shift && value.cellFeature is GlassFeature glass && TryGetNumericShortcutValue(Event.current.keyCode, out int groupIndex))
+                    {
+                        value.cellType = Grid3D.CellType.Normal;
+                        value.cellFeature = glass;
+                        value.cellFeatureGroupIndex = groupIndex;
+                        value.cellFeatureGroupHealth = ResolveExistingGlassGroupHealth(glass, groupIndex);
+                        MarkDirty();
                         Event.current.Use();
                     }
                     if (Event.current.keyCode == KeyCode.E)
@@ -899,6 +1057,8 @@ namespace Game
                         value.cellType = Grid3D.CellType.Empty;
                         value.elementInfo = null;
                         value.cellFeature = null;
+                        value.cellFeatureGroupIndex = 0;
+                        value.cellFeatureGroupHealth = 0;
                         MarkDirty();
                         Event.current.Use();
                     }
@@ -916,6 +1076,8 @@ namespace Game
                         value.breakableWallElementCondition = null;
                         value.elementInfo = null;
                         value.cellFeature = null;
+                        value.cellFeatureGroupIndex = 0;
+                        value.cellFeatureGroupHealth = 0;
                         MarkDirty();
                         Event.current.Use();
                     }
@@ -927,6 +1089,8 @@ namespace Game
                         value.breakableWallElementCondition = null;
                         value.elementInfo = null;
                         value.cellFeature = null;
+                        value.cellFeatureGroupIndex = 0;
+                        value.cellFeatureGroupHealth = 0;
                         MarkDirty();
                         Event.current.Use();
                     }

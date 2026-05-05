@@ -7,6 +7,7 @@ namespace Game
     {
         public SpriteRenderer gridSprite;
         public SpriteRenderer featureSprite;
+        public SpriteRenderer damageIndicator;
         public SpriteRenderer upperBorder;
         public SpriteRenderer lowerBorder;
         public SpriteRenderer leftBorder;

@@ -1,7 +1,15 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace Game
 {
+    [System.Serializable]
+    public class GlassDamageSpritePair
+    {
+        [Min(0)] public int missingHealth;
+        public Sprite sprite;
+    }
+
     /// <summary>
     /// Cell features are special properties that can be assigned to grid cells to create unique gameplay mechanics. They can interact with matched elements in various ways, such as being destroyed 
     /// when an element is matched over them or providing bonuses when adjacent elements are matched. Cell features can be used to add variety and strategic depth to the game by introducing different 
@@ -60,22 +68,41 @@ namespace Game
     [CreateAssetMenu(menuName = "Game/Cell Feature/Glass...")]
     public class GlassFeature : CellFeature
     {
+        [Min(1)] public int defaultGroupHealth = 1;
+        public List<GlassDamageSpritePair> damageSprites = new List<GlassDamageSpritePair>();
+
         public override bool AcceptElements => true;
+
+        public Sprite GetDamageSprite(int missingHealth)
+        {
+            Sprite bestSprite = null;
+            int bestMissingHealth = int.MinValue;
+
+            for (int i = 0; i < damageSprites.Count; i++)
+            {
+                GlassDamageSpritePair pair = damageSprites[i];
+                if (pair == null || pair.sprite == null)
+                    continue;
+
+                if (pair.missingHealth > missingHealth)
+                    continue;
+
+                if (pair.missingHealth > bestMissingHealth)
+                {
+                    bestMissingHealth = pair.missingHealth;
+                    bestSprite = pair.sprite;
+                }
+            }
+
+            return bestSprite;
+        }
 
         public override void OnElementMatchedOverTheCell(Grid3D.GridCell cell, GridElement element)
         {
-            if (cell == null)
-                return;
-
-            cell.cellFeature = null;
         }
 
         public override void OnElementMatchedAdjacentToTheCell(Grid3D.GridCell thisCell, Grid3D.GridCell matchedCell, GridElement element)
         {
-            if (thisCell == null)
-                return;
-
-            thisCell.cellFeature = null;
         }
     }
 }

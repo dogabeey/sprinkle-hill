@@ -486,6 +486,8 @@ namespace Game
             public GridElementInfo elementInfo;
             public CellFeature cellFeature;
             public ElementData breakableWallElementCondition;
+            public int cellFeatureGroupIndex;
+            public int cellFeatureGroupHealth;
         }
 
         [System.Flags]
