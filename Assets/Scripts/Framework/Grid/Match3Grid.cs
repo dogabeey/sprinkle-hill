@@ -162,6 +162,21 @@ namespace Game
             RefreshCellFeatureVisual(pos);
         }
 
+        public void TriggerCellFeatureMatchedAdjacentToAt(Vector2Int matchedPos, GridCell matchedCell, GridElement matchedElement)
+        {
+            Vector2Int[] adjacentOffsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            for (int i = 0; i < adjacentOffsets.Length; i++)
+            {
+                Vector2Int adjacentPos = matchedPos + adjacentOffsets[i];
+                GridCell adjacentCell = GetCell(adjacentPos);
+                if (adjacentCell?.cellFeature == null)
+                    continue;
+
+                adjacentCell.cellFeature.OnElementMatchedAdjacentToTheCell(adjacentCell, matchedCell, matchedElement);
+                RefreshCellFeatureVisual(adjacentPos);
+            }
+        }
+
         public static bool AreAdjacent(Vector2Int a, Vector2Int b)
         {
             return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) == 1;
@@ -475,7 +490,9 @@ namespace Game
                     if (cell.cellType != CellType.Normal || cell.elementInfo == null) continue;
 
                     bool hadGlassFeature = cell.cellFeature is GlassFeature;
+                    GridElement matchedElement = GetElementAt(pos);
                     TriggerCellFeatureMatchedOverAt(pos);
+                    TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
                     if (hadGlassFeature)
                         continue;
@@ -496,8 +513,7 @@ namespace Game
 
                     NotifyElementCleared(pos);
                     cell.elementInfo = null;
-                    GridElement element = GetElementAt(pos);
-                    if (element != null) StartCoroutine(element.DestroyElement());
+                    if (matchedElement != null) StartCoroutine(matchedElement.DestroyElement());
                 }
             }
 

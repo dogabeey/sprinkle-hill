@@ -1148,10 +1148,13 @@ namespace Game
             if (cell.cellFeature is GlassFeature)
             {
                 grid.TriggerCellFeatureMatchedOverAt(pos);
+                grid.TriggerCellFeatureMatchedAdjacentToAt(pos, cell, grid.GetElementAt(pos));
                 return;
             }
 
+            GridElement matchedElement = grid.GetElementAt(pos);
             grid.TriggerCellFeatureMatchedOverAt(pos);
+            grid.TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
             if (grid.TryRevealHiddenBoxAt(pos))
                 return;
@@ -1170,8 +1173,7 @@ namespace Game
 
             grid.NotifyElementCleared(pos);
             cell.elementInfo = null;
-            GridElement element = grid.GetElementAt(pos);
-            if (element != null) grid.StartCoroutine(element.DestroyElement());
+            if (matchedElement != null) grid.StartCoroutine(matchedElement.DestroyElement());
         }
 
         private IEnumerator AnimateBombFlight(GridElement bombElement, Vector3 target)
