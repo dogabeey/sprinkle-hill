@@ -49,6 +49,23 @@ namespace Game
 
         private LevelScene_Match3Game Match3Level => GameManager.Instance != null ? GameManager.Instance.CurrentLevel as LevelScene_Match3Game : null;
 
+        private void PlayCellFeatureDestroyEffect(CellFeature feature, Vector2Int pos)
+        {
+            if (feature?.destroyParticleEffect == null)
+                return;
+
+            Vector3 worldPos = GetWorldPosition(pos);
+            ParticleSystem fx = Instantiate(feature.destroyParticleEffect, worldPos, Quaternion.identity);
+            fx.Play();
+            float lifeTime = fx.main.duration + fx.main.startLifetime.constantMax + 0.2f;
+            Destroy(fx.gameObject, lifeTime);
+        }
+
+        public void PlayCellFeatureDestroyEffectAt(CellFeature feature, Vector2Int pos)
+        {
+            PlayCellFeatureDestroyEffect(feature, pos);
+        }
+
         // ------------------------------------------------------------------
         //  Public accessors used by PowerUpHandler & helpers
         // ------------------------------------------------------------------
@@ -253,6 +270,9 @@ namespace Game
                 if (cell == null)
                     continue;
 
+                if (cell.cellFeatureGroupMaxHealth > maxHealth)
+                    maxHealth = cell.cellFeatureGroupMaxHealth;
+
                 if (cell.cellFeatureGroupHealth > maxHealth)
                     maxHealth = cell.cellFeatureGroupHealth;
             }
@@ -272,6 +292,9 @@ namespace Game
                 int cellHealth = cell.cellFeatureGroupHealth > 0 ? cell.cellFeatureGroupHealth : maxHealth;
                 if (cellHealth < currentHealth)
                     currentHealth = cellHealth;
+
+                if (cell.cellFeatureGroupMaxHealth <= 0)
+                    cell.cellFeatureGroupMaxHealth = maxHealth;
             }
 
             return Mathf.Clamp(currentHealth, 0, maxHealth);
@@ -387,9 +410,12 @@ namespace Game
                         if (cell == null)
                             continue;
 
+                        CellFeature destroyedFeature = cell.cellFeature;
                         cell.cellFeature = null;
                         cell.cellFeatureGroupIndex = 0;
                         cell.cellFeatureGroupHealth = 0;
+                        cell.cellFeatureGroupMaxHealth = 0;
+                        PlayCellFeatureDestroyEffect(destroyedFeature, pos);
                         RefreshCellFeatureVisual(pos);
                     }
                 }
@@ -402,6 +428,8 @@ namespace Game
                             continue;
 
                         cell.cellFeatureGroupHealth = nextHealth;
+                        if (cell.cellFeatureGroupMaxHealth < maxHealth)
+                            cell.cellFeatureGroupMaxHealth = maxHealth;
                     }
                 }
             }
@@ -1117,6 +1145,7 @@ namespace Game
         {
             EnsureGridCells();
             Dictionary<GlassGroupId, int> resolvedGroupHealth = new Dictionary<GlassGroupId, int>();
+            Dictionary<GlassGroupId, int> resolvedGroupMaxHealth = new Dictionary<GlassGroupId, int>();
             for (int x = 0; x < gridSize.x; x++)
                 for (int y = 0; y < gridSize.y; y++)
                 {
@@ -1130,10 +1159,20 @@ namespace Game
                     if (configuredHealth <= 0)
                         configuredHealth = Mathf.Max(1, groupId.feature != null ? groupId.feature.defaultGroupHealth : 1);
 
+                    int configuredMaxHealth = cell.cellFeatureGroupMaxHealth;
+                    if (configuredMaxHealth <= 0)
+                        configuredMaxHealth = configuredHealth;
+                    configuredMaxHealth = Mathf.Max(configuredMaxHealth, configuredHealth);
+
                     if (resolvedGroupHealth.TryGetValue(groupId, out int existingHealth))
                         resolvedGroupHealth[groupId] = Mathf.Min(existingHealth, configuredHealth);
                     else
                         resolvedGroupHealth[groupId] = configuredHealth;
+
+                    if (resolvedGroupMaxHealth.TryGetValue(groupId, out int existingMaxHealth))
+                        resolvedGroupMaxHealth[groupId] = Mathf.Max(existingMaxHealth, configuredMaxHealth);
+                    else
+                        resolvedGroupMaxHealth[groupId] = configuredMaxHealth;
                 }
 
             for (int x = 0; x < gridSize.x; x++)
@@ -1146,6 +1185,9 @@ namespace Game
 
                     if (resolvedGroupHealth.TryGetValue(groupId, out int groupHealth))
                         cell.cellFeatureGroupHealth = groupHealth;
+
+                    if (resolvedGroupMaxHealth.TryGetValue(groupId, out int groupMaxHealth))
+                        cell.cellFeatureGroupMaxHealth = Mathf.Max(groupHealth, groupMaxHealth);
                 }
             }
 

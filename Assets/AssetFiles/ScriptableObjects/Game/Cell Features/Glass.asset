@@ -13,17 +13,15 @@ MonoBehaviour:
   m_Name: Glass
   m_EditorClassIdentifier: Game:Game:GlassFeature
   tileSpriteSet: {fileID: 11400000, guid: 9712bc8a119975a4fa5e866d3dabf47f, type: 2}
-  featureIcon: {fileID: -205259008, guid: a46309d38df06264b96c750375a58bd1, type: 3}
+  featureIcon: {fileID: 444081177, guid: eeb43e0ebd4b7a047a883b2e77204591, type: 3}
   spriteLayerIndex: 4
   defaultGroupHealth: 1
   damageSprites:
-  - missingHealth: 0
-    sprite: {fileID: 0}
   - missingHealth: 1
-    sprite: {fileID: 0}
+    sprite: {fileID: 1814690578, guid: 65990b7bd0ebabb4ea9fcf5dcbb93ccf, type: 3}
   - missingHealth: 2
-    sprite: {fileID: 0}
+    sprite: {fileID: 1499928797, guid: 65990b7bd0ebabb4ea9fcf5dcbb93ccf, type: 3}
   - missingHealth: 3
-    sprite: {fileID: 0}
+    sprite: {fileID: 1012081635, guid: 65990b7bd0ebabb4ea9fcf5dcbb93ccf, type: 3}
   - missingHealth: 4
-    sprite: {fileID: 0}
+    sprite: {fileID: -1618349872, guid: 65990b7bd0ebabb4ea9fcf5dcbb93ccf, type: 3}

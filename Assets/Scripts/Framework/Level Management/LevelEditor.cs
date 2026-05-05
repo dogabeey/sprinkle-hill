@@ -119,6 +119,7 @@ namespace Game
                         continue;
 
                     cell.cellFeatureGroupHealth = normalizedHealth;
+                    cell.cellFeatureGroupMaxHealth = normalizedHealth;
                 }
             }
         }
@@ -140,6 +141,9 @@ namespace Game
 
                     if (cell.cellFeatureGroupHealth > 0)
                         return cell.cellFeatureGroupHealth;
+
+                    if (cell.cellFeatureGroupMaxHealth > 0)
+                        return cell.cellFeatureGroupMaxHealth;
                 }
             }
 
@@ -779,7 +783,8 @@ namespace Game
                         cellFeature = sourceCell != null ? sourceCell.cellFeature : null,
                         breakableWallElementCondition = sourceCell != null ? sourceCell.breakableWallElementCondition : null,
                         cellFeatureGroupIndex = sourceCell != null ? sourceCell.cellFeatureGroupIndex : 0,
-                        cellFeatureGroupHealth = sourceCell != null ? sourceCell.cellFeatureGroupHealth : 0
+                        cellFeatureGroupHealth = sourceCell != null ? sourceCell.cellFeatureGroupHealth : 0,
+                        cellFeatureGroupMaxHealth = sourceCell != null ? sourceCell.cellFeatureGroupMaxHealth : 0
                     };
                 }
             }
@@ -914,6 +919,7 @@ namespace Game
                     EditorGUI.LabelField(new Rect(rect.x + 1f, rect.y + 1f, rect.width - 3f, indicatorSize), $"G{value.cellFeatureGroupIndex}", groupStyle);
 
                     int effectiveHealth = value.cellFeatureGroupHealth > 0 ? value.cellFeatureGroupHealth : Mathf.Max(1, glassInCell.defaultGroupHealth);
+                    int effectiveMaxHealth = value.cellFeatureGroupMaxHealth > 0 ? value.cellFeatureGroupMaxHealth : effectiveHealth;
                     GUIStyle healthStyle = new GUIStyle(EditorStyles.boldLabel)
                     {
                         
@@ -921,7 +927,7 @@ namespace Game
                         fontSize = Mathf.Max(8, Mathf.RoundToInt(rect.height * 0.2f))
                     };
                     healthStyle.normal.textColor = Color.red;
-                    EditorGUI.LabelField(new Rect(rect.x + 2f, rect.y + rect.height - indicatorSize - 2f, rect.width - 3f, indicatorSize), $"H{effectiveHealth}", healthStyle);
+                    EditorGUI.LabelField(new Rect(rect.x + 2f, rect.y + rect.height - indicatorSize - 2f, rect.width - 3f, indicatorSize), $"H{effectiveHealth}/{effectiveMaxHealth}", healthStyle);
                 }
             }
 
@@ -1018,10 +1024,13 @@ namespace Game
                             {
                                 value.cellFeatureGroupIndex = 0;
                                 value.cellFeatureGroupHealth = 0;
+                                value.cellFeatureGroupMaxHealth = 0;
                             }
                             else if (glassFeature != null)
                             {
-                                value.cellFeatureGroupHealth = Mathf.Max(1, value.cellFeatureGroupHealth > 0 ? value.cellFeatureGroupHealth : glassFeature.defaultGroupHealth);
+                                int initialHealth = Mathf.Max(1, value.cellFeatureGroupHealth > 0 ? value.cellFeatureGroupHealth : glassFeature.defaultGroupHealth);
+                                value.cellFeatureGroupHealth = initialHealth;
+                                value.cellFeatureGroupMaxHealth = Mathf.Max(initialHealth, value.cellFeatureGroupMaxHealth);
                             }
                             MarkDirty();
                             consumedShiftShortcut = true;
@@ -1047,6 +1056,7 @@ namespace Game
                         value.cellFeature = glass;
                         value.cellFeatureGroupIndex = groupIndex;
                         value.cellFeatureGroupHealth = ResolveExistingGlassGroupHealth(glass, groupIndex);
+                        value.cellFeatureGroupMaxHealth = Mathf.Max(value.cellFeatureGroupHealth, value.cellFeatureGroupMaxHealth);
                         MarkDirty();
                         Event.current.Use();
                     }
@@ -1059,6 +1069,7 @@ namespace Game
                         value.cellFeature = null;
                         value.cellFeatureGroupIndex = 0;
                         value.cellFeatureGroupHealth = 0;
+                        value.cellFeatureGroupMaxHealth = 0;
                         MarkDirty();
                         Event.current.Use();
                     }
@@ -1078,6 +1089,7 @@ namespace Game
                         value.cellFeature = null;
                         value.cellFeatureGroupIndex = 0;
                         value.cellFeatureGroupHealth = 0;
+                        value.cellFeatureGroupMaxHealth = 0;
                         MarkDirty();
                         Event.current.Use();
                     }
@@ -1091,6 +1103,7 @@ namespace Game
                         value.cellFeature = null;
                         value.cellFeatureGroupIndex = 0;
                         value.cellFeatureGroupHealth = 0;
+                        value.cellFeatureGroupMaxHealth = 0;
                         MarkDirty();
                         Event.current.Use();
                     }

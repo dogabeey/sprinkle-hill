@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace Game
 {
@@ -23,6 +22,7 @@ namespace Game
         public TileSpriteSet tileSpriteSet;
         public Sprite featureIcon;
         public int spriteLayerIndex;
+        public ParticleSystem destroyParticleEffect;
 
         /// <summary>
         /// Indicates whether this cell feature can accept elements to fall into it. If false, the cel this feature is assigned to will act as empty.
@@ -31,78 +31,5 @@ namespace Game
 
         public abstract void OnElementMatchedOverTheCell(Grid3D.GridCell cell, GridElement element);
         public abstract void OnElementMatchedAdjacentToTheCell(Grid3D.GridCell thisCell, Grid3D.GridCell matchedCell, GridElement element);
-    }
-
-    /// <summary>
-    /// Wafer is background feature that breaks and destroyed when elements are matched over it.
-    /// </summary>
-    [CreateAssetMenu(menuName = "Game/Cell Feature/Wafer...")]
-    public class WaferFeature : CellFeature
-    {
-        public override bool AcceptElements => true;
-
-        public override void OnElementMatchedOverTheCell(Grid3D.GridCell cell, GridElement element)
-        {
-            if (cell == null)
-                return;
-
-            EventManager.TriggerEvent(GameEvent.WAFER_CLEARED, new EventParam(
-                paramScriptable: this,
-                vectorList: cell != null
-                    ? new Vector3[] { new Vector3(cell.coordinates.x, cell.coordinates.y, 0f) }
-                    : null
-            ));
-
-            cell.cellFeature = null;
-        }
-        public override void OnElementMatchedAdjacentToTheCell(Grid3D.GridCell thisCell, Grid3D.GridCell matchedCell, GridElement element)
-        {
-            // Wafer is only affected by matches directly over its own cell.
-        }
-    }
-
-    /// <summary>
-    /// Glass allows elements to fall through, but blocks swaps and matching while active.
-    /// It breaks when an element is matched over or adjacent to it.
-    /// </summary>
-    [CreateAssetMenu(menuName = "Game/Cell Feature/Glass...")]
-    public class GlassFeature : CellFeature
-    {
-        [Min(1)] public int defaultGroupHealth = 1;
-        public List<GlassDamageSpritePair> damageSprites = new List<GlassDamageSpritePair>();
-
-        public override bool AcceptElements => true;
-
-        public Sprite GetDamageSprite(int missingHealth)
-        {
-            Sprite bestSprite = null;
-            int bestMissingHealth = int.MinValue;
-
-            for (int i = 0; i < damageSprites.Count; i++)
-            {
-                GlassDamageSpritePair pair = damageSprites[i];
-                if (pair == null || pair.sprite == null)
-                    continue;
-
-                if (pair.missingHealth > missingHealth)
-                    continue;
-
-                if (pair.missingHealth > bestMissingHealth)
-                {
-                    bestMissingHealth = pair.missingHealth;
-                    bestSprite = pair.sprite;
-                }
-            }
-
-            return bestSprite;
-        }
-
-        public override void OnElementMatchedOverTheCell(Grid3D.GridCell cell, GridElement element)
-        {
-        }
-
-        public override void OnElementMatchedAdjacentToTheCell(Grid3D.GridCell thisCell, Grid3D.GridCell matchedCell, GridElement element)
-        {
-        }
     }
 }

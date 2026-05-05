@@ -488,6 +488,7 @@ namespace Game
             public ElementData breakableWallElementCondition;
             public int cellFeatureGroupIndex;
             public int cellFeatureGroupHealth;
+            public int cellFeatureGroupMaxHealth;
         }
 
         [System.Flags]

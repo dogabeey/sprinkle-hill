@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Game:Game:WaferFeature
   tileSpriteSet: {fileID: 11400000, guid: e043f04a44b9eef41b4ca32e6aadd9b9, type: 2}
   featureIcon: {fileID: 1262562994, guid: f941be62a76a51541b0868c1b6a6d8ff, type: 3}
+  spriteLayerIndex: 1

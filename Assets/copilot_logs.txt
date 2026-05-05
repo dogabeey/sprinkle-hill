@@ -1,3 +1,5 @@
 [2026-05-05 19:51:43] - Updated glass feature to grouped prison behavior with group index/editor shortcuts, group health & damage sprites, per-match group damage handling, and damage indicator rendering on group far corners.
 [2026-05-05 20:01:08] - Added Level Editor Shift+0-9 shortcut for glass health assignment and bottom-left health label rendering on glass cells.
 [2026-05-05 20:05:53] - Fixed Level Editor glass group health editing so Shift+0-9 updates all glass cells in the same group index and group index assignment adopts existing group health.
+[2026-05-05 21:34:22] - Fixed glass damage indicator progression by introducing persisted group max health and using current/max health separation for damage sprite updates.
+[2026-05-05 21:40:08] - Added configurable cell feature destroy particle effect prefab support and trigger points for wafer and grouped glass destruction.

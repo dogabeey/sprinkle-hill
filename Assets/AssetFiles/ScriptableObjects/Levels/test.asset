@@ -1171,7 +1171,7 @@ MonoBehaviour:
       Data: 1
     - Name: cellFeatureGroupHealth
       Entry: 3
-      Data: 2
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -1228,7 +1228,7 @@ MonoBehaviour:
       Data: 1
     - Name: cellFeatureGroupHealth
       Entry: 3
-      Data: 2
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -1627,7 +1627,7 @@ MonoBehaviour:
       Data: 1
     - Name: cellFeatureGroupHealth
       Entry: 3
-      Data: 2
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -1684,7 +1684,7 @@ MonoBehaviour:
       Data: 1
     - Name: cellFeatureGroupHealth
       Entry: 3
-      Data: 2
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -2073,17 +2073,17 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: cellFeatureGroupIndex
       Entry: 3
-      Data: 2
+      Data: 0
     - Name: cellFeatureGroupHealth
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -2130,17 +2130,17 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: cellFeatureGroupIndex
       Entry: 3
-      Data: 2
+      Data: 0
     - Name: cellFeatureGroupHealth
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -2415,8 +2415,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2425,7 +2425,7 @@ MonoBehaviour:
       Data: 0
     - Name: cellFeatureGroupHealth
       Entry: 3
-      Data: 0
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -2472,8 +2472,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2482,7 +2482,7 @@ MonoBehaviour:
       Data: 0
     - Name: cellFeatureGroupHealth
       Entry: 3
-      Data: 0
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -2529,17 +2529,17 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: cellFeatureGroupIndex
       Entry: 3
-      Data: 2
+      Data: 0
     - Name: cellFeatureGroupHealth
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -2586,17 +2586,17 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
     - Name: cellFeatureGroupIndex
       Entry: 3
-      Data: 2
+      Data: 0
     - Name: cellFeatureGroupHealth
       Entry: 3
-      Data: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -2871,8 +2871,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2881,7 +2881,7 @@ MonoBehaviour:
       Data: 0
     - Name: cellFeatureGroupHealth
       Entry: 3
-      Data: 0
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
@@ -2928,8 +2928,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2938,7 +2938,7 @@ MonoBehaviour:
       Data: 0
     - Name: cellFeatureGroupHealth
       Entry: 3
-      Data: 0
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
