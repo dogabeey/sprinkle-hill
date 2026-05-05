@@ -702,6 +702,9 @@ namespace Game
                     Vector2Int pos = new Vector2Int(x, y);
                     GridCell cell = GetCell(pos);
                     if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null || IsMultiCellElementAnchor(pos)) continue;
+                    if (cell.elementInfo.isHidden) continue;
+                    if (IsGarbageBagData(cell.elementInfo.elementData)) continue;
+                    if (IsCauldronCell(cell)) continue;
 
                     positions.Add(pos);
                     originalInfos.Add(cell.elementInfo);
