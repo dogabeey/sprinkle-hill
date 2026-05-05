@@ -402,6 +402,7 @@ namespace Game
             Sprite featureSprite = DetermineFeatureTileType(gridCells, x, y, drawStartingCorner, feature, featureSet);
             cellController.featureSprite.sprite = featureSprite;
             cellController.featureSprite.enabled = featureSprite != null;
+            cellController.featureSprite.sortingOrder = feature.spriteLayerIndex;
 
             Color currentColor = cellController.featureSprite.color;
             cellController.featureSprite.color = featureSet.GetColorForTile(new Vector2Int(x, y), currentColor);

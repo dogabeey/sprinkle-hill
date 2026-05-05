@@ -8,37 +8,36 @@ namespace Game
     public class TileSpriteSet : ScriptableObject
     {
         [SerializeReference] public ColorRuleSet colorRuleset;
-        public Sprite topLeftCorner;
-        public Sprite topRightCorner;
-        public Sprite bottomLeftCorner;
-        public Sprite bottomRightCorner;
-        public Sprite topEdge;
-        public Sprite bottomEdge;
-        public Sprite leftEdge;
-        public Sprite rightEdge;
-        public Sprite topTip;
-        public Sprite bottomTip;
-        public Sprite leftTip;
-        public Sprite rightTip;
-        public Sprite verticalTile;
-        public Sprite horizontalTile;
-        public Sprite verticalWithLeftConnectionTile;
-        public Sprite verticalWithRightConnectionTile;
-        public Sprite horizontalWithUpConnectionTile;
-        public Sprite horizontalWithDownConnectionTile;
-        public Sprite onlyVerticalAndHorizontalConnectionTile;
-        public Sprite upperAndLeftTile;
-        public Sprite upperAndRightTile;
-        public Sprite lowerAndLeftTile;
-        public Sprite lowerAndRightTile;
-        public Sprite singleTileStandalone;
-        public Sprite topLeftConvexCorner;
-        public Sprite topRightConvexCorner;
-        public Sprite bottomLeftConvexCorner;
-        public Sprite bottomRightConvexCorner;
-        public Sprite singleInnerTile;
-        public Sprite errorTile;
-
+        [PreviewField] public Sprite topLeftCorner;
+        [PreviewField] public Sprite topRightCorner;
+        [PreviewField] public Sprite bottomLeftCorner;
+        [PreviewField] public Sprite bottomRightCorner;
+        [PreviewField] public Sprite topEdge;
+        [PreviewField] public Sprite bottomEdge;
+        [PreviewField] public Sprite leftEdge;
+        [PreviewField] public Sprite rightEdge;
+        [PreviewField] public Sprite topTip;
+        [PreviewField] public Sprite bottomTip;
+        [PreviewField] public Sprite leftTip;
+        [PreviewField] public Sprite rightTip;
+        [PreviewField] public Sprite verticalTile;
+        [PreviewField] public Sprite horizontalTile;
+        [PreviewField] public Sprite verticalWithLeftConnectionTile;
+        [PreviewField] public Sprite verticalWithRightConnectionTile;
+        [PreviewField] public Sprite horizontalWithUpConnectionTile;
+        [PreviewField] public Sprite horizontalWithDownConnectionTile;
+        [PreviewField] public Sprite onlyVerticalAndHorizontalConnectionTile;
+        [PreviewField] public Sprite upperAndLeftTile;
+        [PreviewField] public Sprite upperAndRightTile;
+        [PreviewField] public Sprite lowerAndLeftTile;
+        [PreviewField] public Sprite lowerAndRightTile;
+        [PreviewField] public Sprite singleTileStandalone;
+        [PreviewField] public Sprite topLeftConvexCorner;
+        [PreviewField] public Sprite topRightConvexCorner;
+        [PreviewField] public Sprite bottomLeftConvexCorner;
+        [PreviewField] public Sprite bottomRightConvexCorner;
+        [PreviewField] public Sprite singleInnerTile;
+        [PreviewField] public Sprite errorTile;
         public Color GetColorForTile(Vector2Int coordinates, Color currentColor)
         {
             if (colorRuleset == null)
