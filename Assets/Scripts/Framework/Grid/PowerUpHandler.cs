@@ -749,7 +749,9 @@ namespace Game
             List<Vector2Int> hiddenElements = new List<Vector2Int>();
             List<Vector2Int> waferCells = new List<Vector2Int>();
             List<Vector2Int> normalCandidates = new List<Vector2Int>();
+            List<Vector2Int> belowGarbageCandidates = new List<Vector2Int>();
             Vector2Int[] offsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            GameManager gm = GameManager.Instance;
 
             for (int x = 0; x < grid.GridSize.x; x++)
             {
@@ -762,6 +764,13 @@ namespace Game
                     Grid3D.GridCell cell = grid.GetCellPublic(pos);
                     if (cell == null || cell.cellType != Grid3D.CellType.Normal)
                         continue;
+
+                    // Propeller should never target garbage bag cells.
+                    if (cell.elementInfo?.elementData != null)
+                    {
+                        if (gm != null && gm.garbageBagElementData == cell.elementInfo.elementData)
+                            continue;
+                    }
 
                     // Check if adjacent to breakable wall (highest priority)
                     bool nearBreakable = false;
@@ -793,13 +802,21 @@ namespace Game
                         }
                         else
                         {
-                            normalCandidates.Add(pos);
+                            Grid3D.GridCell aboveCell = grid.GetCellPublic(pos + Vector2Int.up);
+                            bool isBelowGarbage = gm != null &&
+                                aboveCell?.elementInfo?.elementData != null &&
+                                aboveCell.elementInfo.elementData == gm.garbageBagElementData;
+
+                            if (isBelowGarbage)
+                                belowGarbageCandidates.Add(pos);
+                            else
+                                normalCandidates.Add(pos);
                         }
                     }
                 }
             }
 
-            // Priority: Breakable Walls -> Hidden Elements -> Wafer Features -> Normal Cells
+            // Priority: Breakable Walls -> Hidden Elements -> Wafer Features -> Normal Cells -> Elements below garbage bags
             if (breakableAdjacent.Count > 0)
                 return breakableAdjacent[Random.Range(0, breakableAdjacent.Count)];
             if (hiddenElements.Count > 0)
@@ -808,6 +825,8 @@ namespace Game
                 return waferCells[Random.Range(0, waferCells.Count)];
             if (normalCandidates.Count > 0)
                 return normalCandidates[Random.Range(0, normalCandidates.Count)];
+            if (belowGarbageCandidates.Count > 0)
+                return belowGarbageCandidates[Random.Range(0, belowGarbageCandidates.Count)];
             return origin;
         }
 

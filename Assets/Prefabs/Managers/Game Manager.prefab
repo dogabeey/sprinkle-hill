@@ -52,6 +52,8 @@ MonoBehaviour:
   - {fileID: 6648657062745475262, guid: 04461135af576014d8552532118fc0ca, type: 3}
   - {fileID: 6648657062745475262, guid: cac998f988b69c9439453293c956cda8, type: 3}
   - {fileID: 6648657062745475262, guid: 4bd797af29402654ba1c870264e5a7e9, type: 3}
+  - {fileID: 6648657062745475262, guid: 831fecad3afec634d8c70111334c833d, type: 3}
+  - {fileID: 6648657062745475262, guid: 52f5aba18e8117b4da1230b33185e4d4, type: 3}
   excludeFirstXLevelFromLoop: 4
   lastPlayedLevelIndex: 0
 --- !u!1 &7722314759461277705
@@ -104,15 +106,26 @@ MonoBehaviour:
   soundManager: {fileID: 11400000, guid: 71ffc4cb2ee667b4ba012ffcdf4be7db, type: 2}
   saveManager: {fileID: 11400000, guid: 10fcddd14ad872e47bd6cc371200c1f6, type: 2}
   constantManager: {fileID: 11400000, guid: b9406341470b1d141960d0d2aa97dec6, type: 2}
+  gfxManager: {fileID: 0}
   tutorialManager: {fileID: 0}
   actionBarManager: {fileID: 0}
   screenManager: {fileID: 0}
   featureTracker: {fileID: 0}
   showFeatureProgressScreen: 0
+  cashCurrency: {fileID: 0}
+  premiumCurrency: {fileID: 0}
   autoShuffleWhenOutOfPossibleMoves: 1
+  bombElementData: {fileID: 11400000, guid: 2f83e159c6b368646a1f9d8e7ec081e9, type: 2}
+  rocketElementData: {fileID: 11400000, guid: 56c62304f3d4a6c428379f3845a428a7, type: 2}
+  propellerElementData: {fileID: 11400000, guid: 154ee2fd4a3a356489c4482e8b443c06, type: 2}
+  discoBallElementData: {fileID: 11400000, guid: 24c241fb46e7d3447b4a3d140a9cda60, type: 2}
+  cauldronElementData: {fileID: 11400000, guid: f531cb99e5512e14fbf93538678a6278, type: 2}
+  garbageBagElementData: {fileID: 11400000, guid: 518bd858af96e224fb306e32e60f0080, type: 2}
+  waferFeature: {fileID: 11400000, guid: 9a0a4a3b932d9dd48b6c09ede6bf2324, type: 2}
   worlds:
   - {fileID: 7722314759128445691}
   levelContainer: {fileID: 0}
   winParticle: {fileID: 0}
+  mainCanvas: {fileID: 0}
   upperPanelUI: {fileID: 0}
   isSequentalLevels: 1
