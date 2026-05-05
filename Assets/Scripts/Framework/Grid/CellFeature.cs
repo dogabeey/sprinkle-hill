@@ -14,6 +14,7 @@ namespace Game
         /// </summary>
         public TileSpriteSet tileSpriteSet;
         public Sprite featureIcon;
+        public int spriteLayerIndex;
 
         /// <summary>
         /// Indicates whether this cell feature can accept elements to fall into it. If false, the cel this feature is assigned to will act as empty.
@@ -49,6 +50,32 @@ namespace Game
         public override void OnElementMatchedAdjacentToTheCell(Grid3D.GridCell thisCell, Grid3D.GridCell matchedCell, GridElement element)
         {
             // Wafer is only affected by matches directly over its own cell.
+        }
+    }
+
+    /// <summary>
+    /// Glass allows elements to fall through, but blocks swaps and matching while active.
+    /// It breaks when an element is matched over or adjacent to it.
+    /// </summary>
+    [CreateAssetMenu(menuName = "Game/Cell Feature/Glass...")]
+    public class GlassFeature : CellFeature
+    {
+        public override bool AcceptElements => true;
+
+        public override void OnElementMatchedOverTheCell(Grid3D.GridCell cell, GridElement element)
+        {
+            if (cell == null)
+                return;
+
+            cell.cellFeature = null;
+        }
+
+        public override void OnElementMatchedAdjacentToTheCell(Grid3D.GridCell thisCell, Grid3D.GridCell matchedCell, GridElement element)
+        {
+            if (thisCell == null)
+                return;
+
+            thisCell.cellFeature = null;
         }
     }
 }

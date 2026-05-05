@@ -222,6 +222,9 @@ namespace Game
             GridCell firstCell = GetCell(first);
             GridCell secondCell = GetCell(second);
 
+            if (firstCell?.cellFeature is GlassFeature || secondCell?.cellFeature is GlassFeature)
+                yield break;
+
             // Activate power-ups on swap
             ElementPowerUpType firstType = firstCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
             ElementPowerUpType secondType = secondCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
@@ -471,7 +474,11 @@ namespace Game
                     }
                     if (cell.cellType != CellType.Normal || cell.elementInfo == null) continue;
 
+                    bool hadGlassFeature = cell.cellFeature is GlassFeature;
                     TriggerCellFeatureMatchedOverAt(pos);
+
+                    if (hadGlassFeature)
+                        continue;
 
                     if (TryRevealHiddenBoxAt(pos))
                         continue;
@@ -904,6 +911,7 @@ namespace Game
             GridCell cell = GetCell(new Vector2Int(x, y));
             return cell != null &&
                    cell.cellType == CellType.Normal &&
+                   !(cell.cellFeature is GlassFeature) &&
                    cell.elementInfo != null &&
                    !cell.elementInfo.isHidden &&
                    cell.elementInfo.powerUpType == ElementPowerUpType.None &&
@@ -919,6 +927,7 @@ namespace Game
             {
                 GridCell cell = GetCell(new Vector2Int(x, y));
                 if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null ||
+                    cell.cellFeature is GlassFeature ||
                     cell.elementInfo.isHidden || PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType) ||
                     IsMultiCellData(cell.elementInfo.elementData) ||
                     IsGarbageBagData(cell.elementInfo.elementData))
@@ -1047,7 +1056,11 @@ namespace Game
                     ElementData destroyedElementData = cell.elementInfo.elementData;
 
                     GridElement matchedElement = GetElementAt(pos);
+                    bool hadGlassFeature = cell.cellFeature is GlassFeature;
                     TriggerCellFeatureMatchedOverAt(pos);
+
+                    if (hadGlassFeature)
+                        continue;
 
                     for (int i = 0; i < adjacentOffsets.Length; i++)
                     {
@@ -1442,7 +1455,11 @@ namespace Game
 
                     if (cell.cellType == CellType.Normal && cell.elementInfo != null)
                     {
+                        bool hadGlassFeature = cell.cellFeature is GlassFeature;
                         TriggerCellFeatureMatchedOverAt(pos);
+
+                        if (hadGlassFeature)
+                            continue;
 
                         if (TryRevealHiddenBoxAt(pos))
                             continue;
@@ -1677,6 +1694,7 @@ namespace Game
         {
             return cell != null &&
                    cell.cellType == CellType.Normal &&
+                   !(cell.cellFeature is GlassFeature) &&
                    cell.elementInfo != null &&
                    cell.elementInfo.elementData != null &&
                    !IsMultiCellData(cell.elementInfo.elementData) &&

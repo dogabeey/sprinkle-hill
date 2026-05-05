@@ -72,6 +72,8 @@ namespace Game
         public ElementData garbageBagElementData;
         [FoldoutGroup("Cell Features")]
         public WaferFeature waferFeature;
+        [FoldoutGroup("Cell Features")]
+        public GlassFeature glassFeature;
         [FoldoutGroup("References")]
         public List<World> worlds;
         [FoldoutGroup("References")]

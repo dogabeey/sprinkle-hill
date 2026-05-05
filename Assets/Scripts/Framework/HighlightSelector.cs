@@ -128,6 +128,7 @@ namespace Game
         {
             return cell != null
                 && cell.cellType == Grid3D.CellType.Normal
+                && !(cell.cellFeature is GlassFeature)
                 && cell.elementInfo != null
                 && !cell.elementInfo.isHidden
                 && cell.elementInfo.powerUpType == ElementPowerUpType.None

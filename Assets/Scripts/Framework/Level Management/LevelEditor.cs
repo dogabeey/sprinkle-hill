@@ -44,6 +44,8 @@ namespace Game
             "B: Set cell to Breakable Wall\n" +
             "H: Toggle Hidden Element\n" +
             "U: Set cell to Unbreakable Wall\n" +
+            "Shift+Z: Toggle Wafer Feature\n" +
+            "Shift+X: Toggle Glass Feature\n" +
             "R: Toggle random element marker\n" +
             "Ctrl+R: Assign random element from pool\n" +
             "1-9: Assign element by indexed asset list\n" +
@@ -172,6 +174,7 @@ namespace Game
             GenericMenu menu = new GenericMenu();
             bool isBreakableWall = cell != null && cell.cellType == Grid3D.CellType.BreakableWall;
             WaferFeature waferFeature = GameManager.Instance != null ? GameManager.Instance.waferFeature : null;
+            GlassFeature glassFeature = GameManager.Instance != null ? GameManager.Instance.glassFeature : null;
 
             if (includeCellFeatureItems)
             {
@@ -186,6 +189,16 @@ namespace Game
                     {
                         cell.cellType = Grid3D.CellType.Normal;
                         cell.cellFeature = waferFeature;
+                        cell.breakableWallElementCondition = null;
+                        MarkDirty();
+                    });
+                }
+                if (glassFeature != null)
+                {
+                    menu.AddItem(new GUIContent($"Cell Feature/{glassFeature.name}"), cell.cellFeature == glassFeature, () =>
+                    {
+                        cell.cellType = Grid3D.CellType.Normal;
+                        cell.cellFeature = glassFeature;
                         cell.breakableWallElementCondition = null;
                         MarkDirty();
                     });
@@ -725,9 +738,9 @@ namespace Game
             float indicatorPadding = Mathf.Min(rect.width, rect.height) * 0.05f;
             Rect hiddenIndicatorRect = new Rect(rect.x + indicatorPadding, rect.y + indicatorPadding, indicatorSize, indicatorSize);
             Rect sparklingIndicatorRect = new Rect(hiddenIndicatorRect.xMax + indicatorPadding * 0.6f, rect.y + indicatorPadding, indicatorSize, indicatorSize);
-            Rect featureIndicatorRect = new Rect(rect.x + indicatorPadding, rect.yMax - indicatorSize - indicatorPadding, indicatorSize * 1.5f, indicatorSize);
 
             WaferFeature waferFeature = GameManager.Instance.waferFeature;
+            GlassFeature glassFeature = GameManager.Instance != null ? GameManager.Instance.glassFeature : null;
 
             switch (value.cellType)
             {
@@ -763,7 +776,21 @@ namespace Game
             }
             if (value.cellType == Grid3D.CellType.Normal && value.cellFeature != null)
             {
-                GUI.DrawTexture(rect, value.cellFeature.featureIcon != null ? value.cellFeature.featureIcon.texture : Texture2D.whiteTexture);
+                Sprite featureIcon = value.cellFeature.featureIcon;
+                if (featureIcon != null && featureIcon.texture != null)
+                {
+                    Rect spriteRect = featureIcon.textureRect;
+                    Rect uv = new Rect(
+                        spriteRect.x / featureIcon.texture.width,
+                        spriteRect.y / featureIcon.texture.height,
+                        spriteRect.width / featureIcon.texture.width,
+                        spriteRect.height / featureIcon.texture.height);
+                    GUI.DrawTextureWithTexCoords(rect, featureIcon.texture, uv, true);
+                }
+                else
+                {
+                    GUI.DrawTexture(rect, Texture2D.whiteTexture);
+                }
             }
 
             if (value.elementInfo != null && value.elementInfo.randomElement)
@@ -846,6 +873,12 @@ namespace Game
                             {
                             value.cellType = Grid3D.CellType.Normal;
                             value.cellFeature = value.cellFeature == waferFeature ? null : waferFeature;
+                            MarkDirty();
+                        }
+                        else if (Event.current.keyCode == KeyCode.X)
+                        {
+                            value.cellType = Grid3D.CellType.Normal;
+                            value.cellFeature = value.cellFeature == glassFeature ? null : glassFeature;
                             MarkDirty();
                         }
                         Event.current.Use();

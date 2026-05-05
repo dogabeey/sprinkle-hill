@@ -1145,6 +1145,12 @@ namespace Game
             if (cell == null) return;
             if (cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null) return;
 
+            if (cell.cellFeature is GlassFeature)
+            {
+                grid.TriggerCellFeatureMatchedOverAt(pos);
+                return;
+            }
+
             grid.TriggerCellFeatureMatchedOverAt(pos);
 
             if (grid.TryRevealHiddenBoxAt(pos))

@@ -4622,6 +4622,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 128536242}
     - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: glassFeature
+      value: 
+      objectReference: {fileID: 11400000, guid: 66b5b66c4fb707c46810127020dbbb17, type: 2}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: upperPanelUI
       value: 
       objectReference: {fileID: 9132301250057630282}
