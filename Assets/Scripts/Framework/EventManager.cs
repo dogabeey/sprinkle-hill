@@ -135,6 +135,8 @@ public class EventManager : ScriptableObject, IManager
     public static void StopListening(string eventName, Action<EventParam> listener)
     {
         if (GameManager.Instance && GameManager.Instance.eventManager == null) return;
+        if(instance == null) return;
+        if(instance.eventDictionary == null) return;
         Action<EventParam> thisEvent;
         if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
         {
