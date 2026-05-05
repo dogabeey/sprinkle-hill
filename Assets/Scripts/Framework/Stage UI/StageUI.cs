@@ -40,16 +40,25 @@ namespace Game
 
         public override void DrawUI()
         {
-            float currentFillAmount = fillImage.fillAmount;
-
             ObjectiveManager objectiveManager = ObjectiveManager.Instance;
             currentLevel = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
-            int totalStages = currentLevel.levelEditors.Count;
-            float totalObjectives = objectiveManager.GetTotalInitialObjectives();
-            float remainingObjectives = objectiveManager.GetTotalRemainingObjectives();
-            float progress = 1f - (remainingObjectives / totalObjectives);
+            int totalStages = currentLevel != null ? currentLevel.levelEditors.Count : 0;
+            if (totalStages <= 0)
+            {
+                fillImage.DOFillAmount(0f, 0.25f).SetEase(Ease.OutCubic);
+                return;
+            }
+
+            float totalObjectives = objectiveManager != null ? objectiveManager.GetTotalInitialObjectives() : 0f;
+            float remainingObjectives = objectiveManager != null ? objectiveManager.GetTotalRemainingObjectives() : 0f;
+            float progress = totalObjectives > 0f
+                ? 1f - (remainingObjectives / totalObjectives)
+                : 0f;
+            progress = Mathf.Clamp01(progress);
+
             float stageProgress = currentLevel.GetStageProgress();
-            float finalProgress = Mathf.Max((currentLevel.CurrentStageIndex + 1) / totalStages, stageProgress + (progress / totalStages));
+            float finalProgress = stageProgress + (progress / (float)totalStages);
+            finalProgress = Mathf.Clamp01(finalProgress);
 
             fillImage.DOFillAmount(finalProgress, 0.25f).SetEase(Ease.OutCubic);
         }
