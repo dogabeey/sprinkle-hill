@@ -14,3 +14,4 @@
 [2026-05-06 18:42:12] - Added Power Outlet special element support and ElectricField-driven adjacent outlet activation with powered state sync and activation particle effect emission.
 [2026-05-06 18:45:53] - Updated ElectricField to power on when an already activated Power Outlet exists in the same cell.
 [2026-05-06 19:11:34] - Wired new game events: OUTLET_ACTIVATED now fires when a power outlet transitions to powered on, and GLASS_SHATTERED now fires when glass feature cells are destroyed.
+[2026-05-06 19:48:41] - Added GLASS_CREATED event dispatch during grid generation for cells initialized with GlassFeature.
