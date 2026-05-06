@@ -29,6 +29,11 @@ namespace Game
         /// </summary>
         public abstract bool AcceptElements { get; }
 
+        public virtual TileSpriteSet GetTileSpriteSet(Grid3D.GridCell cell)
+        {
+            return tileSpriteSet;
+        }
+
         public abstract void OnElementMatchedOverTheCell(Grid3D.GridCell cell, GridElement element);
         public abstract void OnElementMatchedAdjacentToTheCell(Grid3D.GridCell thisCell, Grid3D.GridCell matchedCell, GridElement element);
     }

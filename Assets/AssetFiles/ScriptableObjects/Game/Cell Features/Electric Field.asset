@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25c623098a299f7458cf5535617b96ec, type: 3}
+  m_Name: Electric Field
+  m_EditorClassIdentifier: Game::Game.ElectricField
+  tileSpriteSet: {fileID: 11400000, guid: 34a38090dcc083c4eba590c0a7ae2983, type: 2}
+  featureIcon: {fileID: 0}
+  spriteLayerIndex: 1
+  destroyParticleEffect: {fileID: 0}
+  poweredOnSpriteSet: {fileID: 0}

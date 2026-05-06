@@ -390,7 +390,7 @@ namespace Game
                 : null;
 
             CellFeature feature = sourceCell != null ? sourceCell.cellFeature : null;
-            TileSpriteSet featureSet = feature != null ? feature.tileSpriteSet : null;
+            TileSpriteSet featureSet = feature != null ? feature.GetTileSpriteSet(sourceCell) : null;
 
             if (feature == null || featureSet == null)
             {

@@ -46,6 +46,7 @@ namespace Game
             "U: Set cell to Unbreakable Wall\n" +
             "Shift+Z: Toggle Wafer Feature\n" +
             "Shift+X: Toggle Glass Feature\n" +
+            "Shift+A: Toggle Electric Field Feature\n" +
             "0-9: Set Glass Group Index (while hovering a glass cell)\n" +
             "Shift+0-9: Set Glass Group Health (while hovering a glass cell)\n" +
             "R: Toggle random element marker\n" +
@@ -280,6 +281,7 @@ namespace Game
             bool isBreakableWall = cell != null && cell.cellType == Grid3D.CellType.BreakableWall;
             WaferFeature waferFeature = GameManager.Instance != null ? GameManager.Instance.waferFeature : null;
             GlassFeature glassFeature = GameManager.Instance != null ? GameManager.Instance.glassFeature : null;
+            ElectricField electricField = GameManager.Instance != null ? GameManager.Instance.electricField : null;
 
             if (includeCellFeatureItems)
             {
@@ -298,6 +300,19 @@ namespace Game
                         cell.cellFeature = waferFeature;
                         cell.cellFeatureGroupIndex = 0;
                         cell.cellFeatureGroupHealth = 0;
+                        cell.breakableWallElementCondition = null;
+                        MarkDirty();
+                    });
+                }
+                if (electricField != null)
+                {
+                    menu.AddItem(new GUIContent($"Cell Feature/{electricField.name}"), cell.cellFeature == electricField, () =>
+                    {
+                        cell.cellType = Grid3D.CellType.Normal;
+                        cell.cellFeature = electricField;
+                        cell.cellFeatureGroupIndex = 0;
+                        cell.cellFeatureGroupHealth = 0;
+                        cell.cellFeatureGroupMaxHealth = 0;
                         cell.breakableWallElementCondition = null;
                         MarkDirty();
                     });
@@ -862,6 +877,7 @@ namespace Game
 
             WaferFeature waferFeature = GameManager.Instance.waferFeature;
             GlassFeature glassFeature = GameManager.Instance != null ? GameManager.Instance.glassFeature : null;
+            ElectricField electricField = GameManager.Instance != null ? GameManager.Instance.electricField : null;
 
             switch (value.cellType)
             {
@@ -1017,6 +1033,19 @@ namespace Game
                             {
                             value.cellType = Grid3D.CellType.Normal;
                             value.cellFeature = value.cellFeature == waferFeature ? null : waferFeature;
+                            MarkDirty();
+                            consumedShiftShortcut = true;
+                        }
+                        else if (Event.current.keyCode == KeyCode.A)
+                        {
+                            value.cellType = Grid3D.CellType.Normal;
+                            bool disableElectricField = value.cellFeature == electricField;
+                            value.cellFeature = disableElectricField ? null : electricField;
+                            value.cellFeatureGroupIndex = 0;
+                            value.cellFeatureGroupHealth = 0;
+                            value.cellFeatureGroupMaxHealth = 0;
+                            if (!disableElectricField)
+                                value.breakableWallElementCondition = null;
                             MarkDirty();
                             consumedShiftShortcut = true;
                         }

@@ -4,3 +4,5 @@
 [2026-05-05 01:47] - Added ElementData behavior flag enum and refactored special-element swap/match/shuffle/pass-through/clear checks to use flags with backward-compatible defaults for garbage bag and power generator.
 [2026-05-05 01:52] - Added emission mask texture and mask strength controls to SpritePulsingEmission shader and wired mask into emission calculation.
 [2026-05-05 01:57] - Fixed SpritePulsingEmission shader compile error by declaring _EmissionMaskStrength in UnityPerMaterial CBUFFER.
+[2026-05-06 03:54:19] - Implemented ElectricField cell feature with powered on/off state propagation from adjacent power generators or powered ElectricFields, and enabled per-cell feature sprite set switching for stateful visuals.
+[2026-05-06 13:14:22] - Added ElectricField references to GameManager and LevelEditor, including Level Editor context menu support and Shift+A shortcut to toggle Electric Field on hovered cells.
