@@ -105,7 +105,7 @@ namespace Game
 
             yield return destroyTween.WaitForCompletion();
 
-            if (constantManager != null && constantManager.elementDestroyParticlePrefab != null)
+            if (constantManager != null && constantManager.elementDestroyParticlePrefab != null && transform != null)
             {
                 ParticleSystem destroyParticle = Instantiate(constantManager.elementDestroyParticlePrefab, transform.position, Quaternion.identity);
                 destroyParticle.Play();
