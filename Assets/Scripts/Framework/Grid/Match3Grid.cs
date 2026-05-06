@@ -1284,6 +1284,7 @@ namespace Game
                    cell.elementInfo != null &&
                    !cell.elementInfo.isHidden &&
                    cell.elementInfo.powerUpType == ElementPowerUpType.None &&
+                   !HasBehavior(cell.elementInfo.elementData, ElementData.ElementBehaviorFlags.NonMatchable) &&
                    !IsGarbageBagData(cell.elementInfo.elementData) &&
                    cell.elementInfo.elementData == data;
         }
@@ -1299,6 +1300,7 @@ namespace Game
                     cell.cellFeature is GlassFeature ||
                     cell.elementInfo.isHidden || PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType) ||
                     IsMultiCellData(cell.elementInfo.elementData) ||
+                    HasBehavior(cell.elementInfo.elementData, ElementData.ElementBehaviorFlags.NonMatchable) ||
                     IsGarbageBagData(cell.elementInfo.elementData))
                     return null;
                 return cell.elementInfo.elementData;
@@ -2117,6 +2119,7 @@ namespace Game
                    cell.elementInfo.elementData != null &&
                    !IsMultiCellData(cell.elementInfo.elementData) &&
                     !HasBehavior(cell.elementInfo.elementData, ElementData.ElementBehaviorFlags.NonMatchable) &&
+                    !HasBehavior(cell.elementInfo.elementData, ElementData.ElementBehaviorFlags.NonSwappable) &&
                    !cell.elementInfo.isHidden &&
                    cell.elementInfo.powerUpType == ElementPowerUpType.None;
         }
@@ -2276,13 +2279,15 @@ namespace Game
                         ElementData bData = bCell.elementInfo.elementData;
                         if (aData == bData) continue;
 
-                        aCell.elementInfo.elementData = bData;
-                        bCell.elementInfo.elementData = aData;
+                        GridElementInfo aInfo = aCell.elementInfo;
+                        GridElementInfo bInfo = bCell.elementInfo;
+                        aCell.elementInfo = bInfo;
+                        bCell.elementInfo = aInfo;
 
                         bool createsMatch = CreatesMatchAt(aPos) || CreatesMatchAt(bPos);
 
-                        aCell.elementInfo.elementData = aData;
-                        bCell.elementInfo.elementData = bData;
+                        aCell.elementInfo = aInfo;
+                        bCell.elementInfo = bInfo;
 
                         if (createsMatch) return true;
                     }
@@ -2319,8 +2324,10 @@ namespace Game
                         ElementData bData = bCell.elementInfo.elementData;
                         if (aData == bData) continue;
 
-                        aCell.elementInfo.elementData = bData;
-                        bCell.elementInfo.elementData = aData;
+                        GridElementInfo aInfo = aCell.elementInfo;
+                        GridElementInfo bInfo = bCell.elementInfo;
+                        aCell.elementInfo = bInfo;
+                        bCell.elementInfo = aInfo;
 
                         bool aIsMover = CreatesMatchAt(bPos);
                         bool bIsMover = CreatesMatchAt(aPos);
@@ -2335,8 +2342,8 @@ namespace Game
                             candidates.Add((bPos, aPos, BuildMatchedGroupForSwap(bPos, aPos)));
                         }
 
-                        aCell.elementInfo.elementData = aData;
-                        bCell.elementInfo.elementData = bData;
+                        aCell.elementInfo = aInfo;
+                        bCell.elementInfo = bInfo;
                     }
                 }
             }
