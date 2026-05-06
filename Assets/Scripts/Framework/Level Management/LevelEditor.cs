@@ -181,6 +181,10 @@ namespace Game
         {
             return data != null && GameManager.Instance != null && GameManager.Instance.powerGeneratorElementData == data;
         }
+        private static bool IsPowerOutletElementData(ElementData data)
+        {
+            return data != null && GameManager.Instance != null && GameManager.Instance.powerOutletElementData == data;
+        }
 
         private static ElementPowerUpType ResolveElementPowerUpType(ElementData data)
         {
@@ -1214,7 +1218,7 @@ namespace Game
             if (capturedElementData == null)
                 return "Other Elements/";
 
-            if (IsCauldronElementData(capturedElementData) || IsGarbageBagElementData(capturedElementData) || IsPowerGeneratorElementData(capturedElementData))
+            if (IsCauldronElementData(capturedElementData) || IsGarbageBagElementData(capturedElementData) || IsPowerGeneratorElementData(capturedElementData) || IsPowerOutletElementData(capturedElementData))
                 return "Special Elements/";
 
             return "Other Elements/";
