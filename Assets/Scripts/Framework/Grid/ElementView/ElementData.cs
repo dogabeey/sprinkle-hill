@@ -18,11 +18,24 @@ public class VisualizableScriptableObject : ScriptableObject
 [CreateAssetMenu(fileName = "ElementVisualData", menuName = "Game/Element Data...")]
 public class ElementData : VisualizableScriptableObject
 {
+    [System.Flags]
+    public enum ElementBehaviorFlags
+    {
+        None = 0,
+        NonSwappable = 1 << 0,
+        NonMatchable = 1 << 1,
+        NonShuffleable = 1 << 2,
+        PassThrough = 1 << 3,
+        ImmuneToClear = 1 << 4
+    }
+
     [FoldoutGroup("General")]
     public Sprite breakableWallOverride;
     public Mesh elementMesh;
     public Material elementMaterial;
     public Vector2Int gridCoverage = Vector2Int.one;
+    [FoldoutGroup("General")]
+    public ElementBehaviorFlags behaviorFlags;
     [FoldoutGroup("Animation")]
     public string defaultIdleAnimation = "idle";
     [FoldoutGroup("Animation")]
@@ -41,6 +54,39 @@ public class ElementData : VisualizableScriptableObject
     {
         [MinMaxSlider(0, 1)] public Vector2 progressRange;
         public int animationLayer;
+    }
+
+    public ElementBehaviorFlags GetEffectiveBehaviorFlags()
+    {
+        ElementBehaviorFlags flags = behaviorFlags;
+
+        Game.GameManager manager = Game.GameManager.Instance;
+        if (manager != null)
+        {
+            if (manager.garbageBagElementData == this)
+            {
+                flags |= ElementBehaviorFlags.NonSwappable |
+                         ElementBehaviorFlags.NonMatchable |
+                         ElementBehaviorFlags.NonShuffleable |
+                         ElementBehaviorFlags.ImmuneToClear;
+            }
+
+            if (manager.powerGeneratorElementData == this)
+            {
+                flags |= ElementBehaviorFlags.NonSwappable |
+                         ElementBehaviorFlags.NonMatchable |
+                         ElementBehaviorFlags.NonShuffleable |
+                         ElementBehaviorFlags.PassThrough |
+                         ElementBehaviorFlags.ImmuneToClear;
+            }
+        }
+
+        return flags;
+    }
+
+    public bool HasBehavior(ElementBehaviorFlags flag)
+    {
+        return (GetEffectiveBehaviorFlags() & flag) != 0;
     }
 
     public static ElementData GetElementDataByName(string name, List<ElementData> elementDataList)

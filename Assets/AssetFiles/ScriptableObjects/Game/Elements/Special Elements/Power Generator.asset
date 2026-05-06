@@ -17,8 +17,9 @@ MonoBehaviour:
   displayIcon: {fileID: 1835613153, guid: a46309d38df06264b96c750375a58bd1, type: 3}
   breakableWallOverride: {fileID: 0}
   elementMesh: {fileID: 0}
-  elementMaterial: {fileID: 0}
+  elementMaterial: {fileID: 2100000, guid: b89d20f6f855aab44a97cd037ca06884, type: 2}
   gridCoverage: {x: 1, y: 1}
+  behaviorFlags: 31
   defaultIdleAnimation: idle
   animationController: {fileID: 0}
   cauldronChargeRequired: 1

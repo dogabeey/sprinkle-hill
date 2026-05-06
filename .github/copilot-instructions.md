@@ -63,3 +63,7 @@ Avoid overengineering — only apply patterns when they provide clear benefit.
 
 - Choose the solution that maximizes **clarity, modularity, and extensibility**.
 - Ask for clarification instead of making assumptions.
+
+## Extra Notes
+
+- When you need to create a new class, generate it inside and existing related class file.

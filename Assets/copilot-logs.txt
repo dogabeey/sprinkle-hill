@@ -1,3 +1,6 @@
 [2026-05-06 02:20:14] - Added project-local Copilot instructions file at .github/copilot-instructions.md.
 [2026-05-05 01:29] - Added PowerSource cell type with Level Editor P shortcut and dedicated tile visuals, matching UnbreakableWall behavior.
 [2026-05-05 01:37] - Added Power Generator special element support: non-swappable, non-matchable, non-shuffleable, and transparent to gravity flow; integrated GameManager/LevelEditor references and clear-skip logic.
+[2026-05-05 01:47] - Added ElementData behavior flag enum and refactored special-element swap/match/shuffle/pass-through/clear checks to use flags with backward-compatible defaults for garbage bag and power generator.
+[2026-05-05 01:52] - Added emission mask texture and mask strength controls to SpritePulsingEmission shader and wired mask into emission calculation.
+[2026-05-05 01:57] - Fixed SpritePulsingEmission shader compile error by declaring _EmissionMaskStrength in UnityPerMaterial CBUFFER.

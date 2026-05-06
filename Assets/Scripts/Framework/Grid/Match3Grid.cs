@@ -1214,7 +1214,7 @@ namespace Game
 
                     if (!UseLevelEditor &&
                         !cell.elementInfo.isHidden &&
-                        !IsPowerGeneratorData(cell.elementInfo.elementData) &&
+                        !HasBehavior(cell.elementInfo.elementData, ElementData.ElementBehaviorFlags.NonShuffleable) &&
                         cell.elementInfo.powerUpType != ElementPowerUpType.Cauldron &&
                         elementPool.Count > 1)
                     {
@@ -1614,7 +1614,7 @@ namespace Game
                 foreach (GridElement el in generatedElements)
                     if (el != null && el.elementInfo != null && el.elementInfo.elementData != null &&
                         !IsCauldronData(el.elementInfo.elementData) &&
-                        !IsPowerGeneratorData(el.elementInfo.elementData) &&
+                        !HasBehavior(el.elementInfo.elementData, ElementData.ElementBehaviorFlags.NonShuffleable) &&
                         el.elementInfo.powerUpType == ElementPowerUpType.None && !elementPool.Contains(el.elementInfo.elementData))
                         elementPool.Add(el.elementInfo.elementData);
             }
@@ -1844,10 +1844,7 @@ namespace Game
                         if (TryRevealHiddenBoxAt(pos))
                             continue;
 
-                        if (IsGarbageBagData(cell.elementInfo.elementData))
-                            continue;
-
-                        if (IsPowerGeneratorData(cell.elementInfo.elementData))
+                    if (HasBehavior(cell.elementInfo.elementData, ElementData.ElementBehaviorFlags.ImmuneToClear))
                             continue;
 
                         if (PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType))
@@ -1950,6 +1947,11 @@ namespace Game
             return cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron;
         }
 
+        private static bool HasBehavior(ElementData data, ElementData.ElementBehaviorFlags flag)
+        {
+            return data != null && data.HasBehavior(flag);
+        }
+
         private static bool IsGarbageBagData(ElementData data)
         {
             GameManager gm = GameManager.Instance;
@@ -1976,6 +1978,11 @@ namespace Game
         private static bool IsPowerGeneratorCell(GridCell cell)
         {
             return cell != null && cell.cellType == CellType.Normal && cell.elementInfo != null && IsPowerGeneratorData(cell.elementInfo.elementData);
+        }
+
+        private static bool IsNonSwappableCell(GridCell cell)
+        {
+            return cell != null && cell.cellType == CellType.Normal && cell.elementInfo != null && HasBehavior(cell.elementInfo.elementData, ElementData.ElementBehaviorFlags.NonSwappable);
         }
 
         private static void NotifyGarbageBagCleaned(Vector2Int pos, ElementData data)
@@ -2011,7 +2018,7 @@ namespace Game
         private List<ElementData> BuildElementPool()
         {
             List<ElementData> configuredPool = GetConfiguredElementPool();
-            configuredPool.RemoveAll(d => d == null || IsCauldronData(d) || IsPowerGeneratorData(d) || IsMultiCellData(d));
+            configuredPool.RemoveAll(d => d == null || IsCauldronData(d) || HasBehavior(d, ElementData.ElementBehaviorFlags.NonShuffleable) || IsMultiCellData(d));
             if (configuredPool.Count > 0)
             {
                 return configuredPool;
@@ -2023,7 +2030,7 @@ namespace Game
                 {
                     GridCell cell = GetCell(new Vector2Int(x, y));
                     ElementData data = cell?.elementInfo?.elementData;
-                    if (data != null && !IsCauldronData(data) && !IsPowerGeneratorData(data) && !IsMultiCellData(data) && cell.elementInfo.powerUpType == ElementPowerUpType.None && !pool.Contains(data))
+                    if (data != null && !IsCauldronData(data) && !HasBehavior(data, ElementData.ElementBehaviorFlags.NonShuffleable) && !IsMultiCellData(data) && cell.elementInfo.powerUpType == ElementPowerUpType.None && !pool.Contains(data))
                         pool.Add(data);
                 }
             return pool;
@@ -2051,7 +2058,7 @@ namespace Game
                 if (IsCauldronCell(cell))
                     continue;
 
-                if (IsPowerGeneratorData(cell.elementInfo?.elementData))
+                if (HasBehavior(cell.elementInfo?.elementData, ElementData.ElementBehaviorFlags.PassThrough))
                     continue;
 
                 return y;
@@ -2083,7 +2090,7 @@ namespace Game
                     if (IsCellCoveredByMultiCellElement(pos))
                         continue;
 
-                    if (!IsCauldronCell(cell) && !IsPowerGeneratorData(cell.elementInfo?.elementData) && acceptsElements)
+                    if (!IsCauldronCell(cell) && !HasBehavior(cell.elementInfo?.elementData, ElementData.ElementBehaviorFlags.PassThrough) && acceptsElements)
                         current.Add(y);
                 }
                 else
@@ -2103,8 +2110,7 @@ namespace Game
                    cell.elementInfo != null &&
                    cell.elementInfo.elementData != null &&
                    !IsMultiCellData(cell.elementInfo.elementData) &&
-                   !IsGarbageBagData(cell.elementInfo.elementData) &&
-                    !IsPowerGeneratorData(cell.elementInfo.elementData) &&
+                    !HasBehavior(cell.elementInfo.elementData, ElementData.ElementBehaviorFlags.NonMatchable) &&
                    !cell.elementInfo.isHidden &&
                    cell.elementInfo.powerUpType == ElementPowerUpType.None;
         }

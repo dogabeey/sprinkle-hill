@@ -5,6 +5,9 @@ Shader "Universal Render Pipeline/Sprites/PulsingEmission"
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
         _Color ("Tint", Color) = (1,1,1,1)
 
+        _EmissionMask ("Emission Mask", 2D) = "white" {}
+        _EmissionMaskStrength ("Emission Mask Strength", Range(0, 1)) = 1
+
         [HDR] _EmissionColor ("Emission Color", Color) = (1,1,1,1)
         _EmissionBase ("Emission Base", Range(0, 10)) = 0
         _EmissionAmplitude ("Emission Amplitude", Range(0, 10)) = 1
@@ -70,9 +73,13 @@ Shader "Universal Render Pipeline/Sprites/PulsingEmission"
 
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
+            TEXTURE2D(_EmissionMask);
+            SAMPLER(sampler_EmissionMask);
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _MainTex_ST;
+                float4 _EmissionMask_ST;
+                half _EmissionMaskStrength;
                 half4 _Color;
                 half4 _RendererColor;
 
@@ -108,6 +115,8 @@ Shader "Universal Render Pipeline/Sprites/PulsingEmission"
             {
                 half4 texColor = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.uv);
                 half4 baseColor = texColor * IN.color;
+                half emissionMask = SAMPLE_TEXTURE2D(_EmissionMask, sampler_EmissionMask, TRANSFORM_TEX(IN.uv, _EmissionMask)).r;
+                emissionMask = lerp(1.0h, saturate(emissionMask), saturate(_EmissionMaskStrength));
 
                 float pulse01 = sin(_Time.y * _PulseSpeed + _PulsePhase) * 0.5 + 0.5;
                 float shapedPulse = pow(saturate(pulse01), max(_PulseCurve, 0.0001));
@@ -118,7 +127,7 @@ Shader "Universal Render Pipeline/Sprites/PulsingEmission"
                 float brightnessFactor = lerp(1.0, brightnessResponse * _BrightnessMultiplier, saturate(_BrightnessInfluence));
 
                 float emissionStrength = _EmissionBase + (_EmissionAmplitude * pulse * brightnessFactor);
-                half3 emission = _EmissionColor.rgb * emissionStrength * baseColor.rgb;
+                half3 emission = _EmissionColor.rgb * emissionStrength * baseColor.rgb * emissionMask;
 
                 baseColor.rgb += emission;
                 return baseColor;

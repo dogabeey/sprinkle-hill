@@ -39,6 +39,11 @@ namespace Game
             Rocket
         }
 
+        private static bool HasBehavior(GridCell cell, ElementData.ElementBehaviorFlags flag)
+        {
+            return cell?.elementInfo?.elementData != null && cell.elementInfo.elementData.HasBehavior(flag);
+        }
+
         private void Awake()
         {
             if (inputCamera == null)
@@ -175,6 +180,11 @@ namespace Game
                 {
                     return;
                 }
+
+                if (HasBehavior(draggedCell, ElementData.ElementBehaviorFlags.NonSwappable))
+                {
+                    return;
+                }
             }
 
             Vector2 dragDelta = (Vector2)Input.mousePosition - dragStartScreenPos;
@@ -240,6 +250,13 @@ namespace Game
             if (GameManager.Instance != null &&
                 ((fromCell?.elementInfo?.elementData != null && GameManager.Instance.powerGeneratorElementData == fromCell.elementInfo.elementData) ||
                  (toCell?.elementInfo?.elementData != null && GameManager.Instance.powerGeneratorElementData == toCell.elementInfo.elementData)))
+            {
+                CancelDrag();
+                return;
+            }
+
+            if (HasBehavior(fromCell, ElementData.ElementBehaviorFlags.NonSwappable) ||
+                HasBehavior(toCell, ElementData.ElementBehaviorFlags.NonSwappable))
             {
                 CancelDrag();
                 return;

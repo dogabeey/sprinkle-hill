@@ -16,7 +16,7 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 11400000, guid: 66b5b66c4fb707c46810127020dbbb17, type: 2}
+    - {fileID: 11400000, guid: a69c61ad6dd0ebf4e907ef76e4ec2042, type: 2}
     - {fileID: 11400000, guid: 0aff893b628e16b449d95f9a8befead9, type: 2}
     - {fileID: 11400000, guid: 15add8ec82c964f4fa95e19e667720e0, type: 2}
     - {fileID: 11400000, guid: 2c060768e07cda04dabcaaa5a6beefdf, type: 2}
@@ -57,11 +57,11 @@ MonoBehaviour:
       Entry: 7
       Data: 2|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: randomElement
       Entry: 5
-      Data: true
+      Data: false
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -87,6 +87,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -146,6 +149,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -201,6 +207,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -260,6 +269,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -315,6 +327,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -374,6 +389,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -429,6 +447,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -488,6 +509,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -543,6 +567,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -602,6 +629,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -657,6 +687,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -716,6 +749,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -771,6 +807,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -830,6 +869,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -885,6 +927,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -944,6 +989,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -999,6 +1047,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -1058,6 +1109,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1115,6 +1169,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1161,8 +1218,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1172,6 +1229,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 4
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1218,8 +1278,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1229,6 +1289,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 4
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1284,6 +1347,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -1343,6 +1409,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1398,6 +1467,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -1457,6 +1529,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1512,6 +1587,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -1571,6 +1649,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1617,8 +1698,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1628,6 +1709,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 4
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1674,8 +1758,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1685,6 +1769,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 4
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1740,6 +1827,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -1799,6 +1889,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1854,6 +1947,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -1913,6 +2009,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1968,6 +2067,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -2027,6 +2129,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -2082,6 +2187,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -2141,6 +2249,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -2196,6 +2307,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -2255,6 +2369,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -2310,6 +2427,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -2369,6 +2489,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -2415,8 +2538,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2426,6 +2549,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 4
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -2472,8 +2598,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2483,6 +2609,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 4
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -2538,6 +2667,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -2597,6 +2729,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -2652,6 +2787,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -2711,6 +2849,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -2766,6 +2907,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -2825,6 +2969,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -2871,8 +3018,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2882,6 +3029,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 4
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -2928,8 +3078,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2939,6 +3089,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 4
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -2994,6 +3147,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -3053,6 +3209,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -3108,6 +3267,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -3167,6 +3329,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -3222,6 +3387,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -3281,6 +3449,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -3336,6 +3507,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -3395,6 +3569,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -3450,6 +3627,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -3509,6 +3689,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -3564,6 +3747,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -3623,6 +3809,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupHealth
       Entry: 3
       Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -3678,6 +3867,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
     - Name: 
