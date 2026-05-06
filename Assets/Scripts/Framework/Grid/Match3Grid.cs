@@ -415,6 +415,12 @@ namespace Game
                         cell.cellFeatureGroupIndex = 0;
                         cell.cellFeatureGroupHealth = 0;
                         cell.cellFeatureGroupMaxHealth = 0;
+
+                        EventManager.TriggerEvent(GameEvent.GLASS_SHATTERED, new EventParam(
+                            paramScriptable: destroyedFeature,
+                            vectorList: new Vector3[] { new Vector3(pos.x, pos.y, 0f) }
+                        ));
+
                         PlayCellFeatureDestroyEffect(destroyedFeature, pos);
                         RefreshCellFeatureVisual(pos);
                     }

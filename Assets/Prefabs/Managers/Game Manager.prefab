@@ -121,7 +121,11 @@ MonoBehaviour:
   discoBallElementData: {fileID: 11400000, guid: 24c241fb46e7d3447b4a3d140a9cda60, type: 2}
   cauldronElementData: {fileID: 11400000, guid: f531cb99e5512e14fbf93538678a6278, type: 2}
   garbageBagElementData: {fileID: 11400000, guid: 518bd858af96e224fb306e32e60f0080, type: 2}
+  powerGeneratorElementData: {fileID: 11400000, guid: a69c61ad6dd0ebf4e907ef76e4ec2042, type: 2}
+  powerOutletElementData: {fileID: 11400000, guid: 83563b891f3150f43b30e90059666825, type: 2}
   waferFeature: {fileID: 11400000, guid: 9a0a4a3b932d9dd48b6c09ede6bf2324, type: 2}
+  glassFeature: {fileID: 11400000, guid: 66b5b66c4fb707c46810127020dbbb17, type: 2}
+  electricField: {fileID: 11400000, guid: 533e37ef7d2d727448f260ed616b4b05, type: 2}
   worlds:
   - {fileID: 7722314759128445691}
   levelContainer: {fileID: 0}

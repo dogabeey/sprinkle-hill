@@ -74,8 +74,16 @@ namespace Game
                 if (!IsPowerOutletCell(adjacentCell))
                     continue;
 
+                if (IsPoweredOn(adjacentCell))
+                    continue;
+
                 SetPoweredOn(adjacentCell);
                 EmitPowerOutletActivation(grid, adjacentCell.coordinates);
+
+                EventManager.TriggerEvent(GameEvent.OUTLET_ACTIVATED, new EventParam(
+                    paramScriptable: adjacentCell.elementInfo != null ? adjacentCell.elementInfo.elementData : null,
+                    vectorList: new Vector3[] { new Vector3(adjacentCell.coordinates.x, adjacentCell.coordinates.y, 0f) }
+                ));
             }
         }
 

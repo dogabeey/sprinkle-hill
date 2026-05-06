@@ -61,6 +61,8 @@ public enum GameEvent
     GARBAGE_CLEANED = 811,
     WAFER_CREATED = 812,
     WAFER_CLEARED = 813,
+    OUTLET_ACTIVATED = 814,
+    GLASS_SHATTERED = 815,
 
     // Ad Events
     AD_SHOWN = 900,

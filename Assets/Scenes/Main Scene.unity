@@ -4736,17 +4736,9 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 128536242}
     - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: glassFeature
-      value: 
-      objectReference: {fileID: 11400000, guid: 66b5b66c4fb707c46810127020dbbb17, type: 2}
-    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: upperPanelUI
       value: 
       objectReference: {fileID: 9132301250057630282}
-    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: electricField
-      value: 
-      objectReference: {fileID: 11400000, guid: 533e37ef7d2d727448f260ed616b4b05, type: 2}
     - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: screenManager
       value: 
@@ -4767,14 +4759,6 @@ PrefabInstance:
       propertyPath: actionBarManager
       value: 
       objectReference: {fileID: 698709064}
-    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: powerOutletElementData
-      value: 
-      objectReference: {fileID: 11400000, guid: 83563b891f3150f43b30e90059666825, type: 2}
-    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: powerGeneratorElementData
-      value: 
-      objectReference: {fileID: 11400000, guid: a69c61ad6dd0ebf4e907ef76e4ec2042, type: 2}
     - target: {fileID: 7722314759461277707, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
