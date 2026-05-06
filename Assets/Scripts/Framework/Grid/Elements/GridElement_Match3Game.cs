@@ -90,7 +90,7 @@ namespace Game
                 colliders[i].enabled = false;
             }
 
-            GridHelper.AnimateEmission(this, 1, 0.2f);
+            GridHelper.AnimateEmission(this, 1.5f, 0.2f);
 
             ConstantManager constantManager = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
             Vector3 punchScale = constantManager != null ? constantManager.elementDestroyPunchScale : new Vector3(0.25f, 0.25f, 0f);

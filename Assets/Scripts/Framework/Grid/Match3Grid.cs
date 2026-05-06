@@ -1412,7 +1412,7 @@ namespace Game
                 if (mergeTarget.HasValue)
                 {
                     GridElement mergeEl = GetElementAt(mergeTarget.Value);
-                    if (mergeEl != null) GridHelper.AnimateEmission(mergeEl, 5f, 0.2f);
+                    if (mergeEl != null) GridHelper.AnimateEmission(mergeEl, 1.5f, 0.2f);
                 }
 
                 foreach (var pos in group)
@@ -1508,7 +1508,7 @@ namespace Game
             Collider[] colliders = element.GetComponentsInChildren<Collider>(true);
             for (int i = 0; i < colliders.Length; i++) colliders[i].enabled = false;
 
-            GridHelper.SetEmission(element, 2);
+            GridHelper.SetEmission(element, 1.5f);
 
             float dur = Mathf.Max(0.08f, GameManager.Instance.constantManager.elementSwapMoveDuration * 0.6f);
             Tween move = t.DOMove(targetTile.transform.position, dur).SetEase(Ease.InBack);
