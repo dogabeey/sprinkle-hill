@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 34cdb16ba66f3394ca9d5fbeb985b8db, type: 3}
-  m_Name: Electric Cell Tile Data
+  m_Name: Electric Cell Tile Data - On
   m_EditorClassIdentifier: 
   colorRuleset:
     rid: 7533469493743321291

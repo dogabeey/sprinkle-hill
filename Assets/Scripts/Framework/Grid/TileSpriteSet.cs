@@ -119,4 +119,18 @@ namespace Game
 
         public override Color GetTileColor(Vector2Int coordinates) => color;
     }
-}
+
+    // NOT IMPLEMENTED - Should be used for electric field cell features to visually differentiate between powered on and powered off states. The actual state-based color logic should be implemented in the GetTileColor method, potentially by accessing the cell's data to determine its current state.
+    [System.Serializable]
+    public class TurnedOnOffStateColors : ColorRuleSet
+    {
+        // Electric blue
+        public Color turnedOnColor = new Color(0.0f, 0.5f, 1f, 1f);
+        // Dark brown
+        public Color turnedOffColor = new Color(0.2f, 0.1f, 0f, 1f);
+        public override Color GetTileColor(Vector2Int coordinates) // Agent instruction: Change parameters if needed.
+        {
+            // This is a placeholder implementation. In a real scenario, you would determine the state based on the electric cell data.
+
+        }
+    }
