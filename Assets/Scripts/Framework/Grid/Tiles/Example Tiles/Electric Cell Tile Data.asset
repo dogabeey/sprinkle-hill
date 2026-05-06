@@ -51,7 +51,7 @@ MonoBehaviour:
       type: {class: TurnedOnOffStateColors, ns: Game, asm: Game}
       data:
         blendMode: 0
-        turnedOnColor: {r: 0, g: 1.1353016, b: 2.2706032, a: 1}
+        turnedOnColor: {r: 0.0047169924, g: 0.78260905, b: 1, a: 1}
         turnedOnMaterial: {fileID: 2100000, guid: b89d20f6f855aab44a97cd037ca06884, type: 2}
         turnedOffColor: {r: 0.1, g: 0.05, b: 0, a: 1}
         turnedOffMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}

@@ -5,6 +5,8 @@ namespace Game
     [CreateAssetMenu(menuName = "Game/Cell Feature/Electric Field...")]
     public class ElectricField : CellFeature
     {
+        [SerializeField] private ParticleSystem powerOutletActivationParticle;
+
         private const int PoweredOffState = 0;
         private const int PoweredOnState = 1;
 
@@ -12,7 +14,7 @@ namespace Game
 
         public override TileSpriteSet GetTileSpriteSet(Grid3D.GridCell cell)
         {
-            if (IsPowerGeneratorCell(cell))
+            if (IsPowerGeneratorCell(cell) || IsActivatedPowerOutletCell(cell))
                 SetPoweredOn(cell);
 
             return tileSpriteSet;
@@ -21,6 +23,7 @@ namespace Game
         public override void OnElementMatchedOverTheCell(Grid3D.GridCell cell, GridElement element)
         {
             TryPowerOn(cell, element);
+            TryActivateAdjacentPowerOutlet(cell, element);
         }
 
         public override void OnElementMatchedAdjacentToTheCell(Grid3D.GridCell thisCell, Grid3D.GridCell matchedCell, GridElement element)
@@ -48,10 +51,32 @@ namespace Game
             if (electricFieldCell == null || IsPoweredOn(electricFieldCell))
                 return;
 
-            if (HasAdjacentPowerSource(electricFieldCell, sourceElement))
+            if (HasAdjacentPowerSource(electricFieldCell, sourceElement) || IsActivatedPowerOutletCell(electricFieldCell))
                 SetPoweredOn(electricFieldCell);
             else if (electricFieldCell.cellFeatureGroupHealth != PoweredOffState)
                 electricFieldCell.cellFeatureGroupHealth = PoweredOffState;
+        }
+
+        private void TryActivateAdjacentPowerOutlet(Grid3D.GridCell electricFieldCell, GridElement sourceElement)
+        {
+            if (!IsPoweredOn(electricFieldCell))
+                return;
+
+            Match3Grid grid = ResolveGrid(sourceElement);
+            if (grid == null)
+                return;
+
+            Vector2Int center = electricFieldCell.coordinates;
+            Vector2Int[] adjacentOffsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            for (int i = 0; i < adjacentOffsets.Length; i++)
+            {
+                Grid3D.GridCell adjacentCell = grid.GetCellPublic(center + adjacentOffsets[i]);
+                if (!IsPowerOutletCell(adjacentCell))
+                    continue;
+
+                SetPoweredOn(adjacentCell);
+                EmitPowerOutletActivation(grid, adjacentCell.coordinates);
+            }
         }
 
         private static Match3Grid ResolveGrid(GridElement sourceElement)
@@ -97,6 +122,33 @@ namespace Game
                 return false;
 
             return GameManager.Instance.powerGeneratorElementData == cell.elementInfo.elementData;
+        }
+
+        private static bool IsPowerOutletCell(Grid3D.GridCell cell)
+        {
+            if (cell?.elementInfo?.elementData == null || GameManager.Instance == null)
+                return false;
+
+            return GameManager.Instance.powerOutletElementData == cell.elementInfo.elementData;
+        }
+
+        private static bool IsActivatedPowerOutletCell(Grid3D.GridCell cell)
+        {
+            return IsPowerOutletCell(cell) && cell.cellFeatureGroupHealth == PoweredOnState;
+        }
+
+        private void EmitPowerOutletActivation(Match3Grid grid, Vector2Int coordinates)
+        {
+            if (powerOutletActivationParticle == null || grid == null)
+                return;
+
+            Vector3 spawnPosition = grid.GetWorldPosition(coordinates);
+            ParticleSystem instance = Instantiate(powerOutletActivationParticle, spawnPosition, Quaternion.identity);
+            instance.Play();
+
+            ParticleSystem.MainModule main = instance.main;
+            float lifeTime = main.duration + main.startLifetime.constantMax + 0.2f;
+            Destroy(instance.gameObject, lifeTime);
         }
 
         private bool IsAdjacentPoweredElectricField(Grid3D.GridCell cell)

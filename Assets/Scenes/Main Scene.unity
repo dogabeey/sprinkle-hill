@@ -4768,6 +4768,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 698709064}
     - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: powerOutletElementData
+      value: 
+      objectReference: {fileID: 11400000, guid: 83563b891f3150f43b30e90059666825, type: 2}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: powerGeneratorElementData
       value: 
       objectReference: {fileID: 11400000, guid: a69c61ad6dd0ebf4e907ef76e4ec2042, type: 2}

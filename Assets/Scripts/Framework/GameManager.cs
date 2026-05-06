@@ -72,6 +72,8 @@ namespace Game
         public ElementData garbageBagElementData;
         [FoldoutGroup("Element Definitions")]
         public ElementData powerGeneratorElementData;
+        [FoldoutGroup("Element Definitions")]
+        public ElementData powerOutletElementData;
         [FoldoutGroup("Cell Features")]
         public WaferFeature waferFeature;
         [FoldoutGroup("Cell Features")]

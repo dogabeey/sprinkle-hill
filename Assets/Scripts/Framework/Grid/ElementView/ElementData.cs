@@ -79,6 +79,15 @@ public class ElementData : VisualizableScriptableObject
                          ElementBehaviorFlags.PassThrough |
                          ElementBehaviorFlags.ImmuneToClear;
             }
+
+            if (manager.powerOutletElementData == this)
+            {
+                flags |= ElementBehaviorFlags.NonSwappable |
+                         ElementBehaviorFlags.NonMatchable |
+                         ElementBehaviorFlags.NonShuffleable |
+                         ElementBehaviorFlags.PassThrough |
+                         ElementBehaviorFlags.ImmuneToClear;
+            }
         }
 
         return flags;
