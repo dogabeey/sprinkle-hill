@@ -534,11 +534,11 @@ MonoBehaviour:
       Entry: 7
       Data: 18|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -714,11 +714,11 @@ MonoBehaviour:
       Entry: 7
       Data: 24|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -894,11 +894,11 @@ MonoBehaviour:
       Entry: 7
       Data: 30|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: randomElement
       Entry: 5
-      Data: false
+      Data: true
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -3554,6 +3554,13 @@ MonoBehaviour:
     generatedCount: {x: 0, y: 0}
     isCompleted: 0
   - objectiveType: {fileID: 11400000, guid: 2924a1c735ccd1f41ad2be98faceb972, type: 2}
+    isProcedurallyGenerated: 0
+    autoCountRequiredCount: 1
+    scriptableObjectParameter: {fileID: 0}
+    requiredCount: 0
+    generatedCount: {x: 0, y: 0}
+    isCompleted: 0
+  - objectiveType: {fileID: 11400000, guid: ffc265ccfbd2b9e41a1d0dcd96099102, type: 2}
     isProcedurallyGenerated: 0
     autoCountRequiredCount: 1
     scriptableObjectParameter: {fileID: 0}

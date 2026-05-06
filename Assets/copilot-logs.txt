@@ -15,3 +15,6 @@
 [2026-05-06 18:45:53] - Updated ElectricField to power on when an already activated Power Outlet exists in the same cell.
 [2026-05-06 19:11:34] - Wired new game events: OUTLET_ACTIVATED now fires when a power outlet transitions to powered on, and GLASS_SHATTERED now fires when glass feature cells are destroyed.
 [2026-05-06 19:48:41] - Added GLASS_CREATED event dispatch during grid generation for cells initialized with GlassFeature.
+[2026-05-06 20:09:35] - Refined possible-move detection for shuffle checks by excluding hidden/non-matchable/non-swappable blockers and simulating swaps with full element info to prevent false-positive moves.
+[2026-05-06 20:19:26] - Updated match-detection helpers to ignore NonMatchable elements in line/square checks, preventing aligned unmatchable elements from being counted as valid matches and blocking shuffle triggers.
+[2026-05-06 20:29:31] - Fixed UpperPanelUI moves display logic so move count is no longer overwritten by timer text each frame in move-limited levels.

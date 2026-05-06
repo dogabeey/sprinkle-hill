@@ -3330,6 +3330,13 @@ MonoBehaviour:
     requiredCount: 0
     generatedCount: {x: 0, y: 0}
     isCompleted: 0
+  - objectiveType: {fileID: 11400000, guid: ffc265ccfbd2b9e41a1d0dcd96099102, type: 2}
+    isProcedurallyGenerated: 0
+    autoCountRequiredCount: 1
+    scriptableObjectParameter: {fileID: 0}
+    requiredCount: 0
+    generatedCount: {x: 0, y: 0}
+    isCompleted: 0
   specialWinEvent: 0
   targetElement: {fileID: 0}
   levelLimitType: 1

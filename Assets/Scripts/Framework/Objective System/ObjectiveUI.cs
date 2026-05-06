@@ -126,8 +126,6 @@ public class UpperPanelUI : UIElement
 
         while (true)
         {
-            int timer = levelScene.timer;
-            // 
             if (levelScene.levelLimitType == LevelEditor.LevelLimitType.Moves)
             {
                 timerHeaderText.text = "Move";
@@ -137,17 +135,18 @@ public class UpperPanelUI : UIElement
             else
             {
                 timerHeaderText.text = "Time";
-            }
 
-            if (timer == -1)
-            {
-                timerText.text = "∞";
-                timerText.enableAutoSizing = true;
-            }
-            else
-            {
-                timerText.enableAutoSizing = false;
-                timerText.text = Mathf.Max(0, timer).ToString();
+                int timer = levelScene.timer;
+                if (timer == -1)
+                {
+                    timerText.text = "∞";
+                    timerText.enableAutoSizing = true;
+                }
+                else
+                {
+                    timerText.enableAutoSizing = false;
+                    timerText.text = Mathf.Max(0, timer).ToString();
+                }
             }
 
             if (levelScene.isEnded)
