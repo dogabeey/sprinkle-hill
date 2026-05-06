@@ -138,6 +138,14 @@ namespace Game
                                     paramScriptable: sourceCell.cellFeature
                                 ));
                             }
+
+                            if (sourceCell != null && sourceCell.cellFeature is GlassFeature)
+                            {
+                                EventManager.TriggerEvent(GameEvent.GLASS_CREATED, new EventParam(
+                                    vectorList: new Vector3[] { new Vector3(coordinates.x, coordinates.y, 0f) },
+                                    paramScriptable: sourceCell.cellFeature
+                                ));
+                            }
                         }
                     }
                 }
