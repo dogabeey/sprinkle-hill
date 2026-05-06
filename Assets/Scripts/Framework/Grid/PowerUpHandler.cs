@@ -1163,6 +1163,10 @@ namespace Game
                 cell.elementInfo.elementData != null && GameManager.Instance.garbageBagElementData == cell.elementInfo.elementData)
                 return;
 
+            if (GameManager.Instance != null &&
+                cell.elementInfo.elementData != null && GameManager.Instance.powerGeneratorElementData == cell.elementInfo.elementData)
+                return;
+
             if (IsSpecialPowerUp(cell.elementInfo.powerUpType))
             {
                 grid.StartCoroutine(ActivateAt(pos, null));

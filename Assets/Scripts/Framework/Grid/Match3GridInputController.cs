@@ -169,6 +169,12 @@ namespace Game
                 {
                     return;
                 }
+
+                if (GameManager.Instance != null && draggedCell?.elementInfo?.elementData != null &&
+                    GameManager.Instance.powerGeneratorElementData == draggedCell.elementInfo.elementData)
+                {
+                    return;
+                }
             }
 
             Vector2 dragDelta = (Vector2)Input.mousePosition - dragStartScreenPos;
@@ -226,6 +232,14 @@ namespace Game
             if (GameManager.Instance != null &&
                 ((fromCell?.elementInfo?.elementData != null && GameManager.Instance.garbageBagElementData == fromCell.elementInfo.elementData) ||
                  (toCell?.elementInfo?.elementData != null && GameManager.Instance.garbageBagElementData == toCell.elementInfo.elementData)))
+            {
+                CancelDrag();
+                return;
+            }
+
+            if (GameManager.Instance != null &&
+                ((fromCell?.elementInfo?.elementData != null && GameManager.Instance.powerGeneratorElementData == fromCell.elementInfo.elementData) ||
+                 (toCell?.elementInfo?.elementData != null && GameManager.Instance.powerGeneratorElementData == toCell.elementInfo.elementData)))
             {
                 CancelDrag();
                 return;
