@@ -6,3 +6,8 @@
 [2026-05-05 01:57] - Fixed SpritePulsingEmission shader compile error by declaring _EmissionMaskStrength in UnityPerMaterial CBUFFER.
 [2026-05-06 03:54:19] - Implemented ElectricField cell feature with powered on/off state propagation from adjacent power generators or powered ElectricFields, and enabled per-cell feature sprite set switching for stateful visuals.
 [2026-05-06 13:14:22] - Added ElectricField references to GameManager and LevelEditor, including Level Editor context menu support and Shift+A shortcut to toggle Electric Field on hovered cells.
+[2026-05-06 15:58:48] - Implemented TurnedOnOffStateColors for ElectricField state-based feature tinting and removed dual tile sprite set usage in favor of single tile set + cell-state color rules.
+[2026-05-06 16:16:36] - Fixed ColorRuleSet blend modes to preserve current alpha and apply Replace/Additive/Subtractive/Multiplicative behavior on RGB channels only.
+[2026-05-06 16:54:12] - Updated ElectricField to ignore adjacent-cell match callbacks so activation only occurs from match/destroy events on the same cell.
+[2026-05-06 16:58:11] - Extended TurnedOnOffStateColors to drive both feature color and feature material (turnedOn/turnedOff) and wired TileData to apply state-based feature materials.
+[2026-05-06 17:54:40] - Updated ElectricField so cells containing the powerGeneratorElementData element are automatically treated as powered on for logic and visuals.

@@ -1502,7 +1502,7 @@ namespace Game
             Collider[] colliders = element.GetComponentsInChildren<Collider>(true);
             for (int i = 0; i < colliders.Length; i++) colliders[i].enabled = false;
 
-            GridHelper.SetEmission(element, 5f);
+            GridHelper.SetEmission(element, 2);
 
             float dur = Mathf.Max(0.08f, GameManager.Instance.constantManager.elementSwapMoveDuration * 0.6f);
             Tween move = t.DOMove(targetTile.transform.position, dur).SetEase(Ease.InBack);

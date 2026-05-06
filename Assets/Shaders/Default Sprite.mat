@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Pulsing Emission Sprite
+  m_Name: Default Sprite
   m_Shader: {fileID: 4800000, guid: 6388daf21c46f3c4eba4b8ef4eb4f995, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -28,7 +28,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMask:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 91a70489a5833ec418824d1c53aea78f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:

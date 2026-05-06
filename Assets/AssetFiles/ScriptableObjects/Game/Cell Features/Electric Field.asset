@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25c623098a299f7458cf5535617b96ec, type: 3}
   m_Name: Electric Field
   m_EditorClassIdentifier: Game::Game.ElectricField
-  tileSpriteSet: {fileID: 11400000, guid: 34a38090dcc083c4eba590c0a7ae2983, type: 2}
-  featureIcon: {fileID: 0}
+  tileSpriteSet: {fileID: 11400000, guid: 1377e3b0417e6bc4180a6db6b4c86741, type: 2}
+  featureIcon: {fileID: 147047002, guid: 6e924d057a3fa6a409f33739807f1606, type: 3}
   spriteLayerIndex: 1
   destroyParticleEffect: {fileID: 0}
-  poweredOnSpriteSet: {fileID: 0}

@@ -295,6 +295,7 @@ MonoBehaviour:
   objectives:
   - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
     isProcedurallyGenerated: 0
+    autoCountRequiredCount: 0
     scriptableObjectParameter: {fileID: 11400000, guid: f006f435c88374942881e4fd9742c0ca, type: 2}
     requiredCount: 30
     generatedCount: {x: 0, y: 0}
@@ -308,16 +309,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7a3257018b70ead4a81299d022a11654, type: 2}
   - {fileID: 11400000, guid: 7a3257018b70ead4a81299d022a11654, type: 2}
   - {fileID: 11400000, guid: 7a3257018b70ead4a81299d022a11654, type: 2}
-  allowDiscoBallCreation: 1
+  allowDiscoBallCreation: 0
   allowRocketCreation: 1
   allowBombCreation: 1
   allowPropellerCreation: 1
   sparklingPowerAfterXCombo: 1
   sparklingAppearChance: 0
-  bombElementData: {fileID: 11400000, guid: 2f83e159c6b368646a1f9d8e7ec081e9, type: 2}
-  rocketElementData: {fileID: 11400000, guid: 56c62304f3d4a6c428379f3845a428a7, type: 2}
-  propellerElementData: {fileID: 11400000, guid: 154ee2fd4a3a356489c4482e8b443c06, type: 2}
-  discoBallElementData: {fileID: 11400000, guid: 24c241fb46e7d3447b4a3d140a9cda60, type: 2}
   stageCompletePopupTextPrefab: {fileID: 0}
   stageTransitionAnimation:
     elementWinAnimDuration: 1

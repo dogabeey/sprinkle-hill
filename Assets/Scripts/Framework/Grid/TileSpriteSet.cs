@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -40,11 +41,25 @@ namespace Game
         [PreviewField] public Sprite errorTile;
         public Color GetColorForTile(Vector2Int coordinates, Color currentColor)
         {
+            return GetColorForTile(coordinates, null, currentColor);
+        }
+
+        public Color GetColorForTile(Vector2Int coordinates, Grid3D.GridCell cell, Color currentColor)
+        {
             if (colorRuleset == null)
                 return currentColor;
 
-            Color ruleColor = colorRuleset.GetTileColor(coordinates);
+            Color ruleColor = colorRuleset.GetTileColor(coordinates, cell);
             return colorRuleset.ApplyBlend(currentColor, ruleColor);
+        }
+
+        public Material GetMaterialForTile(Vector2Int coordinates, Grid3D.GridCell cell, Material currentMaterial)
+        {
+            if (colorRuleset == null)
+                return currentMaterial;
+
+            Material ruleMaterial = colorRuleset.GetTileMaterial(coordinates, cell);
+            return ruleMaterial != null ? ruleMaterial : currentMaterial;
         }
     }
 
@@ -64,6 +79,16 @@ namespace Game
 
         public abstract Color GetTileColor(Vector2Int coordinates);
 
+        public virtual Color GetTileColor(Vector2Int coordinates, Grid3D.GridCell cell)
+        {
+            return GetTileColor(coordinates);
+        }
+
+        public virtual Material GetTileMaterial(Vector2Int coordinates, Grid3D.GridCell cell)
+        {
+            return null;
+        }
+
         public Color ApplyBlend(Color currentColor, Color ruleColor)
         {
             switch (blendMode)
@@ -73,22 +98,22 @@ namespace Game
                         Mathf.Clamp01(currentColor.r + ruleColor.r),
                         Mathf.Clamp01(currentColor.g + ruleColor.g),
                         Mathf.Clamp01(currentColor.b + ruleColor.b),
-                        Mathf.Clamp01(currentColor.a + ruleColor.a));
+                        currentColor.a);
                 case BlendMode.Subtractive:
                     return new Color(
                         Mathf.Clamp01(currentColor.r - ruleColor.r),
                         Mathf.Clamp01(currentColor.g - ruleColor.g),
                         Mathf.Clamp01(currentColor.b - ruleColor.b),
-                        Mathf.Clamp01(currentColor.a - ruleColor.a));
+                        currentColor.a);
                 case BlendMode.Multiplicative:
                     return new Color(
                         currentColor.r * ruleColor.r,
                         currentColor.g * ruleColor.g,
                         currentColor.b * ruleColor.b,
-                        currentColor.a * ruleColor.a);
+                        currentColor.a);
                 case BlendMode.Replace:
                 default:
-                    return ruleColor;
+                    return new Color(ruleColor.r, ruleColor.g, ruleColor.b, currentColor.a);
             }
         }
     }
@@ -120,17 +145,34 @@ namespace Game
         public override Color GetTileColor(Vector2Int coordinates) => color;
     }
 
-    // NOT IMPLEMENTED - Should be used for electric field cell features to visually differentiate between powered on and powered off states. The actual state-based color logic should be implemented in the GetTileColor method, potentially by accessing the cell's data to determine its current state.
     [System.Serializable]
     public class TurnedOnOffStateColors : ColorRuleSet
     {
-        // Electric blue
-        public Color turnedOnColor = new Color(0.0f, 0.5f, 1f, 1f);
-        // Dark brown
-        public Color turnedOffColor = new Color(0.2f, 0.1f, 0f, 1f);
-        public override Color GetTileColor(Vector2Int coordinates) // Agent instruction: Change parameters if needed.
-        {
-            // This is a placeholder implementation. In a real scenario, you would determine the state based on the electric cell data.
+        private const int PoweredOnState = 1;
 
+        [ColorUsage(true, true)]
+        public Color turnedOnColor = new Color(0.0f, 0.5f, 1f, 1f);
+        public Material turnedOnMaterial;
+        [ColorUsage(true, true)]
+        public Color turnedOffColor = new Color(0.2f, 0.1f, 0f, 1f);
+        public Material turnedOffMaterial;
+
+        public override Color GetTileColor(Vector2Int coordinates)
+        {
+            return turnedOffColor;
+        }
+
+        public override Color GetTileColor(Vector2Int coordinates, Grid3D.GridCell cell)
+        {
+            return cell != null && cell.cellFeatureGroupHealth == PoweredOnState
+                ? turnedOnColor
+                : turnedOffColor;
+        }
+
+        public override Material GetTileMaterial(Vector2Int coordinates, Grid3D.GridCell cell)
+        {
+            bool isPoweredOn = cell != null && cell.cellFeatureGroupHealth == PoweredOnState;
+            return isPoweredOn ? turnedOnMaterial : turnedOffMaterial;
         }
     }
+}

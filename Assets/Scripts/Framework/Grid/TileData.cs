@@ -34,8 +34,6 @@ namespace Game
         public TileSpriteSet normalTileSprites;
         [FoldoutGroup("Tile Types")]
         public TileSpriteSet unbreakableWallTileSprites;
-        [FoldoutGroup("Tile Types")]
-        public TileSpriteSet waferBackgroundTielSprites;
 
         public GridCellController breakableWall;
         public GridCellController unbreakableWall;
@@ -406,7 +404,10 @@ namespace Game
             cellController.featureSprite.sortingOrder = feature.spriteLayerIndex;
 
             Color currentColor = cellController.featureSprite.color;
-            cellController.featureSprite.color = featureSet.GetColorForTile(new Vector2Int(x, y), currentColor);
+            cellController.featureSprite.color = featureSet.GetColorForTile(new Vector2Int(x, y), sourceCell, currentColor);
+
+            Material currentMaterial = cellController.featureSprite.sharedMaterial;
+            cellController.featureSprite.sharedMaterial = featureSet.GetMaterialForTile(new Vector2Int(x, y), sourceCell, currentMaterial);
         }
 
         private Sprite DetermineFeatureTileType(Grid3D.GridCell[,] gridCells, int x, int y, DrawStartingCorner drawStartingCorner, CellFeature feature, int featureGroupIndex, TileSpriteSet selectedSet)

@@ -5,8 +5,6 @@ namespace Game
     [CreateAssetMenu(menuName = "Game/Cell Feature/Electric Field...")]
     public class ElectricField : CellFeature
     {
-        public TileSpriteSet poweredOnSpriteSet;
-
         private const int PoweredOffState = 0;
         private const int PoweredOnState = 1;
 
@@ -14,7 +12,10 @@ namespace Game
 
         public override TileSpriteSet GetTileSpriteSet(Grid3D.GridCell cell)
         {
-            return IsPoweredOn(cell) && poweredOnSpriteSet != null ? poweredOnSpriteSet : tileSpriteSet;
+            if (IsPowerGeneratorCell(cell))
+                SetPoweredOn(cell);
+
+            return tileSpriteSet;
         }
 
         public override void OnElementMatchedOverTheCell(Grid3D.GridCell cell, GridElement element)
@@ -24,12 +25,12 @@ namespace Game
 
         public override void OnElementMatchedAdjacentToTheCell(Grid3D.GridCell thisCell, Grid3D.GridCell matchedCell, GridElement element)
         {
-            TryPowerOn(thisCell, element);
+            // Electric field should only react to events on its own cell.
         }
 
         private static bool IsPoweredOn(Grid3D.GridCell cell)
         {
-            return cell != null && cell.cellFeatureGroupHealth == PoweredOnState;
+            return cell != null && (cell.cellFeatureGroupHealth == PoweredOnState || IsPowerGeneratorCell(cell));
         }
 
         private static void SetPoweredOn(Grid3D.GridCell cell)
@@ -86,6 +87,11 @@ namespace Game
         }
 
         private static bool IsAdjacentPowerGenerator(Grid3D.GridCell cell)
+        {
+            return IsPowerGeneratorCell(cell);
+        }
+
+        private static bool IsPowerGeneratorCell(Grid3D.GridCell cell)
         {
             if (cell?.elementInfo?.elementData == null || GameManager.Instance == null)
                 return false;

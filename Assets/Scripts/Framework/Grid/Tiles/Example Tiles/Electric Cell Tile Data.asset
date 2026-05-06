@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34cdb16ba66f3394ca9d5fbeb985b8db, type: 3}
+  m_Name: Electric Cell Tile Data
+  m_EditorClassIdentifier: 
+  colorRuleset:
+    rid: 8850482694404178011
+  topLeftCorner: {fileID: 120667313, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  topRightCorner: {fileID: 262520162, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  bottomLeftCorner: {fileID: -1553399037, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  bottomRightCorner: {fileID: -135252728, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  topEdge: {fileID: -2118036727, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  bottomEdge: {fileID: -597095882, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  leftEdge: {fileID: -870992989, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  rightEdge: {fileID: -1561072337, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  topTip: {fileID: -1921468823, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  bottomTip: {fileID: -480433984, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  leftTip: {fileID: 510258077, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  rightTip: {fileID: -1896304492, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  verticalTile: {fileID: -557021657, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  horizontalTile: {fileID: -902037851, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  verticalWithLeftConnectionTile: {fileID: 393876257, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  verticalWithRightConnectionTile: {fileID: -372617947, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  horizontalWithUpConnectionTile: {fileID: -1115134531, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  horizontalWithDownConnectionTile: {fileID: -992964071, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  onlyVerticalAndHorizontalConnectionTile: {fileID: 1229303997, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  upperAndLeftTile: {fileID: -275277991, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  upperAndRightTile: {fileID: 465418743, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  lowerAndLeftTile: {fileID: 262520162, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  lowerAndRightTile: {fileID: 120667313, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  singleTileStandalone: {fileID: 444081177, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  topLeftConvexCorner: {fileID: 356962840, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  topRightConvexCorner: {fileID: -771927122, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  bottomLeftConvexCorner: {fileID: -513136796, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  bottomRightConvexCorner: {fileID: -271041133, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  singleInnerTile: {fileID: 1262562994, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
+  errorTile: {fileID: 21300000, guid: 321dfcc1c12d7cf42b0037754b1cdf9b, type: 3}
+  references:
+    version: 2
+    RefIds:
+    - rid: 8850482694404178011
+      type: {class: TurnedOnOffStateColors, ns: Game, asm: Game}
+      data:
+        blendMode: 0
+        turnedOnColor: {r: 0, g: 1.1353016, b: 2.2706032, a: 1}
+        turnedOnMaterial: {fileID: 2100000, guid: b89d20f6f855aab44a97cd037ca06884, type: 2}
+        turnedOffColor: {r: 0.1, g: 0.05, b: 0, a: 1}
+        turnedOffMaterial: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}

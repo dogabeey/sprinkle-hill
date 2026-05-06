@@ -4744,6 +4744,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9132301250057630282}
     - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: electricField
+      value: 
+      objectReference: {fileID: 11400000, guid: 533e37ef7d2d727448f260ed616b4b05, type: 2}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: screenManager
       value: 
       objectReference: {fileID: 1269927695}
