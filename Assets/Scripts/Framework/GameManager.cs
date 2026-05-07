@@ -12,13 +12,6 @@ using UnityEditor;
 
 namespace Game
 {
-    public interface IManager
-    {
-        public void OnInit();
-        public void OnUpdate();
-        public void OnApplicationPause();
-        public void OnApplicationQuit();
-    }
 
     public class GameManager : SingletonComponent<GameManager>
     {
