@@ -7,7 +7,7 @@ using MobileHapticsProFreeEdition;
 
 namespace Game
 {
-    public abstract class GridElement : Grid3D
+    public abstract class GridElement : Grid3D, IPoolable<GridElement>
     {
         private static Material _defaultSpriteMaterial;
         private bool _cachedInitialScale;

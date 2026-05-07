@@ -432,6 +432,14 @@ namespace Game
             return pool;
         }
 
+        public void OnSpawn()
+        {
+        }
+
+        public void OnDespawn()
+        {
+        }
+
         [System.Serializable]
         public class ProceduralGenerationSettings
         {
