@@ -1,9 +1,10 @@
+using DG.Tweening;
+using MobileHapticsProFreeEdition;
 using Sirenix.OdinInspector;
 using System;
-using UnityEngine;
-using DG.Tweening;
 using System.Collections;
-using MobileHapticsProFreeEdition;
+using System.Diagnostics;
+using UnityEngine;
 
 namespace Game
 {
@@ -245,6 +246,17 @@ namespace Game
             };
 
             return _defaultSpriteMaterial;
+        }
+
+        private void Awake()
+        {
+            UnityEngine.Debug.Log(
+                $"CREATED: {GetType().Name}\n{new StackTrace()}");
+        }
+        private void OnDestroy()
+        {
+            UnityEngine.Debug.Log(
+                $"DESTROYED: {GetType().Name}\n{new StackTrace()}");
         }
 
         public abstract IEnumerator DestroyElement();

@@ -1236,7 +1236,7 @@ namespace Game
                     if (cell.cellFeature is GlassFeature && cell.elementInfo?.elementData == null)
                         continue;
 
-                    GridElement element = Instantiate(gridElementPrefab, tile.transform.position, Quaternion.identity, tile.transform);
+                    GridElement element = Instantiate(gridElementPrefab, tile.transform.position, Quaternion.identity, tile.transform); // TODO: Use pooling
                     element.elementInfo = cell.elementInfo;
                     generatedElements.Add(element);
                     element.InitElement(this, element.elementInfo);
@@ -1767,7 +1767,7 @@ namespace Game
                         {
                             int stackOffset = spawnBase + (writeIndex - emptyIdx + 1);
                             Vector3 spawnWorldPos = targetTile.transform.position + Vector3.up * stackOffset;
-                            GridElement newEl = Instantiate(gridElementPrefab, spawnWorldPos, Quaternion.identity);
+                            GridElement newEl = Instantiate(gridElementPrefab, spawnWorldPos, Quaternion.identity); // TODO: Use pooling
                             newEl.transform.SetParent(targetTile.transform, true);
                             newEl.elementInfo = newInfo;
                             generatedElements.Add(newEl);

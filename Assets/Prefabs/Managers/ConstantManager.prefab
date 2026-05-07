@@ -1,0 +1,97 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &356353320566340417
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1990669834911217654}
+  - component: {fileID: 7114163460302476252}
+  m_Layer: 0
+  m_Name: ConstantManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1990669834911217654
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356353320566340417}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7114163460302476252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356353320566340417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2805f0110b2df2c478401d71c6343fea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game::Game.ConstantManager
+  loadingScreenDuration: 1
+  elementSwapMoveDuration: 0.3
+  elementFallSpeed: 3.3
+  matchClearDelay: 0.3
+  elementDestroyPopHeight: 0.2
+  elementDestroyPopDuration: 0.08
+  elementDestroyFallDistance: 0.25
+  elementDestroyFallDuration: 0.12
+  elementDestroyTargetScaleMultiplier: 0.1
+  elementDestroyScaleDuration: 0.2
+  elementDestroyRotateZ: 120
+  elementDestroyRotateDuration: 0.2
+  elementDestroyPunchScale: {x: 0.25, y: 0.25, z: 0}
+  elementDestroyPunchDuration: 0.2
+  elementDestroyPunchVibrato: 8
+  elementDestroyPunchElasticity: 0.8
+  elementDestroyParticlePrefab: {fileID: 0}
+  discoBallTrailDuration: 0.12
+  discoBallTrailSpawnDelay: 0.02
+  discoBallEmissionPeak: 3
+  discoBallEmissionResetDelay: 0.08
+  discoBallSpinLoopDuration: 0.12
+  discoBallSpinDegreesPerLoop: 540
+  sparklingTrailPrefab: {fileID: 0}
+  sparklingTrailDuration: 0.5
+  sparklingTrailSpawnDelay: 0.05
+  sparklingTrailFadeDelay: 0.5
+  sparklingShakeBaseMagnitude: 0.1
+  sparklingShakeMagnitudeIncrement: 0.05
+  sparklingShakeDuration: 0.2
+  sparklingShakeVibrato: 10
+  sparklingShakeRandomness: 90
+  matchShakeBaseMagnitude: 0.15
+  matchShakeComboMultiplier: 0.1
+  matchShakeDuration: 0.3
+  matchShakeVibrato: 10
+  matchShakeRandomness: 90
+  bombImpactParticlePrefab: {fileID: 0}
+  bombImpactShakeDuration: 0.25
+  bombImpactShakeMagnitude: 0.35
+  bombImpactShakeVibrato: 12
+  bombImpactShakeRandomness: 90
+  rocketTrailParticlePrefab: {fileID: 0}
+  rocketTravelSpeed: 12
+  rocketShakeDuration: 0.3
+  rocketShakeMagnitude: 0.25
+  rocketShakeVibrato: 10
+  rocketShakeRandomness: 90
+  elementToCauldronMoveDuration: 0.5
+  elementToCauldronMaxHeight: 0.75
+  elementToCauldronHeightMultiplier: 0.5
