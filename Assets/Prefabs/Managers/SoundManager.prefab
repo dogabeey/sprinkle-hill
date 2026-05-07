@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5803503675761523315
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3900960786679538075}
+  - component: {fileID: 6140130549950348035}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3900960786679538075
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5803503675761523315}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6140130549950348035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5803503675761523315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 411241972bce68c4bbf6095b86d0e0c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game::Game.SoundManager
+  soundInfos:
+  - id: LevelComplete
+    audioClips:
+    - {fileID: 8300000, guid: 6338fb24c250ded498869bc975b28a37, type: 3}
+    - {fileID: 8300000, guid: fcb116aead079da4693f6edfbb88a6fa, type: 3}
+    - {fileID: 8300000, guid: db4ec357d3cb4ab448116b4881a843d4, type: 3}
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 1
+  - id: LevelFailed
+    audioClips:
+    - {fileID: 8300000, guid: 3b72c5d1a25375840a00df3c64cece1a, type: 3}
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 1
+  - id: ElementSwap
+    audioClips:
+    - {fileID: 8300000, guid: 5ff90594ed26fc344988e6f14d11d17d, type: 3}
+    - {fileID: 8300000, guid: b4c7b8f440d45f04d8202a8429607db7, type: 3}
+    - {fileID: 8300000, guid: c869fc16d057b3d41a5e31d5e4aa780d, type: 3}
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 1
+  - id: Match
+    audioClips:
+    - {fileID: 8300000, guid: 47f7f75799394d44bb3e2d879baec9c8, type: 3}
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 1
+  - id: Bomb
+    audioClips: []
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 1
+  - id: Rocket
+    audioClips: []
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 1
+  - id: DiscoBallActivate
+    audioClips: []
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 1
+  - id: DiscoBallTrail
+    audioClips: []
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 1
+  - id: ButtonClickFail
+    audioClips: []
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 1
+  - id: ButtonClickSuccess
+    audioClips: []
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 1

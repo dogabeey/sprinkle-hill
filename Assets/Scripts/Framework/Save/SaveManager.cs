@@ -11,8 +11,7 @@ using UnityEngine;
 
 namespace Game
 {
-    [CreateAssetMenu(fileName = "SaveManager", menuName = "Game/Managers/SaveManager")]
-    public class SaveManager : ScriptableObject, IManager
+    public class SaveManager : MonoBehaviour
     {
         public static SaveManager Instance
         {
@@ -186,14 +185,6 @@ namespace Game
             EditorUtility.RevealInFinder(Application.persistentDataPath);
         }
 #endif
-
-        public void OnInit()
-        {
-        }
-
-        public void OnUpdate()
-        {
-        }
 
         public void OnApplicationPause()
         {

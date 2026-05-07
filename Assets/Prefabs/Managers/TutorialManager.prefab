@@ -39,7 +39,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7027007216058421712}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073f2e7c68f0d2243987fc020d905a76, type: 3}
   m_Name: 
@@ -56,7 +56,6 @@ MonoBehaviour:
   tutorialSteps:
   - {fileID: 11400000, guid: b71aef537cde7dc47a731839858a4b86, type: 2}
   - {fileID: 11400000, guid: beab77d328698014dbbc481afce5067d, type: 2}
-  - {fileID: 11400000, guid: 330c286938e423543bdbdc65e9090038, type: 2}
   animationObjectParent: {fileID: 0}
   directiveText: {fileID: 0}
   directiveParent: {fileID: 0}

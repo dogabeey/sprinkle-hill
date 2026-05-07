@@ -166,9 +166,6 @@ namespace Game
         {
             base.Awake();
 
-            soundManager.OnInit();
-            saveManager.OnInit();
-
             Application.targetFrameRate = 60;
             CurrentWorld = worlds[0];
             if (isSequentalLevels)
@@ -185,8 +182,6 @@ namespace Game
 
         private void Update()
         {
-            soundManager.OnUpdate();
-            saveManager.OnUpdate();
         }
         private void OnApplicationQuit()
         {

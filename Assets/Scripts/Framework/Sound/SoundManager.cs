@@ -7,8 +7,7 @@ using System;
 
 namespace Game
 {
-    [CreateAssetMenu(fileName = "SoundManager", menuName = "Game/Managers/SoundManager")]
-    public class SoundManager : ScriptableObject, ISaveable, IManager
+    public class SoundManager : MonoBehaviour, ISaveable
     {
         #region Classes
 
@@ -70,7 +69,7 @@ namespace Game
 
         #region Unity Methods
 
-        public void OnInit()
+        public void Start()
         {
 
             GameManager.Instance.saveManager.Register(this);
@@ -97,7 +96,7 @@ namespace Game
                 }
             }
         }
-        public void OnUpdate()
+        public void Update()
         {
             if (playingAudioSources.IsNullOrEmpty()) return;
 

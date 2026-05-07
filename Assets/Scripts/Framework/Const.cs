@@ -13,8 +13,7 @@ namespace Game
         FeatureProgress,
     }
 
-    [CreateAssetMenu(fileName = "ConstantManager", menuName = "Game/Constant Manager...", order = 1)]
-    public class ConstantManager : ScriptableObject
+    public class ConstantManager : MonoBehaviour
     {
         [Header("General")]
         public float loadingScreenDuration = 1f;
