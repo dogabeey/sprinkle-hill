@@ -482,6 +482,52 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2172909918253963267, guid: 70bd33374545fe1428a509f86d0456fd, type: 3}
   m_PrefabInstance: {fileID: 5532669354995979708}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &169691985
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 169691986}
+  - component: {fileID: 169691987}
+  m_Layer: 0
+  m_Name: EventManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &169691986
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169691985}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 492599855}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &169691987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169691985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5411e12104bf647a113285caddaedb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game::EventManager
+  activeListeners: []
+  totalListenerCount: 0
 --- !u!1 &177710305
 GameObject:
   m_ObjectHideFlags: 0
@@ -836,6 +882,7 @@ Transform:
   - {fileID: 698709063}
   - {fileID: 1047629135}
   - {fileID: 134930972}
+  - {fileID: 169691986}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &669080936
@@ -3881,6 +3928,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
+      propertyPath: flightDuration
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
       propertyPath: currencyContainer
       value: 
       objectReference: {fileID: 1393474369}
@@ -3888,6 +3939,18 @@ PrefabInstance:
       propertyPath: currencyCanvasGroup
       value: 
       objectReference: {fileID: 1393474371}
+    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
+      propertyPath: currencySpritePrefab
+      value: 
+      objectReference: {fileID: 2570130478893252555, guid: 0bb994df5a34fab418c2b7cd753ad551, type: 3}
+    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
+      propertyPath: currencySpriteMultiplier
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
+      propertyPath: currencyAnimationContainer
+      value: 
+      objectReference: {fileID: 4133448082132307929}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -4739,6 +4802,10 @@ PrefabInstance:
       propertyPath: winParticle
       value: 
       objectReference: {fileID: 128536242}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: eventManager
+      value: 
+      objectReference: {fileID: 169691987}
     - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: upperPanelUI
       value: 

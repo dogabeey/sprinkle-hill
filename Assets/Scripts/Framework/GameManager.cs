@@ -166,7 +166,6 @@ namespace Game
         {
             base.Awake();
 
-            eventManager.OnInit();
             soundManager.OnInit();
             saveManager.OnInit();
 
@@ -186,7 +185,6 @@ namespace Game
 
         private void Update()
         {
-            eventManager.OnUpdate();
             soundManager.OnUpdate();
             saveManager.OnUpdate();
         }

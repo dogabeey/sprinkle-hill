@@ -5,6 +5,7 @@ using UnityEngine;
 using DG.Tweening;
 using TMPro;
 using Sirenix.OdinInspector;
+using UnityEngine.UI;
 
 namespace Game
 {
@@ -30,7 +31,7 @@ namespace Game
 
         [Header("Animation Settings")]
         public Transform currencyAnimationContainer;
-        public SpriteRenderer currencySpritePrefab;
+        public Image currencySpritePrefab;
         public float flightDuration = 0.1f;
         public float currencySpriteMultiplier = 10f;
 
@@ -76,7 +77,7 @@ namespace Game
             StartCoroutine(AddCurrencyCoroutine(currencyID, amount, source));
         }
 
-        private IEnumerator AddCurrencyCoroutine(string currencyID, float amount, GameObject source = null)
+        public IEnumerator AddCurrencyCoroutine(string currencyID, float amount, GameObject source = null)
         {
             CurrencyInfo currencyInfo = currencyInfos.Find(x => x.currencyModel != null && x.currencyModel.currencyID == currencyID);
             if (currencyInfo == null)
@@ -89,17 +90,14 @@ namespace Game
 
             if (source != null && element != null)
             {
-                yield return StartCoroutine(AddCurrencyAnimationCoroutine(currencyInfo, source.transform.position, element.currencyTransform.position, amount));
+                Vector3 sourceScreenPos = source.transform.position;
+                yield return StartCoroutine(AddCurrencyAnimationCoroutine(currencyInfo, sourceScreenPos, element.currencyTransform.position, amount));
             }
 
             currencyInfo.Amount += amount;
             NotifyCurrencyChanged(currencyInfo.currencyModel);
         }
 
-        private void AddCurrencyAnimation(CurrencyInfo currencyInfo, Vector3 sourcePosition, Vector3 targetPosition, float amount)
-        {
-            StartCoroutine(AddCurrencyAnimationCoroutine(currencyInfo, sourcePosition, targetPosition, amount));
-        }
 
         private IEnumerator AddCurrencyAnimationCoroutine(CurrencyInfo currencyInfo, Vector3 sourcePosition, Vector3 targetPosition, float amount)
         {
@@ -114,7 +112,7 @@ namespace Game
 
                 for (int i = 0; i < spriteAmount; i++)
                 {
-                    SpriteRenderer spriteInstance = Instantiate(currencySpritePrefab, currencyAnimationContainer);
+                    Image spriteInstance = Instantiate(currencySpritePrefab, currencyAnimationContainer);
                     if (currencyInfo.currencyModel != null && currencyInfo.currencyModel.currencyIcon != null)
                     {
                         spriteInstance.sprite = currencyInfo.currencyModel.currencyIcon;
@@ -130,7 +128,7 @@ namespace Game
                     spriteInstance.transform
                         .DOMove(targetPosition, duration)
                         .SetDelay(delay)
-                        .SetEase(Ease.InOutQuad)
+                        .SetEase(Ease.Linear)
                         .OnComplete(() =>
                         {
                             if (spriteInstance != null)

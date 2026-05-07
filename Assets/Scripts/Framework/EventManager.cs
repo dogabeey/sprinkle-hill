@@ -20,26 +20,44 @@ public class EventListenerInfo
 }
 
 [CreateAssetMenu(fileName = "EventManager", menuName = "Game/Managers/EventManager")]
-public class EventManager : ScriptableObject, IManager
+public class EventManager : MonoBehaviour
 {
+    public static EventManager Instance => GameManager.Instance ? GameManager.Instance.eventManager : null;
 
     private Dictionary<string, Action<EventParam>> eventDictionary = new Dictionary<string, Action<EventParam>>();
 
+    [Header("Settings")]
+    public float eventQueueProcessingInterval = 0.01f; // Time in seconds between processing the event queue
     [Header("Inspector Debug Info")]
     [SerializeField, Tooltip("Shows all currently active event listeners (Runtime Only)")]
     private List<EventListenerInfo> activeListeners = new List<EventListenerInfo>();
-    
     [SerializeField, Tooltip("Total number of active listeners")]
     private int totalListenerCount = 0;
+    [SerializeField]
+    private Queue<KeyValuePair<string, EventParam>> eventDictionaryQueue = new Queue<KeyValuePair<string, EventParam>>();
 
-    public static EventManager instance => GameManager.Instance ? GameManager.Instance.eventManager : null;
-
-    public void OnInit()
+    public void Start()
     {
+#if UNITY_EDITOR
         UpdateInspectorInfo();
+#endif
+        StartCoroutine(TriggerEventQueueCoroutine());
     }
 
-    public void OnUpdate()
+    private IEnumerator TriggerEventQueueCoroutine()
+    {
+        while (enabled)
+        {
+            if(eventDictionaryQueue.Count > 0)
+            {
+                KeyValuePair<string, EventParam> kvp = eventDictionaryQueue.Dequeue();
+                TriggerEvent(kvp.Key, kvp.Value);
+            }
+            yield return new WaitForSeconds(eventQueueProcessingInterval);
+        }
+    }
+
+    public void Update()
     {
 #if UNITY_EDITOR
         UpdateInspectorInfo();
@@ -107,23 +125,23 @@ public class EventManager : ScriptableObject, IManager
     public static void StartListening(string eventName, Action<EventParam> listener)
     {
         Action<EventParam> thisEvent;
-        if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
+        if (Instance.eventDictionary.TryGetValue(eventName, out thisEvent))
         {
             //Add more event to the existing one
             thisEvent += listener;
 
             //Update the Dictionary
-            instance.eventDictionary[eventName] = thisEvent;
+            Instance.eventDictionary[eventName] = thisEvent;
         }
         else
         {
             //Add event to the Dictionary for the first time
             thisEvent += listener;
-            instance.eventDictionary.Add(eventName, thisEvent);
+            Instance.eventDictionary.Add(eventName, thisEvent);
         }
         
 #if UNITY_EDITOR
-        instance.UpdateInspectorInfo();
+        Instance.UpdateInspectorInfo();
 #endif
     }
 
@@ -135,20 +153,20 @@ public class EventManager : ScriptableObject, IManager
     public static void StopListening(string eventName, Action<EventParam> listener)
     {
         if (GameManager.Instance && GameManager.Instance.eventManager == null) return;
-        if(instance == null) return;
-        if(instance.eventDictionary == null) return;
+        if(Instance == null) return;
+        if(Instance.eventDictionary == null) return;
         Action<EventParam> thisEvent;
-        if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
+        if (Instance.eventDictionary.TryGetValue(eventName, out thisEvent))
         {
             //Remove event from the existing one
             thisEvent -= listener;
 
             //Update the Dictionary
-            instance.eventDictionary[eventName] = thisEvent;
+            Instance.eventDictionary[eventName] = thisEvent;
         }
         
 #if UNITY_EDITOR
-        instance.UpdateInspectorInfo();
+        Instance.UpdateInspectorInfo();
 #endif
     }
 
@@ -157,40 +175,47 @@ public class EventManager : ScriptableObject, IManager
         StopListening(eventName.ToString(), listener);
     }
 
-    public static void TriggerEvent(string eventName)
+    private static void TriggerEvent(string eventName)
     {
         EventParam eventParam = new EventParam();
         Action<EventParam> thisEvent = null;
-        if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
+        if (Instance.eventDictionary.TryGetValue(eventName, out thisEvent))
         {
             if(thisEvent == null)
             {
-                Debug.LogWarning($"Event '{eventName}' has some null listener(s). This might result events to notfiy its listeners correctly");
+                Debug.LogWarning($"Event '{eventName}' has some null listener(s). This might result events to notifiy its listeners incorrectly");
             }
-            thisEvent.Invoke(eventParam);
-            // OR USE  instance.eventDictionary[eventName](eventParam);
+            else
+            {
+                thisEvent.Invoke(eventParam);
+            }
         }
     }
 
     public static void TriggerEvent(GameEvent eventName)
     {
-        TriggerEvent(eventName.ToString());
-        Debug.Log($"Event triggered: {eventName}");
+        Instance.eventDictionaryQueue.Enqueue(new KeyValuePair<string, EventParam>(eventName.ToString(), new EventParam()));
     }
 
-    public static void TriggerEvent(string eventName, EventParam eventParam)
+    private static void TriggerEvent(string eventName, EventParam eventParam)
     {
         Action<EventParam> thisEvent = null;
-        if (instance.eventDictionary.TryGetValue(eventName, out thisEvent))
+        if (Instance.eventDictionary.TryGetValue(eventName, out thisEvent))
         {
-            thisEvent.Invoke(eventParam);
-            // OR USE  instance.eventDictionary[eventName](eventParam);
+            if (thisEvent == null)
+            {
+                Debug.LogWarning($"Event '{eventName}' has some null listener(s). This might result events to notifiy its listeners incorrectly");
+            } 
+            else
+            {
+                thisEvent.Invoke(eventParam);
+            }
         }
     }
 
     public static void TriggerEvent(GameEvent eventName, EventParam eventParam)
     {
-        TriggerEvent(eventName.ToString(), eventParam);
+        Instance.eventDictionaryQueue.Enqueue(new KeyValuePair<string, EventParam>(eventName.ToString(), eventParam));
     }
 
 }

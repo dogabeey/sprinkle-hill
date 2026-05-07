@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp:Dogabeey:CurrencyModel
   currencyID: Cash
   startingAmount: 0
-  currencyIcon: {fileID: 132396073, guid: e1721e006356ea443baff2090acf6c5d, type: 3}
+  currencyIcon: {fileID: 1608940175, guid: 0b65362f13aef9845a6f36ae73845469, type: 3}
   showFormat: 0
   spriteIndexForUI: 0
