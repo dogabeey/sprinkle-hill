@@ -1551,8 +1551,7 @@ namespace Game
                 Quaternion wallRotation = wallTile.transform.rotation;
                 Vector3 wallScale = wallTile.transform.localScale;
 
-                BreakableWall breakable = wallTile.GetComponent<BreakableWall>();
-                if (breakable != null) yield return StartCoroutine(breakable.WallBreak());
+                if (wallTile is BreakableWall breakable) yield return StartCoroutine(breakable.WallBreak());
 
                 if (tileGenerationData != null && tileGenerationData.normalCell != null)
                 {
