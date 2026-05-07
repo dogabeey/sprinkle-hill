@@ -143,7 +143,6 @@ namespace Game
         private void OnLevelCompleted(EventParam param)
         {
             ClearObjectiveListeners();
-            activeObjectives?.Clear();
         }
         internal int GetCurrentCount(Objective objective)
         {

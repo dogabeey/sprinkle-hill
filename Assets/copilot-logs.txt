@@ -18,3 +18,4 @@
 [2026-05-06 20:09:35] - Refined possible-move detection for shuffle checks by excluding hidden/non-matchable/non-swappable blockers and simulating swaps with full element info to prevent false-positive moves.
 [2026-05-06 20:19:26] - Updated match-detection helpers to ignore NonMatchable elements in line/square checks, preventing aligned unmatchable elements from being counted as valid matches and blocking shuffle triggers.
 [2026-05-06 20:29:31] - Fixed UpperPanelUI moves display logic so move count is no longer overwritten by timer text each frame in move-limited levels.
+[2026-05-07 22:45:11] - Preserved objective list on level completion/failure by stopping listener cleanup only, preventing Objective UI from being hidden at level end.
