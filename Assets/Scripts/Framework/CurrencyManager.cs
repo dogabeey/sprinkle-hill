@@ -51,11 +51,9 @@ namespace Game
         }
         private void OnLevelStarted(EventParam e)
         {
-            currencyCanvasGroup.alpha = 0; // Turn it off when level starts.
         }
         private void OnLevelCompleted(EventParam e)
         {
-            currencyCanvasGroup.alpha = 1; // Turn it on when level ends.
         }
 
         private void Start()
