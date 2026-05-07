@@ -16,32 +16,25 @@ namespace Game
     public class GameManager : SingletonComponent<GameManager>
     {
         [FoldoutGroup("Managers")]
-        [InlineEditor]
         public EventManager eventManager;
         [FoldoutGroup("Managers")]
-        [InlineEditor]
         public SoundManager soundManager;
         [FoldoutGroup("Managers")]
-        [InlineEditor]
         public SaveManager saveManager;
         [FoldoutGroup("Managers")]
-        [InlineEditor]
         public ConstantManager constantManager;
         [FoldoutGroup("Managers")]
-        [InlineEditor]
         public Gfx gfxManager;
         [FoldoutGroup("Managers")]
-        [InlineEditor]
         public TutorialManager tutorialManager;
         [FoldoutGroup("Managers")]
-        [InlineEditor]
         public ActionBarManager actionBarManager;
         [FoldoutGroup("Managers")]
-        [InlineEditor]
         public ScreenManager screenManager;
         [FoldoutGroup("Managers")]
-        [InlineEditor]
         public FeatureTracker featureTracker;
+        [FoldoutGroup("Managers")]
+        public PoolingManager poolingManager;
 
         [FoldoutGroup("Settings")]
         public bool showFeatureProgressScreen;
