@@ -4180,6 +4180,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GfxManager
       objectReference: {fileID: 0}
+    - target: {fileID: 9179816618609007364, guid: e0069f0ff63c60b429956823c73f36b9, type: 3}
+      propertyPath: addMovesIcon
+      value: 
+      objectReference: {fileID: -238066524, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5013,6 +5017,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1849306069612893864, guid: b36a00b159538994692c61725e8d2bab, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2164264134496142445, guid: b36a00b159538994692c61725e8d2bab, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -5078,6 +5086,18 @@ PrefabInstance:
       value: 885.68
       objectReference: {fileID: 0}
     - target: {fileID: 4937807638220785313, guid: b36a00b159538994692c61725e8d2bab, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4937807638220785313, guid: b36a00b159538994692c61725e8d2bab, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4937807638220785313, guid: b36a00b159538994692c61725e8d2bab, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4937807638220785313, guid: b36a00b159538994692c61725e8d2bab, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -5125,7 +5145,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3432717966443036791, guid: b36a00b159538994692c61725e8d2bab, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -5399,6 +5420,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010547].buyConfig.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877479918010546].buyConfig.Array.data[0].buyCount
       value: 3
       objectReference: {fileID: 0}
@@ -5408,14 +5433,58 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877479918010546].buyConfig.Array.data[2].buyCount
-      value: 50
+      value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010547].buyConfig.Array.data[0].buyCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010547].buyConfig.Array.data[1].buyCount
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010547].buyConfig.Array.data[2].buyCount
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010546].buyConfig.Array.data[0].BuySprite
+      value: 
+      objectReference: {fileID: 1515371514, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010546].buyConfig.Array.data[1].BuySprite
+      value: 
+      objectReference: {fileID: 955988023, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010546].buyConfig.Array.data[2].BuySprite
+      value: 
+      objectReference: {fileID: 939076426, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010547].buyConfig.Array.data[0].BuySprite
+      value: 
+      objectReference: {fileID: 1515371514, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010547].buyConfig.Array.data[1].BuySprite
+      value: 
+      objectReference: {fileID: 955988023, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010547].buyConfig.Array.data[2].BuySprite
+      value: 
+      objectReference: {fileID: 939076426, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877479918010546].buyConfig.Array.data[1].discountPercentage
       value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877479918010546].buyConfig.Array.data[2].discountPercentage
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010547].buyConfig.Array.data[1].discountPercentage
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010547].buyConfig.Array.data[2].discountPercentage
       value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 1925703224431792360, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
@@ -5555,6 +5624,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5489645690243221849, guid: 7a5c4060ec73d144bbd658c529e7f638, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6052314207170396806, guid: 7a5c4060ec73d144bbd658c529e7f638, type: 3}
       propertyPath: m_Name
       value: Win Panel
@@ -5563,7 +5636,12 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 6840714377295597199, guid: 7a5c4060ec73d144bbd658c529e7f638, type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 5489645690243221849, guid: 7a5c4060ec73d144bbd658c529e7f638, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

@@ -58,7 +58,7 @@ namespace Game
             }
 
             EventManager.TriggerEvent(GameEvent.ACTION_BAR_ITEM_CLICKED, new EventParam(
-                paramStr: actionBarItem.ActionName
+                paramStr: actionBarItem.ItemName
             ));
         }
         private void OnBuyButtonClicked(ActionBarItem actionBarItem)
@@ -100,7 +100,7 @@ namespace Game
                 if (lockedIcon)
                     lockedIcon.enabled = actionIcon && !actionIcon.enabled;
                 if (actionText) 
-                    actionText.text = actionBarItem.ActionName;
+                    actionText.text = actionBarItem.ItemName;
                 if(buyButton)
                     buyButton.gameObject.SetActive(actionBarItem.CostDefinesBuyability && actionBarItem.CurrentCount <= 0 && actionBarItem.IsAvailable());
                 if (costText)

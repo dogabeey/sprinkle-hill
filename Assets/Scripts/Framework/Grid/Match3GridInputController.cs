@@ -466,7 +466,7 @@ namespace Game
 
             rocketAction.CurrentCount--;
             yield return StartCoroutine(rocketAction.RocketThrowAnim(match3Grid.GetCellPositionInGrid(center)));
-            EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: rocketAction.ActionName));
+            EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: rocketAction.ItemName));
             yield return StartCoroutine(match3Grid.PlaceHorizontalRocketActionAt(center));
 
             isProcessing = false;
@@ -495,7 +495,7 @@ namespace Game
 
             discoBallAction.CurrentCount--;
             yield return StartCoroutine(discoBallAction.DiscoBallThrowAnim(match3Grid.GetCellPositionInGrid(center)));
-            EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: discoBallAction.ActionName));
+            EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: discoBallAction.ItemName));
             yield return StartCoroutine(match3Grid.PlaceDiscoBallActionAt(center));
 
             isProcessing = false;

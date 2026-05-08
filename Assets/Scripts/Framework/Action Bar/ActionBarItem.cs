@@ -8,31 +8,6 @@ using UnityEngine;
 
 namespace Game
 {
-    public interface IBuyable
-    {
-        public int GetCost();
-        void Buy(int count);
-
-        public string ActionName { get; }
-        public string ActionDescription { get; }
-        public CurrencyModel CostCurrency { get; }
-        public List<BuyBundle> BuyConfig { get; }
-
-        [Serializable]
-        public class BuyBundle
-        {
-            public int buyCount; // The count at which the buy sprite will change to the specified sprite. If the count is greater than or equal to the count threshold, the buy sprite will be used. This is useful for assigning different sprites when you buy in greater bundles.
-            public float discountPercentage; // The discount percentage to be applied when the count threshold is reached. For example, if the discount percentage is 0.1 (10%), and the original cost is 100, the cost will be reduced to 90 when the count threshold is reached. This is useful for encouraging players to buy in greater bundles by offering them a discount.
-            public Sprite BuySprite; // The sprite to be used when the count is greater than or equal to the count threshold.
-
-            public BuyBundle(int buyCount, float discountPercentage, Sprite buySprite)
-            {
-                this.buyCount = buyCount;
-                this.discountPercentage = discountPercentage;
-                BuySprite = buySprite;
-            }
-        }
-    }
 
     /// <summary>
     /// This is an action bar item which the player can click to perform an action. It can cost any currency. New action bar items can be created by extending this class. 
@@ -41,8 +16,8 @@ namespace Game
     [Serializable]
     public abstract class ActionBarItem : IBuyable
     {
-        public abstract string ActionName { get; }
-        public abstract string ActionDescription { get; }
+        public abstract string ItemName { get; }
+        public abstract string ItemDescription { get; }
         public abstract Sprite ActionBarIcon { get; }
         public abstract CurrencyModel CostCurrency { get; }
         public abstract ParticleSystem ActionSuccessParticle { get; }
@@ -61,8 +36,8 @@ namespace Game
 
         public int CurrentCount // TODO: change this to Isaveable when implementing save system
         {
-            get => PlayerPrefs.GetInt(ActionName + "_count", startingCount);
-            set => PlayerPrefs.SetInt(ActionName + "_count", value);
+            get => PlayerPrefs.GetInt(ItemName + "_count", startingCount);
+            set => PlayerPrefs.SetInt(ItemName + "_count", value);
         }
 
         public List<IBuyable.BuyBundle> buyConfig;
@@ -70,24 +45,24 @@ namespace Game
         public List<IBuyable.BuyBundle> BuyConfig => buyConfig;
         public int[] BuyChoices => new int[] { 1, 5, 25 };
 
-        public void Buy(int count)
+        public void Buy(int cost, int count)
         {
-            int cost = GetCost() * count;
+            int endCost = GetCost() * count;
             if (CostCurrency != null)
             {
-                if (CurrencyManager.Instance.GetCurrencyAmount(CostCurrency) >= cost)
+                if (CurrencyManager.Instance.GetCurrencyAmount(CostCurrency) >= endCost)
                 {
-                    CurrencyManager.Instance.AddCurrency(CostCurrency, -cost);
+                    CurrencyManager.Instance.AddCurrency(CostCurrency, -endCost);
                     CurrentCount += count;
                 }
                 else
                 {
-                    Debug.LogWarning("Not enough currency to buy " + ActionName);
+                    Debug.LogWarning("Not enough currency to buy " + ItemName);
                 }
             }
             else
             {
-                Debug.LogWarning("CostCurrency is not defined for " + ActionName);
+                Debug.LogWarning("CostCurrency is not defined for " + ItemName);
             }
         }
 
@@ -149,8 +124,8 @@ namespace Game
     {
         public int addedTime = 30;
 
-        public override string ActionName => "Add Time";
-        public override string ActionDescription => $"Adds {addedTime} seconds to the timer.";
+        public override string ItemName => "Add Time";
+        public override string ItemDescription => $"Adds {addedTime} seconds to the timer.";
         public override float BaseCost => 0;
         public override float CostIncrement => 0;
         public override float CostAcceleration => 0;
@@ -207,8 +182,8 @@ namespace Game
     public class AddMovesAction : BonusPremiumAction
     {
         public int addedMoves = 5;
-        public override string ActionName => "Add Moves";
-        public override string ActionDescription => $"Adds {addedMoves} moves to the move count.";
+        public override string ItemName => "Add Moves";
+        public override string ItemDescription => $"Adds {addedMoves} moves to the move count.";
         public override float BaseCost => 0;
         public override float CostIncrement => 0;
         public override float CostAcceleration => 0;
@@ -250,8 +225,8 @@ namespace Game
     public class ShuffleAction : BonusPremiumAction
     {
 
-        public override string ActionName => "Shuffle";
-        public override string ActionDescription => "Shuffles the board.";
+        public override string ItemName => "Shuffle";
+        public override string ItemDescription => "Shuffles the board.";
         public override Sprite ActionBarIcon => GameManager.Instance.gfxManager.shuffleActionIcon;
         public override CurrencyModel CostCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.shufflePowerupTrailParticlePrefab;
@@ -273,7 +248,7 @@ namespace Game
             if (grid == null) return;
 
             CurrentCount--;
-            EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: ActionName));
+            EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: ItemName));
 
             if (GameManager.Instance != null)
                 GameManager.Instance.StartCoroutine(ShuffleRoutine(grid));
@@ -298,8 +273,8 @@ namespace Game
     [Serializable]
     public class BombPlacementAction : BonusPremiumAction
     {
-        public override string ActionName => "Bomb Placement";
-        public override string ActionDescription => "Places a bomb on the board, then detonates it.";
+        public override string ItemName => "Bomb Placement";
+        public override string ItemDescription => "Places a bomb on the board, then detonates it.";
         public override Sprite ActionBarIcon => GameManager.Instance.gfxManager.bombElementIcon;
         public override CurrencyModel CostCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.bombPowerupTrailParticlePrefab;
@@ -339,8 +314,8 @@ namespace Game
     [Serializable]
     public class PlaceDiscoBallAction : BonusPremiumAction
     {
-        public override string ActionName => "Place Disco Ball";
-        public override string ActionDescription => "Places a disco ball on the board.";
+        public override string ItemName => "Place Disco Ball";
+        public override string ItemDescription => "Places a disco ball on the board.";
         public override Sprite ActionBarIcon => GameManager.Instance.gfxManager.discoBallElementIcon;
         public override CurrencyModel CostCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.discoBallPowerupTrailParticlePrefab;
@@ -379,8 +354,8 @@ namespace Game
     [Serializable]
     public class PlaceRocketAction : BonusPremiumAction
     {
-        public override string ActionName => "Place Rocket";
-        public override string ActionDescription => "Places a rocket on the board";
+        public override string ItemName => "Place Rocket";
+        public override string ItemDescription => "Places a rocket on the board";
         public override Sprite ActionBarIcon => GameManager.Instance.gfxManager.rocketElementIcon;
         public override CurrencyModel CostCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.rocketPowerupTrailParticlePrefab;

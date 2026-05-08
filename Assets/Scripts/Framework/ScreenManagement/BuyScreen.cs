@@ -35,8 +35,8 @@ namespace Game
                 Destroy(child.gameObject);
             }
 
-            if (itemHeaderText) itemHeaderText.text = referenceBuyable.ActionName;
-            if (itemDescriptionText) itemDescriptionText.text = referenceBuyable.ActionDescription;
+            if (itemHeaderText) itemHeaderText.text = referenceBuyable.ItemName;
+            if (itemDescriptionText) itemDescriptionText.text = referenceBuyable.ItemDescription;
 
             // Use IBuyable.BuyConfig to populate the buy screen with BuyScreenNodes.
             foreach (var buyBundle in referenceBuyable.BuyConfig)

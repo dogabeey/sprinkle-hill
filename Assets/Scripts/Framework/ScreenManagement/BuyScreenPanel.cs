@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,49 +20,28 @@ namespace Game
         internal IBuyable referenceBuyable;
         internal int buyAmount;
 
-        /// <summary>
-        /// Evaluates and returns the appropriate sprite based on the current state or configuration.
-        /// </summary>
-        /// <returns>A Sprite object representing the evaluated result. The returned value may be null if no suitable sprite is
-        /// determined.</returns>
-        public Sprite EvaluateSprite(IBuyable buyable, int count)
-        {
-            List<IBuyable.BuyBundle> buyspriteConfig = buyable.BuyConfig;
-
-            if (buyspriteConfig == null || buyspriteConfig.Count == 0)
-                return null;
-            // Sort the configuration by count in descending order to find the highest applicable sprite
-            buyspriteConfig.Sort((a, b) => b.buyCount.CompareTo(a.buyCount));
-            foreach (var config in buyspriteConfig)
-            {
-                if (count >= config.buyCount)
-                {
-                    return config.BuySprite;
-                }
-            }
-            return null; // Return null if no applicable sprite is found
-        }
 
         public void Init(IBuyable buyable, int count)
         {
             referenceBuyable = buyable;
             buyAmount = count;
+            var buyBundle = buyable.BuyConfig.FirstOrDefault(b => b.buyCount == count);
 
-            if (itemImage) itemImage.sprite = EvaluateSprite(buyable, count);
+            if (itemImage) itemImage.sprite = buyBundle?.BuySprite;
             if (itemCountText) itemCountText.text = string.Format(itemCountTextFormat, count);
-            if (costText) costText.text = string.Format(costTextFormat, buyable.CostCurrency.spriteIndexForUI, buyable.GetCost() * count);
+            if (costText) costText.text = string.Format(costTextFormat, buyable.CostCurrency.spriteIndexForUI, buyBundle?.GetTotalCost(buyable.GetCost()) ?? 0);
             buyButton.onClick.RemoveAllListeners();
             buyButton.onClick.AddListener(() =>
             {
-                OnBuyButtonClicked();
+                OnBuyButtonClicked(buyBundle?.GetTotalCost(buyable.GetCost()) ?? 0, count);
             });
         }
 
-        private void OnBuyButtonClicked()
+        private void OnBuyButtonClicked(int cost, int count)
         {
             if (referenceBuyable != null)
             {
-                referenceBuyable.Buy(buyAmount);
+                referenceBuyable.Buy(cost, count);
             }
         }
     }

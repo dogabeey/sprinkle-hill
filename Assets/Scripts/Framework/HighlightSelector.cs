@@ -403,7 +403,7 @@ namespace Game
                     if (view == null || view.actionBarItem == null)
                         continue;
 
-                    if (view.actionBarItem.ActionName == actionName)
+                    if (view.actionBarItem.ItemName == actionName)
                         return new[] { view.useButton.gameObject };
                 }
 
@@ -428,10 +428,10 @@ namespace Game
 
             foreach (ActionBarItem item in actionBarManager.actionBarItemList)
             {
-                if (item == null || string.IsNullOrEmpty(item.ActionName))
+                if (item == null || string.IsNullOrEmpty(item.ItemName))
                     continue;
 
-                valueDropdownItems.Add(item.ActionName, item.ActionName);
+                valueDropdownItems.Add(item.ItemName, item.ItemName);
             }
             return valueDropdownItems;
         }
