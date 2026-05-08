@@ -70,23 +70,18 @@ namespace Game
             }
         }
 
-        public void AddCurrency(string currencyID, float amount, GameObject source = null)
+        public void AddCurrency(CurrencyModel currencyModel, float amount, GameObject source = null)
         {
-            StartCoroutine(AddCurrencyCoroutine(currencyID, amount, source));
+            StartCoroutine(AddCurrencyCoroutine(currencyModel, amount, source));
         }
 
-        public IEnumerator AddCurrencyCoroutine(string currencyID, float amount, GameObject source = null)
+        public IEnumerator AddCurrencyCoroutine(CurrencyModel currencyModel, float amount, GameObject source = null)
         {
-            CurrencyInfo currencyInfo = currencyInfos.Find(x => x.currencyModel != null && x.currencyModel.currencyID == currencyID);
-            if (currencyInfo == null)
-            {
-                Debug.LogWarning($"Currency with id '{currencyID}' not found.");
-                yield break;
-            }
+            CurrencyInfo currencyInfo = currencyInfos.Find(x => x.currencyModel != null && x.currencyModel == currencyModel);
 
-            CurrencyElement element = currencyElements.Find(x => x.refCurrency != null && x.refCurrency.currencyID == currencyID);
+            CurrencyElement element = currencyElements.Find(x => x.refCurrency != null && x.refCurrency == currencyModel);
 
-            if (source != null && element != null)
+            if (source != null && element != null)  
             {
                 Vector3 sourceScreenPos = source.transform.position;
                 yield return StartCoroutine(AddCurrencyAnimationCoroutine(currencyInfo, sourceScreenPos, element.currencyTransform.position, amount));

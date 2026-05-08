@@ -7,28 +7,34 @@ namespace Game
 {
     public class Gfx : MonoBehaviour
     {
-        [FoldoutGroup("Sprites")]
+        [FoldoutGroup("Icons")]
         public Sprite addTimeIcon;
-        [FoldoutGroup("Sprites")]
+        [FoldoutGroup("Icons")]
+        public Sprite addMovesIcon;
+        [FoldoutGroup("Icons")]
         public Sprite shuffleActionIcon;
-        [FoldoutGroup("Sprites")]
+        [FoldoutGroup("Icons")]
         public Sprite bombElementIcon;
-        [FoldoutGroup("Sprites")]
+        [FoldoutGroup("Icons")]
         public Sprite discoBallElementIcon;
-        [FoldoutGroup("Sprites")]
+        [FoldoutGroup("Icons")]
         public Sprite rocketElementIcon;
-        [FoldoutGroup("Sprites")]
+        [FoldoutGroup("Icons")]
         public Sprite easyLevelIcon;
-        [FoldoutGroup("Sprites")]
+        [FoldoutGroup("Icons")]
         public Sprite mediumLevelIcon;
-        [FoldoutGroup("Sprites")]
+        [FoldoutGroup("Icons")]
         public Sprite hardLevelIcon;
-        [FoldoutGroup("Sprites")]
+        [FoldoutGroup("Icons")]
         public Sprite hiddenIndicatorIcon;
-        [FoldoutGroup("Sprites")]
+        [FoldoutGroup("Icons")]
         public Sprite sparklingIndicatorIcon;
-        [FoldoutGroup("Sprites")]
+        [FoldoutGroup("Icons")]
         public Sprite crunchedBackgroundSprite;
+        [FoldoutGroup("Buy Icons")]
+        public Sprite cashSmallAmount, cashMediumAmount, cashLargeAmount;
+        [FoldoutGroup("Buy Icons")]
+        public Sprite premiumCurrencySmallAmount, premiumCurrencyMediumAmount, premiumCurrencyLargeAmount;
         [FoldoutGroup("Particle Systems")]
         public ParticleSystem elementDestroyParticlePrefab;
         [FoldoutGroup("Particle Systems")]
@@ -37,6 +43,8 @@ namespace Game
         public ParticleSystem rocketTrailParticlePrefab;
         [FoldoutGroup("Particle Systems")]
         public ParticleSystem addTimePowerupTrailParticlePrefab;
+        [FoldoutGroup("Particle Systems")]
+        public ParticleSystem addMovesPowerupTrailParticlePrefab;
         [FoldoutGroup("Particle Systems")]
         public ParticleSystem shufflePowerupTrailParticlePrefab;
         [FoldoutGroup("Particle Systems")]

@@ -43,7 +43,7 @@ namespace Game
             }
         }
 
-        private const string MatchRewardCurrencyId = "cash";
+        private static readonly CurrencyModel MatchRewardCurrency;
         private int currentComboCount = 0;
         private PowerUpHandler powerUpHandler;
 
@@ -2642,25 +2642,7 @@ namespace Game
             CurrencyManager currencyManager = CurrencyManager.Instance;
             if (currencyManager == null) return;
 
-            string currencyId = MatchRewardCurrencyId;
-            bool hasExact = currencyManager.currencyInfos.Exists(x => x.currencyModel != null && x.currencyModel.currencyID == currencyId);
-            if (!hasExact)
-            {
-                CurrencyManager.CurrencyInfo cashLike = currencyManager.currencyInfos.Find(x => x.currencyModel != null &&
-                    string.Equals(x.currencyModel.currencyID, currencyId, System.StringComparison.OrdinalIgnoreCase));
-                if (cashLike != null)
-                {
-                    currencyId = cashLike.currencyModel.currencyID;
-                }
-                else
-                {
-                    CurrencyManager.CurrencyInfo fallback = currencyManager.currencyInfos.Find(x => x.currencyModel != null);
-                    if (fallback == null) return;
-                    currencyId = fallback.currencyModel.currencyID;
-                }
-            }
-
-            currencyManager.AddCurrency(currencyId, Mathf.Max(1, comboCount), source);
+            currencyManager.AddCurrency(GameManager.Instance.cashCurrency, Mathf.Max(1, comboCount), source);
         }
     }
 }

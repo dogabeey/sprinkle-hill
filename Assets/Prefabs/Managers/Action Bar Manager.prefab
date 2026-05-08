@@ -46,61 +46,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionBarViewPrefab: {fileID: 230861821462889445, guid: 9e234be0c7761a34aaf9d63c420f9995, type: 3}
   actionBarItemList:
-  - rid: 5000171156985086083
-  - rid: 943281644091474204
-  - rid: 3084495758061469768
-  - rid: 943281644091474012
+  - rid: 1021877479918010546
+  - rid: 1021877479918010547
+  - rid: 1021877479918010548
+  - rid: 1021877479918010549
+  - rid: 1021877479918010550
   actionBarParent: {fileID: 0}
   lockedSprite: {fileID: -320327708, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
   references:
     version: 2
     RefIds:
-    - rid: 943281644091474012
-      type: {class: AddTimeAction, ns: Game, asm: Assembly-CSharp}
+    - rid: 1021877479918010546
+      type: {class: AddTimeAction, ns: Game, asm: Game}
       data:
-        actionBarIcon: {fileID: -238066524, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
-        costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
-        actionSuccessParticle: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
-        startingCount: 10
-        unlockedLevel: 5
-        tiedFeature:
-          featureName: Add Time
-          unlockedLevelIndex: 5
-          icon: {fileID: -238066524, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+        startingCount: 3
+        unlockedLevel: 3
         addedTime: 30
-    - rid: 943281644091474204
-      type: {class: PlaceDiscoBallAction, ns: Game, asm: Assembly-CSharp}
+    - rid: 1021877479918010547
+      type: {class: AddMovesAction, ns: Game, asm: Game}
       data:
-        actionBarIcon: {fileID: 524596139, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
-        costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
-        actionSuccessParticle: {fileID: 6553830495741696104, guid: f0c3336913e261f479ba003744aaa6ec, type: 3}
-        startingCount: 10
-        unlockedLevel: 15
-        tiedFeature:
-          featureName: Candy Bar
-          unlockedLevelIndex: 15
-          icon: {fileID: 524596139, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
-    - rid: 3084495758061469768
-      type: {class: BombPlacementAction, ns: Game, asm: Assembly-CSharp}
+        startingCount: 3
+        unlockedLevel: 3
+        addedMoves: 5
+    - rid: 1021877479918010548
+      type: {class: BombPlacementAction, ns: Game, asm: Game}
       data:
-        actionBarIcon: {fileID: -1949253524, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
-        costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
-        actionSuccessParticle: {fileID: 6553830495741696104, guid: 1ea5b88013b271144a852e3fdd2cc75b, type: 3}
-        startingCount: 10
-        unlockedLevel: 10
-        tiedFeature:
-          featureName: Bomb Feature
-          unlockedLevelIndex: 10
-          icon: {fileID: -1949253524, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
-    - rid: 5000171156985086083
-      type: {class: PlaceRocketAction, ns: Game, asm: Assembly-CSharp}
+        startingCount: 0
+        unlockedLevel: 6
+    - rid: 1021877479918010549
+      type: {class: PlaceDiscoBallAction, ns: Game, asm: Game}
       data:
-        actionBarIcon: {fileID: 433923414, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
-        costCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
-        actionSuccessParticle: {fileID: 0}
-        startingCount: 10
-        unlockedLevel: 20
-        tiedFeature:
-          featureName: Rocket
-          unlockedLevelIndex: 20
-          icon: {fileID: 433923414, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
+        startingCount: 0
+        unlockedLevel: 9
+    - rid: 1021877479918010550
+      type: {class: PlaceRocketAction, ns: Game, asm: Game}
+      data:
+        startingCount: 0
+        unlockedLevel: 12

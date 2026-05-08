@@ -59,7 +59,7 @@ namespace Game
             {
                 // Get reward text for the current reward to use as the source for the flying currency animation
                 GameObject sourceObject = rewardTexts[levelScene.rewards.IndexOf(reward)].gameObject;
-                yield return StartCoroutine(CurrencyManager.Instance.AddCurrencyCoroutine(reward.type.currencyID, reward.amount, sourceObject));
+                yield return StartCoroutine(CurrencyManager.Instance.AddCurrencyCoroutine(reward.type, reward.amount, sourceObject));
             }
 
             ScreenManager.Instance.CloseAllScreens();
@@ -74,6 +74,6 @@ namespace Game
         }
 
     }
-    
+
 }
 

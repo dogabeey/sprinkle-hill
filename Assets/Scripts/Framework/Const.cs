@@ -11,6 +11,7 @@ namespace Game
         LoseScreen,
         SettingScreen,
         FeatureProgress,
+        BuyMenu,
     }
 
     public class ConstantManager : MonoBehaviour
