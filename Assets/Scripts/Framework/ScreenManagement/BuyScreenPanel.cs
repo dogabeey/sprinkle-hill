@@ -43,6 +43,7 @@ namespace Game
             {
                 referenceBuyable.Buy(cost, count);
             }
+            ScreenManager.Instance.CloseAllScreens();
         }
     }
 }

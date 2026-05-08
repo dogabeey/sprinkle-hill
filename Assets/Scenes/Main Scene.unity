@@ -5416,6 +5416,26 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 66476413}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: 'actionBarItemList.Array.data[0]'
+      value: 1021877479918010549
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: 'actionBarItemList.Array.data[1]'
+      value: 1021877479918010548
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: 'actionBarItemList.Array.data[2]'
+      value: 1021877479918010550
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: 'actionBarItemList.Array.data[3]'
+      value: 1021877479918010547
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: 'actionBarItemList.Array.data[4]'
+      value: 1021877479918010546
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877479918010546].buyConfig.Array.size
       value: 3
       objectReference: {fileID: 0}
