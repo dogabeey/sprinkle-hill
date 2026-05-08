@@ -8,8 +8,6 @@ namespace Game
     public class  BuyScreenNode : MonoBehaviour
     {
         public Image itemImage;
-        public TMP_Text itemNameText;
-        public TMP_Text itemDescriptionText;
         public TMP_Text itemCountText;
         public TMP_Text costText;
         public Button buyButton;
@@ -50,8 +48,6 @@ namespace Game
             buyAmount = count;
 
             if (itemImage) itemImage.sprite = EvaluateSprite(buyable, count);
-            if (itemNameText) itemNameText.text = buyable.ActionName;
-            if (itemDescriptionText) itemDescriptionText.text = buyable.ActionDescription;
             if (itemCountText) itemCountText.text = string.Format(itemCountTextFormat, count);
             if (costText) costText.text = string.Format(costTextFormat, buyable.CostCurrency.spriteIndexForUI, buyable.GetCost() * count);
             buyButton.onClick.RemoveAllListeners();

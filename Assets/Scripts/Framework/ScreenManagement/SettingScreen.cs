@@ -37,8 +37,9 @@ namespace Game
             });
         }
 
-        public override void InitUI()
+        public override void InitUI(EventParam eventParam)
         {
+            base.InitUI(eventParam);
             StartCoroutine(MenuOpenCoroutine());
 
             musicToggle.isOn = SoundManager.Instance.IsMusicOn;
@@ -65,6 +66,10 @@ namespace Game
             });
 
             base.CloseUI();
+        }
+        public override void ResolveParams(EventParam eventParam)
+        {
+
         }
 
         private IEnumerator MenuOpenCoroutine()

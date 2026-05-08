@@ -22,8 +22,9 @@ namespace Game
 
         private List<TMP_Text> rewardTexts = new List<TMP_Text>();
 
-        public override void InitUI()
+        public override void InitUI(EventParam eventParam)
         {
+            base.InitUI(eventParam);
             LevelScene levelScene = GameManager.Instance.CurrentLevel;
             if (levelHeaderText) levelHeaderText.text = string.Format(levelHeaderFormat, GameManager.Instance.CurrentLevelIndex + 1);
             if(levelWinText) levelWinText.text = levelScene.winText;
@@ -71,6 +72,10 @@ namespace Game
             {
                 GameManager.Instance.LoadNextLevel();
             }
+        }
+        public override void ResolveParams(EventParam eventParam)
+        {
+
         }
 
     }

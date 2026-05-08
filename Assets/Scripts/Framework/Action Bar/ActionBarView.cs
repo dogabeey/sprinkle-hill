@@ -63,17 +63,9 @@ namespace Game
         }
         private void OnBuyButtonClicked(ActionBarItem actionBarItem)
         {
-            // If action bar item has buyability defined by cost, implement buy logic here.
-             if (actionBarItem.CostDefinesBuyability && CurrencyManager.Instance.GetCurrencyAmount(actionBarItem.CostCurrency) >= actionBarItem.GetCost())
-            {
-                SoundManager.Instance.Play(ConstantManager.SOUNDS.EFFECTS.BUTTON_CLICK_SUCCESS);
-                CurrencyManager.Instance.AddCurrency(actionBarItem.CostCurrency, -actionBarItem.GetCost());
-            }
-            else
-            {
-                SoundManager.Instance.Play(ConstantManager.SOUNDS.EFFECTS.BUTTON_CLICK_FAIL);
-                // TODO: Open buy panel here.
-            }
+            ScreenManager.Instance.Show(Screens.BuyMenu, new EventParam(
+                paramValue: actionBarItem
+            ));
         }
 
         private void ShakeLockedPanel()

@@ -22,8 +22,9 @@ namespace Game
         public string progressFormat = "Unlock at level {0} • {1} level left";
         public string progressFormatPlural = "Unlock at level {0} • {1} levels left";
 
-        public override void InitUI()
+        public override void InitUI(EventParam eventParam)
         {
+            base.InitUI(eventParam);
             FeatureTracker featureTracker = GameManager.Instance.featureTracker;
             int currentLevelIndex = Mathf.Max(0, World.Instance.lastPlayedLevelIndex);
             UnlockableFeature nextFeature = featureTracker != null ? featureTracker.GetNextLockedFeature(currentLevelIndex) : null;
@@ -81,6 +82,10 @@ namespace Game
                     GameManager.Instance.LoadNextLevel();
                 });
             }
+        }
+        public override void ResolveParams(EventParam eventParam)
+        {
+
         }
     }
 }

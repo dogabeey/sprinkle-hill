@@ -20,8 +20,9 @@ namespace Game
         public string addMovesButtonFormat = "+{0} MOVES";
         public string addMovesCostFormat = "{0}<sprite index=1>";
 
-        public override void InitUI()
+        public override void InitUI(EventParam eventParam)
         {
+            base.InitUI(eventParam);
             LevelScene_Match3Game levelScene = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
             if(levelHeaderText) levelHeaderText.text = string.Format(levelHeaderFormat, GameManager.Instance.CurrentLevelIndex + 1);
             if(levelLostReason) levelLostReason.text = "OUT OF MOVES!";
@@ -43,6 +44,10 @@ namespace Game
                 ScreenManager.Instance.CloseAllScreens();
                 GameManager.Instance.ResetCurrentLevel();
             });
+        }
+        public override void ResolveParams(EventParam eventParam)
+        {
+            
         }
 
         private bool CanAddMovesOrTime()

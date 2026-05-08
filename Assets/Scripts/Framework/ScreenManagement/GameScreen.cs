@@ -21,7 +21,11 @@ namespace Game
             }
         }
 
-        public abstract void InitUI();
+        public virtual void InitUI(EventParam eventParam) 
+        { 
+            ResolveParams(eventParam);
+        }
+        public abstract void ResolveParams(EventParam eventParam);
         public virtual void CloseUI() {
                 if (animator != null && !string.IsNullOrEmpty(closeAnimationName))
                 {
@@ -42,9 +46,18 @@ namespace Game
     }
     public class MainMenuScreen : GameScreen
     {
+        public MainMenuScreen()
+        {
+        }
+
         public override Screens ScreenID => Screens.MainMenu;
 
-        public override void InitUI()
+        public override void InitUI(EventParam eventParam)
+        {
+
+        }
+
+        public override void ResolveParams(EventParam eventParam)
         {
 
         }

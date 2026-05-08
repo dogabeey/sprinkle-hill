@@ -13,6 +13,7 @@ namespace Game
         public BuyScreenNode buyScreenNodePrefab;
         public LayoutGroup buyScreenNodeContainer;
         public TMP_Text itemHeaderText;
+        public TMP_Text itemDescriptionText;
 
         public IBuyable ReferenceBuyable
         {
@@ -23,33 +24,33 @@ namespace Game
             set
             {
                 referenceBuyable = value;
-                Init(value);
             }
         }
 
-        public override void InitUI()
+        public override void InitUI(EventParam eventParam)
         {
-
-        }
-
-        public void Init(IBuyable referenceBuyable)
-        {
-            this.referenceBuyable = referenceBuyable;
+            base.InitUI(eventParam);
             foreach (Transform child in buyScreenNodeContainer.transform)
             {
                 Destroy(child.gameObject);
             }
 
-            if (itemHeaderText != null)
-            {
-                itemHeaderText.text = referenceBuyable.ActionName;
-            }
+            if (itemHeaderText) itemHeaderText.text = referenceBuyable.ActionName;
+            if (itemDescriptionText) itemDescriptionText.text = referenceBuyable.ActionDescription;
 
             // Use IBuyable.BuyChoices to populate the buy screen with BuyScreenNodes.
             foreach (int buyChoice in referenceBuyable.BuyChoices)
             {
                 BuyScreenNode newNode = Instantiate(buyScreenNodePrefab, buyScreenNodeContainer.transform);
                 newNode.Init(referenceBuyable, buyChoice);
+            }
+        }
+        public override void ResolveParams(EventParam eventParam)
+        {
+            IBuyable buyableParam = eventParam.paramValue as IBuyable;
+            if (buyableParam != null)
+            {
+                ReferenceBuyable = buyableParam;
             }
         }
     }

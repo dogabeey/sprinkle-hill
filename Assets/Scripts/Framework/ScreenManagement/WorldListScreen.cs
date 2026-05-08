@@ -4,7 +4,11 @@ namespace Game
     {
         public override Screens ScreenID => Screens.WorldList;
 
-        public override void InitUI()
+        public override void InitUI(EventParam eventParam)
+        {
+            base.InitUI(eventParam);
+        }
+        public override void ResolveParams(EventParam eventParam)
         {
 
         }

@@ -6,6 +6,7 @@ using UnityEngine;
 public class EventParam
 {
     public GameObject paramObj;
+    public object paramValue;
     public ScriptableObject paramScriptable;
     public int paramInt;
     public float paramFloat;
@@ -26,7 +27,7 @@ public class EventParam
     }
 
     public EventParam(GameObject paramObj = null, ScriptableObject paramScriptable = null, int paramInt = 0, float paramFloat = 0f, string paramStr = "", Type paramType = null, Dictionary<string, object> paramDictionary = null,
-    Vector3[] vectorList = null, bool paramBool = false)
+    Vector3[] vectorList = null, bool paramBool = false, object paramValue = null)
     {
         this.paramObj = paramObj;
         this.paramScriptable = paramScriptable;
@@ -37,5 +38,6 @@ public class EventParam
         this.paramDictionary = paramDictionary;
         this.vectorList = vectorList;
         this.paramBool = paramBool;
+        this.paramValue = paramValue;
     }
 }
