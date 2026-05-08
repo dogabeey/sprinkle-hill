@@ -10,8 +10,12 @@ namespace Game
         public Image itemImage;
         public TMP_Text itemNameText;
         public TMP_Text itemDescriptionText;
+        public TMP_Text itemCountText;
         public TMP_Text costText;
         public Button buyButton;
+        [Header("Settings")]
+        public string costTextFormat = "<sprite index={0}>{1}";
+        public string itemCountTextFormat = "x{0}";
 
 
         internal IBuyable referenceBuyable;
@@ -48,7 +52,8 @@ namespace Game
             if (itemImage) itemImage.sprite = EvaluateSprite(buyable, count);
             if (itemNameText) itemNameText.text = buyable.ActionName;
             if (itemDescriptionText) itemDescriptionText.text = buyable.ActionDescription;
-            if (costText) costText.text = $"<sprite index={buyable.CostCurrency.spriteIndexForUI}>{buyable.GetCost() * count}";
+            if (itemCountText) itemCountText.text = string.Format(itemCountTextFormat, count);
+            if (costText) costText.text = string.Format(costTextFormat, buyable.CostCurrency.spriteIndexForUI, buyable.GetCost() * count);
             buyButton.onClick.RemoveAllListeners();
             buyButton.onClick.AddListener(() =>
             {

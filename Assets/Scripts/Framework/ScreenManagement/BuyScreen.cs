@@ -1,4 +1,6 @@
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game
 {
@@ -6,20 +8,50 @@ namespace Game
     {
         public override Screens ScreenID => Screens.BuyMenu;
 
-        internal IBuyable referenceBuyable;
+        private IBuyable referenceBuyable;
 
+        public BuyScreenNode buyScreenNodePrefab;
+        public LayoutGroup buyScreenNodeContainer;
         public TMP_Text itemHeaderText;
+
+        public IBuyable ReferenceBuyable
+        {
+            get
+            {
+                return referenceBuyable;
+            }
+            set
+            {
+                referenceBuyable = value;
+                Init(value);
+            }
+        }
 
         public override void InitUI()
         {
-            throw new System.NotImplementedException();
-        }
-    }
 
-    public class BuyData
-    {
-        public IBuyable buyableItem;
-        public int buyAmount;
+        }
+
+        public void Init(IBuyable referenceBuyable)
+        {
+            this.referenceBuyable = referenceBuyable;
+            foreach (Transform child in buyScreenNodeContainer.transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            if (itemHeaderText != null)
+            {
+                itemHeaderText.text = referenceBuyable.ActionName;
+            }
+
+            // Use IBuyable.BuyChoices to populate the buy screen with BuyScreenNodes.
+            foreach (int buyChoice in referenceBuyable.BuyChoices)
+            {
+                BuyScreenNode newNode = Instantiate(buyScreenNodePrefab, buyScreenNodeContainer.transform);
+                newNode.Init(referenceBuyable, buyChoice);
+            }
+        }
     }
 }
 
