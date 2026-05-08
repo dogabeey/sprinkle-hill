@@ -16,17 +16,19 @@ namespace Game
         public string ActionName { get; }
         public string ActionDescription { get; }
         public CurrencyModel CostCurrency { get; }
-        public List<BuySpriteAtCount> BuySprites { get; }
-        public int[] BuyChoices {  get; } // How many bundle choices there are when buying this item. For example, if the buy choices are [1, 5, 25], the player can choose to buy 1, 5 or 25 of this item at once. This is useful for items that can be bought in bundles.
+        public List<BuyBundle> BuyConfig { get; }
 
-        public class BuySpriteAtCount
+        [Serializable]
+        public class BuyBundle
         {
-            public int countThreshold; // The count at which the buy sprite will change to the specified sprite. If the count is greater than or equal to the count threshold, the buy sprite will be used. This is useful for assigning different sprites when you buy in greater bundles.
+            public int buyCount; // The count at which the buy sprite will change to the specified sprite. If the count is greater than or equal to the count threshold, the buy sprite will be used. This is useful for assigning different sprites when you buy in greater bundles.
+            public float discountPercentage; // The discount percentage to be applied when the count threshold is reached. For example, if the discount percentage is 0.1 (10%), and the original cost is 100, the cost will be reduced to 90 when the count threshold is reached. This is useful for encouraging players to buy in greater bundles by offering them a discount.
             public Sprite BuySprite; // The sprite to be used when the count is greater than or equal to the count threshold.
 
-            public BuySpriteAtCount(int countThreshold, Sprite buySprite)
+            public BuyBundle(int buyCount, float discountPercentage, Sprite buySprite)
             {
-                this.countThreshold = countThreshold;
+                this.buyCount = buyCount;
+                this.discountPercentage = discountPercentage;
                 BuySprite = buySprite;
             }
         }
@@ -63,10 +65,9 @@ namespace Game
             set => PlayerPrefs.SetInt(ActionName + "_count", value);
         }
 
-        public List<IBuyable.BuySpriteAtCount> BuySprites => new List<IBuyable.BuySpriteAtCount>()
-        {
-            new IBuyable.BuySpriteAtCount(0, ActionBarIcon)
-        };
+        public List<IBuyable.BuyBundle> buyConfig;
+
+        public List<IBuyable.BuyBundle> BuyConfig => buyConfig;
         public int[] BuyChoices => new int[] { 1, 5, 25 };
 
         public void Buy(int count)
@@ -120,6 +121,7 @@ namespace Game
     public abstract class BonusPremiumAction : ActionBarItem
     {
         public int unlockedLevel;
+        public int buyCost = 50;
         public override bool CostDefinesBuyability => true;
 
         private IEnumerable GetAllFeatures()
@@ -134,6 +136,11 @@ namespace Game
         public override bool IsAvailable()
         {
             return World.Instance.lastPlayedLevelIndex >= unlockedLevel /* || (tiedFeature != null && tiedFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex))*/;
+        }
+
+        public override int GetCost()
+        {
+            return buyCost;
         }
     }
 
@@ -156,11 +163,6 @@ namespace Game
         public override CurrencyModel CostCurrency => GameManager.Instance.cashCurrency;
 
         public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.addTimePowerupTrailParticlePrefab;
-
-        public override int GetCost()
-        {
-            return 0;
-        }
 
         public override bool IsVisible()
         {
@@ -216,10 +218,6 @@ namespace Game
         public override Sprite ActionBarIcon => GameManager.Instance.gfxManager.addMovesIcon;
         public override CurrencyModel CostCurrency => GameManager.Instance.cashCurrency;
         public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.addMovesPowerupTrailParticlePrefab;
-        public override int GetCost()
-        {
-            return 0;
-        }
         public override bool IsVisible()
         {
             // Return true if current level stage is a moves level, otherwise return false. This is to ensure that the add moves action is only visible in moves levels.
@@ -263,11 +261,6 @@ namespace Game
         public override string VisibilityExplanation => "";
         public override string ClickabilityExplanation => "";
         public override string AvailabilityExplanation => $"Level {unlockedLevel}";
-
-        public override int GetCost()
-        {
-            return 0;
-        }
 
         public override bool IsVisible()
         {
@@ -317,8 +310,6 @@ namespace Game
         public override string ClickabilityExplanation => "";
         public override string AvailabilityExplanation => $"Level {unlockedLevel}";
 
-        public override int GetCost() => 0;
-
         public override bool IsVisible() => true;
 
         public override void OnClick()
@@ -360,8 +351,6 @@ namespace Game
         public override string ClickabilityExplanation => "";
         public override string AvailabilityExplanation => $"Level {unlockedLevel}";
 
-        public override int GetCost() => 0;
-
         public override bool IsVisible() => true;
 
         public override void OnClick()
@@ -401,8 +390,6 @@ namespace Game
         public override string VisibilityExplanation => "";
         public override string ClickabilityExplanation => "";
         public override string AvailabilityExplanation => $"Level {unlockedLevel}";
-
-        public override int GetCost() => 0;
 
         public override bool IsVisible() => true;
         public override void OnClick()

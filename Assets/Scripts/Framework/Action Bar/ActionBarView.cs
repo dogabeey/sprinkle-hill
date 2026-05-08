@@ -108,9 +108,9 @@ namespace Game
                 if (unlockConditionText)
                     unlockConditionText.text = actionBarItem.AvailabilityExplanation;
                 if (countTextPanel)
-                    countTextPanel.SetActive(actionBarItem.CurrentCount > 0 && actionBarItem.IsAvailable());
+                    countTextPanel.SetActive(actionBarItem.IsAvailable());
                 if (countText)
-                    countText.text = actionBarItem.CurrentCount.ToString();
+                    countText.text = actionBarItem.CurrentCount > 0 ? actionBarItem.CurrentCount.ToString() : "+";
                 if (useButton)
                     useButton.interactable = actionBarItem.IsClickable();
                 if (canvasGroup)

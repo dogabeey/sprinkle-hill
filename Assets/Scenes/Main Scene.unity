@@ -5282,6 +5282,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 128536242}
     - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: cashCurrency
+      value: 
+      objectReference: {fileID: 11400000, guid: 31b1c667ab353af4a80bfe0daaa96451, type: 2}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: eventManager
       value: 
       objectReference: {fileID: 169691987}
@@ -5390,6 +5394,30 @@ PrefabInstance:
       propertyPath: actionBarParent
       value: 
       objectReference: {fileID: 66476413}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010546].buyConfig.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010546].buyConfig.Array.data[0].buyCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010546].buyConfig.Array.data[1].buyCount
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010546].buyConfig.Array.data[2].buyCount
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010546].buyConfig.Array.data[1].discountPercentage
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010546].buyConfig.Array.data[2].discountPercentage
+      value: 0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 1925703224431792360, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

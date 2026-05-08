@@ -26,15 +26,15 @@ namespace Game
         /// determined.</returns>
         public Sprite EvaluateSprite(IBuyable buyable, int count)
         {
-            List<IBuyable.BuySpriteAtCount> buyspriteConfig = buyable.BuySprites;
+            List<IBuyable.BuyBundle> buyspriteConfig = buyable.BuyConfig;
 
             if (buyspriteConfig == null || buyspriteConfig.Count == 0)
                 return null;
             // Sort the configuration by count in descending order to find the highest applicable sprite
-            buyspriteConfig.Sort((a, b) => b.countThreshold.CompareTo(a.countThreshold));
+            buyspriteConfig.Sort((a, b) => b.buyCount.CompareTo(a.buyCount));
             foreach (var config in buyspriteConfig)
             {
-                if (count >= config.countThreshold)
+                if (count >= config.buyCount)
                 {
                     return config.BuySprite;
                 }

@@ -38,11 +38,11 @@ namespace Game
             if (itemHeaderText) itemHeaderText.text = referenceBuyable.ActionName;
             if (itemDescriptionText) itemDescriptionText.text = referenceBuyable.ActionDescription;
 
-            // Use IBuyable.BuyChoices to populate the buy screen with BuyScreenNodes.
-            foreach (int buyChoice in referenceBuyable.BuyChoices)
+            // Use IBuyable.BuyConfig to populate the buy screen with BuyScreenNodes.
+            foreach (var buyBundle in referenceBuyable.BuyConfig)
             {
                 BuyScreenNode newNode = Instantiate(buyScreenNodePrefab, buyScreenNodeContainer.transform);
-                newNode.Init(referenceBuyable, buyChoice);
+                newNode.Init(referenceBuyable, buyBundle.buyCount);
             }
         }
         public override void ResolveParams(EventParam eventParam)

@@ -199,6 +199,11 @@ public class EventManager : MonoBehaviour
 
     private static void TriggerEvent(string eventName, EventParam eventParam)
     {
+        if (eventParam == null)
+            eventParam = new EventParam();
+
+        eventParam.PrepareForDispatch();
+
         Action<EventParam> thisEvent = null;
         if (Instance.eventDictionary.TryGetValue(eventName, out thisEvent))
         {
