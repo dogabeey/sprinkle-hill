@@ -525,6 +525,7 @@ namespace Game
                 {
                     value.cellType = Grid3D.CellType.BreakableWall;
                     value.elementInfo = null;
+                    value.cellHealth = 1;
                     MarkDirty();
                 });
                 menu.AddItem(new GUIContent("Set Cell Type/Unbreakable Wall"), value.cellType == Grid3D.CellType.UnbreakableWall, () =>
@@ -533,6 +534,38 @@ namespace Game
                     value.elementInfo = null;
                     MarkDirty();
                 });
+                // Breakable Walls optios
+                if(value.cellType == Grid3D.CellType.BreakableWall)
+                {
+                    menu.AddSeparator("");
+                    // Element condition options.
+                    menu.AddItem(new GUIContent("Breakable Wall Condition/None"), value.breakableWallElementCondition == null, () =>
+                    {
+                        value.breakableWallElementCondition = null;
+                        MarkDirty();
+                    });
+                    // Pool Elements
+                    foreach (ElementData element in elementPool)
+                    {
+                        if (element != null)
+                        {
+                            menu.AddItem(new GUIContent($"Breakable Walls/Element Match Condition/{element.displayName}"), value.breakableWallElementCondition != null && value.breakableWallElementCondition == element, () =>
+                            {
+                                value.breakableWallElementCondition = element;
+                                MarkDirty();
+                            });
+                        }
+                    }
+                    // Health options
+                    for (int health = 1; health <= 3; health++)
+                    {
+                        int capturedHealth = health; // Capture loop variable
+                        menu.AddItem(new GUIContent($"Breakable Wall Condition/Health/{health}"), value.breakableWallElementCondition != null && value.cellHealth == capturedHealth, () =>
+                        {
+                            value.cellHealth = capturedHealth;
+                        });
+                    }
+                }
 
                 // Element Options (only for Normal cells)
                 if (value.cellType == Grid3D.CellType.Normal)
