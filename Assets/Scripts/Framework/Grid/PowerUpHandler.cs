@@ -117,6 +117,65 @@ namespace Game
             for (int g = 0; g < matchedGroups.Count; g++)
             {
                 List<Vector2Int> group = matchedGroups[g];
+                if (group == null || group.Count < 4)
+                    continue;
+
+                HashSet<Vector2Int> groupSet = new HashSet<Vector2Int>(group);
+                ElementData src = grid.GetCellPublic(group[0])?.elementInfo?.elementData;
+                if (src == null)
+                    continue;
+
+                bool found = false;
+                for (int i = 0; i < group.Count && !found; i++)
+                {
+                    Vector2Int pivot = group[i];
+                    int upLen = 0;
+                    while (groupSet.Contains(pivot + (Vector2Int.up * (upLen + 1)))) upLen++;
+                    int downLen = 0;
+                    while (groupSet.Contains(pivot + (Vector2Int.down * (downLen + 1)))) downLen++;
+                    int leftLen = 0;
+                    while (groupSet.Contains(pivot + (Vector2Int.left * (leftLen + 1)))) leftLen++;
+                    int rightLen = 0;
+                    while (groupSet.Contains(pivot + (Vector2Int.right * (rightLen + 1)))) rightLen++;
+
+                    bool hasLShape =
+                        IsValidBombL(upLen, leftLen) ||
+                        IsValidBombL(upLen, rightLen) ||
+                        IsValidBombL(downLen, leftLen) ||
+                        IsValidBombL(downLen, rightLen);
+
+                    bool hasTShape =
+                        IsValidBombT(upLen, leftLen, rightLen) ||
+                        IsValidBombT(downLen, leftLen, rightLen) ||
+                        IsValidBombT(leftLen, upLen, downLen) ||
+                        IsValidBombT(rightLen, upLen, downLen);
+
+                    if (!hasLShape && !hasTShape)
+                        continue;
+
+                    Vector2Int spawnPos = groupSet.Contains(init2) ? init2 : (groupSet.Contains(init1) ? init1 : pivot);
+                    if (claimedPositions != null && claimedPositions.Contains(spawnPos))
+                    {
+                        found = true;
+                        break;
+                    }
+
+                    if (used.Add(spawnPos))
+                        spawns.Add(new SpawnRequest { position = spawnPos, sourceData = src, powerUpType = ElementPowerUpType.Bomb });
+                    found = true;
+                }
+            }
+            return spawns;
+        }
+
+        public List<SpawnRequest> FindPropellerSpawns(List<List<Vector2Int>> matchedGroups, Vector2Int init1, Vector2Int init2, HashSet<Vector2Int> claimedPositions = null)
+        {
+            List<SpawnRequest> spawns = new List<SpawnRequest>();
+            HashSet<Vector2Int> used = new HashSet<Vector2Int>();
+
+            for (int g = 0; g < matchedGroups.Count; g++)
+            {
+                List<Vector2Int> group = matchedGroups[g];
                 HashSet<Vector2Int> groupSet = new HashSet<Vector2Int>(group);
                 bool found = false;
 
@@ -143,69 +202,16 @@ namespace Game
                         Vector2Int spawnPos = PickPreferred(groupSet, new[] { p1, p2, p3, p4 }, init1, init2);
                         if (claimedPositions != null && claimedPositions.Contains(spawnPos)) { found = true; continue; }
                         if (used.Add(spawnPos))
-                            spawns.Add(new SpawnRequest { position = spawnPos, sourceData = src, powerUpType = ElementPowerUpType.Bomb });
+                            spawns.Add(new SpawnRequest { position = spawnPos, sourceData = src, powerUpType = ElementPowerUpType.Propeller });
                         found = true;
                     }
-                }
-            }
-            return spawns;
-        }
-
-        public List<SpawnRequest> FindPropellerSpawns(List<List<Vector2Int>> matchedGroups, Vector2Int init1, Vector2Int init2, HashSet<Vector2Int> claimedPositions = null)
-        {
-            List<SpawnRequest> spawns = new List<SpawnRequest>();
-            HashSet<Vector2Int> used = new HashSet<Vector2Int>();
-
-            for (int g = 0; g < matchedGroups.Count; g++)
-            {
-                List<Vector2Int> group = matchedGroups[g];
-                if (group == null || group.Count < 4)
-                    continue;
-
-                HashSet<Vector2Int> groupSet = new HashSet<Vector2Int>(group);
-                ElementData src = grid.GetCellPublic(group[0])?.elementInfo?.elementData;
-                if (src == null)
-                    continue;
-
-                bool found = false;
-                for (int i = 0; i < group.Count && !found; i++)
-                {
-                    Vector2Int pivot = group[i];
-                    int upLen = 0;
-                    while (groupSet.Contains(pivot + (Vector2Int.up * (upLen + 1)))) upLen++;
-                    int downLen = 0;
-                    while (groupSet.Contains(pivot + (Vector2Int.down * (downLen + 1)))) downLen++;
-                    int leftLen = 0;
-                    while (groupSet.Contains(pivot + (Vector2Int.left * (leftLen + 1)))) leftLen++;
-                    int rightLen = 0;
-                    while (groupSet.Contains(pivot + (Vector2Int.right * (rightLen + 1)))) rightLen++;
-
-                    bool hasLShape =
-                        IsValidPropellerL(upLen, leftLen) ||
-                        IsValidPropellerL(upLen, rightLen) ||
-                        IsValidPropellerL(downLen, leftLen) ||
-                        IsValidPropellerL(downLen, rightLen);
-
-                    if (!hasLShape)
-                        continue;
-
-                    Vector2Int spawnPos = groupSet.Contains(init2) ? init2 : (groupSet.Contains(init1) ? init1 : pivot);
-                    if (claimedPositions != null && claimedPositions.Contains(spawnPos))
-                    {
-                        found = true;
-                        break;
-                    }
-
-                    if (used.Add(spawnPos))
-                        spawns.Add(new SpawnRequest { position = spawnPos, sourceData = src, powerUpType = ElementPowerUpType.Propeller });
-                    found = true;
                 }
             }
 
             return spawns;
         }
 
-        private static bool IsValidPropellerL(int verticalArmLen, int horizontalArmLen)
+        private static bool IsValidBombL(int verticalArmLen, int horizontalArmLen)
         {
             if (verticalArmLen < 1 || horizontalArmLen < 1)
                 return false;
@@ -214,9 +220,18 @@ namespace Game
             if (uniqueCount < 4)
                 return false;
 
-            // Prevent 2x2 square from being treated as propeller (1+1+1 == 3),
+            // Prevent 2x2 square from being treated as bomb (1+1+1 == 3),
             // and require at least one arm to extend beyond a single neighbor.
             return verticalArmLen >= 2 || horizontalArmLen >= 2;
+        }
+
+        private static bool IsValidBombT(int stemArmLen, int branchArmLen1, int branchArmLen2)
+        {
+            if (stemArmLen < 1 || branchArmLen1 < 1 || branchArmLen2 < 1)
+                return false;
+
+            int uniqueCount = stemArmLen + branchArmLen1 + branchArmLen2 + 1;
+            return uniqueCount >= 4;
         }
 
         public List<SpawnRequest> FindRocketSpawns(List<List<Vector2Int>> matchedGroups, Vector2Int init1, Vector2Int init2, HashSet<Vector2Int> claimedPositions = null)
@@ -925,7 +940,7 @@ namespace Game
 
             grid.TriggerCellFeatureMatchedOverAt(bombPos);
             bombCell.elementInfo = null;
-            yield return grid.StartCoroutine(grid.ClearAreaAt(bombPos, 1, false));
+            yield return grid.StartCoroutine(grid.ClearAreaAt(bombPos, 2, false));
             yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
         }
 
