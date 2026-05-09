@@ -2113,7 +2113,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 496.97, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1510078032
 MonoBehaviour:
@@ -2168,7 +2168,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1510078030}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -2288,7 +2288,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1137.26, y: 3406.15}
+  m_SizeDelta: {x: 2010.96, y: 2644.67}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1627171740
 MonoBehaviour:
@@ -10112,6 +10112,18 @@ PrefabInstance:
       propertyPath: actionBarManager
       value: 
       objectReference: {fileID: 698709064}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: winParticle.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'winParticle.Array.data[0]'
+      value: 
+      objectReference: {fileID: 128536242}
+    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'winParticle.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2021190170}
     - target: {fileID: 7722314759461277707, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -10200,6 +10212,26 @@ PrefabInstance:
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: 'actionBarItemList.Array.data[4]'
       value: 1021877479918010546
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010546].unlockedLevel
+      value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010547].unlockedLevel
+      value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010548].unlockedLevel
+      value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010549].unlockedLevel
+      value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010550].unlockedLevel
+      value: 999
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877479918010546].buyConfig.Array.size

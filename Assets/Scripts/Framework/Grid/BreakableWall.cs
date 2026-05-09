@@ -7,6 +7,7 @@ namespace Game
 {
     public class BreakableWall : GridCellController
     {
+        [System.Serializable]
         public class HealthObjectByHealth
         {
             public GameObject healthObject; // the healthObject will be active while cell health is at or below the specified threshold

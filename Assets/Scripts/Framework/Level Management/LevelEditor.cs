@@ -480,23 +480,112 @@ namespace Game
             // Rects
             Rect elementRect = new Rect(rect.x + rect.width * 0.1f, rect.y + rect.height * 0.1f, rect.width * 0.8f, rect.height * 0.8f);
             Rect featureRect = rect;
+            Rect breakableWallElementRect = new Rect(rect.x + rect.width * 0.5f, rect.y, rect.width * 0.5f, rect.height * 0.5f);
+            // Label Texts
+            GUIStyle healthText = new GUIStyle()
+            {
+                alignment = TextAnchor.LowerLeft,
+            };
+            GUIStyle groupText = new GUIStyle()
+            {
+                alignment = TextAnchor.UpperRight,
+            };
 
             // DRAWING
             // Draw cell background based on type
-            DrawCellType(rect, value, normalCellColor, emptyCellColor, breakableWallCellColor, unbreakableWallCellColor);
+            DrawCellType(rect, breakableWallElementRect, value, normalCellColor, emptyCellColor, breakableWallCellColor, unbreakableWallCellColor);
             // Draw element sprite to elementRect if cell type is Normal and has elementInfo
             DrawElement(value, elementRect);
             // Draw cell feature indicators in featureRect (e.g. icons or overlays for wafer, glass, electric field)
             DrawFeatures(value, featureRect);
+            // Draw health text for breakable walls and group index/health for glass features
+            if (value.cellType == Grid3D.CellType.BreakableWall)
+            {
+                healthText.normal.textColor = Color.red;
+                GUI.Label(rect, value.cellHealth.ToString(), healthText);
+            }
+            if(value.cellFeature is GlassFeature)
+            {
+                groupText.normal.textColor = Color.cyan;
+                GUI.Label(rect, $"{value.cellFeatureGroupIndex}", groupText);
+                healthText.normal.textColor = Color.blue;
+                GUI.Label(rect, $"{value.cellFeatureGroupHealth}", healthText);
+            }
 
             // EVENTS
-            // Handle right-click to open context menu for cell features and element assignment
-            if(rect.Contains(Event.current.mousePosition))
+            if (rect.Contains(Event.current.mousePosition))
             {
+                // Handle right-click to open context menu for cell features and element assignment
                 if (Event.current.type == EventType.MouseDown)
                 {
                     // Right-click opens context menu
                     HandleCellRightClick(value);
+                }
+                // Handle shortcuts
+                if (Event.current.type == EventType.KeyDown)
+                {
+                    if (Event.current.keyCode == KeyCode.E)
+                    {
+                        value.cellType = Grid3D.CellType.Empty;
+                        value.elementInfo = null;
+                        MarkDirty();
+                        Event.current.Use();
+                    }
+                    else if (Event.current.keyCode == KeyCode.N)
+                    {
+                        value.cellType = Grid3D.CellType.Normal;
+                        MarkDirty();
+                        Event.current.Use();
+                    }
+                    else if (Event.current.keyCode == KeyCode.B)
+                    {
+                        value.cellType = Grid3D.CellType.BreakableWall;
+                        value.elementInfo = null;
+                        value.cellHealth = 1;
+                        MarkDirty();
+                        Event.current.Use();
+                    }
+                    else if (Event.current.keyCode == KeyCode.U)
+                    {
+                        value.cellType = Grid3D.CellType.UnbreakableWall;
+                        value.elementInfo = null;
+                        MarkDirty();
+                        Event.current.Use();
+                    }
+                    else if (Event.current.keyCode == KeyCode.H)
+                    {
+                        if (value.elementInfo != null)
+                        {
+                            value.elementInfo.isHidden = !value.elementInfo.isHidden;
+                            MarkDirty();
+                            Event.current.Use();
+                        }
+                    }
+                    // Alphanumeric keys for glass group index and health (while hovering a glass cell)
+                    else if (TryGetNumericShortcutValue(Event.current.keyCode, out int numericValue))
+                    {
+                        if (value.cellFeature is GlassFeature)
+                        {
+                            if (Event.current.shift)
+                            {
+                                value.cellFeatureGroupHealth = numericValue;
+                            }
+                            else
+                            {
+                                value.cellFeatureGroupIndex = numericValue;
+                            }
+                            MarkDirty();
+                            Event.current.Use();
+                        }
+                        else if (value.cellType == Grid3D.CellType.BreakableWall)
+                        {
+                            {
+                                value.cellHealth = numericValue;
+                                MarkDirty();
+                                Event.current.Use();
+                            }
+                        }
+                    }
                 }
             }
 
@@ -701,7 +790,7 @@ namespace Game
             }
         }
 
-        private static void DrawCellType(Rect rect, Grid3D.GridCell value, Color normalCellColor, Color emptyCellColor, Color breakableWallCellColor, Color unbreakableWallCellColor)
+        private static void DrawCellType(Rect rect, Rect breakableWallElementIndicatorRect, Grid3D.GridCell value, Color normalCellColor, Color emptyCellColor, Color breakableWallCellColor, Color unbreakableWallCellColor)
         {
             switch (value.cellType)
             {
@@ -713,6 +802,8 @@ namespace Game
                     break;
                 case Grid3D.CellType.BreakableWall:
                     EditorGUI.DrawRect(rect, breakableWallCellColor);
+                    if (value.breakableWallElementCondition != null)
+                        EditorGUI.DrawTextureAlpha(breakableWallElementIndicatorRect, value.breakableWallElementCondition.displayIcon.texture);
                     break;
                 case Grid3D.CellType.UnbreakableWall:
                     EditorGUI.DrawRect(rect, unbreakableWallCellColor);
