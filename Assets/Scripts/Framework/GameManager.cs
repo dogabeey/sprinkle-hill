@@ -71,7 +71,7 @@ namespace Game
         [FoldoutGroup("References")]
         public Transform levelContainer;
         [FoldoutGroup("References")]
-        public ParticleSystem winParticle;
+        public ParticleSystem[] winParticle;
         [FoldoutGroup("UI References")]
         public Canvas mainCanvas;
         [FoldoutGroup("UI References")]
@@ -115,7 +115,10 @@ namespace Game
         void OnLevelCompleted(EventParam param)
         {
             SoundManager.Instance.Play(ConstantManager.SOUNDS.EFFECTS.LEVEL_COMPLETE);
-            winParticle.Play();
+            foreach (var particle in winParticle)            
+            {
+                particle.Play();
+            }
             DOVirtual.DelayedCall(1, () =>
             ScreenManager.Instance.Show(Screens.WinScreen));
         }
