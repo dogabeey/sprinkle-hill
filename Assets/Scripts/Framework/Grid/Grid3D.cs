@@ -497,6 +497,7 @@ namespace Game
             public int cellFeatureGroupIndex;
             public int cellFeatureGroupHealth;
             public int cellFeatureGroupMaxHealth;
+            public int cellHealth;
         }
 
         [System.Flags]

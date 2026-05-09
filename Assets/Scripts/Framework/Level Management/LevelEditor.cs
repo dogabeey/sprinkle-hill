@@ -103,54 +103,6 @@ namespace Game
             }
         }
 
-        private void SetGlassGroupHealthForAllCells(GlassFeature feature, int groupIndex, int health)
-        {
-            EnsureGridCells();
-            int normalizedHealth = Mathf.Max(1, health);
-
-            for (int x = 0; x < gridSize.x; x++)
-            {
-                for (int y = 0; y < gridSize.y; y++)
-                {
-                    Grid3D.GridCell cell = gridCells[x, y];
-                    if (cell?.cellFeature != feature)
-                        continue;
-
-                    if (cell.cellFeatureGroupIndex != groupIndex)
-                        continue;
-
-                    cell.cellFeatureGroupHealth = normalizedHealth;
-                    cell.cellFeatureGroupMaxHealth = normalizedHealth;
-                }
-            }
-        }
-
-        private int ResolveExistingGlassGroupHealth(GlassFeature feature, int groupIndex)
-        {
-            EnsureGridCells();
-
-            for (int x = 0; x < gridSize.x; x++)
-            {
-                for (int y = 0; y < gridSize.y; y++)
-                {
-                    Grid3D.GridCell cell = gridCells[x, y];
-                    if (cell?.cellFeature != feature)
-                        continue;
-
-                    if (cell.cellFeatureGroupIndex != groupIndex)
-                        continue;
-
-                    if (cell.cellFeatureGroupHealth > 0)
-                        return cell.cellFeatureGroupHealth;
-
-                    if (cell.cellFeatureGroupMaxHealth > 0)
-                        return cell.cellFeatureGroupMaxHealth;
-                }
-            }
-
-            return feature != null ? Mathf.Max(1, feature.defaultGroupHealth) : 1;
-        }
-
         [HideIf(nameof(UseProcedural))]
 #if UNITY_EDITOR
         [TableMatrix(DrawElementMethod = nameof(DrawGridCells), SquareCells = true)]
@@ -172,20 +124,6 @@ namespace Game
             return GameManager.Instance != null && GameManager.Instance.cauldronElementData == data;
         }
 
-        private static bool IsGarbageBagElementData(ElementData data)
-        {
-            return data != null && GameManager.Instance != null && GameManager.Instance.garbageBagElementData == data;
-        }
-
-        private static bool IsPowerGeneratorElementData(ElementData data)
-        {
-            return data != null && GameManager.Instance != null && GameManager.Instance.powerGeneratorElementData == data;
-        }
-        private static bool IsPowerOutletElementData(ElementData data)
-        {
-            return data != null && GameManager.Instance != null && GameManager.Instance.powerOutletElementData == data;
-        }
-
         private static ElementPowerUpType ResolveElementPowerUpType(ElementData data)
         {
             return IsCauldronElementData(data) ? ElementPowerUpType.Cauldron : ElementPowerUpType.None;
@@ -204,14 +142,6 @@ namespace Game
             };
         }
 
-        private ElementData GetRandomElementFromPool()
-        {
-            if (elementPool == null || elementPool.Count == 0)
-                return null;
-
-            return elementPool[Random.Range(0, elementPool.Count)];
-        }
-
         private static GridElementInfo CreateRandomElementInfo()
         {
             return new GridElementInfo
@@ -221,213 +151,6 @@ namespace Game
                 cauldronProgress = 0
             };
         }
-
-        private void ToggleRandomElementAt(Vector2Int position)
-        {
-            if (!IsInsideGrid(position))
-                return;
-
-            EnsureGridCells();
-            ClearElementsIntersectingArea(position, Vector2Int.one);
-
-            Grid3D.GridCell targetCell = gridCells[position.x, position.y];
-            targetCell.cellType = Grid3D.CellType.Normal;
-
-            if (targetCell.elementInfo != null && targetCell.elementInfo.randomElement)
-            {
-                targetCell.elementInfo = null;
-                return;
-            }
-
-            targetCell.elementInfo = CreateRandomElementInfo();
-        }
-
-        private bool PlaceRandomElementFromPoolAt(Vector2Int position)
-        {
-            ElementData randomElement = GetRandomElementFromPool();
-            if (randomElement == null)
-                return false;
-
-            PlaceElementAt(position, randomElement);
-            return true;
-        }
-
-        private void ApplyElementSelectionToCell(Grid3D.GridCell cell, ElementData selectedElement)
-        {
-            if (cell == null)
-                return;
-
-            if (cell.cellType == Grid3D.CellType.BreakableWall)
-            {
-                cell.breakableWallElementCondition = selectedElement;
-                MarkDirty();
-                return;
-            }
-
-            if (selectedElement == null)
-                return;
-
-            if (TryGetCellCoordinates(cell, out Vector2Int cellPos))
-                PlaceElementAt(cellPos, selectedElement);
-            else
-            {
-                cell.cellType = Grid3D.CellType.Normal;
-                cell.elementInfo = CreateElementInfo(selectedElement);
-            }
-
-            MarkDirty();
-        }
-
- #if UNITY_EDITOR
-        private void ShowElementSelectionMenu(Grid3D.GridCell cell, bool includeCellFeatureItems)
-        {
-            GenericMenu menu = new GenericMenu();
-            bool isBreakableWall = cell != null && cell.cellType == Grid3D.CellType.BreakableWall;
-            WaferFeature waferFeature = GameManager.Instance != null ? GameManager.Instance.waferFeature : null;
-            GlassFeature glassFeature = GameManager.Instance != null ? GameManager.Instance.glassFeature : null;
-            ElectricField electricField = GameManager.Instance != null ? GameManager.Instance.electricField : null;
-
-            if (includeCellFeatureItems)
-            {
-                menu.AddItem(new GUIContent("Cell Feature/None"), cell.cellFeature == null, () =>
-                {
-                    cell.cellFeature = null;
-                    cell.cellFeatureGroupIndex = 0;
-                    cell.cellFeatureGroupHealth = 0;
-                    MarkDirty();
-                });
-                if (waferFeature != null)
-                {
-                    menu.AddItem(new GUIContent($"Cell Feature/{waferFeature.name}"), cell.cellFeature == waferFeature, () =>
-                    {
-                        cell.cellType = Grid3D.CellType.Normal;
-                        cell.cellFeature = waferFeature;
-                        cell.cellFeatureGroupIndex = 0;
-                        cell.cellFeatureGroupHealth = 0;
-                        cell.breakableWallElementCondition = null;
-                        MarkDirty();
-                    });
-                }
-                if (electricField != null)
-                {
-                    menu.AddItem(new GUIContent($"Cell Feature/{electricField.name}"), cell.cellFeature == electricField, () =>
-                    {
-                        cell.cellType = Grid3D.CellType.Normal;
-                        cell.cellFeature = electricField;
-                        cell.cellFeatureGroupIndex = 0;
-                        cell.cellFeatureGroupHealth = 0;
-                        cell.cellFeatureGroupMaxHealth = 0;
-                        cell.breakableWallElementCondition = null;
-                        MarkDirty();
-                    });
-                }
-                if (glassFeature != null)
-                {
-                    menu.AddItem(new GUIContent($"Cell Feature/{glassFeature.name}"), cell.cellFeature == glassFeature, () =>
-                    {
-                        cell.cellType = Grid3D.CellType.Normal;
-                        cell.cellFeature = glassFeature;
-                        cell.cellFeatureGroupHealth = Mathf.Max(1, cell.cellFeatureGroupHealth > 0 ? cell.cellFeatureGroupHealth : glassFeature.defaultGroupHealth);
-                        cell.breakableWallElementCondition = null;
-                        MarkDirty();
-                    });
-                }
-
-                menu.AddSeparator("");
-            }
-
-            if (isBreakableWall)
-            {
-                menu.AddItem(new GUIContent("Break Condition/Clear"), cell.breakableWallElementCondition == null, () =>
-                {
-                    cell.breakableWallElementCondition = null;
-                    MarkDirty();
-                });
-
-                HashSet<ElementData> addedElements = new HashSet<ElementData>();
-                if (elementPool != null)
-                {
-                    for (int i = 0; i < elementPool.Count; i++)
-                    {
-                        ElementData pooledElement = elementPool[i];
-                        if (pooledElement == null || !addedElements.Add(pooledElement))
-                            continue;
-
-                        ElementData capturedPooledElement = pooledElement;
-                        bool isSelected = cell.breakableWallElementCondition == capturedPooledElement;
-                        menu.AddItem(new GUIContent($"Break Condition/{capturedPooledElement.name}"), isSelected, () =>
-                        {
-                            cell.breakableWallElementCondition = capturedPooledElement;
-                            MarkDirty();
-                        });
-                    }
-                }
-
-                menu.ShowAsContext();
-                return;
-            }
-
-            if (elementPool != null && elementPool.Count > 0)
-            {
-                menu.AddItem(new GUIContent("Random Element (Pool)"), false, () =>
-                {
-                    ElementData randomElement = elementPool[Random.Range(0, elementPool.Count)];
-                    ApplyElementSelectionToCell(cell, randomElement);
-                });
-                menu.AddSeparator("");
-            }
-
-            string[] elementGuids = AssetDatabase.FindAssets("t:ElementData");
-            HashSet<ElementData> poolSet = new HashSet<ElementData>();
-            if (elementPool != null)
-            {
-                for (int i = 0; i < elementPool.Count; i++)
-                {
-                    if (elementPool[i] != null)
-                        poolSet.Add(elementPool[i]);
-                }
-            }
-
-            bool addedPoolElements = false;
-            for (int i = 0; i < elementPool.Count; i++)
-            {
-                ElementData pooledElement = elementPool[i];
-                if (pooledElement == null)
-                    continue;
-
-                ElementData capturedPooledElement = pooledElement;
-                menu.AddItem(new GUIContent($"{capturedPooledElement.name} {capturedPooledElement.gridCoverage.x}x{capturedPooledElement.gridCoverage.y}"), false, () =>
-                {
-                    ApplyElementSelectionToCell(cell, capturedPooledElement);
-                });
-                addedPoolElements = true;
-            }
-
-            if (addedPoolElements)
-                menu.AddSeparator("");
-
-            foreach (string guid in elementGuids)
-            {
-                string path = AssetDatabase.GUIDToAssetPath(guid);
-                ElementData elementData = AssetDatabase.LoadAssetAtPath<ElementData>(path);
-                if (elementData != null)
-                {
-                    if (poolSet.Contains(elementData))
-                        continue;
-
-                    ElementData capturedElementData = elementData;
-                    string category = GetCategoryBasedOnElementType(capturedElementData);
-                    menu.AddItem(new GUIContent(category + elementData.name), false, () =>
-                    {
-                        ApplyElementSelectionToCell(cell, capturedElementData);
-                    });
-                }
-            }
-
-            menu.ShowAsContext();
-        }
- #endif
-
         private ElementData ResolveRandomRuntimeElement(Grid3D.GridCell[,] runtimeCells, int x, int y)
         {
             if (elementPool == null || elementPool.Count == 0)
@@ -510,89 +233,6 @@ namespace Game
             return pos.x >= 0 && pos.y >= 0 && pos.x < gridSize.x && pos.y < gridSize.y;
         }
 
-        private static bool AreasOverlap(Vector2Int aStart, Vector2Int aSize, Vector2Int bStart, Vector2Int bSize)
-        {
-            int aMinX = aStart.x;
-            int aMaxX = aStart.x + aSize.x - 1;
-            int aMinY = aStart.y;
-            int aMaxY = aStart.y + aSize.y - 1;
-
-            int bMinX = bStart.x;
-            int bMaxX = bStart.x + bSize.x - 1;
-            int bMinY = bStart.y;
-            int bMaxY = bStart.y + bSize.y - 1;
-
-            return aMinX <= bMaxX && aMaxX >= bMinX && aMinY <= bMaxY && aMaxY >= bMinY;
-        }
-
-        private bool TryGetCellCoordinates(Grid3D.GridCell cell, out Vector2Int coordinates)
-        {
-            EnsureGridCells();
-            for (int x = 0; x < gridSize.x; x++)
-            {
-                for (int y = 0; y < gridSize.y; y++)
-                {
-                    if (ReferenceEquals(gridCells[x, y], cell))
-                    {
-                        coordinates = new Vector2Int(x, y);
-                        return true;
-                    }
-                }
-            }
-
-            coordinates = default;
-            return false;
-        }
-
-        private void ClearElementsIntersectingArea(Vector2Int start, Vector2Int size)
-        {
-            EnsureGridCells();
-
-            for (int x = 0; x < gridSize.x; x++)
-            {
-                for (int y = 0; y < gridSize.y; y++)
-                {
-                    Grid3D.GridCell cell = gridCells[x, y];
-                    if (cell == null || cell.elementInfo == null || cell.elementInfo.elementData == null)
-                        continue;
-
-                    Vector2Int otherStart = new Vector2Int(x, y);
-                    Vector2Int otherSize = GetGridCoverage(cell.elementInfo.elementData);
-                    if (!AreasOverlap(start, size, otherStart, otherSize))
-                        continue;
-
-                    cell.elementInfo = null;
-                }
-            }
-        }
-
-        private void PlaceElementAt(Vector2Int start, ElementData data)
-        {
-            if (data == null || !IsInsideGrid(start))
-                return;
-
-            Vector2Int size = GetGridCoverage(data);
-            ClearElementsIntersectingArea(start, size);
-
-            Grid3D.GridCell anchorCell = gridCells[start.x, start.y];
-            anchorCell.cellType = Grid3D.CellType.Normal;
-            anchorCell.elementInfo = CreateElementInfo(data);
-
-            for (int dx = 0; dx < size.x; dx++)
-            {
-                for (int dy = 0; dy < size.y; dy++)
-                {
-                    Vector2Int pos = new Vector2Int(start.x + dx, start.y + dy);
-                    if (!IsInsideGrid(pos) || pos == start)
-                        continue;
-
-                    Grid3D.GridCell coveredCell = gridCells[pos.x, pos.y];
-                    if (coveredCell != null)
-                        coveredCell.elementInfo = null;
-                }
-            }
-        }
-
         private void NormalizeMultiCellCoverage()
         {
             EnsureGridCells();
@@ -659,44 +299,6 @@ namespace Game
         }
 
 #if UNITY_EDITOR
-        private void ShowElementInfoMenu(Grid3D.GridCell cell)
-        {
-            if (cell == null || cell.elementInfo == null)
-                return;
-
-            GridElementInfo info = cell.elementInfo;
-            GenericMenu menu = new GenericMenu();
-
-            menu.AddDisabledItem(new GUIContent("Element Info"));
-            menu.AddDisabledItem(new GUIContent($"Element Data: {(info.elementData != null ? info.elementData.name : "<none>")}"));
-            menu.AddSeparator("");
-
-            menu.AddItem(new GUIContent("Random Element"), info.randomElement, () =>
-            {
-                info.randomElement = !info.randomElement;
-                if (info.randomElement)
-                {
-                    info.powerUpType = ElementPowerUpType.None;
-                    info.cauldronProgress = 0;
-                }
-                MarkDirty();
-            });
-
-            menu.AddItem(new GUIContent("Sparkling"), info.isSparkling, () =>
-            {
-                info.isSparkling = !info.isSparkling;
-                MarkDirty();
-            });
-
-            menu.AddItem(new GUIContent("Hidden"), info.isHidden, () =>
-            {
-                info.isHidden = !info.isHidden;
-                MarkDirty();
-            });
-
-            menu.ShowAsContext();
-        }
-
         [Button]
         public void InitializeArray()
         {
@@ -869,20 +471,205 @@ namespace Game
                 value = new Grid3D.GridCell { cellType = Grid3D.CellType.Normal };
             }
 
-            Color emptyCellColor = new Color(0.8f, 0.8f, 0.8f, 0.5f);
-            Color normalCellColor = new Color(0.5f, 0.5f, 1f, 0.5f);
-            Color breakableWallColor = new Color(1f, 0.5f, 0.2f, 0.8f);
-            Color unbreakableWallColor = new Color(0.35f, 0.35f, 0.35f, 0.9f);
+            // INITIALIZATION
+            // Colors
+            Color normalCellColor = new Color(0.59f, 0.75f, 0.83f);
+            Color emptyCellColor = new Color(0.9f, 0.9f, 0.9f);
+            Color breakableWallCellColor = new Color(0.8f, 0.5f, 0.5f);
+            Color unbreakableWallCellColor = new Color(0.4f, 0.3f, 0.4f);
+            // Rects
             Rect elementRect = new Rect(rect.x + rect.width * 0.1f, rect.y + rect.height * 0.1f, rect.width * 0.8f, rect.height * 0.8f);
-            float indicatorSize = Mathf.Min(rect.width, rect.height) * 0.26f;
-            float indicatorPadding = Mathf.Min(rect.width, rect.height) * 0.05f;
-            Rect hiddenIndicatorRect = new Rect(rect.x + indicatorPadding, rect.y + indicatorPadding, indicatorSize, indicatorSize);
-            Rect sparklingIndicatorRect = new Rect(hiddenIndicatorRect.xMax + indicatorPadding * 0.6f, rect.y + indicatorPadding, indicatorSize, indicatorSize);
+            Rect featureRect = rect;
 
-            WaferFeature waferFeature = GameManager.Instance.waferFeature;
-            GlassFeature glassFeature = GameManager.Instance != null ? GameManager.Instance.glassFeature : null;
-            ElectricField electricField = GameManager.Instance != null ? GameManager.Instance.electricField : null;
+            // DRAWING
+            // Draw cell background based on type
+            DrawCellType(rect, value, normalCellColor, emptyCellColor, breakableWallCellColor, unbreakableWallCellColor);
+            // Draw element sprite to elementRect if cell type is Normal and has elementInfo
+            DrawElement(value, elementRect);
+            // Draw cell feature indicators in featureRect (e.g. icons or overlays for wafer, glass, electric field)
+            DrawFeatures(value, featureRect);
 
+            // EVENTS
+            // Handle right-click to open context menu for cell features and element assignment
+            if(rect.Contains(Event.current.mousePosition))
+            {
+                if (Event.current.type == EventType.MouseDown)
+                {
+                    // Right-click opens context menu
+                    HandleCellRightClick(value);
+                }
+            }
+
+            return value;
+        }
+
+        private void HandleCellRightClick(Grid3D.GridCell value)
+        {
+            if (Event.current.button == 1)
+            {
+                GenericMenu menu = new GenericMenu();
+
+                // Cell Type Options
+                menu.AddItem(new GUIContent("Set Cell Type/Empty"), value.cellType == Grid3D.CellType.Empty, () =>
+                {
+                    value.cellType = Grid3D.CellType.Empty;
+                    value.elementInfo = null;
+                    MarkDirty();
+                });
+                menu.AddItem(new GUIContent("Set Cell Type/Normal"), value.cellType == Grid3D.CellType.Normal, () =>
+                {
+                    value.cellType = Grid3D.CellType.Normal;
+                    MarkDirty();
+                });
+                menu.AddItem(new GUIContent("Set Cell Type/Breakable Wall"), value.cellType == Grid3D.CellType.BreakableWall, () =>
+                {
+                    value.cellType = Grid3D.CellType.BreakableWall;
+                    value.elementInfo = null;
+                    MarkDirty();
+                });
+                menu.AddItem(new GUIContent("Set Cell Type/Unbreakable Wall"), value.cellType == Grid3D.CellType.UnbreakableWall, () =>
+                {
+                    value.cellType = Grid3D.CellType.UnbreakableWall;
+                    value.elementInfo = null;
+                    MarkDirty();
+                });
+
+                // Element Options (only for Normal cells)
+                if (value.cellType == Grid3D.CellType.Normal)
+                {
+                    menu.AddItem(new GUIContent("Element/None"), value.elementInfo == null, () =>
+                    {
+                        value.elementInfo = null;
+                        MarkDirty();
+                    });
+                    // Pool Elements
+                    foreach (ElementData element in elementPool)
+                    {
+                        if (element != null)
+                        {
+                            menu.AddItem(new GUIContent($"Element/{element.displayName}"), value.elementInfo != null && value.elementInfo.elementData == element, () =>
+                            {
+                                value.elementInfo = CreateElementInfo(element);
+                                MarkDirty();
+                            });
+                        }
+                    }
+                    // Power-Up Options (Rocket, Bomb, Propeller, Disco Ball)
+                    ElementData rocketData = GameManager.Instance.rocketElementData;
+                    ElementData bombData = GameManager.Instance.bombElementData;
+                    ElementData propellerData = GameManager.Instance.propellerElementData;
+                    ElementData discoBallData = GameManager.Instance.discoBallElementData;
+                    menu.AddItem(new GUIContent($"Element/Power-Ups/{rocketData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == rocketData, () =>
+                    {
+                        value.elementInfo = CreateElementInfo(rocketData);
+                        MarkDirty();
+                    });
+                    menu.AddItem(new GUIContent($"Element/Power-Ups/{bombData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == bombData, () =>
+                    {
+                        value.elementInfo = CreateElementInfo(bombData);
+                        MarkDirty();
+                    });
+                    menu.AddItem(new GUIContent($"Element/Power-Ups/{propellerData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == propellerData, () =>
+                    {
+                        value.elementInfo = CreateElementInfo(propellerData);
+                        MarkDirty();
+                    });
+                    menu.AddItem(new GUIContent($"Element/Power-Ups/{discoBallData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == discoBallData, () =>
+                    {
+                        value.elementInfo = CreateElementInfo(discoBallData);
+                        MarkDirty();
+                    });
+                    // Special Elements (Cauldron, Power Generator, Power Outlet, etc.)
+                    ElementData cauldronData = GameManager.Instance.cauldronElementData;
+                    ElementData powerGeneratorData = GameManager.Instance.powerGeneratorElementData;
+                    ElementData powerOutletData = GameManager.Instance.powerOutletElementData;
+                    ElementData garbageBagData = GameManager.Instance.garbageBagElementData;
+                    menu.AddItem(new GUIContent($"Element/Special/{cauldronData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == cauldronData, () =>
+                    {
+                        value.elementInfo = CreateElementInfo(cauldronData);
+                        MarkDirty();
+                    });
+                    menu.AddItem(new GUIContent($"Element/Special/{powerGeneratorData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == powerGeneratorData, () =>
+                    {
+                        value.elementInfo = CreateElementInfo(powerGeneratorData);
+                        MarkDirty();
+                    });
+                    menu.AddItem(new GUIContent($"Element/Special/{powerOutletData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == powerOutletData, () =>
+                    {
+                        value.elementInfo = CreateElementInfo(powerOutletData);
+                        MarkDirty();
+                    });
+                    menu.AddItem(new GUIContent($"Element/Special/{garbageBagData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == garbageBagData, () =>
+                    {
+                        value.elementInfo = CreateElementInfo(garbageBagData);
+                        MarkDirty();
+                    });
+                }
+
+                // Feature Options
+                menu.AddItem(new GUIContent("Toggle Feature/Wafer"), value.cellFeature is WaferFeature, () =>
+                {
+                    if (value.cellFeature is WaferFeature)
+                        value.cellFeature = null;
+                    else
+                        value.cellFeature = new WaferFeature();
+                    MarkDirty();
+                });
+                menu.AddItem(new GUIContent("Toggle Feature/Glass"), value.cellFeature is GlassFeature, () =>
+                {
+                    if (value.cellFeature is GlassFeature)
+                        value.cellFeature = null;
+                    else
+                        value.cellFeature = new GlassFeature();
+                    MarkDirty();
+                });
+                menu.AddItem(new GUIContent("Toggle Feature/Electric Field"), value.cellFeature is ElectricField, () =>
+                {
+                    if (value.cellFeature is ElectricField)
+                        value.cellFeature = null;
+                    else
+                        value.cellFeature = new ElectricField();
+                    MarkDirty();
+                });
+                menu.ShowAsContext();
+                Event.current.Use();
+            }
+        }
+
+        private static void DrawFeatures(Grid3D.GridCell value, Rect featureRect)
+        {
+            if (value.cellFeature != null)
+            {
+                if (value.cellFeature is WaferFeature wafer)
+                {
+                    GUI.DrawTexture(featureRect, wafer.tileSpriteSet.singleInnerTile.texture);
+                }
+                if (value.cellFeature is GlassFeature glass)
+                {
+                    GUI.DrawTexture(featureRect, glass.tileSpriteSet.singleInnerTile.texture);
+                }
+                if (value.cellFeature is ElectricField electricField)
+                {
+                    GUI.DrawTexture(featureRect, electricField.tileSpriteSet.singleInnerTile.texture);
+                }
+                // Note: Add indicators for the future cell features here
+                // ...
+            }
+        }
+        private static void DrawElement(Grid3D.GridCell value, Rect elementRect)
+        {
+            if (value.cellType == Grid3D.CellType.Normal && value.elementInfo != null && value.elementInfo.elementData != null)
+            {
+                Sprite elementSprite = value.elementInfo.elementData.displayIcon;
+                if (elementSprite != null)
+                {
+                    GUI.DrawTexture(elementRect, elementSprite.texture, ScaleMode.ScaleToFit);
+                }
+            }
+        }
+
+        private static void DrawCellType(Rect rect, Grid3D.GridCell value, Color normalCellColor, Color emptyCellColor, Color breakableWallCellColor, Color unbreakableWallCellColor)
+        {
             switch (value.cellType)
             {
                 case Grid3D.CellType.Normal:
@@ -892,336 +679,13 @@ namespace Game
                     EditorGUI.DrawRect(rect, emptyCellColor);
                     break;
                 case Grid3D.CellType.BreakableWall:
-                    EditorGUI.DrawRect(rect, breakableWallColor);
+                    EditorGUI.DrawRect(rect, breakableWallCellColor);
                     break;
                 case Grid3D.CellType.UnbreakableWall:
-                    EditorGUI.DrawRect(rect, unbreakableWallColor);
+                    EditorGUI.DrawRect(rect, unbreakableWallCellColor);
                     break;
             }
-
-            if (value.cellType != Grid3D.CellType.Normal)
-            {
-                value.elementInfo = null;
-                value.cellFeature = null;
-            }
-
-            if (value.cellType == Grid3D.CellType.BreakableWall && value.breakableWallElementCondition != null)
-            {
-                GUIStyle conditionStyle = new GUIStyle(EditorStyles.boldLabel)
-                {
-                    alignment = TextAnchor.LowerCenter,
-                    fontSize = Mathf.Max(8, Mathf.RoundToInt(rect.height * 0.16f))
-                };
-                conditionStyle.normal.textColor = Color.white;
-                EditorGUI.LabelField(new Rect(rect.x + 1f, rect.yMax - indicatorSize - 1f, rect.width - 2f, indicatorSize), $"[{value.breakableWallElementCondition.name}]", conditionStyle);
-            }
-            if (value.cellType == Grid3D.CellType.Normal && value.cellFeature != null)
-            {
-                Sprite featureIcon = value.cellFeature.featureIcon;
-                if (featureIcon != null && featureIcon.texture != null)
-                {
-                    Rect spriteRect = featureIcon.textureRect;
-                    Rect uv = new Rect(
-                        spriteRect.x / featureIcon.texture.width,
-                        spriteRect.y / featureIcon.texture.height,
-                        spriteRect.width / featureIcon.texture.width,
-                        spriteRect.height / featureIcon.texture.height);
-                    GUI.DrawTextureWithTexCoords(rect, featureIcon.texture, uv, true);
-                }
-                else
-                {
-                    GUI.DrawTexture(rect, Texture2D.whiteTexture);
-                }
-
-                if (value.cellFeature is GlassFeature glassInCell)
-                {
-                    GUIStyle groupStyle = new GUIStyle(EditorStyles.boldLabel)
-                    {
-                        alignment = TextAnchor.UpperRight,
-                        fontSize = Mathf.Max(8, Mathf.RoundToInt(rect.height * 0.22f))
-                    };
-                    groupStyle.normal.textColor = Color.green;
-                    EditorGUI.LabelField(new Rect(rect.x + 1f, rect.y + 1f, rect.width - 3f, indicatorSize), $"G{value.cellFeatureGroupIndex}", groupStyle);
-
-                    int effectiveHealth = value.cellFeatureGroupHealth > 0 ? value.cellFeatureGroupHealth : Mathf.Max(1, glassInCell.defaultGroupHealth);
-                    int effectiveMaxHealth = value.cellFeatureGroupMaxHealth > 0 ? value.cellFeatureGroupMaxHealth : effectiveHealth;
-                    GUIStyle healthStyle = new GUIStyle(EditorStyles.boldLabel)
-                    {
-                        
-                        alignment = TextAnchor.LowerLeft,
-                        fontSize = Mathf.Max(8, Mathf.RoundToInt(rect.height * 0.2f))
-                    };
-                    healthStyle.normal.textColor = Color.red;
-                    EditorGUI.LabelField(new Rect(rect.x + 2f, rect.y + rect.height - indicatorSize - 2f, rect.width - 3f, indicatorSize), $"H{effectiveHealth}/{effectiveMaxHealth}", healthStyle);
-                }
-            }
-
-            if (value.elementInfo != null && value.elementInfo.randomElement)
-            {
-                GUIStyle questionStyle = new GUIStyle(EditorStyles.boldLabel)
-                {
-                    alignment = TextAnchor.MiddleCenter,
-                    fontSize = Mathf.Max(12, Mathf.RoundToInt(rect.height * 0.8f))
-                };
-                questionStyle.normal.textColor = Color.white;
-                EditorGUI.LabelField(rect, "?", questionStyle);
-            }
-
-
-            if (value.elementInfo != null && value.elementInfo.elementData != null)
-            {
-                Sprite icon = value.elementInfo.elementData.displayIcon;
-                if (icon != null && icon.texture != null)
-                {
-                    Rect spriteRect = icon.textureRect;
-                    Rect uv = new Rect(
-                        spriteRect.x / icon.texture.width,
-                        spriteRect.y / icon.texture.height,
-                        spriteRect.width / icon.texture.width,
-                        spriteRect.height / icon.texture.height);
-                    GUI.DrawTextureWithTexCoords(elementRect, icon.texture, uv, true);
-                }
-            }
-
-            if (value.cellType == Grid3D.CellType.Normal && value.elementInfo != null)
-            {
-                Gfx gfx = GameManager.Instance != null ? GameManager.Instance.gfxManager : null;
-
-                if (value.elementInfo.isHidden)
-                {
-                    Sprite hiddenIcon = gfx != null ? gfx.hiddenIndicatorIcon : null;
-                    if (hiddenIcon != null && hiddenIcon.texture != null)
-                    {
-                        Rect hiddenSpriteRect = hiddenIcon.textureRect;
-                        Rect hiddenUv = new Rect(
-                            hiddenSpriteRect.x / hiddenIcon.texture.width,
-                            hiddenSpriteRect.y / hiddenIcon.texture.height,
-                            hiddenSpriteRect.width / hiddenIcon.texture.width,
-                            hiddenSpriteRect.height / hiddenIcon.texture.height);
-                        GUI.DrawTextureWithTexCoords(hiddenIndicatorRect, hiddenIcon.texture, hiddenUv, true);
-                    }
-                    else
-                    {
-                        EditorGUI.LabelField(hiddenIndicatorRect, "H", EditorStyles.whiteMiniLabel);
-                    }
-                }
-
-                if (value.elementInfo.isSparkling)
-                {
-                    Sprite sparklingIcon = gfx != null ? gfx.sparklingIndicatorIcon : null;
-                    if (sparklingIcon != null && sparklingIcon.texture != null)
-                    {
-                        Rect sparklingSpriteRect = sparklingIcon.textureRect;
-                        Rect sparklingUv = new Rect(
-                            sparklingSpriteRect.x / sparklingIcon.texture.width,
-                            sparklingSpriteRect.y / sparklingIcon.texture.height,
-                            sparklingSpriteRect.width / sparklingIcon.texture.width,
-                            sparklingSpriteRect.height / sparklingIcon.texture.height);
-                        GUI.DrawTextureWithTexCoords(sparklingIndicatorRect, sparklingIcon.texture, sparklingUv, true);
-                    }
-                    else
-                    {
-                        EditorGUI.LabelField(sparklingIndicatorRect, "S", EditorStyles.whiteMiniLabel);
-                    }
-                }
-            }
-
-            if (rect.Contains(Event.current.mousePosition))
-            {
-                if (Event.current.type == EventType.KeyDown)
-                {
-                    if (Event.current.shift)
-                    {
-                        bool consumedShiftShortcut = false;
-                        if(Event.current.keyCode == KeyCode.Z)
-                            {
-                            value.cellType = Grid3D.CellType.Normal;
-                            value.cellFeature = value.cellFeature == waferFeature ? null : waferFeature;
-                            MarkDirty();
-                            consumedShiftShortcut = true;
-                        }
-                        else if (Event.current.keyCode == KeyCode.A)
-                        {
-                            value.cellType = Grid3D.CellType.Normal;
-                            bool disableElectricField = value.cellFeature == electricField;
-                            value.cellFeature = disableElectricField ? null : electricField;
-                            value.cellFeatureGroupIndex = 0;
-                            value.cellFeatureGroupHealth = 0;
-                            value.cellFeatureGroupMaxHealth = 0;
-                            if (!disableElectricField)
-                                value.breakableWallElementCondition = null;
-                            MarkDirty();
-                            consumedShiftShortcut = true;
-                        }
-                        else if (Event.current.keyCode == KeyCode.X)
-                        {
-                            value.cellType = Grid3D.CellType.Normal;
-                            bool disableGlass = value.cellFeature == glassFeature;
-                            value.cellFeature = disableGlass ? null : glassFeature;
-                            if (disableGlass)
-                            {
-                                value.cellFeatureGroupIndex = 0;
-                                value.cellFeatureGroupHealth = 0;
-                                value.cellFeatureGroupMaxHealth = 0;
-                            }
-                            else if (glassFeature != null)
-                            {
-                                int initialHealth = Mathf.Max(1, value.cellFeatureGroupHealth > 0 ? value.cellFeatureGroupHealth : glassFeature.defaultGroupHealth);
-                                value.cellFeatureGroupHealth = initialHealth;
-                                value.cellFeatureGroupMaxHealth = Mathf.Max(initialHealth, value.cellFeatureGroupMaxHealth);
-                            }
-                            MarkDirty();
-                            consumedShiftShortcut = true;
-                        }
-
-                        if (!consumedShiftShortcut && value.cellFeature is GlassFeature glassForHealth && TryGetNumericShortcutValue(Event.current.keyCode, out int healthValue))
-                        {
-                            value.cellType = Grid3D.CellType.Normal;
-                            value.cellFeature = glassForHealth;
-                            int normalizedHealth = Mathf.Max(1, healthValue);
-                            value.cellFeatureGroupHealth = normalizedHealth;
-                            SetGlassGroupHealthForAllCells(glassForHealth, value.cellFeatureGroupIndex, normalizedHealth);
-                            MarkDirty();
-                            consumedShiftShortcut = true;
-                        }
-
-                        if (consumedShiftShortcut)
-                            Event.current.Use();
-                    }
-                    if (!Event.current.shift && value.cellFeature is GlassFeature glass && TryGetNumericShortcutValue(Event.current.keyCode, out int groupIndex))
-                    {
-                        value.cellType = Grid3D.CellType.Normal;
-                        value.cellFeature = glass;
-                        value.cellFeatureGroupIndex = groupIndex;
-                        value.cellFeatureGroupHealth = ResolveExistingGlassGroupHealth(glass, groupIndex);
-                        value.cellFeatureGroupMaxHealth = Mathf.Max(value.cellFeatureGroupHealth, value.cellFeatureGroupMaxHealth);
-                        MarkDirty();
-                        Event.current.Use();
-                    }
-                    if (Event.current.keyCode == KeyCode.E)
-                    {
-                        if (TryGetCellCoordinates(value, out Vector2Int cellPos))
-                            ClearElementsIntersectingArea(cellPos, Vector2Int.one);
-                        value.cellType = Grid3D.CellType.Empty;
-                        value.elementInfo = null;
-                        value.cellFeature = null;
-                        value.cellFeatureGroupIndex = 0;
-                        value.cellFeatureGroupHealth = 0;
-                        value.cellFeatureGroupMaxHealth = 0;
-                        MarkDirty();
-                        Event.current.Use();
-                    }
-                    else if (Event.current.keyCode == KeyCode.N)
-                    {
-                        value.cellType = Grid3D.CellType.Normal;
-                        MarkDirty();
-                        Event.current.Use();
-                    }
-                    else if (Event.current.keyCode == KeyCode.B)
-                    {
-                        if (TryGetCellCoordinates(value, out Vector2Int cellPos))
-                            ClearElementsIntersectingArea(cellPos, Vector2Int.one);
-                        value.cellType = Grid3D.CellType.BreakableWall;
-                        value.breakableWallElementCondition = null;
-                        value.elementInfo = null;
-                        value.cellFeature = null;
-                        value.cellFeatureGroupIndex = 0;
-                        value.cellFeatureGroupHealth = 0;
-                        value.cellFeatureGroupMaxHealth = 0;
-                        MarkDirty();
-                        Event.current.Use();
-                    }
-                    else if (Event.current.keyCode == KeyCode.U)
-                    {
-                        if (TryGetCellCoordinates(value, out Vector2Int cellPos))
-                            ClearElementsIntersectingArea(cellPos, Vector2Int.one);
-                        value.cellType = Grid3D.CellType.UnbreakableWall;
-                        value.breakableWallElementCondition = null;
-                        value.elementInfo = null;
-                        value.cellFeature = null;
-                        value.cellFeatureGroupIndex = 0;
-                        value.cellFeatureGroupHealth = 0;
-                        value.cellFeatureGroupMaxHealth = 0;
-                        MarkDirty();
-                        Event.current.Use();
-                    }
-                    else if (Event.current.keyCode == KeyCode.H)
-                    {
-                        value.elementInfo.isHidden = !value.elementInfo.isHidden;
-                        MarkDirty();
-                        Event.current.Use();
-                    }
-                    else if (Event.current.keyCode == KeyCode.R)
-                    {
-                        bool usePoolRandom = Event.current.control || Event.current.command;
-                        if (usePoolRandom)
-                        {
-                            if (TryGetCellCoordinates(value, out Vector2Int cellPos))
-                            {
-                                if (PlaceRandomElementFromPoolAt(cellPos))
-                                    MarkDirty();
-                            }
-                            else
-                            {
-                                ElementData randomElement = GetRandomElementFromPool();
-                                if (randomElement != null)
-                                {
-                                    value.cellType = Grid3D.CellType.Normal;
-                                    value.elementInfo = CreateElementInfo(randomElement);
-                                    MarkDirty();
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (TryGetCellCoordinates(value, out Vector2Int cellPos))
-                                ToggleRandomElementAt(cellPos);
-                            else
-                            {
-                                value.cellType = Grid3D.CellType.Normal;
-                                if (value.elementInfo != null && value.elementInfo.randomElement)
-                                    value.elementInfo = null;
-                                else
-                                    value.elementInfo = CreateRandomElementInfo();
-                            }
-                            MarkDirty();
-                        }
-
-                        Event.current.Use();
-                    }
-                }
-                else if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
-                {
-                    if (value.cellType == Grid3D.CellType.Normal && value.elementInfo != null)
-                    {
-                        ShowElementInfoMenu(value);
-                        Event.current.Use();
-                    }
-                    else if (value.cellType == Grid3D.CellType.BreakableWall)
-                    {
-                        ShowElementSelectionMenu(value, false);
-                        Event.current.Use();
-                    }
-                }
-                else if ((Event.current.type == EventType.MouseDown && Event.current.button == 1) || Event.current.type == EventType.ContextClick)
-                {
-                    ShowElementSelectionMenu(value, true);
-                    Event.current.Use();
-                }
-            }
-
-            return value;
         }
 #endif
-        private string GetCategoryBasedOnElementType(ElementData capturedElementData)
-        {
-            if (capturedElementData == null)
-                return "Other Elements/";
-
-            if (IsCauldronElementData(capturedElementData) || IsGarbageBagElementData(capturedElementData) || IsPowerGeneratorElementData(capturedElementData) || IsPowerOutletElementData(capturedElementData))
-                return "Special Elements/";
-
-            return "Other Elements/";
-        }
     }
 }
