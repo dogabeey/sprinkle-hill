@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
+using System.Linq;
 
 namespace Game
 {
@@ -30,26 +31,11 @@ namespace Game
 
         public Sprite GetDamageSprite(int missingHealth)
         {
-            Sprite bestSprite = null;
-            int bestMissingHealth = int.MinValue;
+            if (damageSprites == null || damageSprites.Count == 0)
+                return null;
 
-            for (int i = 0; i < damageSprites.Count; i++)
-            {
-                GlassDamageSpritePair pair = damageSprites[i];
-                if (pair == null || pair.sprite == null)
-                    continue;
-
-                if (pair.missingHealth > missingHealth)
-                    continue;
-
-                if (pair.missingHealth > bestMissingHealth)
-                {
-                    bestMissingHealth = pair.missingHealth;
-                    bestSprite = pair.sprite;
-                }
-            }
-
-            return bestSprite;
+            Sprite damageSprite = damageSprites.Where(pair => pair.missingHealth == missingHealth).Select(pair => pair.sprite).FirstOrDefault();
+            return damageSprite;
         }
 
         public override void OnElementMatchedOverTheCell(Grid3D.GridCell cell, GridElement element)
