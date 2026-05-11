@@ -220,15 +220,25 @@ namespace Game
             if (tileGenerationData == null)
                 return;
 
-            if (!generatedTiles.TryGetValue(pos, out GridCellController tile) || tile == null)
-                return;
-
-            tileGenerationData.ApplyFeatureSprite(tile, gridCells, pos.x, pos.y, TileData.DrawStartingCorner.TopLeft);
-
-            if (tile.damageIndicator != null)
+            for (int dx = -1; dx <= 1; dx++)
             {
-                tile.damageIndicator.enabled = false;
-                tile.damageIndicator.sprite = null;
+                for (int dy = -1; dy <= 1; dy++)
+                {
+                    Vector2Int refreshPos = new Vector2Int(pos.x + dx, pos.y + dy);
+                    if (refreshPos.x < 0 || refreshPos.y < 0 || refreshPos.x >= gridSize.x || refreshPos.y >= gridSize.y)
+                        continue;
+
+                    if (!generatedTiles.TryGetValue(refreshPos, out GridCellController tile) || tile == null)
+                        continue;
+
+                    tileGenerationData.ApplyFeatureSprite(tile, gridCells, refreshPos.x, refreshPos.y, TileData.DrawStartingCorner.TopLeft);
+
+                    if (tile.damageIndicator != null)
+                    {
+                        tile.damageIndicator.enabled = false;
+                        tile.damageIndicator.sprite = null;
+                    }
+                }
             }
 
             RefreshAllGlassDamageIndicators();

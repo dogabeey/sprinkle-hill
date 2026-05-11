@@ -30,3 +30,4 @@
 [2026-05-08 13:49:49] - Modernized EventParam with extensible typed payload access (Set/TryGet/Get/With) while keeping legacy fields backward-compatible and normalizing payload at dispatch.
 [2026-05-11 16:54:52] - Updated glass group resolution so cells with group index 0 are treated as groupless (unique per-cell groups) for gameplay health grouping while preserving shared sprite connectivity behavior.
 [2026-05-11 17:50:59] - Fixed GlassFeature.GetDamageSprite threshold selection to robustly resolve mask sprites by missing health with fallback to nearest configured threshold.
+[2026-05-11 18:25:11] - Fixed neighboring glass tile sprite reevaluation by refreshing feature visuals in a 3x3 area around changed cells before reapplying glass damage indicators.
