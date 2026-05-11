@@ -34,3 +34,4 @@
 [2026-05-11 19:01:22] - Changed glass damage logic from adjacent-match triggers to gravity landing triggers: glass now damages only when an element lands in the cell directly above it after drops/refills.
 [2026-05-11 19:15:59] - Fixed post-glass-break gravity by re-running ApplyGravity when glass shatters during gravity resolution, preventing mid-air elements from persisting until next move.
 [2026-05-11 19:20:05] - Updated GlassFeature to reject elements (AcceptElements = false), preventing element occupancy and drop-through while glass is active.
+[2026-05-11 22:12:14] - Removed glass crack latency by applying glass group damage on each element landing tween completion during gravity/refill instead of after the full gravity sequence.

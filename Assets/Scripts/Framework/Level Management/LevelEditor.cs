@@ -564,6 +564,12 @@ namespace Game
                             Event.current.Use();
                         }
                     }
+                    else if (Event.current.keyCode == KeyCode.G)
+                    {
+                        CreateElementInfo(GameManager.Instance.garbageBagElementData);
+                        MarkDirty();
+                        Event.current.Use();
+                    }
                     else if (Event.current.keyCode == KeyCode.R)
                     {
                         if (value.cellType != Grid3D.CellType.Normal) value.cellType = Grid3D.CellType.Normal;
@@ -847,6 +853,12 @@ namespace Game
                     randomStyle.fontSize = 36;
                     randomStyle.alignment = TextAnchor.MiddleCenter;
                     GUI.Label(elementRect, "?", randomStyle);
+                }
+
+                if (value.elementInfo.isHidden)
+                {
+                    Rect cornerRect = new Rect(elementRect.xMax - elementRect.width * 0.3f, elementRect.yMax - elementRect.height * 0.3f, elementRect.width * 0.3f, elementRect.height * 0.3f);
+                    DrawSprite(cornerRect, GameManager.Instance.gfxManager.hiddenIndicatorIcon);
                 }
             }
         }
