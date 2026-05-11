@@ -54,6 +54,16 @@ MonoBehaviour:
   - {fileID: 6648657062745475262, guid: 4bd797af29402654ba1c870264e5a7e9, type: 3}
   - {fileID: 6648657062745475262, guid: 831fecad3afec634d8c70111334c833d, type: 3}
   - {fileID: 6648657062745475262, guid: 52f5aba18e8117b4da1230b33185e4d4, type: 3}
+  - {fileID: 6648657062745475262, guid: fa178b8d3e8d98f48a2c57f8ff370a6b, type: 3}
+  - {fileID: 6648657062745475262, guid: 0a3f06714a110e442bdb4da392307610, type: 3}
+  - {fileID: 6648657062745475262, guid: b3aa46faeb913a642b6bca23a1dc229d, type: 3}
+  - {fileID: 6648657062745475262, guid: bf6b5ff29fec1e9408f6df6f1cb96e31, type: 3}
+  - {fileID: 6648657062745475262, guid: 23fbae5510763664f8f8f15c0d9924c3, type: 3}
+  - {fileID: 6648657062745475262, guid: d0030fc7413ac4842ae184975f239f71, type: 3}
+  - {fileID: 6648657062745475262, guid: 6c6a3395455bd35408140e556defc916, type: 3}
+  - {fileID: 6648657062745475262, guid: d3e6b6ef1897a4742a3c0864df1c5ddd, type: 3}
+  - {fileID: 6648657062745475262, guid: 44b98f7625dbcf4458700346bf8e0245, type: 3}
+  - {fileID: 6648657062745475262, guid: aba00876d391e0943acdc4e8ee281610, type: 3}
   excludeFirstXLevelFromLoop: 4
   lastPlayedLevelIndex: 0
 --- !u!1 &7722314759461277705
@@ -102,18 +112,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 1
-  eventManager: {fileID: 11400000, guid: 7795def3bb018e24dbf28a46616ff6e1, type: 2}
-  soundManager: {fileID: 11400000, guid: 71ffc4cb2ee667b4ba012ffcdf4be7db, type: 2}
-  saveManager: {fileID: 11400000, guid: 10fcddd14ad872e47bd6cc371200c1f6, type: 2}
+  eventManager: {fileID: 0}
+  soundManager: {fileID: 0}
+  saveManager: {fileID: 0}
   constantManager: {fileID: 11400000, guid: b9406341470b1d141960d0d2aa97dec6, type: 2}
   gfxManager: {fileID: 0}
   tutorialManager: {fileID: 0}
   actionBarManager: {fileID: 0}
   screenManager: {fileID: 0}
   featureTracker: {fileID: 0}
+  poolingManager: {fileID: 0}
   showFeatureProgressScreen: 0
-  cashCurrency: {fileID: 0}
-  premiumCurrency: {fileID: 0}
+  cashCurrency: {fileID: 11400000, guid: 31b1c667ab353af4a80bfe0daaa96451, type: 2}
+  premiumCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
   autoShuffleWhenOutOfPossibleMoves: 1
   bombElementData: {fileID: 11400000, guid: 2f83e159c6b368646a1f9d8e7ec081e9, type: 2}
   rocketElementData: {fileID: 11400000, guid: 56c62304f3d4a6c428379f3845a428a7, type: 2}
@@ -129,7 +140,9 @@ MonoBehaviour:
   worlds:
   - {fileID: 7722314759128445691}
   levelContainer: {fileID: 0}
-  winParticle: {fileID: 0}
+  winParticle:
+  - {fileID: 0}
+  - {fileID: 0}
   mainCanvas: {fileID: 0}
   upperPanelUI: {fileID: 0}
   isSequentalLevels: 1

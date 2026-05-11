@@ -334,18 +334,30 @@ namespace Game
                 if (!hasImprisonedElement)
                     continue;
 
-                int maxHealth = ResolveGlassGroupMaxHealth(groupId, groupCells);
-                int currentHealth = ResolveGlassGroupCurrentHealth(maxHealth, groupCells);
-                int missingHealth = Mathf.Clamp(maxHealth - currentHealth, 0, maxHealth);
-                Sprite damageSprite = groupId.feature != null ? groupId.feature.GetDamageSprite(missingHealth) : null;
-                if (damageSprite == null)
-                    continue;
-
                 Vector2Int anchorPos = groupCells[0];
                 if (!generatedTiles.TryGetValue(anchorPos, out GridCellController anchorTile) || anchorTile == null || anchorTile.damageIndicator == null)
                     continue;
 
-                anchorTile.damageIndicator.sprite = damageSprite;
+                int maxHealth = ResolveGlassGroupMaxHealth(groupId, groupCells);
+                int currentHealth = ResolveGlassGroupCurrentHealth(maxHealth, groupCells);
+                int missingHealth = Mathf.Clamp(maxHealth - currentHealth, 0, maxHealth);
+                if(groupId.feature.damageVisualType == DamageVisualType.Sprite)
+                {
+                    Sprite damageSprite = groupId.feature != null ? groupId.feature.GetDamageSprite(missingHealth) : null;
+                    if (damageSprite == null)
+                        continue;
+
+                    anchorTile.damageIndicator.sprite = damageSprite;
+                }
+                else
+                {
+                    (Vector2 tiling, Vector2 offset) = groupId.feature != null ? groupId.feature.GetDamageTilingAndOffset(missingHealth) : (Vector2.one, Vector2.zero);
+                    anchorTile.damageIndicator.drawMode = SpriteDrawMode.Tiled;
+                    anchorTile.damageIndicator.size = tiling;
+                    anchorTile.damageIndicator.material.mainTextureOffset = offset;
+                }
+
+
                 anchorTile.damageIndicator.sortingOrder = groupId.feature.spriteLayerIndex + 1;
                 ConfigureGroupDamageIndicator(anchorTile, groupCells);
                 anchorTile.damageIndicator.enabled = true;

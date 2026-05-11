@@ -2,12 +2,6 @@ using UnityEngine;
 
 namespace Game
 {
-    [System.Serializable]
-    public class GlassDamageSpritePair
-    {
-        [Min(0)] public int missingHealth;
-        public Sprite sprite;
-    }
 
     /// <summary>
     /// Cell features are special properties that can be assigned to grid cells to create unique gameplay mechanics. They can interact with matched elements in various ways, such as being destroyed 

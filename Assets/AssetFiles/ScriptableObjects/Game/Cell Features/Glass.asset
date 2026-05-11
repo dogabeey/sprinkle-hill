@@ -16,6 +16,7 @@ MonoBehaviour:
   featureIcon: {fileID: 444081177, guid: eeb43e0ebd4b7a047a883b2e77204591, type: 3}
   spriteLayerIndex: 4
   destroyParticleEffect: {fileID: 0}
+  damageVisualType: 1
   defaultGroupHealth: 1
   damageSprites:
   - missingHealth: 1
@@ -26,3 +27,16 @@ MonoBehaviour:
     sprite: {fileID: 1012081635, guid: 65990b7bd0ebabb4ea9fcf5dcbb93ccf, type: 3}
   - missingHealth: 4
     sprite: {fileID: -1618349872, guid: 65990b7bd0ebabb4ea9fcf5dcbb93ccf, type: 3}
+  damageTilingAndOffsets:
+  - missingHealth: 1
+    tiling: {x: 1, y: 8}
+    offset: {x: 0.25, y: -7}
+  - missingHealth: 2
+    tiling: {x: 1, y: 8}
+    offset: {x: 0.5, y: -7}
+  - missingHealth: 3
+    tiling: {x: 1, y: 8}
+    offset: {x: 0.75, y: -7}
+  - missingHealth: 4
+    tiling: {x: 1, y: 8}
+    offset: {x: 0.75, y: -7}
