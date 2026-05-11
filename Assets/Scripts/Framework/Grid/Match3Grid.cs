@@ -445,10 +445,12 @@ namespace Game
             indicator.transform.localScale = localScale;
         }
 
-        private void DamageGlassGroupsForMatch(HashSet<GlassGroupId> groupsToDamage)
+        private bool DamageGlassGroupsForMatch(HashSet<GlassGroupId> groupsToDamage)
         {
             if (groupsToDamage == null || groupsToDamage.Count == 0)
-                return;
+                return false;
+
+            bool didBreakAnyGlass = false;
 
             Dictionary<GlassGroupId, List<Vector2Int>> groups = BuildGlassGroups();
             foreach (GlassGroupId groupId in groupsToDamage)
@@ -462,6 +464,7 @@ namespace Game
 
                 if (nextHealth <= 0)
                 {
+                    didBreakAnyGlass = true;
                     for (int i = 0; i < groupCells.Count; i++)
                     {
                         Vector2Int pos = groupCells[i];
@@ -500,6 +503,7 @@ namespace Game
             }
 
             RefreshAllGlassDamageIndicators();
+            return didBreakAnyGlass;
         }
 
         public void TriggerCellFeatureMatchedOverAt(Vector2Int pos)
@@ -1907,7 +1911,12 @@ namespace Game
             generatedElements.RemoveAll(el => el == null);
             if (hasTween) yield return gravitySeq.WaitForCompletion();
 
-            DamageGlassGroupsForMatch(glassGroupsToDamageByDrop);
+            bool brokeGlassDuringGravity = DamageGlassGroupsForMatch(glassGroupsToDamageByDrop);
+            if (brokeGlassDuringGravity)
+            {
+                yield return StartCoroutine(ApplyGravity());
+                yield break;
+            }
 
             EventManager.TriggerEvent(GameEvent.GRAVITY_COMPLETED);
 
