@@ -1590,6 +1590,13 @@ namespace Game
             }
         }
 
+        private void DamageGlassAtPosition(Vector2Int pos)
+        {
+            HashSet<GlassGroupId> groupsToDamage = new HashSet<GlassGroupId>();
+            CollectGlassGroupAt(pos, groupsToDamage);
+            DamageGlassGroupsForMatch(groupsToDamage);
+        }
+
         private Vector2Int? FindMergeTarget(List<Vector2Int> group, HashSet<Vector2Int> protectedPositions)
         {
             if (protectedPositions == null || group == null) return null;
