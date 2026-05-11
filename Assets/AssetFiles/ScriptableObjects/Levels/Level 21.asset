@@ -16,7 +16,6 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 11400000, guid: 9a0a4a3b932d9dd48b6c09ede6bf2324, type: 2}
     - {fileID: 11400000, guid: a69c61ad6dd0ebf4e907ef76e4ec2042, type: 2}
     - {fileID: 11400000, guid: 533e37ef7d2d727448f260ed616b4b05, type: 2}
     - {fileID: 11400000, guid: 83563b891f3150f43b30e90059666825, type: 2}
@@ -77,8 +76,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -644,8 +643,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -687,7 +686,7 @@ MonoBehaviour:
       Data: 22|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 1
+      Data: 0
     - Name: randomElement
       Entry: 5
       Data: false
@@ -708,7 +707,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -771,7 +770,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -834,7 +833,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -897,7 +896,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -960,7 +959,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1023,7 +1022,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1086,7 +1085,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1211,8 +1210,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1653,7 +1652,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2094,7 +2093,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2535,7 +2534,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2976,7 +2975,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -3101,8 +3100,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -3543,7 +3542,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -3668,8 +3667,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -3711,7 +3710,7 @@ MonoBehaviour:
       Data: 112|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 3
+      Data: 2
     - Name: randomElement
       Entry: 5
       Data: false
@@ -3732,7 +3731,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -3795,7 +3794,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -3858,7 +3857,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -3921,7 +3920,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -3984,7 +3983,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -4047,7 +4046,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -4110,7 +4109,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 2
+      Data: 1
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -4235,8 +4234,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
