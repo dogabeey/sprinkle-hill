@@ -69,6 +69,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
@@ -127,6 +130,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -189,6 +195,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -228,6 +237,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
@@ -288,6 +300,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -325,6 +340,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -366,6 +384,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -403,6 +424,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -465,6 +489,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -504,6 +531,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
@@ -562,6 +592,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -624,6 +657,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -663,6 +699,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
@@ -723,6 +762,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -762,6 +804,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -799,6 +844,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -861,6 +909,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -921,6 +972,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -960,6 +1014,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
@@ -1018,6 +1075,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -1080,6 +1140,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1119,6 +1182,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
@@ -1179,6 +1245,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1218,6 +1287,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1255,6 +1327,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -1317,6 +1392,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1377,6 +1455,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1416,6 +1497,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
@@ -1474,6 +1558,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -1536,6 +1623,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1575,6 +1665,9 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
@@ -1595,30 +1688,9 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 1
+      Data: 2
     - Name: elementInfo
-      Entry: 7
-      Data: 49|Game.GridElementInfo, Game
-    - Name: elementData
       Entry: 6
-      Data: 
-    - Name: randomElement
-      Entry: 5
-      Data: true
-    - Name: isSparkling
-      Entry: 5
-      Data: false
-    - Name: isHidden
-      Entry: 5
-      Data: false
-    - Name: powerUpType
-      Entry: 3
-      Data: 0
-    - Name: cauldronProgress
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
       Data: 
     - Name: cellFeature
       Entry: 6
@@ -1635,12 +1707,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 50|Game.Grid3D+GridCell, Game
+      Data: 49|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -1658,7 +1733,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 51|Game.GridElementInfo, Game
+      Data: 50|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
       Data: 1
@@ -1693,6 +1768,51 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 51|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 2
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
+    - Name: cellFeatureGroupIndex
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -1709,45 +1829,6 @@ MonoBehaviour:
       Data: 4
     - Name: 
       Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: cellType
-      Entry: 3
-      Data: 2
-    - Name: elementInfo
-      Entry: 6
-      Data: 
-    - Name: cellFeature
-      Entry: 6
-      Data: 
-    - Name: breakableWallElementCondition
-      Entry: 6
-      Data: 
-    - Name: cellFeatureGroupIndex
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupHealth
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupMaxHealth
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 53|Game.Grid3D+GridCell, Game
-    - Name: coordinates
-      Entry: 7
-      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
-    - Name: 
-      Entry: 3
-      Data: 4
-    - Name: 
-      Entry: 3
       Data: 2
     - Name: 
       Entry: 8
@@ -1757,7 +1838,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 54|Game.GridElementInfo, Game
+      Data: 53|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -1794,12 +1875,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 55|Game.Grid3D+GridCell, Game
+      Data: 54|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -1817,7 +1901,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 56|Game.GridElementInfo, Game
+      Data: 55|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -1854,12 +1938,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 57|Game.Grid3D+GridCell, Game
+      Data: 56|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -1893,12 +1980,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 58|Game.Grid3D+GridCell, Game
+      Data: 57|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -1916,7 +2006,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 59|Game.GridElementInfo, Game
+      Data: 58|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -1953,12 +2043,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 60|Game.Grid3D+GridCell, Game
+      Data: 59|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -1976,7 +2069,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 61|Game.GridElementInfo, Game
+      Data: 60|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -2013,12 +2106,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 62|Game.Grid3D+GridCell, Game
+      Data: 61|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -2050,6 +2146,51 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 62|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
+    - Name: cellFeatureGroupIndex
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -2066,45 +2207,6 @@ MonoBehaviour:
       Data: 5
     - Name: 
       Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: cellType
-      Entry: 3
-      Data: 0
-    - Name: elementInfo
-      Entry: 6
-      Data: 
-    - Name: cellFeature
-      Entry: 6
-      Data: 
-    - Name: breakableWallElementCondition
-      Entry: 6
-      Data: 
-    - Name: cellFeatureGroupIndex
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupHealth
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupMaxHealth
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 64|Game.Grid3D+GridCell, Game
-    - Name: coordinates
-      Entry: 7
-      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
-    - Name: 
-      Entry: 3
-      Data: 5
-    - Name: 
-      Entry: 3
       Data: 1
     - Name: 
       Entry: 8
@@ -2114,7 +2216,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 65|Game.GridElementInfo, Game
+      Data: 64|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
       Data: 1
@@ -2149,6 +2251,51 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 65|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 2
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
+    - Name: cellFeatureGroupIndex
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -2165,45 +2312,6 @@ MonoBehaviour:
       Data: 5
     - Name: 
       Entry: 3
-      Data: 2
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: cellType
-      Entry: 3
-      Data: 2
-    - Name: elementInfo
-      Entry: 6
-      Data: 
-    - Name: cellFeature
-      Entry: 6
-      Data: 
-    - Name: breakableWallElementCondition
-      Entry: 6
-      Data: 
-    - Name: cellFeatureGroupIndex
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupHealth
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupMaxHealth
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 67|Game.Grid3D+GridCell, Game
-    - Name: coordinates
-      Entry: 7
-      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
-    - Name: 
-      Entry: 3
-      Data: 5
-    - Name: 
-      Entry: 3
       Data: 3
     - Name: 
       Entry: 8
@@ -2213,7 +2321,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 68|Game.GridElementInfo, Game
+      Data: 67|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -2250,12 +2358,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 69|Game.Grid3D+GridCell, Game
+      Data: 68|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -2273,7 +2384,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 70|Game.GridElementInfo, Game
+      Data: 69|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -2310,12 +2421,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 71|Game.Grid3D+GridCell, Game
+      Data: 70|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -2333,7 +2447,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 72|Game.GridElementInfo, Game
+      Data: 71|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
       Data: 2
@@ -2370,12 +2484,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 73|Game.Grid3D+GridCell, Game
+      Data: 72|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -2393,7 +2510,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 74|Game.GridElementInfo, Game
+      Data: 73|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -2430,12 +2547,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 75|Game.Grid3D+GridCell, Game
+      Data: 74|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -2453,7 +2573,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 76|Game.GridElementInfo, Game
+      Data: 75|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -2488,6 +2608,51 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 76|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
+    - Name: cellFeatureGroupIndex
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -2504,7 +2669,7 @@ MonoBehaviour:
       Data: 6
     - Name: 
       Entry: 3
-      Data: 0
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
@@ -2527,6 +2692,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -2543,45 +2711,6 @@ MonoBehaviour:
       Data: 6
     - Name: 
       Entry: 3
-      Data: 1
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: cellType
-      Entry: 3
-      Data: 0
-    - Name: elementInfo
-      Entry: 6
-      Data: 
-    - Name: cellFeature
-      Entry: 6
-      Data: 
-    - Name: breakableWallElementCondition
-      Entry: 6
-      Data: 
-    - Name: cellFeatureGroupIndex
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupHealth
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupMaxHealth
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 79|Game.Grid3D+GridCell, Game
-    - Name: coordinates
-      Entry: 7
-      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
-    - Name: 
-      Entry: 3
-      Data: 6
-    - Name: 
-      Entry: 3
       Data: 2
     - Name: 
       Entry: 8
@@ -2591,7 +2720,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 80|Game.GridElementInfo, Game
+      Data: 79|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
       Data: 1
@@ -2626,6 +2755,51 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 80|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 2
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
+    - Name: cellFeatureGroupIndex
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -2642,45 +2816,6 @@ MonoBehaviour:
       Data: 6
     - Name: 
       Entry: 3
-      Data: 3
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: cellType
-      Entry: 3
-      Data: 2
-    - Name: elementInfo
-      Entry: 6
-      Data: 
-    - Name: cellFeature
-      Entry: 6
-      Data: 
-    - Name: breakableWallElementCondition
-      Entry: 6
-      Data: 
-    - Name: cellFeatureGroupIndex
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupHealth
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupMaxHealth
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 82|Game.Grid3D+GridCell, Game
-    - Name: coordinates
-      Entry: 7
-      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
-    - Name: 
-      Entry: 3
-      Data: 6
-    - Name: 
-      Entry: 3
       Data: 4
     - Name: 
       Entry: 8
@@ -2690,7 +2825,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 83|Game.GridElementInfo, Game
+      Data: 82|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -2727,12 +2862,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 84|Game.Grid3D+GridCell, Game
+      Data: 83|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -2750,7 +2888,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 85|Game.GridElementInfo, Game
+      Data: 84|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
       Data: 2
@@ -2787,12 +2925,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 86|Game.Grid3D+GridCell, Game
+      Data: 85|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -2810,7 +2951,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 87|Game.GridElementInfo, Game
+      Data: 86|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -2847,12 +2988,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 88|Game.Grid3D+GridCell, Game
+      Data: 87|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -2870,7 +3014,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 89|Game.GridElementInfo, Game
+      Data: 88|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -2905,6 +3049,51 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 89|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
+    - Name: cellFeatureGroupIndex
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
       Entry: 3
       Data: 0
     - Name: 
@@ -2921,45 +3110,6 @@ MonoBehaviour:
       Data: 7
     - Name: 
       Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: cellType
-      Entry: 3
-      Data: 0
-    - Name: elementInfo
-      Entry: 6
-      Data: 
-    - Name: cellFeature
-      Entry: 6
-      Data: 
-    - Name: breakableWallElementCondition
-      Entry: 6
-      Data: 
-    - Name: cellFeatureGroupIndex
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupHealth
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupMaxHealth
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 91|Game.Grid3D+GridCell, Game
-    - Name: coordinates
-      Entry: 7
-      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
-    - Name: 
-      Entry: 3
-      Data: 7
-    - Name: 
-      Entry: 3
       Data: 1
     - Name: 
       Entry: 8
@@ -2985,12 +3135,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 92|Game.Grid3D+GridCell, Game
+      Data: 91|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -3024,12 +3177,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 93|Game.Grid3D+GridCell, Game
+      Data: 92|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -3047,7 +3203,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 94|Game.GridElementInfo, Game
+      Data: 93|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
       Data: 1
@@ -3084,12 +3240,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 95|Game.Grid3D+GridCell, Game
+      Data: 94|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -3123,12 +3282,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 96|Game.Grid3D+GridCell, Game
+      Data: 95|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -3146,7 +3308,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 97|Game.GridElementInfo, Game
+      Data: 96|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -3183,12 +3345,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 98|Game.Grid3D+GridCell, Game
+      Data: 97|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -3206,7 +3371,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 99|Game.GridElementInfo, Game
+      Data: 98|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
       Data: 2
@@ -3243,12 +3408,15 @@ MonoBehaviour:
     - Name: cellFeatureGroupMaxHealth
       Entry: 3
       Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: 
       Entry: 7
-      Data: 100|Game.Grid3D+GridCell, Game
+      Data: 99|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -3266,7 +3434,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 101|Game.GridElementInfo, Game
+      Data: 100|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -3301,6 +3469,9 @@ MonoBehaviour:
       Entry: 3
       Data: 0
     - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
       Entry: 3
       Data: 0
     - Name: 

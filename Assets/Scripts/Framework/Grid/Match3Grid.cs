@@ -1189,6 +1189,9 @@ namespace Game
                 for (int y = 0; y < gridSize.y; y++)
                 {
                     GridCell cell = GetCell(new Vector2Int(x, y));
+                    if (cell != null && cell.cellType == CellType.BreakableWall)
+                        cell.cellHealth = Mathf.Max(1, cell.cellHealth);
+
                     if (!TryGetGlassGroupId(cell, out GlassGroupId groupId))
                         continue;
 
@@ -1199,6 +1202,8 @@ namespace Game
                         cell.cellFeatureGroupMaxHealth = Mathf.Max(groupHealth, groupMaxHealth);
                 }
             }
+
+            InitializeBreakableWallVisuals();
 
             List<ElementData> elementPool = BuildElementPool();
 
@@ -1264,6 +1269,25 @@ namespace Game
                 EnsureAtLeastOneMoveAvailable(elementPool);
 
             RefreshAllGlassDamageIndicators();
+        }
+
+        private void InitializeBreakableWallVisuals()
+        {
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    GridCell cell = GetCell(pos);
+                    if (cell == null || cell.cellType != CellType.BreakableWall)
+                        continue;
+
+                    cell.cellHealth = Mathf.Max(1, cell.cellHealth);
+
+                    if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile is BreakableWall breakableWall)
+                        breakableWall.InitializeHealth(cell.cellHealth);
+                }
+            }
         }
 
         // ------------------------------------------------------------------
@@ -1544,6 +1568,9 @@ namespace Game
             GridCell cell = GetCell(wallPos);
             if (cell == null || cell.cellType != CellType.BreakableWall) yield break;
 
+            cell.cellHealth = Mathf.Max(1, cell.cellHealth);
+            cell.cellHealth--;
+
             if (generatedTiles.TryGetValue(wallPos, out GridCellController wallTile) && wallTile != null)
             {
                 Transform wallParent = wallTile.transform.parent;
@@ -1551,28 +1578,47 @@ namespace Game
                 Quaternion wallRotation = wallTile.transform.rotation;
                 Vector3 wallScale = wallTile.transform.localScale;
 
-                if (wallTile is BreakableWall breakable) yield return StartCoroutine(breakable.WallBreak());
+                if (wallTile is BreakableWall breakable)
+                    breakable.InitializeHealth(cell.cellHealth);
 
-                if (tileGenerationData != null && tileGenerationData.normalCell != null)
+                if (cell.cellHealth <= 0)
                 {
-                    GridCellController normalTile = Instantiate(tileGenerationData.normalCell, wallPosition, wallRotation, wallParent);
-                    normalTile.transform.localScale = wallScale;
-                    normalTile.Bind(wallPos);
-                    generatedTiles[wallPos] = normalTile;
+                    if (wallTile is BreakableWall breakableWall)
+                        yield return StartCoroutine(breakableWall.WallBreak());
+
+                    if (tileGenerationData != null && tileGenerationData.normalCell != null)
+                    {
+                        GridCellController normalTile = Instantiate(tileGenerationData.normalCell, wallPosition, wallRotation, wallParent);
+                        normalTile.transform.localScale = wallScale;
+                        normalTile.Bind(wallPos);
+                        generatedTiles[wallPos] = normalTile;
+                    }
+
+                    if (wallTile != null) Destroy(wallTile.gameObject);
+
+                    cell.cellType = CellType.Normal;
+                    cell.cellHealth = 0;
+
+                    if (tileGenerationData != null)
+                    {
+                        tileGenerationData.RefreshTileSprites(generatedTiles, gridCells, wallPos);
+                    }
+
+                    EventManager.TriggerEvent(GameEvent.BREAKABLE_WALL_DESTROYED,
+                        new EventParam(vectorList: new Vector3[] { new Vector3(wallPos.x, wallPos.y, 0f) }));
+                    yield break;
                 }
 
-                if (wallTile != null) Destroy(wallTile.gameObject);
+                yield break;
             }
 
-            cell.cellType = CellType.Normal;
-
-            if (tileGenerationData != null)
+            if (cell.cellHealth <= 0)
             {
-                tileGenerationData.RefreshTileSprites(generatedTiles, gridCells, wallPos);
+                cell.cellType = CellType.Normal;
+                cell.cellHealth = 0;
+                EventManager.TriggerEvent(GameEvent.BREAKABLE_WALL_DESTROYED,
+                    new EventParam(vectorList: new Vector3[] { new Vector3(wallPos.x, wallPos.y, 0f) }));
             }
-
-            EventManager.TriggerEvent(GameEvent.BREAKABLE_WALL_DESTROYED,
-                new EventParam(vectorList: new Vector3[] { new Vector3(wallPos.x, wallPos.y, 0f) }));
         }
 
         private bool CanBreakWallWithElement(GridCell wallCell, ElementData destroyedElementData)

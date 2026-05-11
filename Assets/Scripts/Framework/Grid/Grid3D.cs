@@ -233,6 +233,7 @@ namespace Game
                             {
                                 cell.cellType = CellType.BreakableWall;
                                 cell.elementInfo = null;
+                                cell.cellHealth = 1;
                                 wallsToPlace--;
                             }
                         }
@@ -253,6 +254,7 @@ namespace Game
                             {
                                 cell.cellType = CellType.BreakableWall;
                                 cell.elementInfo = null;
+                                cell.cellHealth = 1;
                                 wallsThisRow++;
                             }
                         }
@@ -275,6 +277,7 @@ namespace Game
                             {
                                 cell.cellType = CellType.BreakableWall;
                                 cell.elementInfo = null;
+                                cell.cellHealth = 1;
                             }
                         }
                     }

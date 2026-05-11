@@ -22,5 +22,7 @@
 [2026-05-10 02:28:03] - Corrected power-up shape detection so Propeller is created from 2x2 square matches and Bomb is created from L-shape matches in PowerUpHandler.
 [2026-05-10 02:31:33] - Updated bomb behavior in PowerUpHandler: increased explosion size to 5x5 and expanded bomb spawn detection to include T-shape matches in addition to L-shapes.
 [2026-05-10 13:27:42] - Fixed LevelEditor sprite previews to draw selected sprite regions from atlas textures instead of full textures, including cell features, elements, and breakable wall condition indicators.
+[2026-05-11 03:45:26] - Fixed breakable wall health flow by tying runtime damage to GridCell.cellHealth, decrementing on adjacent matches, only destroying at zero, initializing wall visuals from current health, and enforcing minimum breakable wall health of 1 in editor/runtime setup.
+[2026-05-11 04:08:12] - Initialized breakable wall health visuals on grid generation so HealthObjectByHealth thresholds activate the correct healthObject from the first creation frame.
 [2026-05-07 22:45:11] - Preserved objective list on level completion/failure by stopping listener cleanup only, preventing Objective UI from being hidden at level end.
 [2026-05-08 13:49:49] - Modernized EventParam with extensible typed payload access (Set/TryGet/Get/With) while keeping legacy fields backward-compatible and normalizing payload at dispatch.

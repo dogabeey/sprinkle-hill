@@ -410,7 +410,10 @@ namespace Game
                         breakableWallElementCondition = sourceCell != null ? sourceCell.breakableWallElementCondition : null,
                         cellFeatureGroupIndex = sourceCell != null ? sourceCell.cellFeatureGroupIndex : 0,
                         cellFeatureGroupHealth = sourceCell != null ? sourceCell.cellFeatureGroupHealth : 0,
-                        cellFeatureGroupMaxHealth = sourceCell != null ? sourceCell.cellFeatureGroupMaxHealth : 0
+                        cellFeatureGroupMaxHealth = sourceCell != null ? sourceCell.cellFeatureGroupMaxHealth : 0,
+                        cellHealth = sourceCell != null && sourceCell.cellType == Grid3D.CellType.BreakableWall
+                            ? Mathf.Max(1, sourceCell.cellHealth)
+                            : 0
                     };
                 }
             }
@@ -541,7 +544,7 @@ namespace Game
                     {
                         value.cellType = Grid3D.CellType.BreakableWall;
                         value.elementInfo = null;
-                        value.cellHealth = 1;
+                        value.cellHealth = Mathf.Max(1, value.cellHealth);
                         MarkDirty();
                         Event.current.Use();
                     }
@@ -595,7 +598,7 @@ namespace Game
                         else if (value.cellType == Grid3D.CellType.BreakableWall)
                         {
                             {
-                                value.cellHealth = numericValue;
+                                value.cellHealth = Mathf.Max(1, numericValue);
                                 MarkDirty();
                                 Event.current.Use();
                             }
@@ -629,7 +632,7 @@ namespace Game
                 {
                     value.cellType = Grid3D.CellType.BreakableWall;
                     value.elementInfo = null;
-                    value.cellHealth = 1;
+                    value.cellHealth = Mathf.Max(1, value.cellHealth);
                     MarkDirty();
                 });
                 menu.AddItem(new GUIContent("Set Cell Type/Unbreakable Wall"), value.cellType == Grid3D.CellType.UnbreakableWall, () =>
@@ -667,6 +670,7 @@ namespace Game
                         menu.AddItem(new GUIContent($"Breakable Walls/Health/{health}"), value.breakableWallElementCondition != null && value.cellHealth == capturedHealth, () =>
                         {
                             value.cellHealth = capturedHealth;
+                            MarkDirty();
                         });
                     }
                 }

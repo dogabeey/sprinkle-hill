@@ -10,8 +10,8 @@ namespace Game
         [System.Serializable]
         public class HealthObjectByHealth
         {
-            public GameObject healthObject; // the healthObject will be active while cell health is at or below the specified threshold
-            public int healthThreshold; // healthObject will be active while cell health is at or below this threshold
+            public GameObject healthObject; // the healthObject will be active while cell health is at or above the specified threshold
+            public int healthThreshold; // healthObject will be active while cell health is at or above this threshold
             public ParticleSystem breakParticle;
         }
         private int currentHealth;
@@ -21,12 +21,17 @@ namespace Game
         [SerializeField] private string breakTriggerName = "Break";
         [SerializeField] private float breakAnimationDuration = 0.25f;
 
+        public void InitializeHealth(int health)
+        {
+            CurrentHealth = Mathf.Max(0, health);
+        }
+
         public int CurrentHealth
         {
             get => currentHealth;
             set
             {
-                currentHealth = value;
+                currentHealth = Mathf.Max(0, value);
                 UpdateHealthObjects();
             }
         }
@@ -37,15 +42,8 @@ namespace Game
             {
                 if (healthObjectByHealth.healthObject != null)
                 {
-                    bool shouldBeActive = currentHealth <= healthObjectByHealth.healthThreshold;
-                    if (healthObjectByHealth.healthObject.activeSelf != shouldBeActive)
-                    {
-                        healthObjectByHealth.healthObject.SetActive(shouldBeActive);
-                        if (shouldBeActive && healthObjectByHealth.breakParticle != null)
-                        {
-                            healthObjectByHealth.breakParticle.Play();
-                        }
-                    }
+                    bool shouldBeActive = currentHealth >= healthObjectByHealth.healthThreshold;
+                    healthObjectByHealth.healthObject.SetActive(shouldBeActive);
                 }
             }
         }
@@ -60,20 +58,15 @@ namespace Game
 
         public IEnumerator WallBreak()
         {
-            CurrentHealth--;
-            if (CurrentHealth <= 0)
+            if (wallAnimator != null && !string.IsNullOrEmpty(breakTriggerName))
             {
-                if (wallAnimator != null && !string.IsNullOrEmpty(breakTriggerName))
-                {
-                    wallAnimator.SetTrigger(breakTriggerName);
+                wallAnimator.SetTrigger(breakTriggerName);
 
-                    if (breakAnimationDuration > 0f)
-                    {
-                        yield return new WaitForSeconds(breakAnimationDuration);
-                    }
+                if (breakAnimationDuration > 0f)
+                {
+                    yield return new WaitForSeconds(breakAnimationDuration);
                 }
             }
-
         }
     }
 }
