@@ -309,6 +309,7 @@ namespace Game
 
                 tile.damageIndicator.enabled = false;
                 tile.damageIndicator.sprite = null;
+                ResetDamageIndicatorTransform(tile.damageIndicator);
             }
 
             Dictionary<GlassGroupId, List<Vector2Int>> groups = BuildGlassGroups();
@@ -340,50 +341,83 @@ namespace Game
                 if (damageSprite == null)
                     continue;
 
-                int minX = groupCells.Min(p => p.x);
-                int maxX = groupCells.Max(p => p.x);
-                int minY = groupCells.Min(p => p.y);
-                int maxY = groupCells.Max(p => p.y);
+                Vector2Int anchorPos = groupCells[0];
+                if (!generatedTiles.TryGetValue(anchorPos, out GridCellController anchorTile) || anchorTile == null || anchorTile.damageIndicator == null)
+                    continue;
 
-                Vector2[] farCorners =
-                {
-                    new Vector2(minX, minY),
-                    new Vector2(minX, maxY),
-                    new Vector2(maxX, minY),
-                    new Vector2(maxX, maxY)
-                };
-
-                HashSet<Vector2Int> selectedCells = new HashSet<Vector2Int>();
-                for (int i = 0; i < farCorners.Length; i++)
-                {
-                    Vector2 corner = farCorners[i];
-                    float bestDistance = float.MaxValue;
-                    Vector2Int bestPos = groupCells[0];
-
-                    for (int p = 0; p < groupCells.Count; p++)
-                    {
-                        Vector2Int cellPos = groupCells[p];
-                        float distance = (new Vector2(cellPos.x, cellPos.y) - corner).sqrMagnitude;
-                        if (distance < bestDistance)
-                        {
-                            bestDistance = distance;
-                            bestPos = cellPos;
-                        }
-                    }
-
-                    selectedCells.Add(bestPos);
-                }
-
-                foreach (Vector2Int pos in selectedCells)
-                {
-                    if (!generatedTiles.TryGetValue(pos, out GridCellController tile) || tile == null || tile.damageIndicator == null)
-                        continue;
-
-                    tile.damageIndicator.sprite = damageSprite;
-                    tile.damageIndicator.sortingOrder = groupId.feature.spriteLayerIndex + 1;
-                    tile.damageIndicator.enabled = true;
-                }
+                anchorTile.damageIndicator.sprite = damageSprite;
+                anchorTile.damageIndicator.sortingOrder = groupId.feature.spriteLayerIndex + 1;
+                ConfigureGroupDamageIndicator(anchorTile, groupCells);
+                anchorTile.damageIndicator.enabled = true;
             }
+        }
+
+        private static void ResetDamageIndicatorTransform(SpriteRenderer indicator)
+        {
+            if (indicator == null)
+                return;
+
+            indicator.transform.localPosition = Vector3.zero;
+            indicator.transform.localScale = Vector3.one;
+            indicator.transform.localRotation = Quaternion.identity;
+        }
+
+        private void ConfigureGroupDamageIndicator(GridCellController anchorTile, List<Vector2Int> groupCells)
+        {
+            if (anchorTile == null || anchorTile.damageIndicator == null || groupCells == null || groupCells.Count == 0)
+                return;
+
+            float minWorldX = float.MaxValue;
+            float maxWorldX = float.MinValue;
+            float minWorldY = float.MaxValue;
+            float maxWorldY = float.MinValue;
+
+            int minGridX = int.MaxValue;
+            int maxGridX = int.MinValue;
+            int minGridY = int.MaxValue;
+            int maxGridY = int.MinValue;
+
+            for (int i = 0; i < groupCells.Count; i++)
+            {
+                Vector2Int pos = groupCells[i];
+                if (pos.x < minGridX) minGridX = pos.x;
+                if (pos.x > maxGridX) maxGridX = pos.x;
+                if (pos.y < minGridY) minGridY = pos.y;
+                if (pos.y > maxGridY) maxGridY = pos.y;
+
+                if (!generatedTiles.TryGetValue(pos, out GridCellController tile) || tile == null)
+                    continue;
+
+                Vector3 worldPos = tile.transform.position;
+                if (worldPos.x < minWorldX) minWorldX = worldPos.x;
+                if (worldPos.x > maxWorldX) maxWorldX = worldPos.x;
+                if (worldPos.y < minWorldY) minWorldY = worldPos.y;
+                if (worldPos.y > maxWorldY) maxWorldY = worldPos.y;
+            }
+
+            if (minWorldX > maxWorldX || minWorldY > maxWorldY)
+                return;
+
+            SpriteRenderer indicator = anchorTile.damageIndicator;
+            ResetDamageIndicatorTransform(indicator);
+
+            float cellWidth = anchorTile.gridSprite != null ? anchorTile.gridSprite.bounds.size.x : 1f;
+            float cellHeight = anchorTile.gridSprite != null ? anchorTile.gridSprite.bounds.size.y : 1f;
+
+            float targetWorldWidth = (maxGridX - minGridX + 1) * cellWidth;
+            float targetWorldHeight = (maxGridY - minGridY + 1) * cellHeight;
+
+            Vector3 centerWorld = new Vector3((minWorldX + maxWorldX) * 0.5f, (minWorldY + maxWorldY) * 0.5f, indicator.transform.position.z);
+            indicator.transform.position = centerWorld;
+
+            Vector3 baseWorldSize = indicator.bounds.size;
+            if (baseWorldSize.x <= 0f || baseWorldSize.y <= 0f)
+                return;
+
+            Vector3 localScale = indicator.transform.localScale;
+            localScale.x *= targetWorldWidth / baseWorldSize.x;
+            localScale.y *= targetWorldHeight / baseWorldSize.y;
+            indicator.transform.localScale = localScale;
         }
 
         private void DamageGlassGroupsForMatch(HashSet<GlassGroupId> groupsToDamage)

@@ -25,5 +25,6 @@
 [2026-05-11 03:45:26] - Fixed breakable wall health flow by tying runtime damage to GridCell.cellHealth, decrementing on adjacent matches, only destroying at zero, initializing wall visuals from current health, and enforcing minimum breakable wall health of 1 in editor/runtime setup.
 [2026-05-11 04:08:12] - Initialized breakable wall health visuals on grid generation so HealthObjectByHealth thresholds activate the correct healthObject from the first creation frame.
 [2026-05-11 04:11:37] - Updated match resolution so protected power-up formation origin cells still apply adjacent feature, wall, and hidden-element side effects as if an element was destroyed at the origin.
+[2026-05-11 04:30:11] - Updated glass damage rendering to use one grouped damage sprite overlay per same-group glass cluster, scaled and positioned to span the full group bounds instead of per-cell indicators.
 [2026-05-07 22:45:11] - Preserved objective list on level completion/failure by stopping listener cleanup only, preventing Objective UI from being hidden at level end.
 [2026-05-08 13:49:49] - Modernized EventParam with extensible typed payload access (Set/TryGet/Get/With) while keeping legacy fields backward-compatible and normalizing payload at dispatch.
