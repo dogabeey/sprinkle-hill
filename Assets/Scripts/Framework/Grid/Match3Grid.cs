@@ -2642,7 +2642,7 @@ namespace Game
             CurrencyManager currencyManager = CurrencyManager.Instance;
             if (currencyManager == null) return;
 
-            currencyManager.AddCurrency(GameManager.Instance.cashCurrency, Mathf.Max(1, comboCount), source);
+            currencyManager.AddCurrency(GameManager.Instance.cashCurrency, Mathf.Max(1, comboCount), null);
         }
     }
 }

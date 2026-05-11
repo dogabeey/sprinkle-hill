@@ -21,5 +21,6 @@
 [2026-05-10 02:18:54] - Swapped BombCreationStrategy and PropellerCreationStrategy spawn detection behavior in PowerUpHandler while preserving their respective output channels.
 [2026-05-10 02:28:03] - Corrected power-up shape detection so Propeller is created from 2x2 square matches and Bomb is created from L-shape matches in PowerUpHandler.
 [2026-05-10 02:31:33] - Updated bomb behavior in PowerUpHandler: increased explosion size to 5x5 and expanded bomb spawn detection to include T-shape matches in addition to L-shapes.
+[2026-05-10 13:27:42] - Fixed LevelEditor sprite previews to draw selected sprite regions from atlas textures instead of full textures, including cell features, elements, and breakable wall condition indicators.
 [2026-05-07 22:45:11] - Preserved objective list on level completion/failure by stopping listener cleanup only, preventing Objective UI from being hidden at level end.
 [2026-05-08 13:49:49] - Modernized EventParam with extensible typed payload access (Set/TryGet/Get/With) while keeping legacy fields backward-compatible and normalizing payload at dispatch.

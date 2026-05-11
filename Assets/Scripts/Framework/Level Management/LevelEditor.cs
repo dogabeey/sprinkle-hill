@@ -473,10 +473,10 @@ namespace Game
 
             // INITIALIZATION
             // Colors
-            Color normalCellColor = new Color(0.59f, 0.75f, 0.83f);
-            Color emptyCellColor = new Color(0.9f, 0.9f, 0.9f);
-            Color breakableWallCellColor = new Color(0.8f, 0.5f, 0.5f);
-            Color unbreakableWallCellColor = new Color(0.4f, 0.3f, 0.4f);
+            Color normalCellColor = new Color(219/255f, 186/255f, 143/255f);
+            Color emptyCellColor = new Color(67/255f, 67/255f, 67/255f);
+            Color breakableWallCellColor = new Color(140/255f, 100/255f, 86/255f);
+            Color unbreakableWallCellColor = new Color(65/255f, 55/255f, 55/255f);
             // Rects
             Rect elementRect = new Rect(rect.x + rect.width * 0.1f, rect.y + rect.height * 0.1f, rect.width * 0.8f, rect.height * 0.8f);
             Rect featureRect = rect;
@@ -495,9 +495,9 @@ namespace Game
             // Draw cell background based on type
             DrawCellType(rect, breakableWallElementRect, value, normalCellColor, emptyCellColor, breakableWallCellColor, unbreakableWallCellColor);
             // Draw element sprite to elementRect if cell type is Normal and has elementInfo
-            DrawElement(value, elementRect);
             // Draw cell feature indicators in featureRect (e.g. icons or overlays for wafer, glass, electric field)
             DrawFeatures(value, featureRect);
+            DrawElement(value, elementRect);
             // Draw health text for breakable walls and group index/health for glass features
             if (value.cellType == Grid3D.CellType.BreakableWall)
             {
@@ -560,6 +560,21 @@ namespace Game
                             MarkDirty();
                             Event.current.Use();
                         }
+                    }
+                    else if (Event.current.keyCode == KeyCode.R)
+                    {
+                        if(value.cellType != Grid3D.CellType.Normal) value.cellType = Grid3D.CellType.Normal;
+                        if (value.elementInfo != null)
+                        {
+                            value.elementInfo.elementData = null;
+                            value.elementInfo.randomElement = !value.elementInfo.randomElement;
+                        }
+                        else
+                        {
+                            value.elementInfo = CreateRandomElementInfo();
+                        }
+                        MarkDirty();
+                        Event.current.Use();
                     }
                     // Alphanumeric keys for glass group index and health (while hovering a glass cell)
                     else if (TryGetNumericShortcutValue(Event.current.keyCode, out int numericValue))
@@ -628,7 +643,7 @@ namespace Game
                 {
                     menu.AddSeparator("");
                     // Element condition options.
-                    menu.AddItem(new GUIContent("Breakable Wall Condition/None"), value.breakableWallElementCondition == null, () =>
+                    menu.AddItem(new GUIContent("Breakable Walls/None"), value.breakableWallElementCondition == null, () =>
                     {
                         value.breakableWallElementCondition = null;
                         MarkDirty();
@@ -649,7 +664,7 @@ namespace Game
                     for (int health = 1; health <= 3; health++)
                     {
                         int capturedHealth = health; // Capture loop variable
-                        menu.AddItem(new GUIContent($"Breakable Wall Condition/Health/{health}"), value.breakableWallElementCondition != null && value.cellHealth == capturedHealth, () =>
+                        menu.AddItem(new GUIContent($"Breakable Walls/Health/{health}"), value.breakableWallElementCondition != null && value.cellHealth == capturedHealth, () =>
                         {
                             value.cellHealth = capturedHealth;
                         });
@@ -764,15 +779,15 @@ namespace Game
             {
                 if (value.cellFeature is WaferFeature wafer)
                 {
-                    GUI.DrawTexture(featureRect, wafer.tileSpriteSet.singleInnerTile.texture);
+                    DrawSprite(featureRect, wafer.tileSpriteSet.singleInnerTile);
                 }
                 if (value.cellFeature is GlassFeature glass)
                 {
-                    GUI.DrawTexture(featureRect, glass.tileSpriteSet.singleInnerTile.texture);
+                    DrawSprite(featureRect, glass.tileSpriteSet.singleInnerTile);
                 }
                 if (value.cellFeature is ElectricField electricField)
                 {
-                    GUI.DrawTexture(featureRect, electricField.tileSpriteSet.singleInnerTile.texture);
+                    DrawSprite(featureRect, electricField.tileSpriteSet.singleInnerTile);
                 }
                 // Note: Add indicators for the future cell features here
                 // ...
@@ -780,14 +795,41 @@ namespace Game
         }
         private static void DrawElement(Grid3D.GridCell value, Rect elementRect)
         {
-            if (value.cellType == Grid3D.CellType.Normal && value.elementInfo != null && value.elementInfo.elementData != null)
+            if (value.cellType == Grid3D.CellType.Normal && value.elementInfo != null)
             {
-                Sprite elementSprite = value.elementInfo.elementData.displayIcon;
-                if (elementSprite != null)
+                if(value.elementInfo.elementData != null)
                 {
-                    GUI.DrawTexture(elementRect, elementSprite.texture, ScaleMode.ScaleToFit);
+                    Sprite elementSprite = value.elementInfo.elementData.displayIcon;
+                    if (elementSprite != null)
+                    {
+                        DrawSprite(elementRect, elementSprite);
+                    }
+                }
+                else if (value.elementInfo.randomElement)
+                {
+                    GUIStyle randomStyle = new GUIStyle();
+                    randomStyle.fontStyle = FontStyle.Bold;
+                    randomStyle.fontSize = 36;
+                    randomStyle.alignment = TextAnchor.MiddleCenter;
+                    GUI.Label(elementRect, "?", randomStyle);
                 }
             }
+        }
+
+        private static void DrawSprite(Rect drawRect, Sprite sprite)
+        {
+            if (sprite == null || sprite.texture == null)
+                return;
+
+            Texture2D texture = sprite.texture;
+            Rect spriteRect = sprite.textureRect;
+            Rect uv = new Rect(
+                spriteRect.x / texture.width,
+                spriteRect.y / texture.height,
+                spriteRect.width / texture.width,
+                spriteRect.height / texture.height);
+
+            GUI.DrawTextureWithTexCoords(drawRect, texture, uv, true);
         }
 
         private static void DrawCellType(Rect rect, Rect breakableWallElementIndicatorRect, Grid3D.GridCell value, Color normalCellColor, Color emptyCellColor, Color breakableWallCellColor, Color unbreakableWallCellColor)
@@ -803,7 +845,7 @@ namespace Game
                 case Grid3D.CellType.BreakableWall:
                     EditorGUI.DrawRect(rect, breakableWallCellColor);
                     if (value.breakableWallElementCondition != null)
-                        EditorGUI.DrawTextureAlpha(breakableWallElementIndicatorRect, value.breakableWallElementCondition.displayIcon.texture);
+                        DrawSprite(breakableWallElementIndicatorRect, value.breakableWallElementCondition.displayIcon);
                     break;
                 case Grid3D.CellType.UnbreakableWall:
                     EditorGUI.DrawRect(rect, unbreakableWallCellColor);
