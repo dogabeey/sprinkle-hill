@@ -566,7 +566,7 @@ namespace Game
                     }
                     else if (Event.current.keyCode == KeyCode.R)
                     {
-                        if(value.cellType != Grid3D.CellType.Normal) value.cellType = Grid3D.CellType.Normal;
+                        if (value.cellType != Grid3D.CellType.Normal) value.cellType = Grid3D.CellType.Normal;
                         if (value.elementInfo != null)
                         {
                             value.elementInfo.elementData = null;
@@ -602,6 +602,37 @@ namespace Game
                                 MarkDirty();
                                 Event.current.Use();
                             }
+                        }
+                    }
+                    // Feature Placement
+                    else if (Event.current.shift)
+                    {
+                        if (Event.current.keyCode == KeyCode.Z)
+                        {
+                            if (value.cellFeature is WaferFeature)
+                                value.cellFeature = null;
+                            else
+                                value.cellFeature = GameManager.Instance.waferFeature;
+                            MarkDirty();
+                            Event.current.Use();
+                        }
+                        else if (Event.current.keyCode == KeyCode.X)
+                        {
+                            if (value.cellFeature is GlassFeature)
+                                value.cellFeature = null;
+                            else
+                                value.cellFeature = GameManager.Instance.glassFeature;
+                            MarkDirty();
+                            Event.current.Use();
+                        }
+                        else if (Event.current.keyCode == KeyCode.A)
+                        {
+                            if (value.cellFeature is ElectricField)
+                                value.cellFeature = null;
+                            else
+                                value.cellFeature = GameManager.Instance.electricField;
+                            MarkDirty();
+                            Event.current.Use();
                         }
                     }
                 }
@@ -753,7 +784,7 @@ namespace Game
                     if (value.cellFeature is WaferFeature)
                         value.cellFeature = null;
                     else
-                        value.cellFeature = new WaferFeature();
+                        value.cellFeature = GameManager.Instance.waferFeature;
                     MarkDirty();
                 });
                 menu.AddItem(new GUIContent("Toggle Feature/Glass"), value.cellFeature is GlassFeature, () =>
@@ -761,7 +792,7 @@ namespace Game
                     if (value.cellFeature is GlassFeature)
                         value.cellFeature = null;
                     else
-                        value.cellFeature = new GlassFeature();
+                        value.cellFeature = GameManager.Instance.glassFeature;
                     MarkDirty();
                 });
                 menu.AddItem(new GUIContent("Toggle Feature/Electric Field"), value.cellFeature is ElectricField, () =>
@@ -769,7 +800,7 @@ namespace Game
                     if (value.cellFeature is ElectricField)
                         value.cellFeature = null;
                     else
-                        value.cellFeature = new ElectricField();
+                        value.cellFeature = GameManager.Instance.electricField;
                     MarkDirty();
                 });
                 menu.ShowAsContext();

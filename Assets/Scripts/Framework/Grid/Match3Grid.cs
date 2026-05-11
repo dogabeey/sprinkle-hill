@@ -1443,7 +1443,18 @@ namespace Game
 
                 foreach (var pos in group)
                 {
-                    if (protectedPositions != null && protectedPositions.Contains(pos)) continue;
+                    if (protectedPositions != null && protectedPositions.Contains(pos))
+                    {
+                        GridCell protectedCell = GetCell(pos);
+                        if (protectedCell?.elementInfo != null)
+                        {
+                            ElementData protectedElementData = protectedCell.elementInfo.elementData;
+                            GridElement protectedElement = GetElementAt(pos);
+                            ProcessAdjacentFeatureMatchEffects(pos, protectedCell, protectedElement, allMatchedPositions, adjacentFeatureProcessed, adjacentOffsets, glassGroupsToDamage);
+                            ProcessAdjacentWallAndHiddenEffects(pos, protectedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
+                        }
+                        continue;
+                    }
                     if (cleared.Contains(pos)) continue;
 
                     GridCell cell = GetCell(pos);
@@ -1460,28 +1471,7 @@ namespace Game
 
                     TriggerCellFeatureMatchedOverAt(pos);
 
-                    for (int i = 0; i < adjacentOffsets.Length; i++)
-                    {
-                        Vector2Int adjacentPos = pos + adjacentOffsets[i];
-                        if (!adjacentFeatureProcessed.Add(adjacentPos))
-                            continue;
-
-                        if (allMatchedPositions.Contains(adjacentPos))
-                            continue;
-
-                        GridCell adjacentCell = GetCell(adjacentPos);
-                        if (adjacentCell?.cellFeature == null)
-                            continue;
-
-                        if (adjacentCell.cellFeature is GlassFeature)
-                        {
-                            CollectGlassGroupAt(adjacentPos, glassGroupsToDamage);
-                            continue;
-                        }
-
-                        adjacentCell.cellFeature.OnElementMatchedAdjacentToTheCell(adjacentCell, cell, matchedElement);
-                        RefreshCellFeatureVisual(adjacentPos);
-                    }
+                    ProcessAdjacentFeatureMatchEffects(pos, cell, matchedElement, allMatchedPositions, adjacentFeatureProcessed, adjacentOffsets, glassGroupsToDamage);
 
                     NotifyElementCleared(pos);
                     cell.elementInfo = null;
@@ -1492,15 +1482,7 @@ namespace Game
                         else StartCoroutine(element.DestroyElement());
                     }
 
-                    foreach (Vector2Int offset in adjacentOffsets)
-                    {
-                        Vector2Int adjacentPos = pos + offset;
-                        GridCell adj = GetCell(adjacentPos);
-                        if (adj == null) continue;
-                        if (adj.cellType == CellType.BreakableWall && CanBreakWallWithElement(adj, destroyedElementData))
-                            wallsToBreak.Add(adjacentPos);
-                        if (adj.cellType == CellType.Normal && adj.elementInfo != null && adj.elementInfo.isHidden) hiddenToReveal.Add(pos + offset);
-                    }
+                    ProcessAdjacentWallAndHiddenEffects(pos, destroyedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
 
                     cleared.Add(pos);
                 }
@@ -1512,6 +1494,61 @@ namespace Game
 
             foreach (Vector2Int rp in hiddenToReveal) RevealHiddenElement(rp);
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
+        }
+
+        private void ProcessAdjacentFeatureMatchEffects(
+            Vector2Int originPos,
+            GridCell originCell,
+            GridElement originElement,
+            HashSet<Vector2Int> allMatchedPositions,
+            HashSet<Vector2Int> adjacentFeatureProcessed,
+            Vector2Int[] adjacentOffsets,
+            HashSet<GlassGroupId> glassGroupsToDamage)
+        {
+            for (int i = 0; i < adjacentOffsets.Length; i++)
+            {
+                Vector2Int adjacentPos = originPos + adjacentOffsets[i];
+                if (!adjacentFeatureProcessed.Add(adjacentPos))
+                    continue;
+
+                if (allMatchedPositions.Contains(adjacentPos))
+                    continue;
+
+                GridCell adjacentCell = GetCell(adjacentPos);
+                if (adjacentCell?.cellFeature == null)
+                    continue;
+
+                if (adjacentCell.cellFeature is GlassFeature)
+                {
+                    CollectGlassGroupAt(adjacentPos, glassGroupsToDamage);
+                    continue;
+                }
+
+                adjacentCell.cellFeature.OnElementMatchedAdjacentToTheCell(adjacentCell, originCell, originElement);
+                RefreshCellFeatureVisual(adjacentPos);
+            }
+        }
+
+        private void ProcessAdjacentWallAndHiddenEffects(
+            Vector2Int originPos,
+            ElementData destroyedElementData,
+            Vector2Int[] adjacentOffsets,
+            HashSet<Vector2Int> wallsToBreak,
+            HashSet<Vector2Int> hiddenToReveal)
+        {
+            for (int i = 0; i < adjacentOffsets.Length; i++)
+            {
+                Vector2Int adjacentPos = originPos + adjacentOffsets[i];
+                GridCell adjacentCell = GetCell(adjacentPos);
+                if (adjacentCell == null)
+                    continue;
+
+                if (adjacentCell.cellType == CellType.BreakableWall && CanBreakWallWithElement(adjacentCell, destroyedElementData))
+                    wallsToBreak.Add(adjacentPos);
+
+                if (adjacentCell.cellType == CellType.Normal && adjacentCell.elementInfo != null && adjacentCell.elementInfo.isHidden)
+                    hiddenToReveal.Add(adjacentPos);
+            }
         }
 
         private Vector2Int? FindMergeTarget(List<Vector2Int> group, HashSet<Vector2Int> protectedPositions)
