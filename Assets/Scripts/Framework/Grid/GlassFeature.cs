@@ -34,6 +34,8 @@ namespace Game
         [ShowIf(nameof(IsDamageVisualTypeSprite))]
         public List<GlassDamageSpritePair> damageSprites = new List<GlassDamageSpritePair>();
         [HideIf(nameof(IsDamageVisualTypeSprite))]
+        public Texture2D damageIndicatorTextureSheet;
+        [HideIf(nameof(IsDamageVisualTypeSprite))]
         public List<GlassDamageTilingAndOffsetPair> damageTilingAndOffsets = new List<GlassDamageTilingAndOffsetPair>();
         public override bool AcceptElements => true;
 

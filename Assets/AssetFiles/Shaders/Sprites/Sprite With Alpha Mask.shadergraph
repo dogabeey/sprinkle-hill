@@ -1932,7 +1932,7 @@
     "m_DefaultRefNameVersion": 1,
     "m_RefNameGeneratedByDisplayName": "Alpha Mask",
     "m_DefaultReferenceName": "_Alpha_Mask",
-    "m_OverrideReferenceName": "",
+    "m_OverrideReferenceName": "_MaskTexture",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
     "m_CustomSlotLabel": "",

@@ -321,26 +321,36 @@ namespace Game
                     continue;
 
                 bool hasImprisonedElement = false;
+
+                int maxHealth = ResolveGlassGroupMaxHealth(groupId, groupCells);
+                int currentHealth = ResolveGlassGroupCurrentHealth(maxHealth, groupCells);
+                int missingHealth = Mathf.Clamp(maxHealth - currentHealth, 0, maxHealth);
+
                 for (int i = 0; i < groupCells.Count; i++)
                 {
                     GridCell groupCell = GetCell(groupCells[i]);
                     if (groupCell?.elementInfo?.elementData != null)
                     {
                         hasImprisonedElement = true;
-                        break;
+                    }
+                    generatedTiles.TryGetValue(groupCells[i], out GridCellController groupCellController);
+                    if (groupId.feature.damageVisualType == DamageVisualType.TilingAndOffset)
+                    {
+                        (Vector2 tiling, Vector2 offset) = groupId.feature != null ? groupId.feature.GetDamageTilingAndOffset(missingHealth) : (Vector2.one, Vector2.zero);
+                        groupCellController.featureSprite.material.SetTexture("_MaskTexture", groupId.feature != null ? groupId.feature.damageIndicatorTextureSheet : null);
+                        groupCellController.featureSprite.drawMode = SpriteDrawMode.Tiled;
+                        groupCellController.featureSprite.material.DOTiling(tiling, "_MaskTexture", 0);
+                        groupCellController.featureSprite.material.DOOffset(offset, "_MaskTexture", 0);
                     }
                 }
 
                 if (!hasImprisonedElement)
                     continue;
+                
 
                 Vector2Int anchorPos = groupCells[0];
                 if (!generatedTiles.TryGetValue(anchorPos, out GridCellController anchorTile) || anchorTile == null || anchorTile.damageIndicator == null)
                     continue;
-
-                int maxHealth = ResolveGlassGroupMaxHealth(groupId, groupCells);
-                int currentHealth = ResolveGlassGroupCurrentHealth(maxHealth, groupCells);
-                int missingHealth = Mathf.Clamp(maxHealth - currentHealth, 0, maxHealth);
                 if(groupId.feature.damageVisualType == DamageVisualType.Sprite)
                 {
                     Sprite damageSprite = groupId.feature != null ? groupId.feature.GetDamageSprite(missingHealth) : null;
@@ -348,13 +358,6 @@ namespace Game
                         continue;
 
                     anchorTile.damageIndicator.sprite = damageSprite;
-                }
-                else
-                {
-                    (Vector2 tiling, Vector2 offset) = groupId.feature != null ? groupId.feature.GetDamageTilingAndOffset(missingHealth) : (Vector2.one, Vector2.zero);
-                    anchorTile.damageIndicator.drawMode = SpriteDrawMode.Tiled;
-                    anchorTile.damageIndicator.size = tiling;
-                    anchorTile.damageIndicator.material.mainTextureOffset = offset;
                 }
 
 
