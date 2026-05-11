@@ -32,3 +32,5 @@
 [2026-05-11 17:50:59] - Fixed GlassFeature.GetDamageSprite threshold selection to robustly resolve mask sprites by missing health with fallback to nearest configured threshold.
 [2026-05-11 18:25:11] - Fixed neighboring glass tile sprite reevaluation by refreshing feature visuals in a 3x3 area around changed cells before reapplying glass damage indicators.
 [2026-05-11 19:01:22] - Changed glass damage logic from adjacent-match triggers to gravity landing triggers: glass now damages only when an element lands in the cell directly above it after drops/refills.
+[2026-05-11 19:15:59] - Fixed post-glass-break gravity by re-running ApplyGravity when glass shatters during gravity resolution, preventing mid-air elements from persisting until next move.
+[2026-05-11 19:20:05] - Updated GlassFeature to reject elements (AcceptElements = false), preventing element occupancy and drop-through while glass is active.
