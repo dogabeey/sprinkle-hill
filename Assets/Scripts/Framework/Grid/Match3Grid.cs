@@ -215,6 +215,15 @@ namespace Game
                 CollectGlassGroupAt(center + adjacentOffsets[i], groups);
         }
 
+        private void CollectGlassGroupBelowDropTarget(Vector2Int landingPos, HashSet<GlassGroupId> groups)
+        {
+            if (groups == null)
+                return;
+
+            Vector2Int belowPos = new Vector2Int(landingPos.x, landingPos.y + 1);
+            CollectGlassGroupAt(belowPos, groups);
+        }
+
         private void RefreshCellFeatureVisual(Vector2Int pos)
         {
             if (tileGenerationData == null)
@@ -815,7 +824,6 @@ namespace Game
         public IEnumerator ClearAreaAt(Vector2Int center, int radius, bool allowConditionedBreakableWalls = true)
         {
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
-            HashSet<GlassGroupId> glassGroupsToDamage = new HashSet<GlassGroupId>();
 
             for (int x = center.x - radius; x <= center.x + radius; x++)
             {
@@ -832,15 +840,8 @@ namespace Game
                     }
                     if (cell.cellType != CellType.Normal || cell.elementInfo == null) continue;
 
-                    if (cell.cellFeature is GlassFeature)
-                    {
-                        CollectGlassGroupAt(pos, glassGroupsToDamage);
-                        continue;
-                    }
-
                     GridElement matchedElement = GetElementAt(pos);
                     TriggerCellFeatureMatchedOverAt(pos);
-                    CollectAdjacentGlassGroups(pos, glassGroupsToDamage);
                     TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
                     if (TryRevealHiddenBoxAt(pos))
@@ -868,8 +869,6 @@ namespace Game
 
             //GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is BombPlacementAction).CurrentCount--;
             yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
-
-            DamageGlassGroupsForMatch(glassGroupsToDamage);
 
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
@@ -1466,7 +1465,6 @@ namespace Game
             Vector2Int[] adjacentOffsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
             HashSet<Vector2Int> allMatchedPositions = new HashSet<Vector2Int>();
             HashSet<Vector2Int> adjacentFeatureProcessed = new HashSet<Vector2Int>();
-            HashSet<GlassGroupId> glassGroupsToDamage = new HashSet<GlassGroupId>();
 
             if (matchedPositions != null)
             {
@@ -1500,7 +1498,7 @@ namespace Game
                         {
                             ElementData protectedElementData = protectedCell.elementInfo.elementData;
                             GridElement protectedElement = GetElementAt(pos);
-                            ProcessAdjacentFeatureMatchEffects(pos, protectedCell, protectedElement, allMatchedPositions, adjacentFeatureProcessed, adjacentOffsets, glassGroupsToDamage);
+                            ProcessAdjacentFeatureMatchEffects(pos, protectedCell, protectedElement, allMatchedPositions, adjacentFeatureProcessed, adjacentOffsets);
                             ProcessAdjacentWallAndHiddenEffects(pos, protectedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
                         }
                         continue;
@@ -1513,15 +1511,11 @@ namespace Game
                     ElementData destroyedElementData = cell.elementInfo.elementData;
 
                     GridElement matchedElement = GetElementAt(pos);
-                    if (cell.cellFeature is GlassFeature)
-                    {
-                        CollectGlassGroupAt(pos, glassGroupsToDamage);
-                        continue;
-                    }
+
 
                     TriggerCellFeatureMatchedOverAt(pos);
 
-                    ProcessAdjacentFeatureMatchEffects(pos, cell, matchedElement, allMatchedPositions, adjacentFeatureProcessed, adjacentOffsets, glassGroupsToDamage);
+                    ProcessAdjacentFeatureMatchEffects(pos, cell, matchedElement, allMatchedPositions, adjacentFeatureProcessed, adjacentOffsets);
 
                     NotifyElementCleared(pos);
                     cell.elementInfo = null;
@@ -1540,8 +1534,6 @@ namespace Game
                 yield return new WaitForSeconds(cm.matchClearDelay);
             }
 
-            DamageGlassGroupsForMatch(glassGroupsToDamage);
-
             foreach (Vector2Int rp in hiddenToReveal) RevealHiddenElement(rp);
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
@@ -1552,8 +1544,7 @@ namespace Game
             GridElement originElement,
             HashSet<Vector2Int> allMatchedPositions,
             HashSet<Vector2Int> adjacentFeatureProcessed,
-            Vector2Int[] adjacentOffsets,
-            HashSet<GlassGroupId> glassGroupsToDamage)
+            Vector2Int[] adjacentOffsets)
         {
             for (int i = 0; i < adjacentOffsets.Length; i++)
             {
@@ -1567,12 +1558,6 @@ namespace Game
                 GridCell adjacentCell = GetCell(adjacentPos);
                 if (adjacentCell?.cellFeature == null)
                     continue;
-
-                if (adjacentCell.cellFeature is GlassFeature)
-                {
-                    CollectGlassGroupAt(adjacentPos, glassGroupsToDamage);
-                    continue;
-                }
 
                 adjacentCell.cellFeature.OnElementMatchedAdjacentToTheCell(adjacentCell, originCell, originElement);
                 RefreshCellFeatureVisual(adjacentPos);
@@ -1743,6 +1728,8 @@ namespace Game
         {
             EventManager.TriggerEvent(GameEvent.GRAVITY_STARTED);
 
+            HashSet<GlassGroupId> glassGroupsToDamageByDrop = new HashSet<GlassGroupId>();
+
             ConstantManager cm = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
             float fallSpeed = cm != null ? cm.elementFallSpeed : 3.3f;
 
@@ -1857,6 +1844,7 @@ namespace Game
                         {
                             readCell.elementInfo = null;
                             targetCell.elementInfo = movingInfo;
+                            CollectGlassGroupBelowDropTarget(targetPos, glassGroupsToDamageByDrop);
 
                             if (generatedTiles.TryGetValue(readPos, out GridCellController fromTile) &&
                                 generatedTiles.TryGetValue(targetPos, out GridCellController toTile) &&
@@ -1894,6 +1882,7 @@ namespace Game
                             powerUpType = ElementPowerUpType.None
                         };
                         targetCell.elementInfo = newInfo;
+                        CollectGlassGroupBelowDropTarget(targetPos, glassGroupsToDamageByDrop);
 
                         if (generatedTiles.TryGetValue(targetPos, out GridCellController targetTile) && targetTile != null)
                         {
@@ -1918,6 +1907,8 @@ namespace Game
             generatedElements.RemoveAll(el => el == null);
             if (hasTween) yield return gravitySeq.WaitForCompletion();
 
+            DamageGlassGroupsForMatch(glassGroupsToDamageByDrop);
+
             EventManager.TriggerEvent(GameEvent.GRAVITY_COMPLETED);
 
             int refilledCount = 0;
@@ -1936,8 +1927,6 @@ namespace Game
             GridCell cauldronCell = GetCell(cauldronPos);
             if (cauldronCell?.elementInfo == null || cauldronCell.elementInfo.powerUpType != ElementPowerUpType.Cauldron)
                 yield break;
-
-            HashSet<GlassGroupId> glassGroupsToDamage = new HashSet<GlassGroupId>();
 
             GridElement cauldronElement = GetElementAt(cauldronPos);
             Vector3 center = GetElementCoverageCenterWorld(cauldronPos, cauldronCell.elementInfo.elementData);
@@ -1972,14 +1961,7 @@ namespace Game
 
                     if (cell.cellType == CellType.Normal && cell.elementInfo != null)
                     {
-                        if (cell.cellFeature is GlassFeature)
-                        {
-                            CollectGlassGroupAt(pos, glassGroupsToDamage);
-                            continue;
-                        }
-
                         TriggerCellFeatureMatchedOverAt(pos);
-                        CollectAdjacentGlassGroups(pos, glassGroupsToDamage);
 
                         if (TryRevealHiddenBoxAt(pos))
                             continue;
@@ -2020,8 +2002,6 @@ namespace Game
                 clearSeq.Join(cauldronElement.transform.DOScale(0f, 0.22f).SetEase(Ease.InBack));
                 hasTween = true;
             }
-
-            DamageGlassGroupsForMatch(glassGroupsToDamage);
 
             if (hasTween)
                 yield return clearSeq.WaitForCompletion();
