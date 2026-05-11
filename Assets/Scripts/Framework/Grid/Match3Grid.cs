@@ -18,11 +18,15 @@ namespace Game
         {
             public GlassFeature feature;
             public int groupIndex;
+            public bool isGroupless;
+            public Vector2Int grouplessCell;
 
-            public GlassGroupId(GlassFeature feature, int groupIndex)
+            public GlassGroupId(GlassFeature feature, int groupIndex, bool isGroupless, Vector2Int grouplessCell)
             {
                 this.feature = feature;
                 this.groupIndex = groupIndex;
+                this.isGroupless = isGroupless;
+                this.grouplessCell = grouplessCell;
             }
 
             public override int GetHashCode()
@@ -30,7 +34,11 @@ namespace Game
                 int featureHash = feature != null ? feature.GetInstanceID() : 0;
                 unchecked
                 {
-                    return (featureHash * 397) ^ groupIndex;
+                    int hash = (featureHash * 397) ^ groupIndex;
+                    if (isGroupless)
+                        hash = (hash * 397) ^ grouplessCell.GetHashCode();
+
+                    return hash;
                 }
             }
 
@@ -39,7 +47,10 @@ namespace Game
                 if (!(obj is GlassGroupId other))
                     return false;
 
-                return feature == other.feature && groupIndex == other.groupIndex;
+                return feature == other.feature &&
+                       groupIndex == other.groupIndex &&
+                       isGroupless == other.isGroupless &&
+                       grouplessCell == other.grouplessCell;
             }
         }
 
@@ -193,7 +204,7 @@ namespace Game
         private void CollectGlassGroupAt(Vector2Int pos, HashSet<GlassGroupId> groups)
         {
             GridCell cell = GetCell(pos);
-            if (TryGetGlassGroupId(cell, out GlassGroupId groupId))
+            if (TryGetGlassGroupId(pos, cell, out GlassGroupId groupId))
                 groups.Add(groupId);
         }
 
@@ -223,11 +234,12 @@ namespace Game
             RefreshAllGlassDamageIndicators();
         }
 
-        private bool TryGetGlassGroupId(GridCell cell, out GlassGroupId id)
+        private bool TryGetGlassGroupId(Vector2Int position, GridCell cell, out GlassGroupId id)
         {
             if (cell != null && cell.cellFeature is GlassFeature glassFeature)
             {
-                id = new GlassGroupId(glassFeature, cell.cellFeatureGroupIndex);
+                bool isGroupless = cell.cellFeatureGroupIndex == 0;
+                id = new GlassGroupId(glassFeature, cell.cellFeatureGroupIndex, isGroupless, isGroupless ? position : default);
                 return true;
             }
 
@@ -245,7 +257,7 @@ namespace Game
                 {
                     Vector2Int pos = new Vector2Int(x, y);
                     GridCell cell = GetCell(pos);
-                    if (!TryGetGlassGroupId(cell, out GlassGroupId groupId))
+                    if (!TryGetGlassGroupId(pos, cell, out GlassGroupId groupId))
                         continue;
 
                     if (!groups.TryGetValue(groupId, out List<Vector2Int> positions))
@@ -302,16 +314,6 @@ namespace Game
 
         private void RefreshAllGlassDamageIndicators()
         {
-            foreach (var tile in generatedTiles.Values)
-            {
-                if (tile == null || tile.damageIndicator == null)
-                    continue;
-
-                tile.damageIndicator.enabled = false;
-                tile.damageIndicator.sprite = null;
-                ResetDamageIndicatorTransform(tile.damageIndicator);
-            }
-
             Dictionary<GlassGroupId, List<Vector2Int>> groups = BuildGlassGroups();
             foreach (var groupKvp in groups)
             {
@@ -334,13 +336,18 @@ namespace Game
                         hasImprisonedElement = true;
                     }
                     generatedTiles.TryGetValue(groupCells[i], out GridCellController groupCellController);
-                    if (groupId.feature.damageVisualType == DamageVisualType.TilingAndOffset)
+                    Sprite damageSprite = groupId.feature != null ? groupId.feature.GetDamageSprite(missingHealth) : null;
+
+                    if (groupCellController.featureSprite.TryGetComponent(out SpriteMask mask)) 
                     {
-                        (Vector2 tiling, Vector2 offset) = groupId.feature != null ? groupId.feature.GetDamageTilingAndOffset(missingHealth) : (Vector2.one, Vector2.zero);
-                        groupCellController.featureSprite.material.SetTexture("_MaskTexture", groupId.feature != null ? groupId.feature.damageIndicatorTextureSheet : null);
-                        groupCellController.featureSprite.drawMode = SpriteDrawMode.Tiled;
-                        groupCellController.featureSprite.material.DOTiling(tiling, "_MaskTexture", 0);
-                        groupCellController.featureSprite.material.DOOffset(offset, "_MaskTexture", 0);
+                        if (damageSprite != null)
+                        {
+                            mask.sprite = damageSprite;
+                        }
+                        else
+                        {
+                            mask.sprite = null;
+                        }
                     }
                 }
 
@@ -348,22 +355,6 @@ namespace Game
                     continue;
                 
 
-                Vector2Int anchorPos = groupCells[0];
-                if (!generatedTiles.TryGetValue(anchorPos, out GridCellController anchorTile) || anchorTile == null || anchorTile.damageIndicator == null)
-                    continue;
-                if(groupId.feature.damageVisualType == DamageVisualType.Sprite)
-                {
-                    Sprite damageSprite = groupId.feature != null ? groupId.feature.GetDamageSprite(missingHealth) : null;
-                    if (damageSprite == null)
-                        continue;
-
-                    anchorTile.damageIndicator.sprite = damageSprite;
-                }
-
-
-                anchorTile.damageIndicator.sortingOrder = groupId.feature.spriteLayerIndex + 1;
-                ConfigureGroupDamageIndicator(anchorTile, groupCells);
-                anchorTile.damageIndicator.enabled = true;
             }
         }
 
@@ -1210,10 +1201,10 @@ namespace Game
                     GridCell cell = GetCell(new Vector2Int(x, y));
                     NormalizeSpecialElementInfo(cell);
 
-                    if (!TryGetGlassGroupId(cell, out GlassGroupId groupId))
+                    if (!TryGetGlassGroupId(new Vector2Int(x, y), cell, out GlassGroupId groupId))
                         continue;
 
-                    int configuredHealth = cell.cellFeatureGroupHealth;
+                    int configuredHealth = cell.cellHealth;
                     if (configuredHealth <= 0)
                         configuredHealth = Mathf.Max(1, groupId.feature != null ? groupId.feature.defaultGroupHealth : 1);
 
@@ -1241,11 +1232,11 @@ namespace Game
                     if (cell != null && cell.cellType == CellType.BreakableWall)
                         cell.cellHealth = Mathf.Max(1, cell.cellHealth);
 
-                    if (!TryGetGlassGroupId(cell, out GlassGroupId groupId))
+                    if (!TryGetGlassGroupId(new Vector2Int(x, y), cell, out GlassGroupId groupId))
                         continue;
 
                     if (resolvedGroupHealth.TryGetValue(groupId, out int groupHealth))
-                        cell.cellFeatureGroupHealth = groupHealth;
+                        cell.cellHealth = groupHealth;
 
                     if (resolvedGroupMaxHealth.TryGetValue(groupId, out int groupMaxHealth))
                         cell.cellFeatureGroupMaxHealth = Mathf.Max(groupHealth, groupMaxHealth);

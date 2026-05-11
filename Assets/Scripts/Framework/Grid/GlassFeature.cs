@@ -4,11 +4,6 @@ using Sirenix.OdinInspector;
 
 namespace Game
 {
-    public enum DamageVisualType
-    {
-        Sprite,
-        TilingAndOffset
-    }
     [System.Serializable]
     public class GlassDamageSpritePair
     {
@@ -29,17 +24,9 @@ namespace Game
     [CreateAssetMenu(menuName = "Game/Cell Feature/Glass...")]
     public class GlassFeature : CellFeature
     {
-        public DamageVisualType damageVisualType = DamageVisualType.Sprite;
         [Min(1)] public int defaultGroupHealth = 1;
-        [ShowIf(nameof(IsDamageVisualTypeSprite))]
         public List<GlassDamageSpritePair> damageSprites = new List<GlassDamageSpritePair>();
-        [HideIf(nameof(IsDamageVisualTypeSprite))]
-        public Texture2D damageIndicatorTextureSheet;
-        [HideIf(nameof(IsDamageVisualTypeSprite))]
-        public List<GlassDamageTilingAndOffsetPair> damageTilingAndOffsets = new List<GlassDamageTilingAndOffsetPair>();
         public override bool AcceptElements => true;
-
-        public bool IsDamageVisualTypeSprite => damageVisualType == DamageVisualType.Sprite;
 
         public Sprite GetDamageSprite(int missingHealth)
         {
@@ -63,27 +50,6 @@ namespace Game
             }
 
             return bestSprite;
-        }
-        public (Vector2 tiling, Vector2 offset) GetDamageTilingAndOffset(int missingHealth)
-        {
-            Vector2 bestTiling = Vector2.one;
-            Vector2 bestOffset = Vector2.zero;
-            int bestMissingHealth = int.MinValue;
-            for (int i = 0; i < damageTilingAndOffsets.Count; i++)
-            {
-                GlassDamageTilingAndOffsetPair pair = damageTilingAndOffsets[i];
-                if (pair == null)
-                    continue;
-                if (pair.missingHealth > missingHealth)
-                    continue;
-                if (pair.missingHealth > bestMissingHealth)
-                {
-                    bestMissingHealth = pair.missingHealth;
-                    bestTiling = pair.tiling;
-                    bestOffset = pair.offset;
-                }
-            }
-            return (bestTiling, bestOffset);
         }
 
         public override void OnElementMatchedOverTheCell(Grid3D.GridCell cell, GridElement element)
