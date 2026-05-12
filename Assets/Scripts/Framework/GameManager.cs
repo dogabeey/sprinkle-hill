@@ -66,6 +66,8 @@ namespace Game
         public GlassFeature glassFeature;
         [FoldoutGroup("Cell Features")]
         public ElectricField electricField;
+        [FoldoutGroup("Cell Features")]
+        public LockedAreaFeature lockedAreaFeature;
         [FoldoutGroup("References")]
         public List<World> worlds;
         [FoldoutGroup("References")]

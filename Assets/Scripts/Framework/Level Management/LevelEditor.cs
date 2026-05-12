@@ -640,6 +640,15 @@ namespace Game
                             MarkDirty();
                             Event.current.Use();
                         }
+                        else if (Event.current.keyCode == KeyCode.S)
+                        {
+                            if (value.cellFeature is LockedAreaFeature)
+                                value.cellFeature = null;
+                            else
+                                value.cellFeature = GameManager.Instance.lockedAreaFeature;
+                            MarkDirty();
+                            Event.current.Use();
+                        }
                     }
                 }
             }
@@ -807,6 +816,14 @@ namespace Game
                         value.cellFeature = null;
                     else
                         value.cellFeature = GameManager.Instance.electricField;
+                    MarkDirty();
+                });
+                menu.AddItem(new GUIContent("Toggle Feature/Locked Area"), value.cellFeature is LockedAreaFeature, () =>
+                {
+                    if (value.cellFeature is LockedAreaFeature)
+                        value.cellFeature = null;
+                    else
+                        value.cellFeature = GameManager.Instance.lockedAreaFeature;
                     MarkDirty();
                 });
                 menu.ShowAsContext();
