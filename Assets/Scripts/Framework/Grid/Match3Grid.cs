@@ -1081,6 +1081,7 @@ namespace Game
                     if (cell.elementInfo.isHidden) continue;
                     if (IsGarbageBagData(cell.elementInfo.elementData)) continue;
                     if (IsCauldronCell(cell)) continue;
+                    if (HasBehavior(cell.elementInfo.elementData, ElementData.ElementBehaviorFlags.NonShuffleable)) continue;
 
                     positions.Add(pos);
                     originalInfos.Add(cell.elementInfo);
@@ -2106,6 +2107,12 @@ namespace Game
             return gm != null && data != null && gm.powerGeneratorElementData == data;
         }
 
+        private static bool IsPowerOutletData(ElementData data)
+        {
+            GameManager gm = GameManager.Instance;
+            return gm != null && data != null && gm.powerOutletElementData == data;
+        }
+
         private bool IsCauldronData(ElementData data)
         {
             GameManager gm = GameManager.Instance;
@@ -2246,14 +2253,17 @@ namespace Game
 
         private bool IsMatchableForMove(GridCell cell)
         {
+            ElementData elementData = cell?.elementInfo?.elementData;
             return cell != null &&
                    cell.cellType == CellType.Normal &&
                    !(cell.cellFeature is GlassFeature) &&
                    cell.elementInfo != null &&
-                   cell.elementInfo.elementData != null &&
-                   !IsMultiCellData(cell.elementInfo.elementData) &&
-                    !HasBehavior(cell.elementInfo.elementData, ElementData.ElementBehaviorFlags.NonMatchable) &&
-                    !HasBehavior(cell.elementInfo.elementData, ElementData.ElementBehaviorFlags.NonSwappable) &&
+                   elementData != null &&
+                   !IsPowerGeneratorData(elementData) &&
+                   !IsPowerOutletData(elementData) &&
+                   !IsMultiCellData(elementData) &&
+                    !HasBehavior(elementData, ElementData.ElementBehaviorFlags.NonMatchable) &&
+                    !HasBehavior(elementData, ElementData.ElementBehaviorFlags.NonSwappable) &&
                    !cell.elementInfo.isHidden &&
                    cell.elementInfo.powerUpType == ElementPowerUpType.None;
         }
