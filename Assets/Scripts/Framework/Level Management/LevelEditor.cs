@@ -601,6 +601,12 @@ namespace Game
                             MarkDirty();
                             Event.current.Use();
                         }
+                        else if (value.cellFeature is LockedAreaFeature)
+                        {
+                            value.cellFeatureGroupIndex = numericValue;
+                            MarkDirty();
+                            Event.current.Use();
+                        }
                         else if (value.cellType == Grid3D.CellType.BreakableWall)
                         {
                             {

@@ -512,6 +512,8 @@ namespace Game
                     objectiveType = objective.objectiveType,
                     isProcedurallyGenerated = objective.isProcedurallyGenerated,
                     autoCountRequiredCount = objective.autoCountRequiredCount,
+                    tiedToLockedArea = objective.tiedToLockedArea,
+                    lockedAreaIndex = objective.lockedAreaIndex,
                     scriptableObjectParameter = scriptableParameter,
                     requiredCount = requiredCount,
                     initialRequiredCount = requiredCount,
