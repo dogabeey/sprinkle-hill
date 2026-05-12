@@ -38,3 +38,4 @@
 [2026-05-12 02:24:20] - Created URP sprite shader Assets/Shaders/SpriteElectricFieldGlitch.shader based on SpritePulsingEmission with configurable electric glitch flow, UV distortion driven by glitch texture, flow glow, and animated static overlay.
 [2026-05-12 02:57:41] - Created URP sprite shader Assets/Shaders/SpriteElectrifiedUnstable.shader for rapid electrification effects with configurable flowing sparks, rim lightning, UV distortion, and unstable random emission flashes.
 [2026-05-12 03:08:22] - Aggressively optimized SpriteElectrifiedUnstable shader by removing high-cost multi-noise sampling paths, secondary distortion/jitter branches, and 4-tap edge sampling in favor of cheaper alpha-based rim and single-noise flow calculations.
+[2026-05-12 16:15:56] - Expanded .github/copilot-instructions.md with dedicated implementation rules and integration/self-check checklists for new cell features, cell types, and elements.

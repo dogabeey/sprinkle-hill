@@ -167,8 +167,12 @@ namespace Game
         public bool isProcedurallyGenerated;
         [Tooltip("If true, required count will start at 0 the objective will automatically increase the required count based on the creation event.")]
         public bool autoCountRequiredCount;
+        [Tooltip("If true, this objective will be shown in the UI tied to a locked area. Completing all objectives that is tied to the locked area will destroy it.")]
+        public bool tiedToLockedArea;
+        [Tooltip("The index of the locked area this objective is tied to. When all objectives with the same locked area index are completed, the locked area will be unlocked. This is only relevant if tiedToLockedArea is true.")]
+        public int lockedAreaIndex;
         [Tooltip("The scriptable object parameter associated with this objective's event. Every time the event specified in objective type is sent with this specific scriptable object, the required objective count will decreased.")]
-        [HideIf("IsProcedurallyGenerated")]
+        [HideIf(nameof(IsProcedurallyGenerated))]
         public VisualizableScriptableObject scriptableObjectParameter;
         [HideIf("IsProcedurallyGenerated")]
         public int requiredCount;
@@ -181,6 +185,10 @@ namespace Game
         bool IsProcedurallyGenerated()
         {
             return isProcedurallyGenerated;
+        }
+        bool IsTiedToLockedArea()
+        {
+            return tiedToLockedArea;
         }
 
     }

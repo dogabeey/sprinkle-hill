@@ -1,5 +1,6 @@
 using Sirenix.OdinInspector;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -26,14 +27,16 @@ namespace Game
 
     public class LockedAreaConfig
     {
+        public int lockedAreaIndex;
         public LockedAreaFeature lockedAreaReference; 
-        public List<Objective> activeObjectives;
-        public List<ObjectiveUINode> objectiveNodes = new List<ObjectiveUINode>();
 
-        public LockedAreaConfig(LockedAreaFeature lockedAreaReference, List<Objective> activeObjectives, List<ObjectiveUINode> objectiveNodes)
+        private List<ObjectiveUINode> objectiveNodes = new List<ObjectiveUINode>();
+
+        private List<Objective> activeObjectives => ObjectiveManager.Instance.activeObjectives.Where(obj => obj.tiedToLockedArea && obj.lockedAreaIndex == lockedAreaIndex).ToList();
+
+        public LockedAreaConfig(LockedAreaFeature lockedAreaReference, List<ObjectiveUINode> objectiveNodes)
         {
             this.lockedAreaReference = lockedAreaReference;
-            this.activeObjectives = activeObjectives;
             this.objectiveNodes = objectiveNodes;
             InstantiateObjectiveNodes();
         }
