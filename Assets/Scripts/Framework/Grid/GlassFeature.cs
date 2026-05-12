@@ -19,8 +19,8 @@ namespace Game
         public Vector2 offset;
     }
     /// <summary>
-    /// Glass allows elements to fall through, but blocks swaps and matching while active.
-    /// It breaks when an element is matched over or adjacent to it.
+    /// Glass breaks when an element is matched over it, and it can have different sprites based on how much health it has left. It does not accept elements, 
+    /// so elements will pass through it when they fall. It also does not trigger matches when elements fall through it, so it won't cause chain reactions. 
     /// </summary>
     [CreateAssetMenu(menuName = "Game/Cell Feature/Glass...")]
     public class GlassFeature : CellFeature

@@ -496,6 +496,7 @@ namespace Game
             public CellType cellType;
             public GridElementInfo elementInfo;
             public CellFeature cellFeature;
+            public LockedAreaConfig lockedAreaConfig;
             public ElementData breakableWallElementCondition;
             public int cellFeatureGroupIndex;
             public int cellFeatureGroupHealth;
