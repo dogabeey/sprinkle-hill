@@ -4444,13 +4444,13 @@ MonoBehaviour:
   levelCreationMode: 0
   gridSize: {x: 9, y: 9}
   objectives:
-  - objectiveType: {fileID: 11400000, guid: 5edfe890d4c826348ac28a8c1a255151, type: 2}
+  - objectiveType: {fileID: 11400000, guid: 597d5ed959f10e54eac8f874f1e6421d, type: 2}
     isProcedurallyGenerated: 0
     autoCountRequiredCount: 1
     tiedToLockedArea: 0
     lockedAreaIndex: 0
     scriptableObjectParameter: {fileID: 0}
-    requiredCount: 0
+    requiredCount: 2
     generatedCount: {x: 0, y: 0}
     isCompleted: 0
   specialWinEvent: 0
