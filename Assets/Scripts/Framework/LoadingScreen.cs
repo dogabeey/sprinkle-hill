@@ -21,6 +21,10 @@ namespace Game
         {
         }
 
+        private void Awake()
+        {
+            screenContainer.alpha = 1;
+        }
         public override void InitUI()
         {
             screenContainer.alpha = 1f;
