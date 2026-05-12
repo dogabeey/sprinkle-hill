@@ -60,9 +60,16 @@ public class UpperPanelUI : UIElement
 
     private void EnsureObjectiveNodesSynced()
     {
-        int activeCount = objectiveManager != null && objectiveManager.activeObjectives != null
-            ? objectiveManager.activeObjectives.Count
-            : 0;
+        int activeCount = 0;
+        if (objectiveManager != null && objectiveManager.activeObjectives != null)
+        {
+            for (int i = 0; i < objectiveManager.activeObjectives.Count; i++)
+            {
+                Objective objective = objectiveManager.activeObjectives[i];
+                if (objective != null && !objective.tiedToLockedArea)
+                    activeCount++;
+            }
+        }
 
         if (objectiveNodes.Count != activeCount)
         {
@@ -79,6 +86,9 @@ public class UpperPanelUI : UIElement
             return;
 
         objectiveManager.activeObjectives.ForEach(objective => {
+            if (objective == null || objective.tiedToLockedArea)
+                return;
+
             ObjectiveUINode node = Instantiate(objectiveNodePrefab, transform);
             node.Initialize(objective);
             objectiveNodes.Add(node);
@@ -100,7 +110,21 @@ public class UpperPanelUI : UIElement
 
     private void UpdateObjectivesContainerVisibility()
     {
-        if (objectiveManager.activeObjectives == null || objectiveManager.activeObjectives.Count == 0)
+        bool hasVisibleObjectives = false;
+        if (objectiveManager != null && objectiveManager.activeObjectives != null)
+        {
+            for (int i = 0; i < objectiveManager.activeObjectives.Count; i++)
+            {
+                Objective objective = objectiveManager.activeObjectives[i];
+                if (objective != null && !objective.tiedToLockedArea)
+                {
+                    hasVisibleObjectives = true;
+                    break;
+                }
+            }
+        }
+
+        if (!hasVisibleObjectives)
         {
             objectivesContainer.alpha = 0f;
         }

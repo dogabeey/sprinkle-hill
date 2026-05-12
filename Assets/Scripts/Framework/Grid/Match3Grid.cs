@@ -176,6 +176,7 @@ namespace Game
 
         public override void PostInit()
         {
+            LockedAreaFeature.InitializeForGrid(this);
             RefreshAllGlassDamageIndicators();
         }
 
@@ -251,6 +252,11 @@ namespace Game
             }
 
             RefreshAllGlassDamageIndicators();
+        }
+
+        public void RefreshCellFeatureVisualAt(Vector2Int pos)
+        {
+            RefreshCellFeatureVisual(pos);
         }
 
         private bool TryGetGlassGroupId(Vector2Int position, GridCell cell, out GlassGroupId id)
