@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e86138cdc52b534da1d96d2cbf93105, type: 3}
   m_Name: Locked Area
   m_EditorClassIdentifier: Game::Game.LockedAreaFeature
-  tileSpriteSet: {fileID: 11400000, guid: 34a38090dcc083c4eba590c0a7ae2983, type: 2}
-  featureIcon: {fileID: 0}
-  spriteLayerIndex: 0
+  tileSpriteSet: {fileID: 11400000, guid: f18223b04cef2cb4d887cc9fbf8756d7, type: 2}
+  featureIcon: {fileID: -320327708, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+  spriteLayerIndex: 10
   destroyParticleEffect: {fileID: 0}
-  objectiveNodePrefab: {fileID: 0}
-  lockedAreaCanvasParentPrefab: {fileID: 0}
+  objectiveNodePrefab: {fileID: 6249795917659776395, guid: b98a0bd0978144f409eccd31c6d39e06, type: 3}
+  lockedAreaCanvasParentPrefab: {fileID: 2514203487333984939, guid: 3f7baffc2e600c342a92fbfd2ccd3358, type: 3}

@@ -184,8 +184,9 @@ namespace Game
             GameObject canvasObj = new GameObject($"LockedAreaCanvas_{lockedAreaIndex}", typeof(RectTransform), typeof(Canvas));
             worldCanvas = canvasObj.GetComponent<Canvas>();
             worldCanvas.renderMode = RenderMode.WorldSpace;
+            worldCanvas.sortingLayerName = "Default";
             worldCanvas.worldCamera = Camera.main;
-            worldCanvas.sortingOrder = 200;
+            worldCanvas.sortingOrder = 10;
 
             RectTransform canvasRect = worldCanvas.GetComponent<RectTransform>();
             canvasRect.SetParent(grid.transform, false);

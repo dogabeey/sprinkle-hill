@@ -837,15 +837,19 @@ namespace Game
             {
                 if (value.cellFeature is WaferFeature wafer)
                 {
-                    DrawSprite(featureRect, wafer.tileSpriteSet.singleInnerTile);
+                    DrawSprite(featureRect, GameManager.Instance.waferFeature.featureIcon);
                 }
                 if (value.cellFeature is GlassFeature glass)
                 {
-                    DrawSprite(featureRect, glass.tileSpriteSet.singleInnerTile);
+                    DrawSprite(featureRect, GameManager.Instance.glassFeature.featureIcon);
                 }
                 if (value.cellFeature is ElectricField electricField)
                 {
-                    DrawSprite(featureRect, electricField.tileSpriteSet.singleInnerTile);
+                    DrawSprite(featureRect, GameManager.Instance.electricField.featureIcon);
+                }
+                if (value.cellFeature is LockedAreaFeature lockedArea)
+                {
+                    DrawSprite(featureRect, GameManager.Instance.lockedAreaFeature.featureIcon);
                 }
                 // Note: Add indicators for the future cell features here
                 // ...

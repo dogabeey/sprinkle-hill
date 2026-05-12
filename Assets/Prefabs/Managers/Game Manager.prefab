@@ -64,7 +64,11 @@ MonoBehaviour:
   - {fileID: 6648657062745475262, guid: d3e6b6ef1897a4742a3c0864df1c5ddd, type: 3}
   - {fileID: 6648657062745475262, guid: 44b98f7625dbcf4458700346bf8e0245, type: 3}
   - {fileID: 6648657062745475262, guid: aba00876d391e0943acdc4e8ee281610, type: 3}
-  excludeFirstXLevelFromLoop: 4
+  - {fileID: 6648657062745475262, guid: c6a01284eee1479418bddecf12039aaa, type: 3}
+  - {fileID: 6648657062745475262, guid: de05181d3fae9f148b8defc0180dfcc1, type: 3}
+  - {fileID: 6648657062745475262, guid: 0728eaeefc9d4214184731f15ae6e064, type: 3}
+  - {fileID: 6648657062745475262, guid: 5aba8c6389097cd4fb2fe24c36e730c9, type: 3}
+  excludeFirstXLevelFromLoop: 2
   lastPlayedLevelIndex: 0
 --- !u!1 &7722314759461277705
 GameObject:
@@ -137,6 +141,7 @@ MonoBehaviour:
   waferFeature: {fileID: 11400000, guid: 9a0a4a3b932d9dd48b6c09ede6bf2324, type: 2}
   glassFeature: {fileID: 11400000, guid: 66b5b66c4fb707c46810127020dbbb17, type: 2}
   electricField: {fileID: 11400000, guid: 533e37ef7d2d727448f260ed616b4b05, type: 2}
+  lockedAreaFeature: {fileID: 11400000, guid: 5640791a68fa34e4b8924dbee4afb003, type: 2}
   worlds:
   - {fileID: 7722314759128445691}
   levelContainer: {fileID: 0}
