@@ -15,3 +15,4 @@ MonoBehaviour:
   tileSpriteSet: {fileID: 11400000, guid: e043f04a44b9eef41b4ca32e6aadd9b9, type: 2}
   featureIcon: {fileID: 1262562994, guid: f941be62a76a51541b0868c1b6a6d8ff, type: 3}
   spriteLayerIndex: 1
+  destroyParticleEffect: {fileID: 9101700452171790528, guid: b0224005ee2bbfe4b891e72ef40c9df2, type: 3}

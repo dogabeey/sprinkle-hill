@@ -314,7 +314,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -359,7 +359,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -404,7 +404,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -449,7 +449,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -917,7 +917,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1271,7 +1271,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1316,7 +1316,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1361,7 +1361,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1406,7 +1406,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1916,7 +1916,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -1940,7 +1940,7 @@ MonoBehaviour:
       Data: 0
     - Name: cellHealth
       Entry: 3
-      Data: 1
+      Data: 3
     - Name: 
       Entry: 8
       Data: 
@@ -2291,7 +2291,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -2336,7 +2336,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -2381,7 +2381,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -2426,7 +2426,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -2936,7 +2936,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -3290,7 +3290,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -3335,7 +3335,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -3380,7 +3380,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -3425,7 +3425,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -3893,7 +3893,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -4205,7 +4205,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -4250,7 +4250,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -4295,7 +4295,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -4340,7 +4340,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 3
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -4378,7 +4378,7 @@ MonoBehaviour:
   levelCreationMode: 0
   gridSize: {x: 9, y: 9}
   objectives:
-  - objectiveType: {fileID: 11400000, guid: 5edfe890d4c826348ac28a8c1a255151, type: 2}
+  - objectiveType: {fileID: 11400000, guid: bc27c85d73dea714589531fcf14549f0, type: 2}
     isProcedurallyGenerated: 0
     autoCountRequiredCount: 1
     tiedToLockedArea: 0

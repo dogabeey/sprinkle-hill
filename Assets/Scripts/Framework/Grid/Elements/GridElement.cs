@@ -128,13 +128,10 @@ namespace Game
 
                     if (elementInfo != null && elementInfo.powerUpType != ElementPowerUpType.None)
                     {
-                        Material defaultSpriteMat = GetDefaultSpriteMaterial();
-                        if (defaultSpriteMat != null)
-                            spriteRenderer.sharedMaterial = defaultSpriteMat;
-                    }
-                    else if (visualInfo.elementMaterial != null)
-                    {
-                        spriteRenderer.sharedMaterial = visualInfo.elementMaterial;
+                        if (visualInfo.elementMaterial != null)
+                        {
+                            spriteRenderer.sharedMaterial = visualInfo.elementMaterial;
+                        }
                     }
                 }
             }

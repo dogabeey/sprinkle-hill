@@ -68,6 +68,10 @@ MonoBehaviour:
   - {fileID: 6648657062745475262, guid: de05181d3fae9f148b8defc0180dfcc1, type: 3}
   - {fileID: 6648657062745475262, guid: 0728eaeefc9d4214184731f15ae6e064, type: 3}
   - {fileID: 6648657062745475262, guid: 5aba8c6389097cd4fb2fe24c36e730c9, type: 3}
+  - {fileID: 6648657062745475262, guid: f11cebe8dc062ff4abf8d663372519f4, type: 3}
+  - {fileID: 6648657062745475262, guid: d94578f0d2357c949854c1c73901cb54, type: 3}
+  - {fileID: 6648657062745475262, guid: f856e218846691840970b9b778c8fe70, type: 3}
+  - {fileID: 6648657062745475262, guid: 92e24d3e1a3f6f4439d6e889bd06b149, type: 3}
   excludeFirstXLevelFromLoop: 2
   lastPlayedLevelIndex: 0
 --- !u!1 &7722314759461277705

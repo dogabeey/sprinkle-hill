@@ -59,6 +59,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -99,6 +102,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -143,6 +149,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -183,6 +192,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -248,6 +260,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -288,6 +303,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -353,6 +371,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -414,6 +435,9 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -479,6 +503,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -519,6 +546,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -563,6 +593,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -605,6 +638,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -645,6 +681,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -710,6 +749,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -750,6 +792,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -815,6 +860,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -876,6 +924,9 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -941,6 +992,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -981,6 +1035,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -1025,6 +1082,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1067,6 +1127,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1107,6 +1170,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -1172,6 +1238,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1212,6 +1281,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -1277,6 +1349,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1338,6 +1413,9 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -1403,6 +1481,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1443,6 +1524,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -1487,6 +1571,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1529,6 +1616,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1569,6 +1659,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -1634,6 +1727,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1674,6 +1770,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -1718,6 +1817,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1760,6 +1862,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1800,6 +1905,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -1865,6 +1973,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -1926,6 +2037,9 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -1991,6 +2105,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2052,6 +2169,9 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -2117,6 +2237,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2178,6 +2301,9 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -2243,6 +2369,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2304,6 +2433,9 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -2369,6 +2501,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2409,6 +2544,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -2453,6 +2591,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2495,6 +2636,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2535,6 +2679,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -2600,6 +2747,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2640,6 +2790,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -2684,6 +2837,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2726,6 +2882,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2766,6 +2925,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -2831,6 +2993,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 10
       Data: 0
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2894,6 +3059,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 10
       Data: 0
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2957,6 +3125,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 10
       Data: 0
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -2997,6 +3168,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -3062,6 +3236,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -3102,6 +3279,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -3167,6 +3347,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -3228,6 +3411,9 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -3293,6 +3479,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -3356,6 +3545,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 10
       Data: 0
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -3419,6 +3611,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 10
       Data: 0
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -3482,6 +3677,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 10
       Data: 0
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -3522,6 +3720,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -3587,6 +3788,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -3627,6 +3831,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -3692,6 +3899,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -3753,6 +3963,9 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -3818,6 +4031,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -3881,6 +4097,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 10
       Data: 0
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -3944,6 +4163,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 10
       Data: 0
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -4007,6 +4229,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 10
       Data: 0
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -4047,6 +4272,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -4112,6 +4340,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -4152,6 +4383,9 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -4217,6 +4451,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -4278,6 +4515,9 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
@@ -4343,6 +4583,9 @@ MonoBehaviour:
     - Name: cellFeature
       Entry: 6
       Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
     - Name: breakableWallElementCondition
       Entry: 6
       Data: 
@@ -4374,6 +4617,8 @@ MonoBehaviour:
   - objectiveType: {fileID: 11400000, guid: bc27c85d73dea714589531fcf14549f0, type: 2}
     isProcedurallyGenerated: 0
     autoCountRequiredCount: 1
+    tiedToLockedArea: 0
+    lockedAreaIndex: 0
     scriptableObjectParameter: {fileID: 0}
     requiredCount: 0
     generatedCount: {x: 0, y: 0}
@@ -4381,6 +4626,8 @@ MonoBehaviour:
   - objectiveType: {fileID: 11400000, guid: 2924a1c735ccd1f41ad2be98faceb972, type: 2}
     isProcedurallyGenerated: 0
     autoCountRequiredCount: 1
+    tiedToLockedArea: 0
+    lockedAreaIndex: 0
     scriptableObjectParameter: {fileID: 0}
     requiredCount: 0
     generatedCount: {x: 0, y: 0}
@@ -4388,6 +4635,8 @@ MonoBehaviour:
   - objectiveType: {fileID: 11400000, guid: ffc265ccfbd2b9e41a1d0dcd96099102, type: 2}
     isProcedurallyGenerated: 0
     autoCountRequiredCount: 1
+    tiedToLockedArea: 0
+    lockedAreaIndex: 0
     scriptableObjectParameter: {fileID: 0}
     requiredCount: 0
     generatedCount: {x: 0, y: 0}
