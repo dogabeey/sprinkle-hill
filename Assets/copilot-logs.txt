@@ -46,3 +46,4 @@
 [2026-05-12 17:35:02] - Fixed shuffle/move-potential detection to explicitly exclude powerGeneratorElementData and powerOutletElementData from matchable/swap-candidate checks, preventing false possible-move results and soft-locks.
 [2026-05-12 17:41:31] - Fixed board shuffle candidate selection to respect ElementBehaviorFlags.NonShuffleable so flagged elements remain fixed during shuffle.
 [2026-05-13 16:31:50] - Fixed propeller target prioritization to prefer breakable wall cells first, then hidden elements, then WaferFeature cells in PowerUpHandler.
+[2026-05-13 16:58:29] - Added ConstantManager power-up direct/indirect spawn cap fields and enforced per-type board count limits in PowerUpHandler for direct matches vs chain/indirect matches.

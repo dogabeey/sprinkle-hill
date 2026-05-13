@@ -84,6 +84,18 @@ namespace Game
         public float elementToCauldronMaxHeight = 0.75f;
         public float elementToCauldronHeightMultiplier = 0.5f;
 
+        [Header("Power-Up Spawn Limits")]
+        [Min(0)] public int maxBombCount = 3;
+        [Min(0)] public int maxBombIndirectCount = 6;
+        [Min(0)] public int maxRocketCount = 3;
+        [Min(0)] public int maxRocketIndirectCount = 6;
+        [Min(0)] public int maxPropellerCount = 3;
+        [Min(0)] public int maxPropellerIndirectCount = 6;
+        [Min(0)] public int maxDiscoBallCount = 1;
+        [Min(0)] public int maxDiscoBallIndirectCount = 2;
+        [Min(0)] public int maxCauldronCount = 1;
+        [Min(0)] public int maxCauldronIndirectCount = 1;
+
         public struct SOUNDS
         {
             public struct MUSICS

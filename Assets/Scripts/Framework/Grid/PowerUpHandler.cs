@@ -74,6 +74,7 @@ namespace Game
             public List<List<Vector2Int>> matchedGroups;
             public Vector2Int init1;
             public Vector2Int init2;
+            public bool isIndirectCreation;
             public bool allowDiscoBall;
             public bool allowPropeller;
             public bool allowBomb;
@@ -98,16 +99,70 @@ namespace Game
             SpawnResolution resolution = new SpawnResolution();
             HashSet<Vector2Int> claimedPositions = new HashSet<Vector2Int>();
 
+            ConstantManager constantManager = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
+
             for (int i = 0; i < creationStrategies.Count; i++)
             {
                 IPowerUpCreationStrategy strategy = creationStrategies[i];
                 if (!strategy.IsEnabled(context))
                     continue;
 
+                if (constantManager != null && IsCreationLimitedByCurrentCount(strategy.GetType(), context, constantManager))
+                    continue;
+
                 strategy.CollectSpawns(context, resolution, claimedPositions);
             }
 
             return resolution;
+        }
+
+        private bool IsCreationLimitedByCurrentCount(System.Type strategyType, CreationContext context, ConstantManager constantManager)
+        {
+            if (strategyType == typeof(DiscoBallCreationStrategy))
+                return GetPowerUpCount(ElementPowerUpType.DiscoBall) >= GetLimit(context.isIndirectCreation, constantManager.maxDiscoBallCount, constantManager.maxDiscoBallIndirectCount);
+
+            if (strategyType == typeof(PropellerCreationStrategy))
+                return GetPowerUpCount(ElementPowerUpType.Propeller) >= GetLimit(context.isIndirectCreation, constantManager.maxPropellerCount, constantManager.maxPropellerIndirectCount);
+
+            if (strategyType == typeof(BombCreationStrategy))
+                return GetPowerUpCount(ElementPowerUpType.Bomb) >= GetLimit(context.isIndirectCreation, constantManager.maxBombCount, constantManager.maxBombIndirectCount);
+
+            if (strategyType == typeof(RocketCreationStrategy))
+            {
+                int rocketCount = GetPowerUpCount(ElementPowerUpType.Rocket)
+                                  + GetPowerUpCount(ElementPowerUpType.HorizontalRocket)
+                                  + GetPowerUpCount(ElementPowerUpType.VerticalRocket);
+                return rocketCount >= GetLimit(context.isIndirectCreation, constantManager.maxRocketCount, constantManager.maxRocketIndirectCount);
+            }
+
+            return false;
+        }
+
+        private static int GetLimit(bool isIndirectCreation, int directLimit, int indirectLimit)
+        {
+            return Mathf.Max(0, isIndirectCreation ? indirectLimit : directLimit);
+        }
+
+        private int GetPowerUpCount(ElementPowerUpType powerUpType)
+        {
+            int count = 0;
+            for (int x = 0; x < grid.GridSize.x; x++)
+            {
+                for (int y = 0; y < grid.GridSize.y; y++)
+                {
+                    Grid3D.GridCell cell = grid.GetCellPublic(new Vector2Int(x, y));
+                    if (cell == null || cell.cellType != Grid3D.CellType.Normal)
+                        continue;
+
+                    if (cell.elementInfo == null)
+                        continue;
+
+                    if (cell.elementInfo.powerUpType == powerUpType)
+                        count++;
+                }
+            }
+
+            return count;
         }
 
         public List<SpawnRequest> FindBombSpawns(List<List<Vector2Int>> matchedGroups, Vector2Int init1, Vector2Int init2, HashSet<Vector2Int> claimedPositions = null)
