@@ -255,6 +255,9 @@ namespace Game
         }
         private void OnDestroy()
         {
+            if (transform != null)
+                transform.DOKill();
+
             UnityEngine.Debug.Log(
                 $"DESTROYED: {GetType().Name}\n{new StackTrace()}");
         }

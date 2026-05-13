@@ -754,6 +754,7 @@ namespace Game
             }
             else
             {
+                RunOccupancySanityPass();
                 TriggerGridSettledEvents();
             }
         }
@@ -815,6 +816,7 @@ namespace Game
                 yield return StartCoroutine(ApplyGravity());
             }
 
+            RunOccupancySanityPass();
             TriggerGridSettledEvents();
         }
 
@@ -1932,6 +1934,8 @@ namespace Game
                 yield break;
             }
 
+            RunOccupancySanityPass();
+
             EventManager.TriggerEvent(GameEvent.GRAVITY_COMPLETED);
 
             int refilledCount = 0;
@@ -1943,6 +1947,101 @@ namespace Game
                 }
             if (refilledCount > 0)
                 EventManager.TriggerEvent(GameEvent.ELEMENTS_REFILLED, new EventParam(paramInt: refilledCount));
+        }
+
+        private void RunOccupancySanityPass()
+        {
+            EnsureGridCells();
+            generatedElements.RemoveAll(e => e == null);
+
+            HashSet<GridElement> validElements = new HashSet<GridElement>();
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    GridCell cell = GetCell(pos);
+                    if (cell == null || !generatedTiles.TryGetValue(pos, out GridCellController tile) || tile == null)
+                        continue;
+
+                    bool acceptsElements = cell.cellFeature == null || cell.cellFeature.AcceptElements;
+                    bool shouldHaveElement = cell.cellType == CellType.Normal && acceptsElements && cell.elementInfo?.elementData != null;
+
+                    GridElement[] tileElements = tile.GetComponentsInChildren<GridElement>(true);
+                    GridElement selected = null;
+
+                    for (int i = 0; i < tileElements.Length; i++)
+                    {
+                        GridElement element = tileElements[i];
+                        if (element == null)
+                            continue;
+
+                        if (selected == null)
+                        {
+                            selected = element;
+                            continue;
+                        }
+
+                        element.transform.DOKill();
+                        generatedElements.Remove(element);
+                        Destroy(element.gameObject);
+                    }
+
+                    if (!shouldHaveElement)
+                    {
+                        if (selected != null)
+                        {
+                            selected.transform.DOKill();
+                            generatedElements.Remove(selected);
+                            Destroy(selected.gameObject);
+                        }
+
+                        continue;
+                    }
+
+                    if (selected == null)
+                    {
+                        GridElement created = Instantiate(gridElementPrefab, tile.transform.position, Quaternion.identity, tile.transform);
+                        created.elementInfo = cell.elementInfo;
+                        created.InitElement(this, cell.elementInfo);
+                        generatedElements.Add(created);
+                        validElements.Add(created);
+                        continue;
+                    }
+
+                    selected.transform.DOKill();
+                    selected.transform.SetParent(tile.transform, true);
+
+                    if (selected.elementInfo != cell.elementInfo)
+                    {
+                        selected.elementInfo = cell.elementInfo;
+                        selected.InitElement(this, cell.elementInfo);
+                    }
+
+                    if (!generatedElements.Contains(selected))
+                        generatedElements.Add(selected);
+
+                    validElements.Add(selected);
+                }
+            }
+
+            for (int i = generatedElements.Count - 1; i >= 0; i--)
+            {
+                GridElement element = generatedElements[i];
+                if (element == null)
+                {
+                    generatedElements.RemoveAt(i);
+                    continue;
+                }
+
+                if (validElements.Contains(element))
+                    continue;
+
+                element.transform.DOKill();
+                Destroy(element.gameObject);
+                generatedElements.RemoveAt(i);
+            }
         }
 
         public IEnumerator TriggerCauldronExplosion(Vector2Int cauldronPos)

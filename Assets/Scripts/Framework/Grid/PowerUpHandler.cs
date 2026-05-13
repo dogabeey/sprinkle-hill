@@ -13,6 +13,7 @@ namespace Game
     {
         private readonly Match3Grid grid;
         private const int SortingOrderBoost = 200;
+        private readonly HashSet<Vector2Int> activatingPowerUpPositions = new HashSet<Vector2Int>();
         private readonly Dictionary<ElementPowerUpType, IPowerUpActivationStrategy> activationStrategies;
         private readonly List<IPowerUpCreationStrategy> creationStrategies;
 
@@ -527,12 +528,22 @@ namespace Game
 
         public IEnumerator ActivateAt(Vector2Int pos, ElementData swappedElementData)
         {
-            Grid3D.GridCell cell = grid.GetCellPublic(pos);
-            ElementPowerUpType type = cell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
-            if (!activationStrategies.TryGetValue(type, out IPowerUpActivationStrategy strategy))
+            if (!activatingPowerUpPositions.Add(pos))
                 yield break;
 
-            yield return grid.StartCoroutine(strategy.Activate(pos, swappedElementData));
+            Grid3D.GridCell cell = grid.GetCellPublic(pos);
+            ElementPowerUpType type = cell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
+            try
+            {
+                if (!activationStrategies.TryGetValue(type, out IPowerUpActivationStrategy strategy))
+                    yield break;
+
+                yield return grid.StartCoroutine(strategy.Activate(pos, swappedElementData));
+            }
+            finally
+            {
+                activatingPowerUpPositions.Remove(pos);
+            }
         }
 
         private interface IPowerUpActivationStrategy
@@ -880,7 +891,9 @@ namespace Game
 
             PlayEffect(ConstantManager.SOUNDS.EFFECTS.DISCO_BALL_TRAIL, volumeMultiplier: 0.75f, pitchOffset: Mathf.Clamp(trailIndex * 0.01f, 0f, 0.12f));
 
-            yield return trailObj.transform.DOMove(targetWorldPos, cm.discoBallTrailDuration).SetEase(Ease.OutQuad).WaitForCompletion();
+            Tween trailTween = trailObj.transform.DOMove(targetWorldPos, cm.discoBallTrailDuration).SetEase(Ease.OutQuad);
+            if (trailTween != null && trailTween.active)
+                yield return trailTween.WaitForCompletion();
 
             Grid3D.GridCell cell = grid.GetCellPublic(targetPos);
             if (cell?.elementInfo != null)
@@ -1203,6 +1216,9 @@ namespace Game
         {
             if (bombElement == null) yield break;
             Transform t = bombElement.transform;
+            if (t == null)
+                yield break;
+
             Vector3 start = t.position;
             float duration = Mathf.Max(0.25f, GameManager.Instance.constantManager.elementSwapMoveDuration * 2f);
 
@@ -1213,7 +1229,8 @@ namespace Game
             seq.Join(t.DOPath(path, duration, PathType.CatmullRom).SetEase(Ease.OutQuad).SetOptions(false));
             seq.Join(t.DORotate(new Vector3(0f, 0f, 540f), duration, RotateMode.FastBeyond360).SetEase(Ease.Linear).SetRelative());
             seq.Join(t.DOScale(1.18f, duration * 0.45f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutSine));
-            yield return seq.WaitForCompletion();
+            if (seq != null && seq.active)
+                yield return seq.WaitForCompletion();
         }
 
         private void PlayBombImpactEffects(Vector3 impactPos)

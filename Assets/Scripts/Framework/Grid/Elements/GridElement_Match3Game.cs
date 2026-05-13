@@ -82,6 +82,9 @@ namespace Game
 
         public override IEnumerator DestroyElement()
         {
+            if (this == null || transform == null)
+                yield break;
+
             transform.DOKill();
 
             Collider[] colliders = GetComponentsInChildren<Collider>();
@@ -103,16 +106,18 @@ namespace Game
             EventManager.TriggerEvent(GameEvent.ELEMENT_DESTROYED,
                 eventParam: new EventParam(paramScriptable: elementInfo != null ? elementInfo.elementData : null));
 
-            yield return destroyTween.WaitForCompletion();
+            if (destroyTween != null && destroyTween.active)
+                yield return destroyTween.WaitForCompletion();
 
-            if (constantManager != null && constantManager.elementDestroyParticlePrefab != null && transform != null)
+            if (this != null && constantManager != null && constantManager.elementDestroyParticlePrefab != null && transform != null)
             {
                 ParticleSystem destroyParticle = Instantiate(constantManager.elementDestroyParticlePrefab, transform.position, Quaternion.identity);
                 destroyParticle.Play();
                 Destroy(destroyParticle.gameObject, destroyParticle.main.duration + destroyParticle.main.startLifetime.constantMax + 0.2f);
             }
 
-            Destroy(gameObject);
+            if (this != null)
+                Destroy(gameObject);
         }
     }
 }
