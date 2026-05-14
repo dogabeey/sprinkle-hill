@@ -887,6 +887,124 @@ namespace Game
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
 
+        public IEnumerator ClearColumnAt(int columnX, bool allowConditionedBreakableWalls = true)
+        {
+            if (columnX < 0 || columnX >= gridSize.x)
+                yield break;
+
+            HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
+
+            for (int y = 0; y < gridSize.y; y++)
+            {
+                Vector2Int pos = new Vector2Int(columnX, y);
+                GridCell cell = GetCell(pos);
+                if (cell == null)
+                    continue;
+
+                if (cell.cellType == CellType.BreakableWall)
+                {
+                    if (allowConditionedBreakableWalls || cell.breakableWallElementCondition == null)
+                        wallsToBreak.Add(pos);
+                    continue;
+                }
+
+                if (cell.cellType != CellType.Normal || cell.elementInfo == null)
+                    continue;
+
+                GridElement matchedElement = GetElementAt(pos);
+                TriggerCellFeatureMatchedOverAt(pos);
+                TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+
+                if (TryRevealHiddenBoxAt(pos))
+                    continue;
+
+                if (IsGarbageBagData(cell.elementInfo.elementData))
+                    continue;
+
+                if (IsPowerGeneratorData(cell.elementInfo.elementData))
+                    continue;
+
+                if (PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType))
+                {
+                    StartCoroutine(powerUpHandler.ActivateAt(pos, null));
+                    continue;
+                }
+
+                if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron)
+                    continue;
+
+                NotifyElementCleared(pos);
+                cell.elementInfo = null;
+                if (matchedElement != null)
+                    StartCoroutine(matchedElement.DestroyElement());
+            }
+
+            yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
+            yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
+        }
+
+        public IEnumerator ClearCrossAt(Vector2Int center, bool allowConditionedBreakableWalls = true)
+        {
+            Vector2Int[] offsets =
+            {
+                Vector2Int.zero,
+                Vector2Int.left,
+                Vector2Int.right,
+                Vector2Int.up,
+                Vector2Int.down
+            };
+
+            HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
+
+            for (int i = 0; i < offsets.Length; i++)
+            {
+                Vector2Int pos = center + offsets[i];
+                GridCell cell = GetCell(pos);
+                if (cell == null)
+                    continue;
+
+                if (cell.cellType == CellType.BreakableWall)
+                {
+                    if (allowConditionedBreakableWalls || cell.breakableWallElementCondition == null)
+                        wallsToBreak.Add(pos);
+                    continue;
+                }
+
+                if (cell.cellType != CellType.Normal || cell.elementInfo == null)
+                    continue;
+
+                GridElement matchedElement = GetElementAt(pos);
+                TriggerCellFeatureMatchedOverAt(pos);
+                TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+
+                if (TryRevealHiddenBoxAt(pos))
+                    continue;
+
+                if (IsGarbageBagData(cell.elementInfo.elementData))
+                    continue;
+
+                if (IsPowerGeneratorData(cell.elementInfo.elementData))
+                    continue;
+
+                if (PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType))
+                {
+                    StartCoroutine(powerUpHandler.ActivateAt(pos, null));
+                    continue;
+                }
+
+                if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron)
+                    continue;
+
+                NotifyElementCleared(pos);
+                cell.elementInfo = null;
+                if (matchedElement != null)
+                    StartCoroutine(matchedElement.DestroyElement());
+            }
+
+            yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
+            yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
+        }
+
         // ------------------------------------------------------------------
         //  Bomb target selection
         // ------------------------------------------------------------------

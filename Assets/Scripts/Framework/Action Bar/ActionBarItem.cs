@@ -389,4 +389,70 @@ namespace Game
             return UnityEngine.Object.FindObjectOfType<Match3GridInputController>();
         }
     }
+
+    [Serializable]
+    public class CannonAction : BonusPremiumAction
+    {
+        public override string ItemName => "Cannon";
+        public override string ItemDescription => "Destroys the entire column of the clicked cell.";
+        public override Sprite ActionBarIcon => GameManager.Instance != null && GameManager.Instance.gfxManager != null
+            ? GameManager.Instance.gfxManager.rocketElementIcon
+            : null;
+        public override CurrencyModel CostCurrency => GameManager.Instance.premiumCurrency;
+        public override ParticleSystem ActionSuccessParticle => null;
+        public override float BaseCost => 0;
+        public override float CostIncrement => 0;
+        public override float CostAcceleration => 0;
+        public override string VisibilityExplanation => "";
+        public override string ClickabilityExplanation => "";
+        public override string AvailabilityExplanation => $"Level {unlockedLevel}";
+
+        public override bool IsVisible() => true;
+
+        public override void OnClick()
+        {
+            Match3GridInputController inputController = GetInputController();
+            if (inputController == null) return;
+
+            inputController.BeginCannonPlacement();
+        }
+
+        private Match3GridInputController GetInputController()
+        {
+            return UnityEngine.Object.FindObjectOfType<Match3GridInputController>();
+        }
+    }
+
+    [Serializable]
+    public class HammerAction : BonusPremiumAction
+    {
+        public override string ItemName => "Hammer";
+        public override string ItemDescription => "Destroys the clicked cell and adjacent orthogonal cells.";
+        public override Sprite ActionBarIcon => GameManager.Instance != null && GameManager.Instance.gfxManager != null
+            ? GameManager.Instance.gfxManager.bombElementIcon
+            : null;
+        public override CurrencyModel CostCurrency => GameManager.Instance.premiumCurrency;
+        public override ParticleSystem ActionSuccessParticle => null;
+        public override float BaseCost => 0;
+        public override float CostIncrement => 0;
+        public override float CostAcceleration => 0;
+        public override string VisibilityExplanation => "";
+        public override string ClickabilityExplanation => "";
+        public override string AvailabilityExplanation => $"Level {unlockedLevel}";
+
+        public override bool IsVisible() => true;
+
+        public override void OnClick()
+        {
+            Match3GridInputController inputController = GetInputController();
+            if (inputController == null) return;
+
+            inputController.BeginHammerPlacement();
+        }
+
+        private Match3GridInputController GetInputController()
+        {
+            return UnityEngine.Object.FindObjectOfType<Match3GridInputController>();
+        }
+    }
 }

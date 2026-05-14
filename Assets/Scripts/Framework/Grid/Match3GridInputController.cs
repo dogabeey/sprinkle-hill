@@ -36,7 +36,9 @@ namespace Game
             None,
             Bomb,
             DiscoBall,
-            Rocket
+            Rocket,
+            Cannon,
+            Hammer
         }
 
         private static bool HasBehavior(GridCell cell, ElementData.ElementBehaviorFlags flag)
@@ -382,6 +384,18 @@ namespace Game
             isPlacementReady = false;
         }
 
+        public void BeginCannonPlacement()
+        {
+            pendingPlacementAction = PendingPlacementAction.Cannon;
+            isPlacementReady = false;
+        }
+
+        public void BeginHammerPlacement()
+        {
+            pendingPlacementAction = PendingPlacementAction.Hammer;
+            isPlacementReady = false;
+        }
+
         private void TryPlacePendingAction()
         {
             Camera cam = inputCamera != null ? inputCamera : Camera.main;
@@ -422,6 +436,14 @@ namespace Game
             {
                 StartCoroutine(RocketPlacementRoutine(cell.Coordinates));
             }
+            else if (actionToPlace == PendingPlacementAction.Cannon)
+            {
+                StartCoroutine(CannonPlacementRoutine(cell.Coordinates));
+            }
+            else if (actionToPlace == PendingPlacementAction.Hammer)
+            {
+                StartCoroutine(HammerPlacementRoutine(cell.Coordinates));
+            }
         }
 
         private IEnumerator BombPlacementRoutine(Vector2Int center)
@@ -440,6 +462,48 @@ namespace Game
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: "Bomb Placement"));
             yield return StartCoroutine(match3Grid.ClearAreaAt(center, 1, false));
             yield return StartCoroutine(match3Grid.ApplyGravityPublic());
+            isProcessing = false;
+            idleTimer = 0f;
+        }
+
+        private IEnumerator HammerPlacementRoutine(Vector2Int center)
+        {
+            ClearHintVisuals();
+            isProcessing = true;
+
+            HammerAction hammerAction = GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is HammerAction) as HammerAction;
+            if (hammerAction == null)
+            {
+                isProcessing = false;
+                yield break;
+            }
+
+            hammerAction.CurrentCount--;
+            EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: hammerAction.ItemName));
+            yield return StartCoroutine(match3Grid.ClearCrossAt(center, false));
+            yield return StartCoroutine(match3Grid.ApplyGravityPublic());
+
+            isProcessing = false;
+            idleTimer = 0f;
+        }
+
+        private IEnumerator CannonPlacementRoutine(Vector2Int center)
+        {
+            ClearHintVisuals();
+            isProcessing = true;
+
+            CannonAction cannonAction = GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is CannonAction) as CannonAction;
+            if (cannonAction == null)
+            {
+                isProcessing = false;
+                yield break;
+            }
+
+            cannonAction.CurrentCount--;
+            EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: cannonAction.ItemName));
+            yield return StartCoroutine(match3Grid.ClearColumnAt(center.x, false));
+            yield return StartCoroutine(match3Grid.ApplyGravityPublic());
+
             isProcessing = false;
             idleTimer = 0f;
         }
