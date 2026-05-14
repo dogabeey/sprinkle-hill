@@ -50,3 +50,4 @@
 [2026-05-13 16:31:50] - Fixed propeller target prioritization to prefer breakable wall cells first, then hidden elements, then WaferFeature cells in PowerUpHandler.
 [2026-05-13 16:58:29] - Added ConstantManager power-up direct/indirect spawn cap fields and enforced per-type board count limits in PowerUpHandler for direct matches vs chain/indirect matches.
 [2026-05-14 02:21:03] - Updated Disco Ball random target selection to skip elements flagged NonShuffleable or NonSwappable so they are not converted.
+[2026-05-14 23:26:07] - Added SpriteRandomSpritesheet URP shader with Tiles and Animation Speed properties that randomly selects spritesheet frames over time.
