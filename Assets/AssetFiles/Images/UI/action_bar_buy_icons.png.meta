@@ -97,7 +97,7 @@ TextureImporter:
     buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: 50
+    textureFormat: 65
     textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
@@ -123,11 +123,11 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: action_bar_buy_icons_0
+      name: action_bar_buy_icons_time_1
       rect:
         serializedVersion: 2
         x: 0
-        y: 768
+        y: 1792
         width: 256
         height: 256
       alignment: 0
@@ -145,11 +145,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: action_bar_buy_icons_1
+      name: action_bar_buy_icons_time_2
       rect:
         serializedVersion: 2
         x: 256
-        y: 768
+        y: 1792
         width: 256
         height: 256
       alignment: 0
@@ -167,11 +167,11 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: action_bar_buy_icons_2
+      name: action_bar_buy_icons_time_3
       rect:
         serializedVersion: 2
         x: 512
-        y: 768
+        y: 1792
         width: 256
         height: 256
       alignment: 0
@@ -184,6 +184,204 @@ TextureImporter:
       bones: []
       spriteID: db7ccb9f4b4393f4da520413ed915c95
       internalID: 939076426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: action_bar_buy_icons_shuffle_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1536
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66fc5005cd5fbe14e8bca95cf3ff738d
+      internalID: -482402101
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: action_bar_buy_icons_shuffle_2
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1536
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0a28963c6f54c37408f9e8dcce1848a9
+      internalID: 136029994
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: action_bar_buy_icons_shuffle_3
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1536
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 826f77905af3bde43abd8dd7275bdcd3
+      internalID: -1060796528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: action_bar_buy_icons_hammer_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1280
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d44caeaba4db36f46ab35c9d42cf4025
+      internalID: -400374839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: action_bar_buy_icons_hammer_2
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1280
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f76a0b18f7e70bd49a9708fed447f660
+      internalID: -1054736132
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: action_bar_buy_icons_hammer_3
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1280
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd371ae42eec4484ea899ab2e179f99e
+      internalID: -571819677
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: action_bar_buy_icons_cannon_1
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1024
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e3274bf168891244bb7d8cdb2bb59388
+      internalID: 1206983405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: action_bar_buy_icons_cannon_2
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1024
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 97c43a66de7f50f42bc3052213844435
+      internalID: -955304093
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: action_bar_buy_icons_cannon_3
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1024
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a72d3183fa755f84fb2e985b1abf99f8
+      internalID: 1382202287
       vertices: []
       indices: 
       edges: []
@@ -202,11 +400,20 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":256.0,"y":256.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":256.0,"y":256.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":1,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      action_bar_buy_icons_0: 1515371514
-      action_bar_buy_icons_1: 955988023
-      action_bar_buy_icons_2: 939076426
+      action_bar_buy_icons_cannon_1: 1206983405
+      action_bar_buy_icons_cannon_2: -955304093
+      action_bar_buy_icons_cannon_3: 1382202287
+      action_bar_buy_icons_hammer_1: -400374839
+      action_bar_buy_icons_hammer_2: -1054736132
+      action_bar_buy_icons_hammer_3: -571819677
+      action_bar_buy_icons_shuffle_1: -482402101
+      action_bar_buy_icons_shuffle_2: 136029994
+      action_bar_buy_icons_shuffle_3: -1060796528
+      action_bar_buy_icons_time_1: 1515371514
+      action_bar_buy_icons_time_2: 955988023
+      action_bar_buy_icons_time_3: 939076426
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
