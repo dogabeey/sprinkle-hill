@@ -60,26 +60,41 @@ MonoBehaviour:
       type: {class: AddTimeAction, ns: Game, asm: Game}
       data:
         startingCount: 3
+        ActionBarIcon: {fileID: -238066524, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+        buyConfig: []
         unlockedLevel: 3
+        buyCost: 50
         addedTime: 30
     - rid: 1021877479918010547
       type: {class: AddMovesAction, ns: Game, asm: Game}
       data:
         startingCount: 3
+        ActionBarIcon: {fileID: 1175953842, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+        buyConfig: []
         unlockedLevel: 3
+        buyCost: 50
         addedMoves: 5
     - rid: 1021877479918010548
       type: {class: BombPlacementAction, ns: Game, asm: Game}
       data:
         startingCount: 0
+        ActionBarIcon: {fileID: 0}
+        buyConfig: []
         unlockedLevel: 6
+        buyCost: 50
     - rid: 1021877479918010549
       type: {class: PlaceDiscoBallAction, ns: Game, asm: Game}
       data:
         startingCount: 0
+        ActionBarIcon: {fileID: 0}
+        buyConfig: []
         unlockedLevel: 9
+        buyCost: 50
     - rid: 1021877479918010550
       type: {class: PlaceRocketAction, ns: Game, asm: Game}
       data:
         startingCount: 0
+        ActionBarIcon: {fileID: 0}
+        buyConfig: []
         unlockedLevel: 12
+        buyCost: 50

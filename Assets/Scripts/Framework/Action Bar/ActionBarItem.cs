@@ -18,7 +18,6 @@ namespace Game
     {
         public abstract string ItemName { get; }
         public abstract string ItemDescription { get; }
-        public abstract Sprite ActionBarIcon { get; }
         public abstract CurrencyModel CostCurrency { get; }
         public abstract ParticleSystem ActionSuccessParticle { get; }
         public int startingCount; // This is only used for the first time the player gets this action. After that, the count will be saved in PlayerPrefs and this value will not be used anymore. This is useful for testing and debugging.
@@ -40,8 +39,8 @@ namespace Game
             set => PlayerPrefs.SetInt(ItemName + "_count", value);
         }
 
+        public Sprite ActionBarIcon;
         public List<IBuyable.BuyBundle> buyConfig;
-
         public List<IBuyable.BuyBundle> BuyConfig => buyConfig;
         public int[] BuyChoices => new int[] { 1, 5, 25 };
 
@@ -133,8 +132,6 @@ namespace Game
         public override string ClickabilityExplanation => "";
         public override string AvailabilityExplanation => $"Level {unlockedLevel}";
 
-        public override Sprite ActionBarIcon => GameManager.Instance.gfxManager.addTimeIcon;
-
         public override CurrencyModel CostCurrency => GameManager.Instance.cashCurrency;
 
         public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.addTimePowerupTrailParticlePrefab;
@@ -190,7 +187,6 @@ namespace Game
         public override string VisibilityExplanation => "";
         public override string ClickabilityExplanation => "";
         public override string AvailabilityExplanation => $"Level {unlockedLevel}";
-        public override Sprite ActionBarIcon => GameManager.Instance.gfxManager.addMovesIcon;
         public override CurrencyModel CostCurrency => GameManager.Instance.cashCurrency;
         public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.addMovesPowerupTrailParticlePrefab;
         public override bool IsVisible()
@@ -227,7 +223,6 @@ namespace Game
 
         public override string ItemName => "Shuffle";
         public override string ItemDescription => "Shuffles the board.";
-        public override Sprite ActionBarIcon => GameManager.Instance.gfxManager.shuffleActionIcon;
         public override CurrencyModel CostCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.shufflePowerupTrailParticlePrefab;
         public override float BaseCost => 0;
@@ -275,7 +270,6 @@ namespace Game
     {
         public override string ItemName => "Bomb Placement";
         public override string ItemDescription => "Places a bomb on the board, then detonates it.";
-        public override Sprite ActionBarIcon => GameManager.Instance.gfxManager.bombElementIcon;
         public override CurrencyModel CostCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.bombPowerupTrailParticlePrefab;
         public override float BaseCost => 0;
@@ -316,7 +310,6 @@ namespace Game
     {
         public override string ItemName => "Place Disco Ball";
         public override string ItemDescription => "Places a disco ball on the board.";
-        public override Sprite ActionBarIcon => GameManager.Instance.gfxManager.discoBallElementIcon;
         public override CurrencyModel CostCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.discoBallPowerupTrailParticlePrefab;
         public override float BaseCost => 0;
@@ -356,7 +349,6 @@ namespace Game
     {
         public override string ItemName => "Place Rocket";
         public override string ItemDescription => "Places a rocket on the board";
-        public override Sprite ActionBarIcon => GameManager.Instance.gfxManager.rocketElementIcon;
         public override CurrencyModel CostCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.rocketPowerupTrailParticlePrefab;
         public override float BaseCost => 0;
@@ -395,9 +387,6 @@ namespace Game
     {
         public override string ItemName => "Cannon";
         public override string ItemDescription => "Destroys the entire column of the clicked cell.";
-        public override Sprite ActionBarIcon => GameManager.Instance != null && GameManager.Instance.gfxManager != null
-            ? GameManager.Instance.gfxManager.rocketElementIcon
-            : null;
         public override CurrencyModel CostCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem ActionSuccessParticle => null;
         public override float BaseCost => 0;
@@ -428,9 +417,6 @@ namespace Game
     {
         public override string ItemName => "Hammer";
         public override string ItemDescription => "Destroys the clicked cell and adjacent orthogonal cells.";
-        public override Sprite ActionBarIcon => GameManager.Instance != null && GameManager.Instance.gfxManager != null
-            ? GameManager.Instance.gfxManager.bombElementIcon
-            : null;
         public override CurrencyModel CostCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem ActionSuccessParticle => null;
         public override float BaseCost => 0;

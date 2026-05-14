@@ -10135,15 +10135,15 @@ PrefabInstance:
       objectReference: {fileID: 66476413}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: 'actionBarItemList.Array.data[0]'
-      value: 1021877479918010549
+      value: 1021877643594432513
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: 'actionBarItemList.Array.data[1]'
-      value: 1021877479918010548
+      value: 1021877643594432512
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: 'actionBarItemList.Array.data[2]'
-      value: 1021877479918010550
+      value: 1021877643594432514
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: 'actionBarItemList.Array.data[3]'
@@ -10154,12 +10154,40 @@ PrefabInstance:
       value: 1021877479918010546
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
-      propertyPath: managedReferences[1021877479918010546].unlockedLevel
-      value: 999
+      propertyPath: 'managedReferences[1021877643594432512]'
+      value: Game Game.HammerAction
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: 'managedReferences[1021877643594432513]'
+      value: Game Game.CannonAction
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: 'managedReferences[1021877643594432514]'
+      value: Game Game.ShuffleAction
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].buyCost
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].buyCost
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432514].buyCost
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010546].unlockedLevel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010547].ActionBarIcon
+      value: 
+      objectReference: {fileID: 177486326, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877479918010547].unlockedLevel
-      value: 999
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877479918010548].unlockedLevel
@@ -10174,11 +10202,59 @@ PrefabInstance:
       value: 999
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].ActionBarIcon
+      value: 
+      objectReference: {fileID: -1379819299, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].startingCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].unlockedLevel
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].ActionBarIcon
+      value: 
+      objectReference: {fileID: 1334718345, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].startingCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].unlockedLevel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432514].ActionBarIcon
+      value: 
+      objectReference: {fileID: 1175953842, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432514].startingCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432514].unlockedLevel
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877479918010546].buyConfig.Array.size
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877479918010547].buyConfig.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].buyConfig.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].buyConfig.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432514].buyConfig.Array.size
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
@@ -10206,6 +10282,42 @@ PrefabInstance:
       value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].buyConfig.Array.data[0].buyCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].buyConfig.Array.data[1].buyCount
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].buyConfig.Array.data[2].buyCount
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].buyConfig.Array.data[0].buyCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].buyConfig.Array.data[1].buyCount
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].buyConfig.Array.data[2].buyCount
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432514].buyConfig.Array.data[0].buyCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432514].buyConfig.Array.data[1].buyCount
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432514].buyConfig.Array.data[2].buyCount
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877479918010546].buyConfig.Array.data[0].BuySprite
       value: 
       objectReference: {fileID: 1515371514, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
@@ -10230,6 +10342,42 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 939076426, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].buyConfig.Array.data[0].BuySprite
+      value: 
+      objectReference: {fileID: -400374839, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].buyConfig.Array.data[1].BuySprite
+      value: 
+      objectReference: {fileID: -1054736132, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].buyConfig.Array.data[2].BuySprite
+      value: 
+      objectReference: {fileID: -571819677, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].buyConfig.Array.data[0].BuySprite
+      value: 
+      objectReference: {fileID: 1206983405, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].buyConfig.Array.data[1].BuySprite
+      value: 
+      objectReference: {fileID: -955304093, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].buyConfig.Array.data[2].BuySprite
+      value: 
+      objectReference: {fileID: 1382202287, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432514].buyConfig.Array.data[0].BuySprite
+      value: 
+      objectReference: {fileID: -482402101, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432514].buyConfig.Array.data[1].BuySprite
+      value: 
+      objectReference: {fileID: 136029994, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432514].buyConfig.Array.data[2].BuySprite
+      value: 
+      objectReference: {fileID: -1060796528, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877479918010546].buyConfig.Array.data[1].discountPercentage
       value: 0.1
       objectReference: {fileID: 0}
@@ -10243,6 +10391,42 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877479918010547].buyConfig.Array.data[2].discountPercentage
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].buyConfig.Array.data[0].discountPercentage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].buyConfig.Array.data[1].discountPercentage
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].buyConfig.Array.data[2].discountPercentage
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].buyConfig.Array.data[0].discountPercentage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].buyConfig.Array.data[1].discountPercentage
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].buyConfig.Array.data[2].discountPercentage
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432514].buyConfig.Array.data[0].discountPercentage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432514].buyConfig.Array.data[1].discountPercentage
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432514].buyConfig.Array.data[2].discountPercentage
       value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 1925703224431792360, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
