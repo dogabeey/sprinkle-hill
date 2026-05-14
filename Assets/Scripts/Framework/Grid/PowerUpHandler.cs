@@ -742,6 +742,12 @@ namespace Game
                     Grid3D.GridCell cell = grid.GetCellPublic(pos);
                     if (cell == null || cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null) continue;
                     if (IsSpecialPowerUp(cell.elementInfo.powerUpType)) continue;
+                    ElementData elementData = cell.elementInfo.elementData;
+                    if (elementData != null &&
+                        (elementData.HasBehavior(ElementData.ElementBehaviorFlags.NonShuffleable) ||
+                         elementData.HasBehavior(ElementData.ElementBehaviorFlags.NonSwappable)))
+                        continue;
+
                     candidates.Add(pos);
                 }
             }
