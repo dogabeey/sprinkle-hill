@@ -15,6 +15,6 @@ MonoBehaviour:
   tileSpriteSet: {fileID: 11400000, guid: f18223b04cef2cb4d887cc9fbf8756d7, type: 2}
   featureIcon: {fileID: -320327708, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
   spriteLayerIndex: 10
-  destroyParticleEffect: {fileID: 0}
+  destroyParticleEffect: {fileID: 9101700452171790528, guid: a42fa4c2130def14c81b6cdf97dc0e0c, type: 3}
   objectiveNodePrefab: {fileID: 6249795917659776395, guid: b98a0bd0978144f409eccd31c6d39e06, type: 3}
   lockedAreaCanvasParentPrefab: {fileID: 2514203487333984939, guid: 3f7baffc2e600c342a92fbfd2ccd3358, type: 3}

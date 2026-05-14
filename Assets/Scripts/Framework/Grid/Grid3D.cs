@@ -498,7 +498,7 @@ namespace Game
             public CellFeature cellFeature;
             public LockedAreaConfig lockedAreaConfig;
             public ElementData breakableWallElementCondition;
-            public int cellFeatureGroupIndex;
+            public int cellFeatureGroupIndex; 
             public int cellFeatureGroupHealth;
             public int cellFeatureGroupMaxHealth;
             public int cellHealth;
