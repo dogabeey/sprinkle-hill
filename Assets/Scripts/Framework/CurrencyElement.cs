@@ -1,5 +1,6 @@
-using UnityEngine;
+using System.Globalization;
 using TMPro;
+using UnityEngine;
 
 namespace Game
 {
@@ -33,41 +34,35 @@ namespace Game
             refCurrency = currency;
 
             float amount = CurrencyManager.Instance.GetCurrencyAmount(currency);
-            float shortAmount = FormatCurrencyAmount(amount);
-            string abbreviation = GetCurrencyAbbreviation(amount);
+            string formattedAmount = amount.ToLargeNumberString();
 
-            currencyText.text = $"<sprite index={currency.spriteIndexForUI}>" + shortAmount.ToString(currency.showFormat) + abbreviation;
+            currencyText.text = $"<sprite index={currency.spriteIndexForUI}>" + formattedAmount;
         }
 
-        public float FormatCurrencyAmount(float amount)
+        
+    }
+    public static class NumberFormatter
+    {
+        public static string ToLargeNumberString(this float value)
         {
-            if (float.IsNaN(amount) || float.IsInfinity(amount))
+            float absValue = Mathf.Abs(value);
+
+            if (absValue >= 1_000_000_000f)
             {
-                return 0f;
+                return (value / 1_000_000_000f).ToString("0.##", CultureInfo.InvariantCulture) + "B";
             }
 
-            float absAmount = Mathf.Abs(amount);
+            if (absValue >= 1_000_000f)
+            {
+                return (value / 1_000_000f).ToString("0.##", CultureInfo.InvariantCulture) + "M";
+            }
 
-            if (absAmount >= 1_000_000_000_000_000f) return amount / 1_000_000_000_000_000f; // Qa
-            if (absAmount >= 1_000_000_000_000f) return amount / 1_000_000_000_000f; // T
-            if (absAmount >= 1_000_000_000f) return amount / 1_000_000_000f; // B
-            if (absAmount >= 1_000_000f) return amount / 1_000_000f; // M
-            if (absAmount >= 1_000f) return amount / 1_000f; // K
+            if (absValue >= 1_000f)
+            {
+                return (value / 1_000f).ToString("0.##", CultureInfo.InvariantCulture) + "K";
+            }
 
-            return amount;
-        }
-
-        private static string GetCurrencyAbbreviation(float amount)
-        {
-            float absAmount = Mathf.Abs(amount);
-
-            if (absAmount >= 1_000_000_000_000_000f) return "Qa";
-            if (absAmount >= 1_000_000_000_000f) return "T";
-            if (absAmount >= 1_000_000_000f) return "B";
-            if (absAmount >= 1_000_000f) return "M";
-            if (absAmount >= 1_000f) return "K";
-
-            return string.Empty;
+            return value.ToString("0.##", CultureInfo.InvariantCulture);
         }
     }
 }

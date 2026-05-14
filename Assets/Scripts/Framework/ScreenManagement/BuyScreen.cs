@@ -11,6 +11,7 @@ namespace Game
         private IBuyable referenceBuyable;
 
         public BuyScreenNode buyScreenNodePrefab;
+        public Button returnToGameButton;
         public LayoutGroup buyScreenNodeContainer;
         public TMP_Text itemHeaderText;
         public TMP_Text itemDescriptionText;
@@ -37,12 +38,14 @@ namespace Game
 
             if (itemHeaderText) itemHeaderText.text = referenceBuyable.ItemName;
             if (itemDescriptionText) itemDescriptionText.text = referenceBuyable.ItemDescription;
+            if (returnToGameButton) returnToGameButton.onClick.AddListener(() => ScreenManager.Instance.CloseAllScreens());
 
             // Use IBuyable.BuyConfig to populate the buy screen with BuyScreenNodes.
             foreach (var buyBundle in referenceBuyable.BuyConfig)
             {
+                buyBundle.buyableReference = referenceBuyable; // Set the buyable reference for each buy bundle.
                 BuyScreenNode newNode = Instantiate(buyScreenNodePrefab, buyScreenNodeContainer.transform);
-                newNode.Init(referenceBuyable, buyBundle.buyCount);
+                newNode.Init(buyBundle);
             }
         }
         public override void ResolveParams(EventParam eventParam)

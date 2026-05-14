@@ -44,24 +44,27 @@ namespace Game
         public List<IBuyable.BuyBundle> BuyConfig => buyConfig;
         public int[] BuyChoices => new int[] { 1, 5, 25 };
 
-        public void Buy(int cost, int count)
+        public bool TryBuy(IBuyable.BuyBundle buyBundle)
         {
-            int endCost = GetCost() * count;
+            int endCost = buyBundle.GetTotalCost(GetCost());
             if (CostCurrency != null)
             {
                 if (CurrencyManager.Instance.GetCurrencyAmount(CostCurrency) >= endCost)
                 {
                     CurrencyManager.Instance.AddCurrency(CostCurrency, -endCost);
-                    CurrentCount += count;
+                    CurrentCount += buyBundle.buyCount;
+                    return true;
                 }
                 else
                 {
                     Debug.LogWarning("Not enough currency to buy " + ItemName);
+                    return false;
                 }
             }
             else
             {
                 Debug.LogWarning("CostCurrency is not defined for " + ItemName);
+                return false;
             }
         }
 
@@ -92,11 +95,12 @@ namespace Game
 
     }
     [Serializable]
-    public abstract class BonusPremiumAction : ActionBarItem
+    public abstract class BoosterBarAction : ActionBarItem
     {
         public int unlockedLevel;
         public int buyCost = 50;
         public override bool CostDefinesBuyability => true;
+        public override CurrencyModel CostCurrency => GameManager.Instance.cashCurrency;
 
         private IEnumerable GetAllFeatures()
         {
@@ -119,7 +123,7 @@ namespace Game
     }
 
     [Serializable]
-    public class AddTimeAction : BonusPremiumAction
+    public class AddTimeAction : BoosterBarAction
     {
         public int addedTime = 30;
 
@@ -131,8 +135,6 @@ namespace Game
         public override string VisibilityExplanation => "";
         public override string ClickabilityExplanation => "";
         public override string AvailabilityExplanation => $"Level {unlockedLevel}";
-
-        public override CurrencyModel CostCurrency => GameManager.Instance.cashCurrency;
 
         public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.addTimePowerupTrailParticlePrefab;
 
@@ -176,7 +178,7 @@ namespace Game
 
     }
     [Serializable]
-    public class AddMovesAction : BonusPremiumAction
+    public class AddMovesAction : BoosterBarAction
     {
         public int addedMoves = 5;
         public override string ItemName => "Add Moves";
@@ -187,7 +189,6 @@ namespace Game
         public override string VisibilityExplanation => "";
         public override string ClickabilityExplanation => "";
         public override string AvailabilityExplanation => $"Level {unlockedLevel}";
-        public override CurrencyModel CostCurrency => GameManager.Instance.cashCurrency;
         public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.addMovesPowerupTrailParticlePrefab;
         public override bool IsVisible()
         {
@@ -218,12 +219,11 @@ namespace Game
         }
     }
     [Serializable]
-    public class ShuffleAction : BonusPremiumAction
+    public class ShuffleAction : BoosterBarAction
     {
 
         public override string ItemName => "Shuffle";
         public override string ItemDescription => "Shuffles the board.";
-        public override CurrencyModel CostCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.shufflePowerupTrailParticlePrefab;
         public override float BaseCost => 0;
         public override float CostIncrement => 0;
@@ -266,11 +266,10 @@ namespace Game
     }
 
     [Serializable]
-    public class BombPlacementAction : BonusPremiumAction
+    public class BombPlacementAction : BoosterBarAction
     {
         public override string ItemName => "Bomb Placement";
         public override string ItemDescription => "Places a bomb on the board, then detonates it.";
-        public override CurrencyModel CostCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.bombPowerupTrailParticlePrefab;
         public override float BaseCost => 0;
         public override float CostIncrement => 0;
@@ -306,11 +305,10 @@ namespace Game
     }
 
     [Serializable]
-    public class PlaceDiscoBallAction : BonusPremiumAction
+    public class PlaceDiscoBallAction : BoosterBarAction
     {
         public override string ItemName => "Place Disco Ball";
         public override string ItemDescription => "Places a disco ball on the board.";
-        public override CurrencyModel CostCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.discoBallPowerupTrailParticlePrefab;
         public override float BaseCost => 0;
         public override float CostIncrement => 0;
@@ -345,11 +343,10 @@ namespace Game
     }
 
     [Serializable]
-    public class PlaceRocketAction : BonusPremiumAction
+    public class PlaceRocketAction : BoosterBarAction
     {
         public override string ItemName => "Place Rocket";
         public override string ItemDescription => "Places a rocket on the board";
-        public override CurrencyModel CostCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.rocketPowerupTrailParticlePrefab;
         public override float BaseCost => 0;
         public override float CostIncrement => 0;
@@ -383,11 +380,10 @@ namespace Game
     }
 
     [Serializable]
-    public class CannonAction : BonusPremiumAction
+    public class CannonAction : BoosterBarAction
     {
         public override string ItemName => "Cannon";
         public override string ItemDescription => "Destroys the entire column of the clicked cell.";
-        public override CurrencyModel CostCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem ActionSuccessParticle => null;
         public override float BaseCost => 0;
         public override float CostIncrement => 0;
@@ -413,11 +409,10 @@ namespace Game
     }
 
     [Serializable]
-    public class HammerAction : BonusPremiumAction
+    public class HammerAction : BoosterBarAction
     {
         public override string ItemName => "Hammer";
         public override string ItemDescription => "Destroys the clicked cell and adjacent orthogonal cells.";
-        public override CurrencyModel CostCurrency => GameManager.Instance.premiumCurrency;
         public override ParticleSystem ActionSuccessParticle => null;
         public override float BaseCost => 0;
         public override float CostIncrement => 0;

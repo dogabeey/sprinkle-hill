@@ -10322,7 +10322,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1515371514, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010546].buyConfig.Array.data[0].buySprite
+      value: 
+      objectReference: {fileID: 1515371514, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877479918010546].buyConfig.Array.data[1].BuySprite
+      value: 
+      objectReference: {fileID: 955988023, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010546].buyConfig.Array.data[1].buySprite
       value: 
       objectReference: {fileID: 955988023, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
@@ -10330,7 +10338,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 939076426, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010546].buyConfig.Array.data[2].buySprite
+      value: 
+      objectReference: {fileID: 939076426, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877479918010547].buyConfig.Array.data[0].BuySprite
+      value: 
+      objectReference: {fileID: 1515371514, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010547].buyConfig.Array.data[0].buySprite
       value: 
       objectReference: {fileID: 1515371514, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
@@ -10338,7 +10354,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 955988023, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010547].buyConfig.Array.data[1].buySprite
+      value: 
+      objectReference: {fileID: 955988023, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877479918010547].buyConfig.Array.data[2].BuySprite
+      value: 
+      objectReference: {fileID: 939076426, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877479918010547].buyConfig.Array.data[2].buySprite
       value: 
       objectReference: {fileID: 939076426, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
@@ -10346,7 +10370,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -400374839, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].buyConfig.Array.data[0].buySprite
+      value: 
+      objectReference: {fileID: -400374839, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877643594432512].buyConfig.Array.data[1].BuySprite
+      value: 
+      objectReference: {fileID: -1054736132, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].buyConfig.Array.data[1].buySprite
       value: 
       objectReference: {fileID: -1054736132, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
@@ -10354,7 +10386,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -571819677, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].buyConfig.Array.data[2].buySprite
+      value: 
+      objectReference: {fileID: -571819677, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877643594432513].buyConfig.Array.data[0].BuySprite
+      value: 
+      objectReference: {fileID: 1206983405, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].buyConfig.Array.data[0].buySprite
       value: 
       objectReference: {fileID: 1206983405, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
@@ -10362,7 +10402,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -955304093, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].buyConfig.Array.data[1].buySprite
+      value: 
+      objectReference: {fileID: -955304093, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877643594432513].buyConfig.Array.data[2].BuySprite
+      value: 
+      objectReference: {fileID: 1382202287, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].buyConfig.Array.data[2].buySprite
       value: 
       objectReference: {fileID: 1382202287, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
@@ -10370,11 +10418,23 @@ PrefabInstance:
       value: 
       objectReference: {fileID: -482402101, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432514].buyConfig.Array.data[0].buySprite
+      value: 
+      objectReference: {fileID: -482402101, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877643594432514].buyConfig.Array.data[1].BuySprite
       value: 
       objectReference: {fileID: 136029994, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432514].buyConfig.Array.data[1].buySprite
+      value: 
+      objectReference: {fileID: 136029994, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877643594432514].buyConfig.Array.data[2].BuySprite
+      value: 
+      objectReference: {fileID: -1060796528, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432514].buyConfig.Array.data[2].buySprite
       value: 
       objectReference: {fileID: -1060796528, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}

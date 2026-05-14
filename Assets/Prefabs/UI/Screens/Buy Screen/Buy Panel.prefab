@@ -547,6 +547,7 @@ MonoBehaviour:
   closeAnimationName: 
   isPersistent: 0
   buyScreenNodePrefab: {fileID: 3409939573189215091, guid: ef58e8463293f824d929c5f39becb7ef, type: 3}
+  returnToGameButton: {fileID: 4717045479971935349}
   buyScreenNodeContainer: {fileID: 1791114162836733352}
   itemHeaderText: {fileID: 394864170758894708}
   itemDescriptionText: {fileID: 7346157622876640394}
@@ -624,7 +625,7 @@ GameObject:
   - component: {fileID: 4717045479971935349}
   - component: {fileID: 3643182237794394002}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Return Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
