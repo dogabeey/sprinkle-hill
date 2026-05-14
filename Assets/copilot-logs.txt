@@ -45,6 +45,8 @@
 [2026-05-12 17:21:10] - Fixed locked area objective cloning to preserve tiedToLockedArea and lockedAreaIndex so locked cells no longer unlock immediately and remain active until their tied objectives are completed.
 [2026-05-12 17:35:02] - Fixed shuffle/move-potential detection to explicitly exclude powerGeneratorElementData and powerOutletElementData from matchable/swap-candidate checks, preventing false possible-move results and soft-locks.
 [2026-05-12 17:41:31] - Fixed board shuffle candidate selection to respect ElementBehaviorFlags.NonShuffleable so flagged elements remain fixed during shuffle.
+[2026-05-12 18:03:27] - Added CannonAction premium action with click-to-place flow that clears the selected column using new Match3Grid.ClearColumnAt and then resolves gravity.
+[2026-05-12 18:16:43] - Added HammerAction premium action with click-to-place flow that clears the selected cell plus orthogonal neighbors (up/down/left/right) via new Match3Grid.ClearCrossAt, then resolves gravity.
 [2026-05-13 16:31:50] - Fixed propeller target prioritization to prefer breakable wall cells first, then hidden elements, then WaferFeature cells in PowerUpHandler.
 [2026-05-13 16:58:29] - Added ConstantManager power-up direct/indirect spawn cap fields and enforced per-type board count limits in PowerUpHandler for direct matches vs chain/indirect matches.
 [2026-05-14 02:21:03] - Updated Disco Ball random target selection to skip elements flagged NonShuffleable or NonSwappable so they are not converted.
