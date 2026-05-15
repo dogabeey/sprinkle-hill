@@ -153,7 +153,7 @@ PrefabInstance:
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: 'levelEditors.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: 58db7583026e9c84eabf903b77dfe817, type: 2}
+      objectReference: {fileID: 11400000, guid: 632c0fb979f13174c9b0587c6a3593e8, type: 2}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: 'levelEditors.Array.data[1]'
       value: 
