@@ -10155,6 +10155,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 66476413}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: actionBarViewPrefab
+      value: 
+      objectReference: {fileID: 230861821462889445, guid: 9e234be0c7761a34aaf9d63c420f9995, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: 'actionBarItemList.Array.data[0]'
       value: 1021877643594432513
       objectReference: {fileID: 0}

@@ -461,7 +461,7 @@ namespace Game
             yield return StartCoroutine(bombAction.BombThrowAnim(match3Grid.GetCellPositionInGrid(center)));
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: "Bomb Placement"));
             yield return StartCoroutine(match3Grid.ClearAreaAt(center, 1, false));
-            yield return StartCoroutine(match3Grid.ApplyGravityPublic());
+            yield return StartCoroutine(match3Grid.ResolveBoardAfterSpecialClear());
             isProcessing = false;
             idleTimer = 0f;
         }
@@ -481,7 +481,7 @@ namespace Game
             hammerAction.CurrentCount--;
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: hammerAction.ItemName));
             yield return StartCoroutine(match3Grid.ClearCrossAt(center, false));
-            yield return StartCoroutine(match3Grid.ApplyGravityPublic());
+            yield return StartCoroutine(match3Grid.ResolveBoardAfterSpecialClear());
 
             isProcessing = false;
             idleTimer = 0f;
@@ -502,7 +502,7 @@ namespace Game
             cannonAction.CurrentCount--;
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: cannonAction.ItemName));
             yield return StartCoroutine(match3Grid.ClearColumnAt(center.x, false));
-            yield return StartCoroutine(match3Grid.ApplyGravityPublic());
+            yield return StartCoroutine(match3Grid.ResolveBoardAfterSpecialClear());
 
             isProcessing = false;
             idleTimer = 0f;

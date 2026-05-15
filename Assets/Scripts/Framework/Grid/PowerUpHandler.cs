@@ -14,6 +14,7 @@ namespace Game
         private readonly Match3Grid grid;
         private const int SortingOrderBoost = 200;
         private readonly HashSet<Vector2Int> activatingPowerUpPositions = new HashSet<Vector2Int>();
+        private int activePowerUpChainCount;
         private readonly Dictionary<ElementPowerUpType, IPowerUpActivationStrategy> activationStrategies;
         private readonly List<IPowerUpCreationStrategy> creationStrategies;
 
@@ -60,6 +61,11 @@ namespace Game
         public static bool IsPropeller(ElementPowerUpType type)
         {
             return type == ElementPowerUpType.Propeller;
+        }
+
+        public bool IsChainReactionInProgress()
+        {
+            return activePowerUpChainCount > 0;
         }
 
         public struct SpawnRequest
@@ -593,10 +599,14 @@ namespace Game
                 if (!activationStrategies.TryGetValue(type, out IPowerUpActivationStrategy strategy))
                     yield break;
 
+                activePowerUpChainCount++;
                 yield return grid.StartCoroutine(strategy.Activate(pos, swappedElementData));
             }
             finally
             {
+                if (activePowerUpChainCount > 0)
+                    activePowerUpChainCount--;
+
                 activatingPowerUpPositions.Remove(pos);
             }
         }
@@ -778,8 +788,6 @@ namespace Game
                 GameManager.Instance.constantManager.matchShakeBaseMagnitude * 1.5f,
                 GameManager.Instance.constantManager.matchShakeVibrato,
                 GameManager.Instance.constantManager.matchShakeRandomness);
-
-            yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
         }
 
         private IEnumerator ActivatePropeller(Vector2Int propellerPos)
@@ -827,7 +835,6 @@ namespace Game
             grid.TriggerCellFeatureMatchedOverAt(propellerPos);
             propellerCell.elementInfo = null;
             yield return grid.StartCoroutine(grid.ClearAreaAt(targetPos, 0));
-            yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
         }
 
         private Vector2Int PickPropellerTargetPosition(Vector2Int origin)
@@ -1007,7 +1014,6 @@ namespace Game
             grid.TriggerCellFeatureMatchedOverAt(bombPos);
             bombCell.elementInfo = null;
             yield return grid.StartCoroutine(grid.ClearAreaAt(bombPos, 2, false));
-            yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
         }
 
         private IEnumerator ActivateRocket(Vector2Int rocketPos)
@@ -1084,7 +1090,6 @@ namespace Game
             CollectAffectedWallsForRocketLine(downCells, walls);
 
             yield return grid.StartCoroutine(grid.BreakWallsSimultaneous(walls));
-            yield return grid.StartCoroutine(grid.ResolveBoardAfterSpecialClear());
         }
 
         private void CollectAffectedWallsForRocketLine(List<Vector2Int> lineCells, HashSet<Vector2Int> walls)

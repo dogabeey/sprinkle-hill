@@ -51,3 +51,5 @@
 [2026-05-13 16:58:29] - Added ConstantManager power-up direct/indirect spawn cap fields and enforced per-type board count limits in PowerUpHandler for direct matches vs chain/indirect matches.
 [2026-05-14 02:21:03] - Updated Disco Ball random target selection to skip elements flagged NonShuffleable or NonSwappable so they are not converted.
 [2026-05-14 23:26:07] - Added SpriteRandomSpritesheet URP shader with Tiles and Animation Speed properties that randomly selects spritesheet frames over time.
+[2026-05-15 00:58:03] - Delayed gravity/refill until all chained power-up activations finish by tracking active power-up chains in PowerUpHandler, gating ResolveBoardAfterSpecialClear, and routing direct/premium-action power-up activations through the shared post-special board resolution flow.
+[2026-05-15 01:11:42] - Fixed chained power-up gravity deadlock by removing nested ResolveBoardAfterSpecialClear calls from individual power-up execution coroutines and keeping board resolution only in the outer activation/action flows, so drops resume after the full chain completes.
