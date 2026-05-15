@@ -1,3 +1,5 @@
+using DG.Tweening;
+using System.Collections;
 using System.Globalization;
 using TMPro;
 using UnityEngine;
@@ -25,18 +27,31 @@ namespace Game
         {
             if (param.paramScriptable == refCurrency)
             {
-                UpdateCurrencyUI(refCurrency);
+                StartCoroutine(UpdateCurrencyUI(refCurrency, param.paramFloat));
             }
         }
 
-        public void UpdateCurrencyUI(CurrencyModel currency)
+        private Tween currencyTextTween;
+        public IEnumerator UpdateCurrencyUI(CurrencyModel currency, float amount)
         {
             refCurrency = currency;
 
-            float amount = CurrencyManager.Instance.GetCurrencyAmount(currency);
-            string formattedAmount = amount.ToLargeNumberString();
-
-            currencyText.text = $"<sprite index={currency.spriteIndexForUI}>" + formattedAmount;
+            float finalAmount = CurrencyManager.Instance.GetCurrencyAmount(currency);
+            if (currencyTextTween != null && currencyTextTween.IsActive())
+            {
+                currencyTextTween.Kill();
+            }
+            if(amount < 0)
+                currencyText.text = $"<sprite index={currency.spriteIndexForUI}> {(finalAmount + amount).ToLargeNumberString()} (<color=red>-{(-amount).ToLargeNumberString()})";
+            else
+                currencyText.text = $"<sprite index={currency.spriteIndexForUI}> {(finalAmount + amount).ToLargeNumberString()} (<color=green>+{amount.ToLargeNumberString()})";
+            
+            yield return new WaitForSeconds(0.5f);
+            currencyTextTween = DOVirtual.Float(amount, finalAmount, 0.5f, (value) =>
+            {
+                string formattedAmount = value.ToLargeNumberString();
+                currencyText.text = $"<sprite index={currency.spriteIndexForUI}>" + formattedAmount;
+            });
         }
 
         

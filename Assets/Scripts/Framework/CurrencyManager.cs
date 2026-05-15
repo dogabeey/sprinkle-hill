@@ -71,7 +71,7 @@ namespace Game
                 CurrencyElement instantiatedElement = Instantiate(currencyElementPrefab, currencyContainer);
                 instantiatedElement.currencyTransform = instantiatedElement.transform;
                 instantiatedElement.currencyText = instantiatedElement.GetComponentInChildren<TMP_Text>();
-                instantiatedElement.UpdateCurrencyUI(currencyInfo.currencyModel);
+                StartCoroutine(instantiatedElement.UpdateCurrencyUI(currencyInfo.currencyModel, currencyInfo.Amount));
                 currencyElements.Add(instantiatedElement);
             }
         }
@@ -94,7 +94,7 @@ namespace Game
             }
 
             currencyInfo.Amount += amount;
-            NotifyCurrencyChanged(currencyInfo.currencyModel);
+            NotifyCurrencyChanged(currencyInfo.currencyModel, amount);
         }
 
 
@@ -141,16 +141,17 @@ namespace Game
             }
 
             currencyInfo.Amount = startAmount + amount;
-            NotifyCurrencyChanged(currencyInfo.currencyModel);
+            NotifyCurrencyChanged(currencyInfo.currencyModel, amount);
 
             yield break;
         }
 
-        private static void NotifyCurrencyChanged(CurrencyModel currencyModel)
+        private static void NotifyCurrencyChanged(CurrencyModel currencyModel, float amount)
         {
             EventManager.TriggerEvent(GameEvent.CURRENCY_CHANGED, new EventParam
             {
-                paramScriptable = currencyModel
+                paramScriptable = currencyModel,
+                paramFloat = amount
             });
         }
 
