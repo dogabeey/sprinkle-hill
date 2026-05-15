@@ -396,6 +396,28 @@ namespace Game
             isPlacementReady = false;
         }
 
+        public bool IsPlacementActionActive(string actionTypeName)
+        {
+            if (string.IsNullOrEmpty(actionTypeName))
+                return false;
+
+            switch (actionTypeName)
+            {
+                case "BombPlacementAction":
+                    return pendingPlacementAction == PendingPlacementAction.Bomb;
+                case "PlaceDiscoBallAction":
+                    return pendingPlacementAction == PendingPlacementAction.DiscoBall;
+                case "PlaceRocketAction":
+                    return pendingPlacementAction == PendingPlacementAction.Rocket;
+                case "CannonAction":
+                    return pendingPlacementAction == PendingPlacementAction.Cannon;
+                case "HammerAction":
+                    return pendingPlacementAction == PendingPlacementAction.Hammer;
+                default:
+                    return false;
+            }
+        }
+
         private void TryPlacePendingAction()
         {
             Camera cam = inputCamera != null ? inputCamera : Camera.main;

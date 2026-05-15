@@ -188,6 +188,8 @@ namespace Game
     [Serializable]
     public abstract class BoosterBarAction : ActionBarItem
     {
+        public Animator preExecutionAnimator; // This is used to play an animation on the action button before executing the action.
+        public string animationName; // This is the name of the animation to play on the preExecutionAnimator.
         public int unlockedLevel;
         public int buyCost = 50;
         public override bool CostDefinesBuyability => true;
