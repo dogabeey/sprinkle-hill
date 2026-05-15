@@ -1494,8 +1494,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -151.67004}
-  m_SizeDelta: {x: 0, y: 303.32}
+  m_AnchoredPosition: {x: 0, y: -129.02}
+  m_SizeDelta: {x: 0, y: 258.02}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1068210312
 MonoBehaviour:
@@ -10041,10 +10041,6 @@ PrefabInstance:
       propertyPath: eventManager
       value: 
       objectReference: {fileID: 169691987}
-    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: glassFeature
-      value: 
-      objectReference: {fileID: 11400000, guid: 66b5b66c4fb707c46810127020dbbb17, type: 2}
     - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: soundManager
       value: 

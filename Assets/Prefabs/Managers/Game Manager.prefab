@@ -52,9 +52,9 @@ MonoBehaviour:
   - {fileID: 6648657062745475262, guid: 04461135af576014d8552532118fc0ca, type: 3}
   - {fileID: 6648657062745475262, guid: cac998f988b69c9439453293c956cda8, type: 3}
   - {fileID: 6648657062745475262, guid: 4bd797af29402654ba1c870264e5a7e9, type: 3}
-  - {fileID: 6648657062745475262, guid: 831fecad3afec634d8c70111334c833d, type: 3}
   - {fileID: 6648657062745475262, guid: 52f5aba18e8117b4da1230b33185e4d4, type: 3}
   - {fileID: 6648657062745475262, guid: fa178b8d3e8d98f48a2c57f8ff370a6b, type: 3}
+  - {fileID: 6648657062745475262, guid: 831fecad3afec634d8c70111334c833d, type: 3}
   - {fileID: 6648657062745475262, guid: 0a3f06714a110e442bdb4da392307610, type: 3}
   - {fileID: 6648657062745475262, guid: b3aa46faeb913a642b6bca23a1dc229d, type: 3}
   - {fileID: 6648657062745475262, guid: bf6b5ff29fec1e9408f6df6f1cb96e31, type: 3}
@@ -123,7 +123,7 @@ MonoBehaviour:
   eventManager: {fileID: 0}
   soundManager: {fileID: 0}
   saveManager: {fileID: 0}
-  constantManager: {fileID: 11400000, guid: b9406341470b1d141960d0d2aa97dec6, type: 2}
+  constantManager: {fileID: 0}
   gfxManager: {fileID: 0}
   tutorialManager: {fileID: 0}
   actionBarManager: {fileID: 0}
