@@ -126,7 +126,7 @@ namespace Game
                 break;
             }
 
-            Sprite feedbackSprite = buyBundle.buySprite != null ? buyBundle.buySprite : ActionBarIcon;
+            Sprite feedbackSprite = ActionBarIcon;
             if (feedbackSprite == null)
                 return;
 
