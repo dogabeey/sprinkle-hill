@@ -99,6 +99,7 @@ namespace Game
             ElementData selectedElementData = cell.elementInfo.elementData;
             powerUpHandler.CreatePowerUpAt(center, selectedElementData, ElementPowerUpType.DiscoBall);
             yield return StartCoroutine(powerUpHandler.ActivateAt(center, selectedElementData));
+            yield return StartCoroutine(ResolveBoardAfterSpecialClear());
         }
 
         public IEnumerator PlaceHorizontalRocketActionAt(Vector2Int center)
@@ -608,7 +609,10 @@ namespace Game
             if (firstType == ElementPowerUpType.Cauldron || secondType == ElementPowerUpType.Cauldron)
             {
                 if (first == second && firstType == ElementPowerUpType.Cauldron)
+                {
                     yield return StartCoroutine(powerUpHandler.ActivateAt(first, null));
+                    yield return StartCoroutine(ResolveBoardAfterSpecialClear());
+                }
                 yield break;
             }
 
@@ -618,6 +622,7 @@ namespace Game
                 if (PowerUpHandler.IsSpecialPowerUp(firstType))
                 {
                     yield return StartCoroutine(powerUpHandler.ActivateAt(first, null));
+                    yield return StartCoroutine(ResolveBoardAfterSpecialClear());
                     yield break;
                 }
                 yield break;
@@ -654,6 +659,8 @@ namespace Game
                     // power-up moved to 'first', the swapped element was at 'first' (now at 'second')
                     yield return StartCoroutine(powerUpHandler.ActivateAt(first, firstSwapData));
                 }
+
+                yield return StartCoroutine(ResolveBoardAfterSpecialClear());
                 yield break;
             }
 
@@ -766,6 +773,7 @@ namespace Game
         public IEnumerator ResolveBoardAfterSpecialClear()
         {
             currentComboCount = 0;
+            yield return new WaitUntil(() => !powerUpHandler.IsChainReactionInProgress());
             yield return StartCoroutine(ApplyGravity());
 
             List<List<Vector2Int>> matchedGroups;
@@ -2257,7 +2265,6 @@ namespace Game
             generatedElements.Clear();
 
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
-            yield return StartCoroutine(ResolveBoardAfterSpecialClear());
         }
 
         public bool TryRevealHiddenBoxAt(Vector2Int pos)

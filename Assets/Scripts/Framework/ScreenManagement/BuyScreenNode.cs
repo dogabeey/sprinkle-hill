@@ -38,7 +38,15 @@ namespace Game
 
         private void OnBuyButtonClicked(IBuyable.BuyBundle buyBundle)
         {
-            if (buyBundle != null && buyBundle.buyableReference != null && buyBundle.buyableReference.TryBuy(buyBundle))
+            GameObject objectSource = null;
+            if (buyBundle?.buyableReference is ActionBarItem actionBarItem && GameManager.Instance != null && GameManager.Instance.actionBarManager != null)
+            {
+                ActionBarView matchingActionBarView = GameManager.Instance.actionBarManager.GetActionBarView(actionBarItem);
+                if (matchingActionBarView != null)
+                    objectSource = matchingActionBarView.gameObject;
+            }
+
+            if (buyBundle != null && buyBundle.buyableReference != null && buyBundle.buyableReference.TryBuy(buyBundle, objectSource))
             {
                 ScreenManager.Instance.CloseAllScreens();
             }
