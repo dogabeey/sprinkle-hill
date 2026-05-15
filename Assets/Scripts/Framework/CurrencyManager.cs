@@ -42,18 +42,24 @@ namespace Game
             EventManager.StartListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
             EventManager.StartListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
             EventManager.StartListening(GameEvent.LEVEL_FAILED, OnLevelCompleted);
+            EventManager.StartListening(GameEvent.SCREEN_OPENED, OnLevelCompleted);
+            EventManager.StartListening(GameEvent.SCREEN_CLOSED, OnLevelCompleted);
         }
         private void OnDisable()
         {
             EventManager.StopListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
             EventManager.StopListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
             EventManager.StopListening(GameEvent.LEVEL_FAILED, OnLevelCompleted);
+            EventManager.StopListening(GameEvent.SCREEN_OPENED, OnLevelCompleted);
+            EventManager.StopListening(GameEvent.SCREEN_CLOSED, OnLevelCompleted);
         }
         private void OnLevelStarted(EventParam e)
         {
+            currencyCanvasGroup.alpha = 0;
         }
         private void OnLevelCompleted(EventParam e)
         {
+            currencyCanvasGroup.alpha = 1;
         }
 
         private void Start()
