@@ -566,7 +566,7 @@ namespace Game
                     }
                     else if (Event.current.keyCode == KeyCode.G)
                     {
-                        CreateElementInfo(GameManager.Instance.garbageBagElementData);
+                        value.elementInfo = CreateElementInfo(GameManager.Instance.garbageBagElementData);
                         MarkDirty();
                         Event.current.Use();
                     }
