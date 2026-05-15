@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game
 {
@@ -44,7 +45,7 @@ namespace Game
         public List<IBuyable.BuyBundle> BuyConfig => buyConfig;
         public int[] BuyChoices => new int[] { 1, 5, 25 };
 
-        public bool TryBuy(IBuyable.BuyBundle buyBundle)
+        public bool TryBuy(IBuyable.BuyBundle buyBundle, GameObject source = null)
         {
             int endCost = buyBundle.GetTotalCost(GetCost());
             if (CostCurrency != null)
@@ -53,6 +54,11 @@ namespace Game
                 {
                     CurrencyManager.Instance.AddCurrency(CostCurrency, -endCost);
                     CurrentCount += buyBundle.buyCount;
+                    PlayBuyFlyToSourceFeedback(buyBundle, source);
+
+                    if (source != null && source.TryGetComponent(out ActionBarView actionBarView))
+                        actionBarView.DrawUI();
+
                     return true;
                 }
                 else
@@ -92,6 +98,82 @@ namespace Game
         /// </summary>
         /// <returns>true if the object is available; otherwise, false.</returns>
         abstract public bool IsAvailable();
+
+        private void PlayBuyFlyToSourceFeedback(IBuyable.BuyBundle buyBundle, GameObject source)
+        {
+            if (buyBundle == null || source == null || buyBundle.buyCount <= 0)
+                return;
+
+            Canvas mainCanvas = GameManager.Instance != null ? GameManager.Instance.mainCanvas : null;
+            RectTransform canvasRect = mainCanvas != null ? mainCanvas.transform as RectTransform : null;
+            if (canvasRect == null)
+                return;
+
+            if (!TryGetCanvasPosition(canvasRect, mainCanvas, source.transform, out Vector2 targetCanvasPosition))
+                return;
+
+            Vector2 startCanvasPosition = targetCanvasPosition;
+            BuyScreenNode[] buyScreenNodes = UnityEngine.Object.FindObjectsOfType<BuyScreenNode>(true);
+            for (int i = 0; i < buyScreenNodes.Length; i++)
+            {
+                BuyScreenNode buyScreenNode = buyScreenNodes[i];
+                if (buyScreenNode == null || !ReferenceEquals(buyScreenNode.buyBundle, buyBundle) || buyScreenNode.itemImage == null)
+                    continue;
+
+                if (TryGetCanvasPosition(canvasRect, mainCanvas, buyScreenNode.itemImage.rectTransform, out Vector2 buyNodeCanvasPosition))
+                    startCanvasPosition = buyNodeCanvasPosition;
+
+                break;
+            }
+
+            Sprite feedbackSprite = buyBundle.buySprite != null ? buyBundle.buySprite : ActionBarIcon;
+            if (feedbackSprite == null)
+                return;
+
+            for (int i = 0; i < buyBundle.buyCount; i++)
+            {
+                GameObject flyObject = new GameObject($"{ItemName}_BuyFlyFeedback_{i}", typeof(RectTransform), typeof(CanvasGroup), typeof(Image));
+                RectTransform flyRect = flyObject.GetComponent<RectTransform>();
+                flyRect.SetParent(canvasRect, false);
+                flyRect.anchorMin = new Vector2(0.5f, 0.5f);
+                flyRect.anchorMax = new Vector2(0.5f, 0.5f);
+                flyRect.pivot = new Vector2(0.5f, 0.5f);
+                flyRect.sizeDelta = new Vector2(64f, 64f);
+                flyRect.anchoredPosition = startCanvasPosition + UnityEngine.Random.insideUnitCircle * 30f;
+                flyRect.localScale = Vector3.one * 3f;
+
+                Image flyImage = flyObject.GetComponent<Image>();
+                flyImage.raycastTarget = false;
+                flyImage.sprite = feedbackSprite;
+                flyImage.preserveAspect = true;
+
+                CanvasGroup canvasGroup = flyObject.GetComponent<CanvasGroup>();
+                float delay = i * 0.04f;
+                float jumpPower = UnityEngine.Random.Range(30f, 80f);
+                Vector2 finalTargetPosition = targetCanvasPosition + UnityEngine.Random.insideUnitCircle * 12f;
+
+                Sequence sequence = DOTween.Sequence();
+                sequence.SetDelay(delay);
+                sequence.Append(flyRect.DOJumpAnchorPos(finalTargetPosition, jumpPower, 1, 0.45f).SetEase(Ease.OutQuad));
+                sequence.Join(flyRect.DOScale(0.55f, 0.45f).SetEase(Ease.InQuad));
+                sequence.Join(canvasGroup.DOFade(0f, 0.12f).SetDelay(0.33f));
+                sequence.OnComplete(() => UnityEngine.Object.Destroy(flyObject));
+            }
+        }
+
+        private static bool TryGetCanvasPosition(RectTransform canvasRect, Canvas canvas, Transform target, out Vector2 canvasPosition)
+        {
+            canvasPosition = default;
+            if (canvasRect == null || target == null)
+                return false;
+
+            Camera eventCamera = canvas != null && canvas.renderMode != RenderMode.ScreenSpaceOverlay ? canvas.worldCamera : null;
+            Vector3 worldPosition = target is RectTransform rectTransform
+                ? rectTransform.TransformPoint(rectTransform.rect.center)
+                : target.position;
+            Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(eventCamera, worldPosition);
+            return RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenPoint, eventCamera, out canvasPosition);
+        }
 
     }
     [Serializable]

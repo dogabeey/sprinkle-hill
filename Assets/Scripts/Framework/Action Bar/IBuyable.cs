@@ -7,7 +7,7 @@ namespace Game
     public interface IBuyable
     {
         public int GetCost();
-        bool TryBuy(BuyBundle buyBundle);
+        bool TryBuy(BuyBundle buyBundle, GameObject source = null);
 
         public string ItemName { get; }
         public string ItemDescription { get; }
