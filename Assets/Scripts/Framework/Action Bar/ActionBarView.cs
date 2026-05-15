@@ -15,6 +15,7 @@ namespace Game
         public ActionBarItem actionBarItem;
         public Image actionIcon;
         public Image lockedIcon;
+        public Image selectionIcon;
         public GameObject lockedPanel;
         public TMP_Text unlockConditionText;
         public TMP_Text actionText;
@@ -37,7 +38,20 @@ namespace Game
             {
                 OnBuyButtonClicked(actionBarItem);
             });
+            
+            EventManager.StartListening(GameEvent.ACTION_SUCCESSFUL, OnActionSuccessful);
+            
             DrawUI();
+        }
+
+        private void OnActionSuccessful(EventParam param)
+        {
+            RefreshAllActionBarViews();
+        }
+
+        private void OnDestroy()
+        {
+            EventManager.StopListening(GameEvent.ACTION_SUCCESSFUL, OnActionSuccessful);
         }
 
         private void OnUseButtonClicked(ActionBarItem actionBarItem)
@@ -46,6 +60,7 @@ namespace Game
             {
                 SoundManager.Instance.Play(ConstantManager.SOUNDS.EFFECTS.BUTTON_CLICK_SUCCESS);
                 actionBarItem.OnClick();
+                RefreshAllActionBarViews();
             }
             else
             {
@@ -60,6 +75,18 @@ namespace Game
             EventManager.TriggerEvent(GameEvent.ACTION_BAR_ITEM_CLICKED, new EventParam(
                 paramStr: actionBarItem.ItemName
             ));
+        }
+
+        private void RefreshAllActionBarViews()
+        {
+            if (GameManager.Instance != null && GameManager.Instance.actionBarManager != null)
+            {
+                foreach (ActionBarView view in GameManager.Instance.actionBarManager.actionBarViews)
+                {
+                    if (view != null)
+                        view.DrawUI();
+                }
+            }
         }
         private void OnBuyButtonClicked(ActionBarItem actionBarItem)
         {
@@ -99,6 +126,8 @@ namespace Game
                 }
                 if (lockedIcon)
                     lockedIcon.enabled = actionIcon && !actionIcon.enabled;
+                if (selectionIcon)
+                    selectionIcon.enabled = actionBarItem.IsSelected();
                 if (actionText) 
                     actionText.text = actionBarItem.ItemName;
                 if(buyButton)

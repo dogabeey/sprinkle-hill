@@ -99,6 +99,15 @@ namespace Game
         /// <returns>true if the object is available; otherwise, false.</returns>
         abstract public bool IsAvailable();
 
+        /// <summary>
+        /// Determines whether the action is currently selected and ready to be used (e.g., in placement mode).
+        /// </summary>
+        /// <returns>true if the action is selected; otherwise, false.</returns>
+        virtual public bool IsSelected()
+        {
+            return false;
+        }
+
         private void PlayBuyFlyToSourceFeedback(IBuyable.BuyBundle buyBundle, GameObject source)
         {
             if (buyBundle == null || source == null || buyBundle.buyCount <= 0)
@@ -362,6 +371,12 @@ namespace Game
 
         public override bool IsVisible() => true;
 
+        public override bool IsSelected()
+        {
+            Match3GridInputController inputController = GetInputController();
+            return inputController != null && inputController.IsPlacementActionActive(nameof(BombPlacementAction));
+        }
+
         public override void OnClick()
         {
             Match3GridInputController inputController = GetInputController();
@@ -401,6 +416,12 @@ namespace Game
 
         public override bool IsVisible() => true;
 
+        public override bool IsSelected()
+        {
+            Match3GridInputController inputController = GetInputController();
+            return inputController != null && inputController.IsPlacementActionActive(nameof(PlaceDiscoBallAction));
+        }
+
         public override void OnClick()
         {
             Match3GridInputController inputController = GetInputController();
@@ -438,6 +459,12 @@ namespace Game
         public override string AvailabilityExplanation => $"Level {unlockedLevel}";
 
         public override bool IsVisible() => true;
+
+        public override bool IsSelected()
+        {
+            Match3GridInputController inputController = GetInputController();
+            return inputController != null && inputController.IsPlacementActionActive(nameof(PlaceRocketAction));
+        }
         public override void OnClick()
         {
             Match3GridInputController inputController = GetInputController();
@@ -476,6 +503,12 @@ namespace Game
 
         public override bool IsVisible() => true;
 
+        public override bool IsSelected()
+        {
+            Match3GridInputController inputController = GetInputController();
+            return inputController != null && inputController.IsPlacementActionActive(nameof(CannonAction));
+        }
+
         public override void OnClick()
         {
             Match3GridInputController inputController = GetInputController();
@@ -504,6 +537,12 @@ namespace Game
         public override string AvailabilityExplanation => $"Level {unlockedLevel}";
 
         public override bool IsVisible() => true;
+
+        public override bool IsSelected()
+        {
+            Match3GridInputController inputController = GetInputController();
+            return inputController != null && inputController.IsPlacementActionActive(nameof(HammerAction));
+        }
 
         public override void OnClick()
         {
