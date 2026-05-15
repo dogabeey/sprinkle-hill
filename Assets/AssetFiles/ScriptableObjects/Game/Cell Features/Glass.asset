@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 66c5957dbbba9c94d98a497539cc8a17, type: 3}
   m_Name: Glass
-  m_EditorClassIdentifier: Game:Game:GlassFeature
+  m_EditorClassIdentifier: Game::Game.GlassFeature
   tileSpriteSet: {fileID: 11400000, guid: 9712bc8a119975a4fa5e866d3dabf47f, type: 2}
   featureIcon: {fileID: 444081177, guid: eeb43e0ebd4b7a047a883b2e77204591, type: 3}
   spriteLayerIndex: 4

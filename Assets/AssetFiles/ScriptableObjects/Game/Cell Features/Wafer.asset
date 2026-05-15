@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 9800e91c98dfc1948800c4ccbb2502f6, type: 3}
   m_Name: Wafer
   m_EditorClassIdentifier: Game:Game:WaferFeature
   tileSpriteSet: {fileID: 11400000, guid: e043f04a44b9eef41b4ca32e6aadd9b9, type: 2}

@@ -624,7 +624,7 @@ namespace Game
                             if (value.cellFeature is WaferFeature)
                                 value.cellFeature = null;
                             else
-                                value.cellFeature = GameManager.Instance.waferFeature;
+                                value.cellFeature = GameManager.Instance.waferFeature; 
                             MarkDirty();
                             Event.current.Use();
                         }
@@ -924,6 +924,17 @@ namespace Game
                 case Grid3D.CellType.UnbreakableWall:
                     EditorGUI.DrawRect(rect, unbreakableWallCellColor);
                     break;
+            }
+        }
+
+        [Button]
+        public void SaveChanges()
+        {
+            string path = UnityEditor.AssetDatabase.GetAssetPath(this);
+            if (!string.IsNullOrEmpty(path))
+            {
+                UnityEditor.AssetDatabase.SaveAssets();
+                Debug.Log($"Level data saved to {path}");
             }
         }
 #endif

@@ -5,19 +5,6 @@ using System.Linq;
 
 namespace Game
 {
-    [System.Serializable]
-    public class GlassDamageSpritePair
-    {
-        [Min(0)] public int missingHealth;
-        public Sprite sprite;
-    }
-    [System.Serializable]
-    public class GlassDamageTilingAndOffsetPair
-    {
-        [Min(0)] public int missingHealth;
-        public Vector2 tiling;
-        public Vector2 offset;
-    }
     /// <summary>
     /// Glass breaks when an element is matched over it, and it can have different sprites based on how much health it has left. It does not accept elements, 
     /// so elements will pass through it when they fall. It also does not trigger matches when elements fall through it, so it won't cause chain reactions. 
@@ -45,5 +32,18 @@ namespace Game
         public override void OnElementMatchedAdjacentToTheCell(Grid3D.GridCell thisCell, Grid3D.GridCell matchedCell, GridElement element)
         {
         }
+    }
+    [System.Serializable]
+    public class GlassDamageSpritePair
+    {
+        [Min(0)] public int missingHealth;
+        public Sprite sprite;
+    }
+    [System.Serializable]
+    public class GlassDamageTilingAndOffsetPair
+    {
+        [Min(0)] public int missingHealth;
+        public Vector2 tiling;
+        public Vector2 offset;
     }
 }
