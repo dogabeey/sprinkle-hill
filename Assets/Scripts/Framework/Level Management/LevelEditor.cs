@@ -477,9 +477,9 @@ namespace Game
             // INITIALIZATION
             // Colors
             Color normalCellColor = new Color(219/255f, 186/255f, 143/255f);
-            Color emptyCellColor = new Color(67/255f, 67/255f, 67/255f);
+            Color emptyCellColor = new Color(88/255f, 88/255f, 100/255f);
             Color breakableWallCellColor = new Color(140/255f, 100/255f, 86/255f);
-            Color unbreakableWallCellColor = new Color(65/255f, 55/255f, 55/255f);
+            Color unbreakableWallCellColor = new Color(35/255f, 35/255f, 35/255f);
             // Rects
             Rect elementRect = new Rect(rect.x + rect.width * 0.1f, rect.y + rect.height * 0.1f, rect.width * 0.8f, rect.height * 0.8f);
             Rect featureRect = rect;

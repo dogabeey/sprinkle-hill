@@ -1470,58 +1470,34 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 1
     - Name: elementInfo
+      Entry: 7
+      Data: 40|Game.GridElementInfo, Game
+    - Name: elementData
       Entry: 6
       Data: 
-    - Name: cellFeature
-      Entry: 6
-      Data: 
-    - Name: lockedAreaConfig
-      Entry: 6
-      Data: 
-    - Name: breakableWallElementCondition
-      Entry: 6
-      Data: 
-    - Name: cellFeatureGroupIndex
+    - Name: randomElement
+      Entry: 5
+      Data: true
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: false
+    - Name: powerUpType
       Entry: 3
       Data: 0
-    - Name: cellFeatureGroupHealth
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupMaxHealth
-      Entry: 3
-      Data: 0
-    - Name: cellHealth
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
       Entry: 8
       Data: 
-    - Name: 
-      Entry: 7
-      Data: 40|Game.Grid3D+GridCell, Game
-    - Name: coordinates
-      Entry: 7
-      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
-    - Name: 
-      Entry: 3
-      Data: 3
-    - Name: 
-      Entry: 3
-      Data: 3
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: cellType
-      Entry: 3
-      Data: 3
-    - Name: elementInfo
-      Entry: 6
-      Data: 
     - Name: cellFeature
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: lockedAreaConfig
       Entry: 6
       Data: 
@@ -1554,64 +1530,40 @@ MonoBehaviour:
       Data: 3
     - Name: 
       Entry: 3
-      Data: 4
+      Data: 3
     - Name: 
       Entry: 8
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 1
     - Name: elementInfo
+      Entry: 7
+      Data: 42|Game.GridElementInfo, Game
+    - Name: elementData
       Entry: 6
       Data: 
-    - Name: cellFeature
-      Entry: 6
-      Data: 
-    - Name: lockedAreaConfig
-      Entry: 6
-      Data: 
-    - Name: breakableWallElementCondition
-      Entry: 6
-      Data: 
-    - Name: cellFeatureGroupIndex
+    - Name: randomElement
+      Entry: 5
+      Data: true
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: false
+    - Name: powerUpType
       Entry: 3
       Data: 0
-    - Name: cellFeatureGroupHealth
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupMaxHealth
-      Entry: 3
-      Data: 0
-    - Name: cellHealth
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
       Entry: 8
       Data: 
-    - Name: 
-      Entry: 7
-      Data: 42|Game.Grid3D+GridCell, Game
-    - Name: coordinates
-      Entry: 7
-      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
-    - Name: 
-      Entry: 3
-      Data: 3
-    - Name: 
-      Entry: 3
-      Data: 5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: cellType
-      Entry: 3
-      Data: 3
-    - Name: elementInfo
-      Entry: 6
-      Data: 
     - Name: cellFeature
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: lockedAreaConfig
       Entry: 6
       Data: 
@@ -1644,64 +1596,40 @@ MonoBehaviour:
       Data: 3
     - Name: 
       Entry: 3
-      Data: 6
+      Data: 4
     - Name: 
       Entry: 8
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 1
     - Name: elementInfo
+      Entry: 7
+      Data: 44|Game.GridElementInfo, Game
+    - Name: elementData
       Entry: 6
       Data: 
-    - Name: cellFeature
-      Entry: 6
-      Data: 
-    - Name: lockedAreaConfig
-      Entry: 6
-      Data: 
-    - Name: breakableWallElementCondition
-      Entry: 6
-      Data: 
-    - Name: cellFeatureGroupIndex
+    - Name: randomElement
+      Entry: 5
+      Data: true
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: false
+    - Name: powerUpType
       Entry: 3
       Data: 0
-    - Name: cellFeatureGroupHealth
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupMaxHealth
-      Entry: 3
-      Data: 0
-    - Name: cellHealth
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
       Entry: 8
       Data: 
-    - Name: 
-      Entry: 7
-      Data: 44|Game.Grid3D+GridCell, Game
-    - Name: coordinates
-      Entry: 7
-      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
-    - Name: 
-      Entry: 3
-      Data: 3
-    - Name: 
-      Entry: 3
-      Data: 7
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: cellType
-      Entry: 3
-      Data: 3
-    - Name: elementInfo
-      Entry: 6
-      Data: 
     - Name: cellFeature
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: lockedAreaConfig
       Entry: 6
       Data: 
@@ -1731,67 +1659,43 @@ MonoBehaviour:
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 4
+      Data: 3
     - Name: 
       Entry: 3
-      Data: 0
+      Data: 5
     - Name: 
       Entry: 8
       Data: 
     - Name: cellType
-      Entry: 3
-      Data: 2
-    - Name: elementInfo
-      Entry: 6
-      Data: 
-    - Name: cellFeature
-      Entry: 6
-      Data: 
-    - Name: lockedAreaConfig
-      Entry: 6
-      Data: 
-    - Name: breakableWallElementCondition
-      Entry: 6
-      Data: 
-    - Name: cellFeatureGroupIndex
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupHealth
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupMaxHealth
-      Entry: 3
-      Data: 0
-    - Name: cellHealth
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 46|Game.Grid3D+GridCell, Game
-    - Name: coordinates
-      Entry: 7
-      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
-    - Name: 
-      Entry: 3
-      Data: 4
-    - Name: 
       Entry: 3
       Data: 1
+    - Name: elementInfo
+      Entry: 7
+      Data: 46|Game.GridElementInfo, Game
+    - Name: elementData
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: false
+    - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
-    - Name: cellType
-      Entry: 3
-      Data: 2
-    - Name: elementInfo
-      Entry: 6
-      Data: 
     - Name: cellFeature
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: lockedAreaConfig
       Entry: 6
       Data: 
@@ -1821,67 +1725,43 @@ MonoBehaviour:
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 4
+      Data: 3
     - Name: 
       Entry: 3
-      Data: 2
+      Data: 6
     - Name: 
       Entry: 8
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 1
     - Name: elementInfo
+      Entry: 7
+      Data: 48|Game.GridElementInfo, Game
+    - Name: elementData
       Entry: 6
       Data: 
-    - Name: cellFeature
-      Entry: 6
-      Data: 
-    - Name: lockedAreaConfig
-      Entry: 6
-      Data: 
-    - Name: breakableWallElementCondition
-      Entry: 6
-      Data: 
-    - Name: cellFeatureGroupIndex
+    - Name: randomElement
+      Entry: 5
+      Data: true
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: false
+    - Name: powerUpType
       Entry: 3
       Data: 0
-    - Name: cellFeatureGroupHealth
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupMaxHealth
-      Entry: 3
-      Data: 0
-    - Name: cellHealth
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
       Entry: 8
       Data: 
-    - Name: 
-      Entry: 7
-      Data: 48|Game.Grid3D+GridCell, Game
-    - Name: coordinates
-      Entry: 7
-      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
-    - Name: 
-      Entry: 3
-      Data: 4
-    - Name: 
-      Entry: 3
-      Data: 3
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: cellType
-      Entry: 3
-      Data: 3
-    - Name: elementInfo
-      Entry: 6
-      Data: 
     - Name: cellFeature
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: lockedAreaConfig
       Entry: 6
       Data: 
@@ -1911,67 +1791,43 @@ MonoBehaviour:
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 4
+      Data: 3
     - Name: 
       Entry: 3
-      Data: 4
+      Data: 7
     - Name: 
       Entry: 8
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 1
     - Name: elementInfo
+      Entry: 7
+      Data: 50|Game.GridElementInfo, Game
+    - Name: elementData
       Entry: 6
       Data: 
-    - Name: cellFeature
-      Entry: 6
-      Data: 
-    - Name: lockedAreaConfig
-      Entry: 6
-      Data: 
-    - Name: breakableWallElementCondition
-      Entry: 6
-      Data: 
-    - Name: cellFeatureGroupIndex
+    - Name: randomElement
+      Entry: 5
+      Data: true
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: false
+    - Name: powerUpType
       Entry: 3
       Data: 0
-    - Name: cellFeatureGroupHealth
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupMaxHealth
-      Entry: 3
-      Data: 0
-    - Name: cellHealth
+    - Name: cauldronProgress
       Entry: 3
       Data: 0
     - Name: 
       Entry: 8
       Data: 
-    - Name: 
-      Entry: 7
-      Data: 50|Game.Grid3D+GridCell, Game
-    - Name: coordinates
-      Entry: 7
-      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
-    - Name: 
-      Entry: 3
-      Data: 4
-    - Name: 
-      Entry: 3
-      Data: 5
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: cellType
-      Entry: 3
-      Data: 3
-    - Name: elementInfo
-      Entry: 6
-      Data: 
     - Name: cellFeature
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: lockedAreaConfig
       Entry: 6
       Data: 
@@ -2004,13 +1860,13 @@ MonoBehaviour:
       Data: 4
     - Name: 
       Entry: 3
-      Data: 6
+      Data: 0
     - Name: 
       Entry: 8
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 2
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -2049,13 +1905,13 @@ MonoBehaviour:
       Data: 4
     - Name: 
       Entry: 3
-      Data: 7
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 3
+      Data: 2
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -2091,63 +1947,39 @@ MonoBehaviour:
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 5
+      Data: 4
     - Name: 
       Entry: 3
-      Data: 0
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
     - Name: cellType
-      Entry: 3
-      Data: 2
-    - Name: elementInfo
-      Entry: 6
-      Data: 
-    - Name: cellFeature
-      Entry: 6
-      Data: 
-    - Name: lockedAreaConfig
-      Entry: 6
-      Data: 
-    - Name: breakableWallElementCondition
-      Entry: 6
-      Data: 
-    - Name: cellFeatureGroupIndex
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupHealth
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupMaxHealth
-      Entry: 3
-      Data: 0
-    - Name: cellHealth
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 54|Game.Grid3D+GridCell, Game
-    - Name: coordinates
-      Entry: 7
-      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
-    - Name: 
-      Entry: 3
-      Data: 5
-    - Name: 
       Entry: 3
       Data: 1
+    - Name: elementInfo
+      Entry: 7
+      Data: 54|Game.GridElementInfo, Game
+    - Name: elementData
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: true
+    - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
+      Entry: 3
+      Data: 0
     - Name: 
       Entry: 8
-      Data: 
-    - Name: cellType
-      Entry: 3
-      Data: 2
-    - Name: elementInfo
-      Entry: 6
       Data: 
     - Name: cellFeature
       Entry: 6
@@ -2181,52 +2013,7 @@ MonoBehaviour:
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 5
-    - Name: 
-      Entry: 3
-      Data: 2
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: cellType
-      Entry: 3
-      Data: 2
-    - Name: elementInfo
-      Entry: 6
-      Data: 
-    - Name: cellFeature
-      Entry: 6
-      Data: 
-    - Name: lockedAreaConfig
-      Entry: 6
-      Data: 
-    - Name: breakableWallElementCondition
-      Entry: 6
-      Data: 
-    - Name: cellFeatureGroupIndex
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupHealth
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupMaxHealth
-      Entry: 3
-      Data: 0
-    - Name: cellHealth
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 56|Game.Grid3D+GridCell, Game
-    - Name: coordinates
-      Entry: 7
-      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
-    - Name: 
-      Entry: 3
-      Data: 5
+      Data: 4
     - Name: 
       Entry: 3
       Data: 3
@@ -2238,7 +2025,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 57|Game.GridElementInfo, Game
+      Data: 56|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -2286,13 +2073,13 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 58|Game.Grid3D+GridCell, Game
+      Data: 57|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 5
+      Data: 4
     - Name: 
       Entry: 3
       Data: 4
@@ -2304,7 +2091,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 59|Game.GridElementInfo, Game
+      Data: 58|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -2352,13 +2139,13 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 60|Game.Grid3D+GridCell, Game
+      Data: 59|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 5
+      Data: 4
     - Name: 
       Entry: 3
       Data: 5
@@ -2370,7 +2157,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 61|Game.GridElementInfo, Game
+      Data: 60|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -2418,13 +2205,13 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 62|Game.Grid3D+GridCell, Game
+      Data: 61|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 5
+      Data: 4
     - Name: 
       Entry: 3
       Data: 6
@@ -2436,7 +2223,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 63|Game.GridElementInfo, Game
+      Data: 62|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -2484,13 +2271,13 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 64|Game.Grid3D+GridCell, Game
+      Data: 63|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 5
+      Data: 4
     - Name: 
       Entry: 3
       Data: 7
@@ -2502,7 +2289,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 65|Game.GridElementInfo, Game
+      Data: 64|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -2523,6 +2310,51 @@ MonoBehaviour:
       Data: 0
     - Name: 
       Entry: 8
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
+    - Name: cellFeatureGroupIndex
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 65|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 2
+    - Name: elementInfo
+      Entry: 6
       Data: 
     - Name: cellFeature
       Entry: 6
@@ -2556,16 +2388,16 @@ MonoBehaviour:
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 6
+      Data: 5
     - Name: 
       Entry: 3
-      Data: 0
+      Data: 1
     - Name: 
       Entry: 8
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 2
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -2601,10 +2433,10 @@ MonoBehaviour:
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 6
+      Data: 5
     - Name: 
       Entry: 3
-      Data: 1
+      Data: 2
     - Name: 
       Entry: 8
       Data: 
@@ -2646,52 +2478,7 @@ MonoBehaviour:
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 6
-    - Name: 
-      Entry: 3
-      Data: 2
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: cellType
-      Entry: 3
-      Data: 2
-    - Name: elementInfo
-      Entry: 6
-      Data: 
-    - Name: cellFeature
-      Entry: 6
-      Data: 
-    - Name: lockedAreaConfig
-      Entry: 6
-      Data: 
-    - Name: breakableWallElementCondition
-      Entry: 6
-      Data: 
-    - Name: cellFeatureGroupIndex
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupHealth
-      Entry: 3
-      Data: 0
-    - Name: cellFeatureGroupMaxHealth
-      Entry: 3
-      Data: 0
-    - Name: cellHealth
-      Entry: 3
-      Data: 0
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 69|Game.Grid3D+GridCell, Game
-    - Name: coordinates
-      Entry: 7
-      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
-    - Name: 
-      Entry: 3
-      Data: 6
+      Data: 5
     - Name: 
       Entry: 3
       Data: 3
@@ -2700,9 +2487,30 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 2
+      Data: 1
     - Name: elementInfo
+      Entry: 7
+      Data: 69|Game.GridElementInfo, Game
+    - Name: elementData
       Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: true
+    - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
       Data: 
     - Name: cellFeature
       Entry: 6
@@ -2736,7 +2544,7 @@ MonoBehaviour:
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 6
+      Data: 5
     - Name: 
       Entry: 3
       Data: 4
@@ -2802,7 +2610,7 @@ MonoBehaviour:
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 6
+      Data: 5
     - Name: 
       Entry: 3
       Data: 5
@@ -2868,7 +2676,7 @@ MonoBehaviour:
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 6
+      Data: 5
     - Name: 
       Entry: 3
       Data: 6
@@ -2934,7 +2742,7 @@ MonoBehaviour:
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 6
+      Data: 5
     - Name: 
       Entry: 3
       Data: 7
@@ -3000,7 +2808,7 @@ MonoBehaviour:
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 7
+      Data: 6
     - Name: 
       Entry: 3
       Data: 0
@@ -3045,7 +2853,7 @@ MonoBehaviour:
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 7
+      Data: 6
     - Name: 
       Entry: 3
       Data: 1
@@ -3054,7 +2862,7 @@ MonoBehaviour:
       Data: 
     - Name: cellType
       Entry: 3
-      Data: 0
+      Data: 2
     - Name: elementInfo
       Entry: 6
       Data: 
@@ -3090,7 +2898,7 @@ MonoBehaviour:
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 7
+      Data: 6
     - Name: 
       Entry: 3
       Data: 2
@@ -3135,7 +2943,7 @@ MonoBehaviour:
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
-      Data: 7
+      Data: 6
     - Name: 
       Entry: 3
       Data: 3
@@ -3180,6 +2988,450 @@ MonoBehaviour:
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
     - Name: 
       Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 3
+      Data: 4
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 1
+    - Name: elementInfo
+      Entry: 7
+      Data: 83|Game.GridElementInfo, Game
+    - Name: elementData
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: true
+    - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
+    - Name: cellFeatureGroupIndex
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 84|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 3
+      Data: 5
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 1
+    - Name: elementInfo
+      Entry: 7
+      Data: 85|Game.GridElementInfo, Game
+    - Name: elementData
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: true
+    - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
+    - Name: cellFeatureGroupIndex
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 86|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 1
+    - Name: elementInfo
+      Entry: 7
+      Data: 87|Game.GridElementInfo, Game
+    - Name: elementData
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: true
+    - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
+    - Name: cellFeatureGroupIndex
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 88|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 6
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 1
+    - Name: elementInfo
+      Entry: 7
+      Data: 89|Game.GridElementInfo, Game
+    - Name: elementData
+      Entry: 6
+      Data: 
+    - Name: randomElement
+      Entry: 5
+      Data: true
+    - Name: isSparkling
+      Entry: 5
+      Data: false
+    - Name: isHidden
+      Entry: 5
+      Data: true
+    - Name: powerUpType
+      Entry: 3
+      Data: 0
+    - Name: cauldronProgress
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
+    - Name: cellFeatureGroupIndex
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 90|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
+    - Name: cellFeatureGroupIndex
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 91|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 3
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 0
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
+    - Name: cellFeatureGroupIndex
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 92|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 3
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 2
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
+    - Name: cellFeatureGroupIndex
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 93|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
+      Data: 7
+    - Name: 
+      Entry: 3
+      Data: 3
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: cellType
+      Entry: 3
+      Data: 2
+    - Name: elementInfo
+      Entry: 6
+      Data: 
+    - Name: cellFeature
+      Entry: 6
+      Data: 
+    - Name: lockedAreaConfig
+      Entry: 6
+      Data: 
+    - Name: breakableWallElementCondition
+      Entry: 6
+      Data: 
+    - Name: cellFeatureGroupIndex
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupHealth
+      Entry: 3
+      Data: 0
+    - Name: cellFeatureGroupMaxHealth
+      Entry: 3
+      Data: 0
+    - Name: cellHealth
+      Entry: 3
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 94|Game.Grid3D+GridCell, Game
+    - Name: coordinates
+      Entry: 7
+      Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
+    - Name: 
+      Entry: 3
       Data: 7
     - Name: 
       Entry: 3
@@ -3219,7 +3471,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 83|Game.Grid3D+GridCell, Game
+      Data: 95|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -3237,7 +3489,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 84|Game.GridElementInfo, Game
+      Data: 96|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -3285,7 +3537,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 85|Game.Grid3D+GridCell, Game
+      Data: 97|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -3303,7 +3555,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 86|Game.GridElementInfo, Game
+      Data: 98|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 
@@ -3351,7 +3603,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 87|Game.Grid3D+GridCell, Game
+      Data: 99|Game.Grid3D+GridCell, Game
     - Name: coordinates
       Entry: 7
       Data: UnityEngine.Vector2Int, UnityEngine.CoreModule
@@ -3369,7 +3621,7 @@ MonoBehaviour:
       Data: 1
     - Name: elementInfo
       Entry: 7
-      Data: 88|Game.GridElementInfo, Game
+      Data: 100|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 6
       Data: 

@@ -3592,22 +3592,22 @@ MonoBehaviour:
   levelCreationMode: 0
   gridSize: {x: 8, y: 8}
   objectives:
-  - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
+  - objectiveType: {fileID: 11400000, guid: bc27c85d73dea714589531fcf14549f0, type: 2}
     isProcedurallyGenerated: 0
-    autoCountRequiredCount: 0
+    autoCountRequiredCount: 1
     tiedToLockedArea: 0
     lockedAreaIndex: 0
-    scriptableObjectParameter: {fileID: 11400000, guid: 15add8ec82c964f4fa95e19e667720e0, type: 2}
+    scriptableObjectParameter: {fileID: 0}
     requiredCount: 6
     generatedCount: {x: 0, y: 0}
     isCompleted: 0
-  - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
+  - objectiveType: {fileID: 0}
     isProcedurallyGenerated: 0
     autoCountRequiredCount: 0
     tiedToLockedArea: 0
     lockedAreaIndex: 0
-    scriptableObjectParameter: {fileID: 11400000, guid: d35d7301f52f6504a8cc2a157fc9a0b8, type: 2}
-    requiredCount: 6
+    scriptableObjectParameter: {fileID: 0}
+    requiredCount: 0
     generatedCount: {x: 0, y: 0}
     isCompleted: 0
   specialWinEvent: 0
