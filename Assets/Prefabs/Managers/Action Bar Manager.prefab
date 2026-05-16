@@ -46,11 +46,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionBarViewPrefab: {fileID: 230861821462889445, guid: 9e234be0c7761a34aaf9d63c420f9995, type: 3}
   actionBarItemList:
-  - rid: 1021877479918010546
+  - rid: 1021877643594432513
+  - rid: 1021877643594432512
+  - rid: 1021877643594432514
   - rid: 1021877479918010547
-  - rid: 1021877479918010548
-  - rid: 1021877479918010549
-  - rid: 1021877479918010550
+  - rid: 1021877479918010546
   actionBarParent: {fileID: 0}
   lockedSprite: {fileID: -320327708, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
   references:
@@ -61,40 +61,95 @@ MonoBehaviour:
       data:
         startingCount: 3
         ActionBarIcon: {fileID: -238066524, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
-        buyConfig: []
-        unlockedLevel: 3
+        buyConfig:
+        - buyCount: 3
+          discountPercentage: 0
+          buySprite: {fileID: 1515371514, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+        - buyCount: 10
+          discountPercentage: 0.1
+          buySprite: {fileID: 955988023, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+        - buyCount: 25
+          discountPercentage: 0.25
+          buySprite: {fileID: 939076426, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+        preExecutionAnimator: {fileID: 0}
+        animationName: 
+        unlockedLevel: 1
         buyCost: 50
         addedTime: 30
     - rid: 1021877479918010547
       type: {class: AddMovesAction, ns: Game, asm: Game}
       data:
         startingCount: 3
-        ActionBarIcon: {fileID: 1175953842, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
-        buyConfig: []
-        unlockedLevel: 3
+        ActionBarIcon: {fileID: 177486326, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+        buyConfig:
+        - buyCount: 3
+          discountPercentage: 0
+          buySprite: {fileID: 1515371514, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+        - buyCount: 10
+          discountPercentage: 0.1
+          buySprite: {fileID: 955988023, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+        - buyCount: 25
+          discountPercentage: 0.25
+          buySprite: {fileID: 939076426, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+        preExecutionAnimator: {fileID: 0}
+        animationName: 
+        unlockedLevel: 1
         buyCost: 50
         addedMoves: 5
-    - rid: 1021877479918010548
-      type: {class: BombPlacementAction, ns: Game, asm: Game}
+    - rid: 1021877643594432512
+      type: {class: HammerAction, ns: Game, asm: Game}
       data:
         startingCount: 0
-        ActionBarIcon: {fileID: 0}
-        buyConfig: []
-        unlockedLevel: 6
+        ActionBarIcon: {fileID: -1379819299, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+        buyConfig:
+        - buyCount: 3
+          discountPercentage: 0
+          buySprite: {fileID: -400374839, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+        - buyCount: 10
+          discountPercentage: 0.1
+          buySprite: {fileID: -1054736132, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+        - buyCount: 25
+          discountPercentage: 0.25
+          buySprite: {fileID: -571819677, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+        preExecutionAnimator: {fileID: 0}
+        animationName: 
+        unlockedLevel: 0
         buyCost: 50
-    - rid: 1021877479918010549
-      type: {class: PlaceDiscoBallAction, ns: Game, asm: Game}
+    - rid: 1021877643594432513
+      type: {class: CannonAction, ns: Game, asm: Game}
       data:
         startingCount: 0
-        ActionBarIcon: {fileID: 0}
-        buyConfig: []
-        unlockedLevel: 9
+        ActionBarIcon: {fileID: 1334718345, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+        buyConfig:
+        - buyCount: 3
+          discountPercentage: 0
+          buySprite: {fileID: 1206983405, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+        - buyCount: 10
+          discountPercentage: 0.1
+          buySprite: {fileID: -955304093, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+        - buyCount: 25
+          discountPercentage: 0.25
+          buySprite: {fileID: 1382202287, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+        preExecutionAnimator: {fileID: 3490327515930101110, guid: 2c72308a58ed09b45b42f2f80b2f71fc, type: 3}
+        animationName: hammer_anim
+        unlockedLevel: 1
         buyCost: 50
-    - rid: 1021877479918010550
-      type: {class: PlaceRocketAction, ns: Game, asm: Game}
+    - rid: 1021877643594432514
+      type: {class: ShuffleAction, ns: Game, asm: Game}
       data:
         startingCount: 0
-        ActionBarIcon: {fileID: 0}
-        buyConfig: []
-        unlockedLevel: 12
+        ActionBarIcon: {fileID: 1175953842, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+        buyConfig:
+        - buyCount: 3
+          discountPercentage: 0
+          buySprite: {fileID: -482402101, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+        - buyCount: 10
+          discountPercentage: 0.1
+          buySprite: {fileID: 136029994, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+        - buyCount: 25
+          discountPercentage: 0.25
+          buySprite: {fileID: -1060796528, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+        preExecutionAnimator: {fileID: 0}
+        animationName: 
+        unlockedLevel: 1
         buyCost: 50

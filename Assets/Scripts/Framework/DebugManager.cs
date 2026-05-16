@@ -29,6 +29,14 @@ namespace Game
             {
                 GameManager.Instance.ResetCurrentLevel();
             }
+            if(Input.GetKeyDown(KeyCode.C))
+            {
+                CurrencyManager.Instance.AddCurrency(GameManager.Instance.cashCurrency, 1000);
+            }
+            if(Input.GetKeyDown(KeyCode.P))
+            {
+                CurrencyManager.Instance.AddCurrency(GameManager.Instance.premiumCurrency, 1000);
+            }
             if(Input.GetKeyDown(KeyCode.A))
             {
                 if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))

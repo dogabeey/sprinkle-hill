@@ -396,6 +396,34 @@ namespace Game
             isPlacementReady = false;
         }
 
+        private IEnumerator PlayPreExecutionAnimation(BoosterBarAction action, Vector2Int center)
+        {
+            if (action == null || action.preExecutionAnimator == null || string.IsNullOrEmpty(action.animationName) || match3Grid == null)
+                yield break;
+
+            Vector3 cellPosition = match3Grid.GetCellPositionInGrid(center);
+            Animator animator = Instantiate(action.preExecutionAnimator, cellPosition, Quaternion.identity);
+            
+            if (animator != null)
+            {
+                animator.Play(action.animationName);
+                
+                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+                float animationLength = stateInfo.length;
+                
+                if (animationLength > 0)
+                {
+                    yield return new WaitForSeconds(animationLength);
+                }
+                else
+                {
+                    yield return new WaitForSeconds(1);
+                }
+            }
+            
+            Destroy(animator.gameObject);
+        }
+
         public bool IsPlacementActionActive(string actionTypeName)
         {
             if (string.IsNullOrEmpty(actionTypeName))
@@ -479,6 +507,7 @@ namespace Game
                 yield break;
             }
 
+            yield return StartCoroutine(PlayPreExecutionAnimation(bombAction, center));
             bombAction.CurrentCount--;
             yield return StartCoroutine(bombAction.BombThrowAnim(match3Grid.GetCellPositionInGrid(center)));
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: "Bomb Placement"));
@@ -500,6 +529,7 @@ namespace Game
                 yield break;
             }
 
+            yield return StartCoroutine(PlayPreExecutionAnimation(hammerAction, center));
             hammerAction.CurrentCount--;
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: hammerAction.ItemName));
             yield return StartCoroutine(match3Grid.ClearCrossAt(center, false));
@@ -521,6 +551,7 @@ namespace Game
                 yield break;
             }
 
+            yield return StartCoroutine(PlayPreExecutionAnimation(cannonAction, center));
             cannonAction.CurrentCount--;
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: cannonAction.ItemName));
             yield return StartCoroutine(match3Grid.ClearColumnAt(center.x, false));
@@ -550,6 +581,7 @@ namespace Game
                 yield break;
             }
 
+            yield return StartCoroutine(PlayPreExecutionAnimation(rocketAction, center));
             rocketAction.CurrentCount--;
             yield return StartCoroutine(rocketAction.RocketThrowAnim(match3Grid.GetCellPositionInGrid(center)));
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: rocketAction.ItemName));
@@ -579,6 +611,7 @@ namespace Game
                 yield break;
             }
 
+            yield return StartCoroutine(PlayPreExecutionAnimation(discoBallAction, center));
             discoBallAction.CurrentCount--;
             yield return StartCoroutine(discoBallAction.DiscoBallThrowAnim(match3Grid.GetCellPositionInGrid(center)));
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: discoBallAction.ItemName));

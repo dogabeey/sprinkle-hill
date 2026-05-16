@@ -42,7 +42,7 @@ Material:
     - _BrightnessMultiplier: 3
     - _BrightnessPower: 2
     - _EmissionAmplitude: 4
-    - _EmissionBase: 0
+    - _EmissionBase: 0.16
     - _EmissionMaskStrength: 1
     - _EnableExternalAlpha: 0
     - _PulseCurve: 2
@@ -52,7 +52,7 @@ Material:
     - _PulseSpeed: 2
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 0.9811321, g: 0.87450945, b: 0.55998576, a: 1}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _LuminanceWeights: {r: 0.2126, g: 0.7152, b: 0.1722, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
