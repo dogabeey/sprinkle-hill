@@ -51,7 +51,7 @@ MonoBehaviour:
   currencyInfos:
   - currencyModel: {fileID: 11400000, guid: 31b1c667ab353af4a80bfe0daaa96451, type: 2}
   - currencyModel: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
-  currencyAnimationContainer: {fileID: 1412219885008021525}
-  currencySpritePrefab: {fileID: 6522668367705246200, guid: 0bb994df5a34fab418c2b7cd753ad551, type: 3}
-  flightDuration: 0.35
-  currencySpriteMultiplier: 1
+  currencyAnimationContainer: {fileID: 0}
+  currencySpritePrefab: {fileID: 2570130478893252555, guid: 0bb994df5a34fab418c2b7cd753ad551, type: 3}
+  flightDuration: 0.5
+  currencySpriteMultiplier: 0.1

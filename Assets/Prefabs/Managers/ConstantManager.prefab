@@ -98,12 +98,10 @@ MonoBehaviour:
   maxBombCount: 99
   maxBombIndirectCount: 1
   maxRocketCount: 99
-  maxRocketIndirectCount: 2
+  maxRocketIndirectCount: 1
   maxPropellerCount: 99
-  maxPropellerIndirectCount: 2
+  maxPropellerIndirectCount: 1
   maxDiscoBallCount: 99
   maxDiscoBallIndirectCount: 1
   maxCauldronCount: 99
   maxCauldronIndirectCount: 1
-  
-  

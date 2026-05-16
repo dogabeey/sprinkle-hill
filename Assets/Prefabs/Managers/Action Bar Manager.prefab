@@ -111,8 +111,8 @@ MonoBehaviour:
         - buyCount: 25
           discountPercentage: 0.25
           buySprite: {fileID: -571819677, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
-        preExecutionAnimator: {fileID: 0}
-        animationName: 
+        preExecutionAnimator: {fileID: 3490327515930101110, guid: 2c72308a58ed09b45b42f2f80b2f71fc, type: 3}
+        animationName: hammer_anim
         unlockedLevel: 0
         buyCost: 50
     - rid: 1021877643594432513
@@ -131,7 +131,7 @@ MonoBehaviour:
           discountPercentage: 0.25
           buySprite: {fileID: 1382202287, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
         preExecutionAnimator: {fileID: 3490327515930101110, guid: 2c72308a58ed09b45b42f2f80b2f71fc, type: 3}
-        animationName: hammer_anim
+        animationName: cannon_anim
         unlockedLevel: 1
         buyCost: 50
     - rid: 1021877643594432514

@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3672124562995186146}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.4507976, y: -1.0817314, z: -37.96}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -44,21 +44,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 772d24d3d0a4d4cd2b0cd703c63f0c1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  addTimeIcon: {fileID: -238066524, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
-  shuffleActionIcon: {fileID: 1175953842, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
-  bombElementIcon: {fileID: -1949253524, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
-  discoBallElementIcon: {fileID: 524596139, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
-  rocketElementIcon: {fileID: 433923414, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
-  easyLevelIcon: {fileID: 0}
-  mediumLevelIcon: {fileID: 0}
-  hardLevelIcon: {fileID: 0}
+  breakableWallIcon: {fileID: 0}
   hiddenIndicatorIcon: {fileID: -480097980, guid: 5d8f4e5489d651244acf4484951fbd74, type: 3}
   sparklingIndicatorIcon: {fileID: -669346809, guid: 5d8f4e5489d651244acf4484951fbd74, type: 3}
-  crunchedBackgroundSprite: {fileID: 0}
+  cashSmallAmount: {fileID: 0}
+  cashMediumAmount: {fileID: 0}
+  cashLargeAmount: {fileID: 0}
+  premiumCurrencySmallAmount: {fileID: 0}
+  premiumCurrencyMediumAmount: {fileID: 0}
+  premiumCurrencyLargeAmount: {fileID: 0}
   elementDestroyParticlePrefab: {fileID: 6553830495741696104, guid: c66bb7ca972ded84692b09698947ca71, type: 3}
   bombImpactParticlePrefab: {fileID: 6553830495741696104, guid: 0b989c0118a79ff489a67064e4ccd54b, type: 3}
   rocketTrailParticlePrefab: {fileID: 6553830495741696104, guid: 6004a563187092a48932c66eba0f64a8, type: 3}
   addTimePowerupTrailParticlePrefab: {fileID: 6553830495741696104, guid: a8edf5e7a7b98474b8c22331374c6a56, type: 3}
+  addMovesPowerupTrailParticlePrefab: {fileID: 0}
   shufflePowerupTrailParticlePrefab: {fileID: 0}
   bombPowerupTrailParticlePrefab: {fileID: 6553830495741696104, guid: 1ea5b88013b271144a852e3fdd2cc75b, type: 3}
   discoBallPowerupTrailParticlePrefab: {fileID: 6553830495741696104, guid: f0c3336913e261f479ba003744aaa6ec, type: 3}
