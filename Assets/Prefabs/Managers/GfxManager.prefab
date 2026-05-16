@@ -44,7 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 772d24d3d0a4d4cd2b0cd703c63f0c1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  breakableWallIcon: {fileID: 0}
+  breakableWallIcon: {fileID: 1909799903, guid: cca08bb4584b9214bb9e96f1234a95f0, type: 3}
+  breakableWallIcon2: {fileID: -149542430, guid: cca08bb4584b9214bb9e96f1234a95f0, type: 3}
+  breakableWallIcon3: {fileID: -1331831539, guid: cca08bb4584b9214bb9e96f1234a95f0, type: 3}
   hiddenIndicatorIcon: {fileID: -480097980, guid: 5d8f4e5489d651244acf4484951fbd74, type: 3}
   sparklingIndicatorIcon: {fileID: -669346809, guid: 5d8f4e5489d651244acf4484951fbd74, type: 3}
   cashSmallAmount: {fileID: 0}

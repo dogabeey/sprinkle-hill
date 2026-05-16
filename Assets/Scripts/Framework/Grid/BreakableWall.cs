@@ -43,7 +43,15 @@ namespace Game
                 if (healthObjectByHealth.healthObject != null)
                 {
                     bool shouldBeActive = currentHealth >= healthObjectByHealth.healthThreshold;
-                    healthObjectByHealth.healthObject.SetActive(shouldBeActive);
+                    if (healthObjectByHealth.healthObject.activeSelf && !shouldBeActive)
+                    {
+                        ParticleSystem breakParticleInstance = healthObjectByHealth.breakParticle != null ? Instantiate(healthObjectByHealth.breakParticle, healthObjectByHealth.healthObject.transform.position, Quaternion.identity) : null;
+                        if (breakParticleInstance != null)
+                        {
+                            breakParticleInstance.Play();
+                        }
+                    }
+                        healthObjectByHealth.healthObject.SetActive(shouldBeActive);
                 }
             }
         }

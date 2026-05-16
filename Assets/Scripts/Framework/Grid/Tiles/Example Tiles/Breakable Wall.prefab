@@ -109,7 +109,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &3498355400748104645
 Transform:
   m_ObjectHideFlags: 0
@@ -119,8 +119,8 @@ Transform:
   m_GameObject: {fileID: 2802260092766530332}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.262, z: 0}
-  m_LocalScale: {x: 0.46083, y: 0.35714325, z: 0.46083}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6807820960757635180}
@@ -172,9 +172,9 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 128471528, guid: d773595130d903044a6b836c8069db57, type: 3}
+  m_Sprite: {fileID: -149542430, guid: cca08bb4584b9214bb9e96f1234a95f0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -200,7 +200,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2764054059501500234
 Transform:
   m_ObjectHideFlags: 0
@@ -210,8 +210,8 @@ Transform:
   m_GameObject: {fileID: 4475690576741026412}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.225, z: 0}
-  m_LocalScale: {x: 0.46083, y: 0.35714325, z: 0.46083}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6807820960757635180}
@@ -263,9 +263,9 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 128471528, guid: d773595130d903044a6b836c8069db57, type: 3}
+  m_Sprite: {fileID: -1331831539, guid: cca08bb4584b9214bb9e96f1234a95f0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -332,10 +332,10 @@ MonoBehaviour:
   healthObjectsByHealth:
   - healthObject: {fileID: 2802260092766530332}
     healthThreshold: 2
-    breakParticle: {fileID: 0}
+    breakParticle: {fileID: 9101700452171790528, guid: edb51d9cfbe673e408e908bf63ffbc8e, type: 3}
   - healthObject: {fileID: 4475690576741026412}
     healthThreshold: 3
-    breakParticle: {fileID: 0}
+    breakParticle: {fileID: 9101700452171790528, guid: fc9ee7e75f6c091458c065bf3b79e512, type: 3}
   breakTriggerName: Break
   breakAnimationDuration: 0.2
 --- !u!95 &7141815730495433159

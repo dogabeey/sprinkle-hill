@@ -12,15 +12,8 @@ namespace Game
 
         internal void Init(LevelEditor stage, int stageIndex)
         {
-            if(stage.levelDifficulty == 3)
-            {
-                if(stageImage) stageImage.sprite = GameManager.Instance.gfxManager.hardLevelIcon;
-                if(stageText) stageText.text = "";
-            }
-            else
-            {
-                if (stageText) stageText.text = (stageIndex + 1).ToString();
-            }
+
+            if (stageText) stageText.text = (stageIndex + 1).ToString();
         }
     }
 }

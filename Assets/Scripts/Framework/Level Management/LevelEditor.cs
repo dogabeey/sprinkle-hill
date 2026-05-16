@@ -126,7 +126,26 @@ namespace Game
 
         private static ElementPowerUpType ResolveElementPowerUpType(ElementData data)
         {
-            return IsCauldronElementData(data) ? ElementPowerUpType.Cauldron : ElementPowerUpType.None;
+            GameManager manager = GameManager.Instance;
+            if (data == null || manager == null)
+                return ElementPowerUpType.None;
+
+            if (manager.cauldronElementData == data)
+                return ElementPowerUpType.Cauldron;
+
+            if (manager.bombElementData == data)
+                return ElementPowerUpType.Bomb;
+
+            if (manager.rocketElementData == data)
+                return ElementPowerUpType.Rocket;
+
+            if (manager.propellerElementData == data)
+                return ElementPowerUpType.Propeller;
+
+            if (manager.discoBallElementData == data)
+                return ElementPowerUpType.DiscoBall;
+
+            return ElementPowerUpType.None;
         }
 
         private static GridElementInfo CreateElementInfo(ElementData data)
@@ -918,12 +937,17 @@ namespace Game
                     EditorGUI.DrawRect(rect, emptyCellColor);
                     break;
                 case Grid3D.CellType.BreakableWall:
-                    EditorGUI.DrawRect(rect, breakableWallCellColor);
+                    if(value.cellHealth <= 1)
+                        DrawSprite(rect, GameManager.Instance.gfxManager.breakableWallIcon);
+                    else if (value.cellHealth == 2)
+                        DrawSprite(rect, GameManager.Instance.gfxManager.breakableWallIcon2);
+                    else if (value.cellHealth >= 3)
+                        DrawSprite(rect, GameManager.Instance.gfxManager.breakableWallIcon3);
                     if (value.breakableWallElementCondition != null)
-                        DrawSprite(breakableWallElementIndicatorRect, value.breakableWallElementCondition.displayIcon);
+                        DrawSprite(rect, value.breakableWallElementCondition.breakableWallOverride);
                     break;
                 case Grid3D.CellType.UnbreakableWall:
-                    EditorGUI.DrawRect(rect, unbreakableWallCellColor);
+                    EditorGUI.DrawRect(rect, Color.magenta);
                     break;
             }
         }

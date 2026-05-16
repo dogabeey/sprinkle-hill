@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: cca08bb4584b9214bb9e96f1234a95f0
+guid: 7ea9e2049290c8d41a38a3b4805d6237
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -21,7 +21,7 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
     flipGreenChannel: 0
-  isReadable: 0
+  isReadable: 1
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
@@ -34,23 +34,23 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
-    wrapU: 1
-    wrapV: 1
+    wrapU: 0
+    wrapV: 0
     wrapW: 0
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
   spriteMode: 2
-  spriteExtrude: 1
+  spriteExtrude: 0
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 256
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -95,7 +95,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 4
     buildTarget: Android
-    maxTextureSize: 1024
+    maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: 65
     textureCompression: 1
@@ -136,11 +136,11 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: breakable_box_1
+      name: special_elements_general_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
+        y: 1792
         width: 256
         height: 256
       alignment: 0
@@ -151,18 +151,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2de85b9c485578b4186d2a7a4b7aeacc
-      internalID: 1909799903
+      spriteID: f813d397308179a4694f0da2553312e7
+      internalID: -442064117
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: breakable_box_2
+      name: special_elements_general_1
       rect:
         serializedVersion: 2
         x: 256
-        y: 0
+        y: 1792
         width: 256
         height: 256
       alignment: 0
@@ -173,18 +173,18 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 104e436b452da214aae07b8a100cbae2
-      internalID: -149542430
+      spriteID: a50aee011cc16b34980b7c6e3899ce02
+      internalID: -1594882395
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: breakable_box_3
+      name: special_elements_general_2
       rect:
         serializedVersion: 2
         x: 512
-        y: 0
+        y: 1792
         width: 256
         height: 256
       alignment: 0
@@ -195,8 +195,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1dcb6c4af1c299f4bbfd5b860a414895
-      internalID: -1331831539
+      spriteID: 95a0f61ac15cd6146848afb0cd8cf828
+      internalID: -622759365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: special_elements_general_3
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 1792
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cb79df8aa5677504688f5817878d5d0b
+      internalID: -205259008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: special_elements_general_4
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 1792
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a41503fdc1573294dbae96c4c71d3be1
+      internalID: 1835613153
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: special_elements_general_5
+      rect:
+        serializedVersion: 2
+        x: 1280
+        y: 1792
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6a87b6cbb54bcd4999ed85fa0d10221
+      internalID: -1294166768
       vertices: []
       indices: 
       edges: []
@@ -205,7 +271,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: a0b292d8abc8fa2478aae6cba7d84a4e
+    spriteID: abf707788e3e105469351cce91faa516
     internalID: 0
     vertices: []
     indices: 
@@ -213,16 +279,16 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":256.0,"y":256.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":1,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      breakable_box_0: -127590010
-      breakable_box_1: 1909799903
-      breakable_box_2: -149542430
-      breakable_box_3: -1331831539
-      grid_sprites_3: 141436327
-      grid_sprites_4: -528177245
-      grid_sprites_5: -664459858
-      grid_sprites_6: -1949703169
+      special_elements_general_0: -442064117
+      special_elements_general_1: -1594882395
+      special_elements_general_2: -622759365
+      special_elements_general_3: -205259008
+      special_elements_general_4: 1835613153
+      special_elements_general_5: -1294166768
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

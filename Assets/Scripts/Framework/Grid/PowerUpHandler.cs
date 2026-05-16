@@ -1013,7 +1013,86 @@ namespace Game
 
             grid.TriggerCellFeatureMatchedOverAt(bombPos);
             bombCell.elementInfo = null;
-            yield return grid.StartCoroutine(grid.ClearAreaAt(bombPos, 2, false));
+            yield return grid.StartCoroutine(ClearBombAreaProgressive(bombPos, 2, false));
+        }
+
+        private IEnumerator ClearBombAreaProgressive(Vector2Int center, int radius, bool allowConditionedBreakableWalls)
+        {
+            HashSet<Vector2Int> processedWalls = new HashSet<Vector2Int>();
+            float ringDelay = Mathf.Max(0.02f, GameManager.Instance.constantManager.matchClearDelay * 0.35f);
+
+            for (int ring = 0; ring <= radius; ring++)
+            {
+                for (int x = center.x - radius; x <= center.x + radius; x++)
+                {
+                    for (int y = center.y - radius; y <= center.y + radius; y++)
+                    {
+                        Vector2Int pos = new Vector2Int(x, y);
+                        int chebyshevDistance = Mathf.Max(Mathf.Abs(pos.x - center.x), Mathf.Abs(pos.y - center.y));
+                        if (chebyshevDistance != ring)
+                            continue;
+
+                        ClearBombCellImmediate(pos, processedWalls, allowConditionedBreakableWalls);
+                    }
+                }
+
+                if (ring < radius)
+                    yield return new WaitForSeconds(ringDelay);
+            }
+        }
+
+        private void ClearBombCellImmediate(Vector2Int pos, HashSet<Vector2Int> processedWalls, bool allowConditionedBreakableWalls)
+        {
+            Grid3D.GridCell cell = grid.GetCellPublic(pos);
+            if (cell == null)
+                return;
+
+            if (cell.cellType == Grid3D.CellType.BreakableWall)
+            {
+                if (!allowConditionedBreakableWalls && cell.breakableWallElementCondition != null)
+                    return;
+
+                if (processedWalls.Add(pos))
+                    grid.StartCoroutine(grid.BreakWallAt(pos));
+
+                return;
+            }
+
+            if (cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null)
+                return;
+
+            GridElement matchedElement = grid.GetElementAt(pos);
+            grid.TriggerCellFeatureMatchedOverAt(pos);
+            grid.TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+
+            if (grid.TryRevealHiddenBoxAt(pos))
+                return;
+
+            if (GameManager.Instance != null &&
+                cell.elementInfo.elementData != null && GameManager.Instance.garbageBagElementData == cell.elementInfo.elementData)
+                return;
+
+            if (GameManager.Instance != null &&
+                cell.elementInfo.elementData != null && GameManager.Instance.powerGeneratorElementData == cell.elementInfo.elementData)
+                return;
+
+            if (cell.elementInfo.elementData != null &&
+                cell.elementInfo.elementData.HasBehavior(ElementData.ElementBehaviorFlags.ImmuneToClear))
+                return;
+
+            if (IsSpecialPowerUp(cell.elementInfo.powerUpType))
+            {
+                grid.StartCoroutine(ActivateAt(pos, null));
+                return;
+            }
+
+            if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron)
+                return;
+
+            grid.NotifyElementCleared(pos);
+            cell.elementInfo = null;
+            if (matchedElement != null)
+                grid.StartCoroutine(matchedElement.DestroyElement());
         }
 
         private IEnumerator ActivateRocket(Vector2Int rocketPos)

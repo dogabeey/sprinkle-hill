@@ -10,12 +10,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 827273221046619716, guid: 6f18e130bf811584b8ef0f44cfd6bd9e, type: 3}
       propertyPath: m_Name
-      value: breakable wall destroy
+      value: breakable wall destroy 3
       objectReference: {fileID: 0}
     - target: {fileID: 2192144657987395655, guid: 6f18e130bf811584b8ef0f44cfd6bd9e, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 40b92a9676500af47b4254568dba1e81, type: 2}
+      objectReference: {fileID: 2100000, guid: b56bee242f5d8a948b6b71612a769cfc, type: 2}
     - target: {fileID: 2395681802986520704, guid: 6f18e130bf811584b8ef0f44cfd6bd9e, type: 3}
       propertyPath: ShapeModule.type
       value: 10

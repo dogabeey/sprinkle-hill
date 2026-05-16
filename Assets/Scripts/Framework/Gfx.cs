@@ -7,30 +7,12 @@ namespace Game
 {
     public class Gfx : MonoBehaviour
     {
-        [FoldoutGroup("Icons")]
-        public Sprite addTimeIcon;
-        [FoldoutGroup("Icons")]
-        public Sprite addMovesIcon;
-        [FoldoutGroup("Icons")]
-        public Sprite shuffleActionIcon;
-        [FoldoutGroup("Icons")]
-        public Sprite bombElementIcon;
-        [FoldoutGroup("Icons")]
-        public Sprite discoBallElementIcon;
-        [FoldoutGroup("Icons")]
-        public Sprite rocketElementIcon;
-        [FoldoutGroup("Icons")]
-        public Sprite easyLevelIcon;
-        [FoldoutGroup("Icons")]
-        public Sprite mediumLevelIcon;
-        [FoldoutGroup("Icons")]
-        public Sprite hardLevelIcon;
-        [FoldoutGroup("Icons")]
+        [FoldoutGroup("Editor Icons")]
+        public Sprite breakableWallIcon, breakableWallIcon2, breakableWallIcon3;
+        [FoldoutGroup("Editor Icons")]
         public Sprite hiddenIndicatorIcon;
-        [FoldoutGroup("Icons")]
+        [FoldoutGroup("Editor Icons")]
         public Sprite sparklingIndicatorIcon;
-        [FoldoutGroup("Icons")]
-        public Sprite crunchedBackgroundSprite;
         [FoldoutGroup("Buy Icons")]
         public Sprite cashSmallAmount, cashMediumAmount, cashLargeAmount;
         [FoldoutGroup("Buy Icons")]
@@ -53,6 +35,5 @@ namespace Game
         public ParticleSystem discoBallPowerupTrailParticlePrefab;
         [FoldoutGroup("Particle Systems")]
         public ParticleSystem rocketPowerupTrailParticlePrefab;
-
     }
 }

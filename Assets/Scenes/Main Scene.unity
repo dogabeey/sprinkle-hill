@@ -8889,14 +8889,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GfxManager
       objectReference: {fileID: 0}
-    - target: {fileID: 9179816618609007364, guid: e0069f0ff63c60b429956823c73f36b9, type: 3}
-      propertyPath: breakableWallIcon2
-      value: 
-      objectReference: {fileID: -149542430, guid: cca08bb4584b9214bb9e96f1234a95f0, type: 3}
-    - target: {fileID: 9179816618609007364, guid: e0069f0ff63c60b429956823c73f36b9, type: 3}
-      propertyPath: breakableWallIcon3
-      value: 
-      objectReference: {fileID: -1331831539, guid: cca08bb4584b9214bb9e96f1234a95f0, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
