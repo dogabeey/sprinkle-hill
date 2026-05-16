@@ -401,6 +401,14 @@ namespace Game
             if (action == null || action.preExecutionAnimator == null || string.IsNullOrEmpty(action.animationName) || match3Grid == null)
                 yield break;
 
+            center.x = action.overrideCellLocationX ? action.fixedCellLocationX : center.x;
+            center.y = action.overrideCellLocationY ? action.fixedCellLocationY : center.y;
+            // If a center value is (-), It means grid size minus that value, so -1 means last cell index, -2 means second to last cell index, etc.
+            if (center.x < 0)
+                center.x = match3Grid.GridSize.x + center.x;
+            if (center.y < 0)
+                center.y = match3Grid.GridSize.y + center.y;
+
             Vector3 cellPosition = match3Grid.GetCellPositionInGrid(center);
             Animator animator = Instantiate(action.preExecutionAnimator, cellPosition, Quaternion.identity);
             

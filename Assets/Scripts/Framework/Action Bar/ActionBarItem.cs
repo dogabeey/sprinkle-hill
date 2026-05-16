@@ -192,6 +192,14 @@ namespace Game
         public string animationName; // This is the name of the animation to play on the preExecutionAnimator.
         public int unlockedLevel;
         public int buyCost = 50;
+        [FoldoutGroup("Override Settings")]
+        public bool overrideCellLocationX;
+        [FoldoutGroup("Override Settings")]
+        public bool overrideCellLocationY;
+        [FoldoutGroup("Override Settings")]
+        public int fixedCellLocationX;
+        [FoldoutGroup("Override Settings")]
+        public int fixedCellLocationY;
         public override bool CostDefinesBuyability => true;
         public override CurrencyModel CostCurrency => GameManager.Instance.cashCurrency;
 
