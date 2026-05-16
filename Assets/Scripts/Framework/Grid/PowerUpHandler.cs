@@ -1068,10 +1068,13 @@ namespace Game
 
             GridHelper.ShakeCamera(cm.rocketShakeDuration, cm.rocketShakeMagnitude, cm.rocketShakeVibrato, cm.rocketShakeRandomness);
 
-            Coroutine travelRight = grid.StartCoroutine(TravelRocketCopy(rocketCopyRight, originWorld, rightEnd, rightCells, cm));
-            Coroutine travelLeft = grid.StartCoroutine(TravelRocketCopy(rocketCopyLeft, originWorld, leftEnd, leftCells, cm));
-            Coroutine travelUp = grid.StartCoroutine(TravelRocketCopy(rocketCopyUp, originWorld, upEnd, upCells, cm));
-            Coroutine travelDown = grid.StartCoroutine(TravelRocketCopy(rocketCopyDown, originWorld, downEnd, downCells, cm));
+            HashSet<Vector2Int> processedWalls = new HashSet<Vector2Int>();
+            BreakAdjacentWallsImmediate(rocketPos, processedWalls);
+
+            Coroutine travelRight = grid.StartCoroutine(TravelRocketCopy(rocketCopyRight, originWorld, rightEnd, rightCells, cm, processedWalls));
+            Coroutine travelLeft = grid.StartCoroutine(TravelRocketCopy(rocketCopyLeft, originWorld, leftEnd, leftCells, cm, processedWalls));
+            Coroutine travelUp = grid.StartCoroutine(TravelRocketCopy(rocketCopyUp, originWorld, upEnd, upCells, cm, processedWalls));
+            Coroutine travelDown = grid.StartCoroutine(TravelRocketCopy(rocketCopyDown, originWorld, downEnd, downCells, cm, processedWalls));
 
             yield return travelRight;
             Object.Destroy(rocketCopyRight);
@@ -1081,15 +1084,6 @@ namespace Game
             Object.Destroy(rocketCopyUp);
             yield return travelDown;
             Object.Destroy(rocketCopyDown);
-
-            HashSet<Vector2Int> walls = new HashSet<Vector2Int>();
-            CollectAdjacentWalls(rocketPos, walls);
-            CollectAffectedWallsForRocketLine(rightCells, walls);
-            CollectAffectedWallsForRocketLine(leftCells, walls);
-            CollectAffectedWallsForRocketLine(upCells, walls);
-            CollectAffectedWallsForRocketLine(downCells, walls);
-
-            yield return grid.StartCoroutine(grid.BreakWallsSimultaneous(walls));
         }
 
         private void CollectAffectedWallsForRocketLine(List<Vector2Int> lineCells, HashSet<Vector2Int> walls)
@@ -1182,7 +1176,7 @@ namespace Game
             return copy;
         }
 
-        private IEnumerator TravelRocketCopy(GameObject rocketCopy, Vector3 start, Vector3 end, List<Vector2Int> cellsInOrder, ConstantManager cm)
+        private IEnumerator TravelRocketCopy(GameObject rocketCopy, Vector3 start, Vector3 end, List<Vector2Int> cellsInOrder, ConstantManager cm, HashSet<Vector2Int> processedWalls)
         {
             if (rocketCopy == null) yield break;
 
@@ -1211,7 +1205,7 @@ namespace Game
 
                 while (nextCellIndex < cellsInOrder.Count && currentDist >= cellDistances[nextCellIndex])
                 {
-                    ClearLineCellImmediate(cellsInOrder[nextCellIndex]);
+                    ClearLineCellImmediate(cellsInOrder[nextCellIndex], processedWalls);
                     nextCellIndex++;
                 }
 
@@ -1220,27 +1214,46 @@ namespace Game
 
             while (nextCellIndex < cellsInOrder.Count)
             {
-                ClearLineCellImmediate(cellsInOrder[nextCellIndex]);
+                ClearLineCellImmediate(cellsInOrder[nextCellIndex], processedWalls);
                 nextCellIndex++;
             }
         }
 
-        private void ClearLineCellImmediate(Vector2Int pos)
+        private void ClearLineCellImmediate(Vector2Int pos, HashSet<Vector2Int> processedWalls)
         {
             Grid3D.GridCell cell = grid.GetCellPublic(pos);
             if (cell == null) return;
-            if (cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null) return;
+
+            if (cell.cellType == Grid3D.CellType.BreakableWall)
+            {
+                TryBreakRocketWallImmediate(pos, processedWalls);
+                return;
+            }
+
+            if (cell.cellType != Grid3D.CellType.Normal)
+            {
+                BreakAdjacentWallsImmediate(pos, processedWalls);
+                return;
+            }
+
+            if (cell.elementInfo == null)
+            {
+                BreakAdjacentWallsImmediate(pos, processedWalls);
+                return;
+            }
 
             if (cell.cellFeature is GlassFeature)
             {
                 grid.TriggerCellFeatureMatchedOverAt(pos);
                 grid.TriggerCellFeatureMatchedAdjacentToAt(pos, cell, grid.GetElementAt(pos));
+                BreakAdjacentWallsImmediate(pos, processedWalls);
                 return;
             }
 
             GridElement matchedElement = grid.GetElementAt(pos);
             grid.TriggerCellFeatureMatchedOverAt(pos);
             grid.TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+            BreakAdjacentWallsImmediate(pos, processedWalls);
 
             if (grid.TryRevealHiddenBoxAt(pos))
                 return;
@@ -1268,6 +1281,28 @@ namespace Game
             grid.NotifyElementCleared(pos);
             cell.elementInfo = null;
             if (matchedElement != null) grid.StartCoroutine(matchedElement.DestroyElement());
+        }
+
+        private void BreakAdjacentWallsImmediate(Vector2Int pos, HashSet<Vector2Int> processedWalls)
+        {
+            Vector2Int[] offsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            for (int i = 0; i < offsets.Length; i++)
+                TryBreakRocketWallImmediate(pos + offsets[i], processedWalls);
+        }
+
+        private void TryBreakRocketWallImmediate(Vector2Int wallPos, HashSet<Vector2Int> processedWalls)
+        {
+            Grid3D.GridCell wallCell = grid.GetCellPublic(wallPos);
+            if (wallCell == null || wallCell.cellType != Grid3D.CellType.BreakableWall)
+                return;
+
+            if (wallCell.breakableWallElementCondition != null)
+                return;
+
+            if (processedWalls != null && !processedWalls.Add(wallPos))
+                return;
+
+            grid.StartCoroutine(grid.BreakWallAt(wallPos));
         }
 
         private IEnumerator AnimateBombFlight(GridElement bombElement, Vector3 target)
