@@ -390,6 +390,7 @@ Temp/bin/Debug/
  Unity.Properties.SourceGenerator.dll
  Unity.SourceGenerators.dll
  Unity.UIToolkit.SourceGenerator.dll
+../../../.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.2/Analyzers/Microsoft.Unity.Analyzers.dll
 
 [analyzerConfigFiles]
 Library/PackageCache/com.unity.ide.rider@4504839d03f7/.editorconfig

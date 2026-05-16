@@ -614,6 +614,7 @@ Temp/bin/Debug/UnityEngine.TestRunner.dll
  Unity.Properties.SourceGenerator.dll
  Unity.SourceGenerators.dll
  Unity.UIToolkit.SourceGenerator.dll
+../../../.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.2/Analyzers/Microsoft.Unity.Analyzers.dll
 
 [analyzerConfigFiles]
 Temp/obj/UnityEditor.TestRunner/UnityEditor.TestRunner.GeneratedMSBuildEditorConfig.editorconfig

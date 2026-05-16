@@ -393,6 +393,7 @@ Temp/bin/Debug/
  Unity.Properties.SourceGenerator.dll
  Unity.SourceGenerators.dll
  Unity.UIToolkit.SourceGenerator.dll
+../../../.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.2/Analyzers/Microsoft.Unity.Analyzers.dll
 
 [analyzerConfigFiles]
 Temp/obj/Unity.AI.Navigation.Editor.ConversionSystem/Unity.AI.Navigation.Editor.ConversionSystem.GeneratedMSBuildEditorConfig.editorconfig

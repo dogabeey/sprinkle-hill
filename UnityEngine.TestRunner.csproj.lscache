@@ -481,6 +481,7 @@ Library/PackageCache/com.unity.ext.nunit@d8c07649098d/net40/unity-custom/nunit.f
  Unity.Properties.SourceGenerator.dll
  Unity.SourceGenerators.dll
  Unity.UIToolkit.SourceGenerator.dll
+../../../.vscode/extensions/visualstudiotoolsforunity.vstuc-1.2.2/Analyzers/Microsoft.Unity.Analyzers.dll
 
 [analyzerConfigFiles]
 Temp/obj/UnityEngine.TestRunner/UnityEngine.TestRunner.GeneratedMSBuildEditorConfig.editorconfig
