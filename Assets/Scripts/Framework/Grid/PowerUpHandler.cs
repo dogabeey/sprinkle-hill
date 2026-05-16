@@ -706,7 +706,7 @@ namespace Game
                     {
                         Grid3D.GridCell c = grid.GetCellPublic(new Vector2Int(x, y));
                         if (c != null && c.cellType == Grid3D.CellType.Normal &&
-                            c.elementInfo != null && c.elementInfo.powerUpType == ElementPowerUpType.None &&
+                            c.elementInfo != null && !c.elementInfo.isHidden && c.elementInfo.powerUpType == ElementPowerUpType.None &&
                             c.elementInfo.elementData != null)
                         {
                             targetElementData = c.elementInfo.elementData;
@@ -751,6 +751,7 @@ namespace Game
                     if (pos == discoBallPos) continue;
                     Grid3D.GridCell cell = grid.GetCellPublic(pos);
                     if (cell == null || cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null) continue;
+                    if (cell.elementInfo.isHidden) continue;
                     if (IsSpecialPowerUp(cell.elementInfo.powerUpType)) continue;
                     ElementData elementData = cell.elementInfo.elementData;
                     if (elementData != null &&
@@ -775,7 +776,10 @@ namespace Game
             }
 
             if (selectedCells.Count > 0)
+            {
                 yield return grid.StartCoroutine(AnimateDiscoBallTrails(discoBallPos, selectedCells, targetElementData));
+                DestroyDiscoBallConvertedCells(selectedCells);
+            }
 
             if (spinTween != null)
                 spinTween.Kill();
@@ -788,6 +792,47 @@ namespace Game
                 GameManager.Instance.constantManager.matchShakeBaseMagnitude * 1.5f,
                 GameManager.Instance.constantManager.matchShakeVibrato,
                 GameManager.Instance.constantManager.matchShakeRandomness);
+        }
+
+        private void DestroyDiscoBallConvertedCells(List<Vector2Int> convertedCells)
+        {
+            if (convertedCells == null)
+                return;
+
+            for (int i = 0; i < convertedCells.Count; i++)
+            {
+                Vector2Int pos = convertedCells[i];
+                Grid3D.GridCell cell = grid.GetCellPublic(pos);
+                if (cell == null || cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null)
+                    continue;
+
+                GridElement matchedElement = grid.GetElementAt(pos);
+                grid.TriggerCellFeatureMatchedOverAt(pos);
+                grid.TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+
+                if (grid.TryRevealHiddenBoxAt(pos))
+                    continue;
+
+                if (GameManager.Instance != null &&
+                    cell.elementInfo.elementData != null && GameManager.Instance.garbageBagElementData == cell.elementInfo.elementData)
+                    continue;
+
+                if (GameManager.Instance != null &&
+                    cell.elementInfo.elementData != null && GameManager.Instance.powerGeneratorElementData == cell.elementInfo.elementData)
+                    continue;
+
+                if (cell.elementInfo.elementData != null &&
+                    cell.elementInfo.elementData.HasBehavior(ElementData.ElementBehaviorFlags.ImmuneToClear))
+                    continue;
+
+                if (IsSpecialPowerUp(cell.elementInfo.powerUpType) || cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron)
+                    continue;
+
+                grid.NotifyElementCleared(pos);
+                cell.elementInfo = null;
+                if (matchedElement != null)
+                    grid.StartCoroutine(matchedElement.DestroyElement());
+            }
         }
 
         private IEnumerator ActivatePropeller(Vector2Int propellerPos)
