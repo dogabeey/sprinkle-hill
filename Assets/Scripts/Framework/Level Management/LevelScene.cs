@@ -49,7 +49,7 @@ namespace Game
         }
 
 
-        virtual protected void Update()
+        virtual protected void LateUpdate()
         {
             if (isEnded) return;
             if (isWin) // PUT YOUR WIN CONDITIONS HERE
@@ -68,6 +68,12 @@ namespace Game
             }
 
 
+        }
+
+        internal void RestoreStateBeforeLoseCondition()
+        {
+            isLose = false;
+            isEnded = false;
         }
     }
     [System.Serializable]

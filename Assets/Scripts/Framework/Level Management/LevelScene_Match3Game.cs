@@ -555,7 +555,7 @@ namespace Game
             if (CanBuyExtraMovesOrTime())
             {
                 // Deduct the cost from the player's currency
-                CurrencyManager.Instance.AddCurrency(extraMoveCost.type, extraMoveCost.amount);
+                CurrencyManager.Instance.AddCurrency(extraMoveCost.type, -extraMoveCost.amount);
                 if (levelEditors[currentLevelEditorIndex].levelLimitType == LevelEditor.LevelLimitType.Moves)
                 {
                     moves += extraMovesGiven;
