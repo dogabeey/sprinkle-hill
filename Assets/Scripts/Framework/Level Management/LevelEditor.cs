@@ -513,6 +513,7 @@ namespace Game
                 GUI.Label(rect, $"{value.cellFeatureGroupIndex}", groupText);
                 healthText.normal.textColor = Color.blue;
                 GUI.Label(rect, $"{value.cellFeatureGroupHealth}", healthText);
+                
             }
 
             // EVENTS

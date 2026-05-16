@@ -2045,7 +2045,7 @@ namespace Game
 
                             float dist = newEl.transform.localPosition.magnitude;
                             float dur = fallSpeed > 0f ? dist / fallSpeed : 0f;
-                            gravitySeq.Join(newEl.transform.DOLocalMove(Vector3.zero, dur).SetEase(Ease.Linear));
+                            gravitySeq.Join(newEl.transform.DOLocalMove(Vector3.zero, dur).SetEase(Ease.OutBack, 0.9f));
                             hasTween = true;
                         }
                     }
