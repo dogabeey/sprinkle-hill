@@ -3437,7 +3437,7 @@ MonoBehaviour:
   targetElement: {fileID: 0}
   levelLimitType: 1
   timer: -1
-  moves: -1
+  moves: 40
   proceduralGeneration:
     useRandomSeed: 1
     seed: 0

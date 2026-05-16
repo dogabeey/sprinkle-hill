@@ -125,22 +125,13 @@ namespace Game
 
         private void OnEnable()
         {
-            EventManager.StartListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
-            EventManager.StartListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
-            EventManager.StartListening(GameEvent.LEVEL_FAILED, OnLevelCompleted);
+            EventManager.StartListening(GameEvent.LEVEL_EXTRA_MOVE_REJECTED, OnLevelFailConfirmed);
         }
         private void OnDisable()
         {
-            EventManager.StopListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
-            EventManager.StopListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
-            EventManager.StopListening(GameEvent.LEVEL_FAILED, OnLevelCompleted);
-            ClearObjectiveListeners();
+            EventManager.StopListening(GameEvent.LEVEL_EXTRA_MOVE_REJECTED, OnLevelFailConfirmed);
         }
-
-        private void OnLevelStarted(EventParam param)
-        {
-        }
-        private void OnLevelCompleted(EventParam param)
+        private void OnLevelFailConfirmed(EventParam param)
         {
             ClearObjectiveListeners();
         }

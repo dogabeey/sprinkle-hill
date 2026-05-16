@@ -73,6 +73,7 @@ namespace Game
         internal void RestoreStateBeforeLoseCondition()
         {
             isLose = false;
+            isPaused = false;
             isEnded = false;
         }
     }

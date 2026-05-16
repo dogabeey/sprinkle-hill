@@ -20,7 +20,6 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 154ee2fd4a3a356489c4482e8b443c06, type: 2}
     - {fileID: 11400000, guid: 66b5b66c4fb707c46810127020dbbb17, type: 2}
     - {fileID: 11400000, guid: 56c62304f3d4a6c428379f3845a428a7, type: 2}
-    - {fileID: 11400000, guid: d35d7301f52f6504a8cc2a157fc9a0b8, type: 2}
     - {fileID: 11400000, guid: 2f83e159c6b368646a1f9d8e7ec081e9, type: 2}
     - {fileID: 11400000, guid: 0aff893b628e16b449d95f9a8befead9, type: 2}
     SerializedBytesString: 
@@ -3017,8 +3016,8 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
-      Entry: 10
-      Data: 4
+      Entry: 6
+      Data: 
     - Name: cellFeatureGroupIndex
       Entry: 3
       Data: 0
@@ -3062,8 +3061,8 @@ MonoBehaviour:
       Entry: 6
       Data: 
     - Name: breakableWallElementCondition
-      Entry: 10
-      Data: 4
+      Entry: 6
+      Data: 
     - Name: cellFeatureGroupIndex
       Entry: 3
       Data: 0
@@ -3102,7 +3101,7 @@ MonoBehaviour:
       Data: 92|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 5
+      Data: 4
     - Name: randomElement
       Entry: 5
       Data: false
@@ -3570,7 +3569,7 @@ MonoBehaviour:
       Data: 
     - Name: breakableWallElementCondition
       Entry: 10
-      Data: 4
+      Data: 5
     - Name: cellFeatureGroupIndex
       Entry: 3
       Data: 0
@@ -3615,7 +3614,7 @@ MonoBehaviour:
       Data: 
     - Name: breakableWallElementCondition
       Entry: 10
-      Data: 6
+      Data: 5
     - Name: cellFeatureGroupIndex
       Entry: 3
       Data: 0
@@ -5238,7 +5237,7 @@ MonoBehaviour:
   targetElement: {fileID: 0}
   levelLimitType: 1
   timer: 200
-  moves: 999
+  moves: 40
   proceduralGeneration:
     useRandomSeed: 1
     seed: 0

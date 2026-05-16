@@ -56,6 +56,7 @@ public class UpperPanelUI : UIElement
     {
         EnsureObjectiveNodesSynced();
         UpdateObjectiveNodes();
+        UpdateTimerDisplay();
     }
 
     private void EnsureObjectiveNodesSynced()
@@ -150,33 +151,39 @@ public class UpperPanelUI : UIElement
 
         while (true)
         {
-            if (levelScene.levelLimitType == LevelEditor.LevelLimitType.Moves)
-            {
-                timerHeaderText.text = "Move";
-                timerText.enableAutoSizing = false;
-                timerText.text = Mathf.Max(0, levelScene.moves).ToString();
-            }
-            else
-            {
-                timerHeaderText.text = "Time";
-
-                int timer = levelScene.timer;
-                if (timer == -1)
-                {
-                    timerText.text = "∞";
-                    timerText.enableAutoSizing = true;
-                }
-                else
-                {
-                    timerText.enableAutoSizing = false;
-                    timerText.text = Mathf.Max(0, timer).ToString();
-                }
-            }
+            UpdateTimerDisplay();
 
             if (levelScene.isEnded)
                 yield break;
 
             yield return null;
+        }
+    }
+
+    private void UpdateTimerDisplay()
+    {
+        LevelScene_Match3Game levelScene = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
+        int timer = levelScene.timer;
+        if (timer == -1)
+        {
+            timerText.text = "∞";
+            timerText.enableAutoSizing = true;
+        }
+        else
+        {
+            timerText.enableAutoSizing = false;
+            timerText.text = Mathf.Max(0, timer).ToString();
+        }
+        if (levelScene.levelLimitType == LevelEditor.LevelLimitType.Moves)
+        {
+            timerHeaderText.text = "Move";
+            timerText.enableAutoSizing = false;
+            timerText.text = Mathf.Max(0, levelScene.moves).ToString();
+        }
+        else
+        {
+            timerHeaderText.text = "Time";
+
         }
     }
 
