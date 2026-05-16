@@ -29,6 +29,9 @@ namespace Game
             if (levelHeaderText) levelHeaderText.text = string.Format(levelHeaderFormat, GameManager.Instance.CurrentLevelIndex + 1);
             if(levelWinText) levelWinText.text = levelScene.winText;
 
+
+            nextLevelButton.interactable = true;
+
             // Remove old rewards
             foreach (var reward in rewardTexts)
             {
@@ -45,6 +48,7 @@ namespace Game
             nextLevelButton.onClick.RemoveAllListeners();
             nextLevelButton.onClick.AddListener(() =>
             {
+                nextLevelButton.interactable = false;
                 OnNextLevelButtonClicked();
             });
         }
