@@ -328,7 +328,7 @@ MonoBehaviour:
   lowerBorder: {fileID: 0}
   leftBorder: {fileID: 0}
   rightBorder: {fileID: 0}
-  wallAnimator: {fileID: 7141815730495433159}
+  breakParticle: {fileID: 9101700452171790528, guid: 6c747fef66f9d654f82eabae32a17c18, type: 3}
   healthObjectsByHealth:
   - healthObject: {fileID: 2802260092766530332}
     healthThreshold: 2

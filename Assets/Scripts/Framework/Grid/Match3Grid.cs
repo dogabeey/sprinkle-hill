@@ -1804,7 +1804,7 @@ namespace Game
                 if (cell.cellHealth <= 0)
                 {
                     if (wallTile is BreakableWall breakableWall)
-                        yield return StartCoroutine(breakableWall.WallBreak());
+                        breakableWall.WallBreak();
 
                     if (tileGenerationData != null && tileGenerationData.normalCell != null)
                     {

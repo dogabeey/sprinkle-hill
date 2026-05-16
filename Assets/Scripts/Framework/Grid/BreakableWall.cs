@@ -16,7 +16,7 @@ namespace Game
         }
         private int currentHealth;
 
-        [SerializeField] private Animator wallAnimator;
+        public ParticleSystem breakParticle;
         [SerializeField] private List<HealthObjectByHealth> healthObjectsByHealth;
         [SerializeField] private string breakTriggerName = "Break";
         [SerializeField] private float breakAnimationDuration = 0.25f;
@@ -50,22 +50,14 @@ namespace Game
 
         private void Awake()
         {
-            if (wallAnimator == null)
-            {
-                wallAnimator = GetComponent<Animator>();
-            }
         }
 
-        public IEnumerator WallBreak()
+        public void WallBreak()
         {
-            if (wallAnimator != null && !string.IsNullOrEmpty(breakTriggerName))
+            if (breakParticle != null)
             {
-                wallAnimator.SetTrigger(breakTriggerName);
-
-                if (breakAnimationDuration > 0f)
-                {
-                    yield return new WaitForSeconds(breakAnimationDuration);
-                }
+                ParticleSystem breakParticleInstance = Instantiate(breakParticle, transform.position, Quaternion.identity);
+                breakParticleInstance.Play();
             }
         }
     }
