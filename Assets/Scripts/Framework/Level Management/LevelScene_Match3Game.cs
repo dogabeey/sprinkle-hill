@@ -80,6 +80,7 @@ namespace Game
         };
 
         public int CurrentStageIndex => currentLevelEditorIndex;
+        public LevelEditor CurrentStage => levelEditors[CurrentStageIndex];
         public bool AllowDiscoBallCreation => allowDiscoBallCreation;
         public bool AllowRocketCreation => allowRocketCreation;
         public bool AllowBombCreation => allowBombCreation;
@@ -556,6 +557,12 @@ namespace Game
             {
                 // Deduct the cost from the player's currency
                 CurrencyManager.Instance.AddCurrency(extraMoveCost.type, -extraMoveCost.amount);
+
+                AnalyticsManager.SendEvent("movesBought", new Dictionary<string, object>
+                {
+                    { "levelIndex", GameManager.Instance.CurrentLevelIndex },
+                });
+
                 if (levelEditors[currentLevelEditorIndex].levelLimitType == LevelEditor.LevelLimitType.Moves)
                 {
                     moves += extraMovesGiven;

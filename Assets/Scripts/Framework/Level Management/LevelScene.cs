@@ -57,6 +57,14 @@ namespace Game
                 isEnded = true;
                 GridHelper.TriggerHaptic(HapticModes.Confirm);
                 EventParam param = new EventParam();
+                if(this is LevelScene_Match3Game levelScene)
+                {
+                    AnalyticsManager.SendEvent("levelWin", new Dictionary<string, object> 
+                    {
+                        { "levelIndex", GameManager.Instance.CurrentLevelIndex },
+                        { "moves", levelScene.CurrentStage.moves - levelScene.moves }
+                    });
+                }
                 EventManager.TriggerEvent(GameEvent.LEVEL_COMPLETED, param); // You can trigger this event anywhere and It will trigger On Win actions in the inspector, along with regular Level Completion events. This one also passes the time it took to win the level.
             }
             if (isLose) // PUT YOUR LOSE CONDITIONS HERE
@@ -64,6 +72,10 @@ namespace Game
                 isEnded = true;
                 GridHelper.TriggerHaptic(HapticModes.Failure);
                 EventParam param = new EventParam();
+                AnalyticsManager.SendEvent("levelFail", new Dictionary<string, object>
+                    {
+                        { "levelIndex", GameManager.Instance.CurrentLevelIndex },
+                    });
                 EventManager.TriggerEvent(GameEvent.LEVEL_FAILED, param); // You can trigger this event anywhere and It will trigger It will trigger On Lose actions in the inspector, along with regular Level Failure events. This one also passes the time it took to lose the level.
             }
 

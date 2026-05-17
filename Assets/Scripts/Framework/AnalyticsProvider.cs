@@ -14,6 +14,7 @@ namespace Game
         public void Initialize()
         {
             // Initialize any analytics SDKs here if needed
+            
         }
         public void SendEvent(string eventName)
         {
@@ -27,6 +28,15 @@ namespace Game
             Analytics.CustomEvent(eventName, parameters);
 #endif
         }
-    }
+        public void SendLevelWinEvent(int levelIndex)
+        {
+#if UNITY_ANALYTICS
+            Analytics.CustomEvent("LevelWin", new Dictionary<string, object>
+            {
+                { "LevelIndex", levelIndex }
+            });
+#endif
+        }
 
+    }
 }

@@ -214,7 +214,6 @@ public class EventManager : MonoBehaviour
             else
             {
                 thisEvent.Invoke(eventParam);
-                AnalyticsManager.SendEvent(eventName, eventParam.Payload);
             }
         }
     }

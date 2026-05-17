@@ -48,6 +48,13 @@ namespace Game
 
             if (buyBundle != null && buyBundle.buyableReference != null && buyBundle.buyableReference.TryBuy(buyBundle, objectSource))
             {
+                AnalyticsManager.SendEvent("boosterBought", new Dictionary<string, object>
+                {
+                    { "levelIndex", GameManager.Instance.CurrentLevelIndex },
+                    { "boosterName", buyBundle.buyableReference.ItemName },
+                    { "cashAmount", CurrencyManager.Instance.GetCurrencyAmount(buyBundle.buyableReference.CostCurrency) },
+                    { "itemAmount", buyBundle.buyCount},
+                });
                 ScreenManager.Instance.CloseAllScreens();
             }
         }
