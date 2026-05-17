@@ -49,11 +49,6 @@ namespace Game
             _provider.Initialize();
         }
 
-        public static void SendEvent(string eventName)
-        {
-            Instance._provider.SendEvent(eventName);
-        }
-
         public static void SendEvent(Unity.Services.Analytics.Event @event)
         {
             Instance._provider.SendEvent(@event);

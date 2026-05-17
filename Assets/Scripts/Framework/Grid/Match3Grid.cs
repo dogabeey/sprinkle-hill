@@ -757,6 +757,7 @@ namespace Game
                 EventManager.TriggerEvent(GameEvent.SWAP_FAILED, new EventParam(
                     vectorList: new Vector3[] { new Vector3(init1.x, init1.y, 0), new Vector3(init2.x, init2.y, 0) }
                 ));
+                AnalyticsManager.SendEvent(new SwapFailedEvent(GameManager.Instance.CurrentLevelIndex, GetCell(init1)?.elementInfo?.elementData?.name));
                 GridHelper.TriggerHaptic(HapticModes.Alert);
                 yield return StartCoroutine(SwapElements(init1, init2));
             }
