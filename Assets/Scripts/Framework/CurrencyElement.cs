@@ -47,7 +47,7 @@ namespace Game
                 currencyText.text = $"<sprite index={currency.spriteIndexForUI}> {(finalAmount + amount).ToLargeNumberString()} (<color=green>+{amount.ToLargeNumberString()})";
             
             yield return new WaitForSeconds(0.5f);
-            currencyTextTween = DOVirtual.Float(amount, finalAmount, 0.5f, (value) =>
+            currencyTextTween = DOVirtual.Float(finalAmount - amount, finalAmount, 0.5f, (value) =>
             {
                 string formattedAmount = value.ToLargeNumberString();
                 currencyText.text = $"<sprite index={currency.spriteIndexForUI}>" + formattedAmount;
