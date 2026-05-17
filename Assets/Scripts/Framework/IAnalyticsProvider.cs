@@ -7,7 +7,7 @@ namespace Game
     {
         void Initialize();
         void SendEvent(string eventName);
-        void SendEvent(string eventName, Dictionary<string, object> parameters);
+        void SendEvent<T>(T analyticsEvent) where T : Unity.Services.Analytics.Event;
     }
 
 }

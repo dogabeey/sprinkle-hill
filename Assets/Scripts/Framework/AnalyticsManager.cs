@@ -3,6 +3,7 @@ using Unity.Services.Core;
 using UnityEngine.UnityConsent ;
 using UnityEngine;
 using System;
+using Game.SimpleJSON;
 
 
 namespace Game
@@ -20,17 +21,18 @@ namespace Game
 
         private async void Awake()
         {
+            SaveManager.Instance.Register(this);
             await UnityServices.InitializeAsync();
-            EndUserConsent.SetConsentState(new ConsentState
-            {
-                AnalyticsIntent = ConsentStatus.Granted,
-                AdsIntent = ConsentStatus.Granted
-            });
             
             if (Instance != null && Instance != this)
             {
                 Destroy(gameObject);
                 return;
+            }
+
+            if (!Load())
+            {
+                ScreenManager.Instance.Show(Screens.ConsentPopup);
             }
 
             Instance = this;
@@ -52,19 +54,42 @@ namespace Game
             Instance._provider.SendEvent(eventName);
         }
 
-        public static void SendEvent(string eventName, Dictionary<string, object> parameters)
+        public static void SendEvent(Unity.Services.Analytics.Event @event)
         {
-            Instance._provider.SendEvent(eventName, parameters);
+            Instance._provider.SendEvent(@event);
         }
 
         public Dictionary<string, object> Save()
         {
-            throw new NotImplementedException();
+            Dictionary<string, object> json = new Dictionary<string, object>();
+
+            json["currentConsentState"] = new Dictionary<string, object>
+            {
+                {"AnalyticsIntent", currentConsentState.AnalyticsIntent.ToString()},
+                {"AdsIntent", currentConsentState.AdsIntent.ToString()}
+            };
+
+            return json;
         }
 
-        public bool Load(Action onLoadSuccess, Action onLoadFail)
+        public bool Load(Action onLoadSuccess = null, Action onLoadFail = null)
         {
-            throw new NotImplementedException();
+            JSONNode json = GameManager.Instance.saveManager.LoadSave(this);
+
+            if (json == null)
+            {
+                onLoadFail?.Invoke();
+                return false;
+            }
+
+            currentConsentState = new ConsentState
+            {
+                AnalyticsIntent = Enum.Parse<ConsentStatus>(json["currentConsentState"]["AnalyticsIntent"]),
+                AdsIntent = Enum.Parse<ConsentStatus>(json["currentConsentState"]["AdsIntent"])
+            };
+
+            onLoadSuccess?.Invoke();
+            return true;
         }
     }
 

@@ -11,6 +11,7 @@ namespace Game
         public override Screens ScreenID => Screens.ConsentPopup;
         public Button acceptButton;
         public Button declineButton;
+
         private void Start()
         {
             acceptButton.onClick.AddListener(OnAccept);
@@ -23,6 +24,7 @@ namespace Game
                 AnalyticsIntent = ConsentStatus.Granted,
                 AdsIntent = ConsentStatus.Granted
             });
+            AnalyticsManager.Instance.currentConsentState = EndUserConsent.GetConsentState();
             ScreenManager.Instance.CloseAllScreens();
         }
         private void OnDecline()
@@ -32,6 +34,7 @@ namespace Game
                 AnalyticsIntent = ConsentStatus.Denied,
                 AdsIntent = ConsentStatus.Denied
             });
+            AnalyticsManager.Instance.currentConsentState = EndUserConsent.GetConsentState();
             ScreenManager.Instance.CloseAllScreens();
         }
 

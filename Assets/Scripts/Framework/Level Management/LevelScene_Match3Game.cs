@@ -558,9 +558,10 @@ namespace Game
                 // Deduct the cost from the player's currency
                 CurrencyManager.Instance.AddCurrency(extraMoveCost.type, -extraMoveCost.amount);
 
-                AnalyticsManager.SendEvent("movesBought", new Dictionary<string, object>
+                AnalyticsManager.SendEvent(new ExtraMovesOrTimeBought
                 {
-                    { "levelIndex", GameManager.Instance.CurrentLevelIndex },
+                    LevelIndex = GameManager.Instance.CurrentLevelIndex,
+                    CashAmount = extraMoveCost.amount,
                 });
 
                 if (levelEditors[currentLevelEditorIndex].levelLimitType == LevelEditor.LevelLimitType.Moves)

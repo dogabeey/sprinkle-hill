@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using UnityEngine.UnityConsent;
 namespace Game
 {
     public class SettingScreen : GameScreen
@@ -11,7 +12,7 @@ namespace Game
         public Button toggleSettingsButton;
         public GridLayoutGroup layoutGroup;
         public Button restartButton;
-        public Toggle musicToggle, sfxToggle, vibrationToggle;
+        public Toggle musicToggle, sfxToggle, vibrationToggle, consentToggle;
 
         private void Awake()
         {
@@ -34,6 +35,28 @@ namespace Game
             vibrationToggle.onValueChanged.AddListener((isOn) =>
             {
                 SoundManager.Instance.IsVibrationOn = isOn;
+            });
+            consentToggle.onValueChanged.AddListener((isOn) =>
+            {
+                if (isOn)
+                {
+                    ScreenManager.Instance.Show(Screens.ConsentPopup);
+                    EndUserConsent.SetConsentState(new ConsentState
+                    {
+                        AnalyticsIntent = ConsentStatus.Granted,
+                        AdsIntent = ConsentStatus.Granted
+                    });
+                    AnalyticsManager.Instance.currentConsentState = EndUserConsent.GetConsentState();
+                }
+                else
+                {
+                    EndUserConsent.SetConsentState(new ConsentState
+                    {
+                        AnalyticsIntent = ConsentStatus.Denied,
+                        AdsIntent = ConsentStatus.Denied
+                    });
+                    AnalyticsManager.Instance.currentConsentState = EndUserConsent.GetConsentState();
+                }
             });
         }
 

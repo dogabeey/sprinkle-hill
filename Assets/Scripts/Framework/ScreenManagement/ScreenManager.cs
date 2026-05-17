@@ -12,16 +12,16 @@ namespace Game
 
         public Image backgroundImage; // This is toggled when a screen is open to darken the background.
 
-        internal List<GameScreen> screens = new List<GameScreen>();
+        public List<GameScreen> screens = new List<GameScreen>();
 
         private float defaultBGAlpha;
 
         private IEnumerator Start()
         {
-            yield return new WaitForSeconds(0.2f);
             screens.AddRange(FindObjectsOfType<GameScreen>(true));
 
             defaultBGAlpha = backgroundImage.color.a;
+            yield break;
         }
 
         private void Update()
