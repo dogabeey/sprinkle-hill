@@ -2050,7 +2050,7 @@ MonoBehaviour:
   screenContainer: {fileID: 1510078035}
   loadingText: {fileID: 1696311921}
   fillBar: {fileID: 1340314734}
-  waitTime: 3
+  waitTime: 1.4
   altLoadingTexts:
   - BAKING THE SODA
   - PREHEATING THE OVEN

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using Unity.Services.Core;
+using UnityEngine.UnityConsent ;
 using UnityEngine;
 
 
@@ -10,8 +12,15 @@ namespace Game
 
         private IAnalyticsProvider _provider;
 
-        private void Awake()
+        private async void Awake()
         {
+            await UnityServices.InitializeAsync();
+            EndUserConsent.SetConsentState(new ConsentState
+            {
+                AnalyticsIntent = ConsentStatus.Granted,
+                AdsIntent = ConsentStatus.Granted
+            });
+            
             if (Instance != null && Instance != this)
             {
                 Destroy(gameObject);
