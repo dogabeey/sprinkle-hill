@@ -192,7 +192,7 @@ TextureImporter:
       name: action_bar_settings
       rect:
         serializedVersion: 2
-        x: 1
+        x: 0
         y: 512
         width: 256
         height: 256
@@ -280,12 +280,12 @@ TextureImporter:
       name: action_bar_icons_move
       rect:
         serializedVersion: 2
-        x: 769
+        x: 768
         y: 512
-        width: 255
+        width: 256
         height: 256
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -294,6 +294,28 @@ TextureImporter:
       bones: []
       spriteID: 00f616b917406fe4a89e18a0d3bb80d5
       internalID: 177486326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: action_bar_icons_0
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 256
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 80e8d20a603f82e4986b6c2accb2d287
+      internalID: -214030625
       vertices: []
       indices: 
       edges: []
@@ -310,11 +332,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":4.0,"y":4.0},"gridSpriteSize":{"x":256.0,"y":256.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":1,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       action_bar_add_timer: -238066524
       action_bar_cannon: 1334718345
       action_bar_hammer: -1379819299
+      action_bar_icons_0: -214030625
       action_bar_icons_10: 6746950
       action_bar_icons_11: 990293928
       action_bar_icons_12: -1447246347
