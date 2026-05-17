@@ -31,7 +31,7 @@ public class EventParam
 
     private readonly Dictionary<string, object> payload = new Dictionary<string, object>(StringComparer.Ordinal);
 
-    public IReadOnlyDictionary<string, object> Payload => payload;
+    public Dictionary<string, object> Payload => payload;
 
     public EventParam()
     {
