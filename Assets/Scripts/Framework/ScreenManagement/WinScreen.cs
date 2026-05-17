@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 namespace Game
 {
     public class WinScreen : GameScreen
@@ -27,7 +28,7 @@ namespace Game
             base.InitUI(eventParam);
             LevelScene levelScene = GameManager.Instance.CurrentLevel;
             if (levelHeaderText) levelHeaderText.text = string.Format(levelHeaderFormat, GameManager.Instance.CurrentLevelIndex + 1);
-            if(levelWinText) levelWinText.text = levelScene.winText;
+            if (levelWinText) levelWinText.text = levelScene.winText;
 
 
             nextLevelButton.interactable = true;
@@ -85,4 +86,3 @@ namespace Game
     }
 
 }
-

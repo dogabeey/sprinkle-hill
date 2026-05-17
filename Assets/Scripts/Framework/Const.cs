@@ -12,6 +12,7 @@ namespace Game
         SettingScreen,
         FeatureProgress,
         BuyMenu,
+        ConsentPopup,
     }
 
     public class ConstantManager : MonoBehaviour
