@@ -4,7 +4,6 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-// using Firebase.Database;
 using System.Threading;
 using UnityEditor;
 using UnityEngine;
@@ -188,12 +187,19 @@ namespace Game
 
         public void OnApplicationPause()
         {
-
+            if (saveOnQuit) Save();
         }
 
         public void OnApplicationQuit()
         {
             if (saveOnQuit) Save();
+        }
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (!hasFocus && saveOnQuit)
+            {
+                Save();
+            }
         }
     }
     #endregion
