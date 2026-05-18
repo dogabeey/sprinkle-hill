@@ -37,17 +37,6 @@ namespace Game
             {
                 CurrencyManager.Instance.AddCurrency(GameManager.Instance.premiumCurrency, 1000);
             }
-            if(Input.GetKeyDown(KeyCode.A))
-            {
-                if(Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
-                {
-                    UnityAdsManager.Instance.ShowRewardedAd();
-                }
-                else
-                {
-                    UnityAdsManager.Instance.ShowAd();
-                }
-            }
         }
     }
 }
