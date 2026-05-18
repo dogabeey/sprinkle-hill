@@ -10475,6 +10475,14 @@ PrefabInstance:
       propertyPath: actionBarParent
       value: 
       objectReference: {fileID: 66476413}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].animationName
+      value: cannon_anim
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].preExecutionAnimator
+      value: 
+      objectReference: {fileID: 3490327515930101110, guid: 68dadf668f1c25c49b2d686970add31d, type: 3}
     - target: {fileID: 1925703224431792360, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
