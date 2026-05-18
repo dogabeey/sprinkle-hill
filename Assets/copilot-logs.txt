@@ -62,3 +62,4 @@
 [2026-05-16 12:49:00] - Fixed LevelEditor pre-placed power-ups by mapping ElementData to proper ElementPowerUpType (Bomb/Rocket/Propeller/DiscoBall/Cauldron), restoring click activation and runtime behavior.
 [2026-05-17 00:00:00] - Fixed empty-cell targeting regressions by making rocket traversal ignore non-generated cells and resolving booster override coordinates (including negative values) to valid playable cells before animation/action execution.
 [2026-05-17 00:20:00] - Refined booster override fallback targeting: when only Y (or X) is overridden and target cell is empty, resolution now keeps the same column (or row) first, preventing jumps to unrelated middle columns.
+[2026-05-18 00:00:00] - Added configurable hidden-element reveal particle effect and triggered it when hidden elements are revealed.

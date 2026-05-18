@@ -1776,7 +1776,11 @@ namespace Game
             if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null || !cell.elementInfo.isHidden) return;
             cell.elementInfo.isHidden = false;
             GridElement element = GetElementAt(pos);
-            if (element != null) element.InitElement(this, cell.elementInfo);
+            if (element != null)
+            {
+                element.InitElement(this, cell.elementInfo);
+                element.PlayRevealEffect();
+            }
 
             EventManager.TriggerEvent(GameEvent.HIDDEN_BOX_REVEALED, new EventParam(
                 vectorList: new Vector3[] { new Vector3(pos.x, pos.y, 0f) },

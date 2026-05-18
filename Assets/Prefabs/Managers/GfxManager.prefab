@@ -64,3 +64,4 @@ MonoBehaviour:
   bombPowerupTrailParticlePrefab: {fileID: 6553830495741696104, guid: 1ea5b88013b271144a852e3fdd2cc75b, type: 3}
   discoBallPowerupTrailParticlePrefab: {fileID: 6553830495741696104, guid: f0c3336913e261f479ba003744aaa6ec, type: 3}
   rocketPowerupTrailParticlePrefab: {fileID: 6553830495741696104, guid: 8adbe991380bca04c84b93e14da310f0, type: 3}
+  hiddenElementRevealParticlePrefab: {fileID: 9101700452171790528, guid: 725ed1e8348102c4ea8575fb88b28f21, type: 3}

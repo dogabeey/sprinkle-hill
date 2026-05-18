@@ -109,11 +109,9 @@ namespace Game
             if (destroyTween != null && destroyTween.active)
                 yield return destroyTween.WaitForCompletion();
 
-            if (this != null && constantManager != null && constantManager.elementDestroyParticlePrefab != null && transform != null)
+            if (this != null && constantManager != null && transform != null)
             {
-                ParticleSystem destroyParticle = Instantiate(constantManager.elementDestroyParticlePrefab, transform.position, Quaternion.identity);
-                destroyParticle.Play();
-                Destroy(destroyParticle.gameObject, destroyParticle.main.duration + destroyParticle.main.startLifetime.constantMax + 0.2f);
+                SpawnParticleEffect(constantManager.elementDestroyParticlePrefab);
             }
 
             if (this != null)

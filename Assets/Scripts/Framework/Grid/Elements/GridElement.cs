@@ -56,6 +56,26 @@ namespace Game
             }
         }
 
+        public virtual void PlayRevealEffect()
+        {
+            var gfxManager = GameManager.Instance != null ? GameManager.Instance.gfxManager : null;
+            if (gfxManager == null)
+                return;
+
+            SpawnParticleEffect(gfxManager.hiddenElementRevealParticlePrefab);
+        }
+
+        protected void SpawnParticleEffect(ParticleSystem particlePrefab)
+        {
+            if (particlePrefab == null || transform == null)
+                return;
+
+            Vector3 spawnPosition = elementRenderer != null ? elementRenderer.bounds.center : transform.position;
+            ParticleSystem particle = Instantiate(particlePrefab, spawnPosition, Quaternion.identity);
+            particle.Play();
+            Destroy(particle.gameObject, particle.main.duration + particle.main.startLifetime.constantMax + 0.2f);
+        }
+
         private static Vector2Int GetGridCoverage(ElementData data)
         {
             if (data == null)
