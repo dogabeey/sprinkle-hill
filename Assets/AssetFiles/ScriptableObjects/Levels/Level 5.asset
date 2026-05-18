@@ -3563,7 +3563,7 @@ MonoBehaviour:
   targetElement: {fileID: 0}
   levelLimitType: 1
   timer: 180
-  moves: 40
+  moves: 60
   proceduralGeneration:
     useRandomSeed: 1
     seed: 0

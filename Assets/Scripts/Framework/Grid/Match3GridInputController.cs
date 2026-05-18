@@ -396,18 +396,157 @@ namespace Game
             isPlacementReady = false;
         }
 
+        private static int WrapIndex(int value, int size)
+        {
+            if (size <= 0)
+                return 0;
+
+            int wrapped = value % size;
+            if (wrapped < 0)
+                wrapped += size;
+
+            return wrapped;
+        }
+
+        private bool TryFindClosestPlayableCell(Vector2Int desired, out Vector2Int resolved)
+        {
+            resolved = desired;
+            if (match3Grid == null)
+                return false;
+
+            int bestDistance = int.MaxValue;
+            bool found = false;
+
+            for (int x = 0; x < match3Grid.GridSize.x; x++)
+            {
+                for (int y = 0; y < match3Grid.GridSize.y; y++)
+                {
+                    Vector2Int candidate = new Vector2Int(x, y);
+                    if (match3Grid.GetCellControllerAt(candidate) == null)
+                        continue;
+
+                    int dx = Mathf.Abs(candidate.x - desired.x);
+                    int dy = Mathf.Abs(candidate.y - desired.y);
+                    int distance = dx + dy;
+                    int resolvedDx = Mathf.Abs(resolved.x - desired.x);
+                    int resolvedDy = Mathf.Abs(resolved.y - desired.y);
+                    if (!found ||
+                        distance < bestDistance ||
+                        (distance == bestDistance && dx < resolvedDx) ||
+                        (distance == bestDistance && dx == resolvedDx && dy < resolvedDy))
+                    {
+                        found = true;
+                        bestDistance = distance;
+                        resolved = candidate;
+                    }
+                }
+            }
+
+            return found;
+        }
+
+        private bool TryFindClosestPlayableCellInColumn(int x, int desiredY, out Vector2Int resolved)
+        {
+            resolved = new Vector2Int(x, desiredY);
+            if (match3Grid == null || x < 0 || x >= match3Grid.GridSize.x)
+                return false;
+
+            bool found = false;
+            int bestDistance = int.MaxValue;
+
+            for (int y = 0; y < match3Grid.GridSize.y; y++)
+            {
+                Vector2Int candidate = new Vector2Int(x, y);
+                if (match3Grid.GetCellControllerAt(candidate) == null)
+                    continue;
+
+                int distance = Mathf.Abs(y - desiredY);
+                if (!found || distance < bestDistance || (distance == bestDistance && y > resolved.y))
+                {
+                    found = true;
+                    bestDistance = distance;
+                    resolved = candidate;
+                }
+            }
+
+            return found;
+        }
+
+        private bool TryFindClosestPlayableCellInRow(int desiredX, int y, out Vector2Int resolved)
+        {
+            resolved = new Vector2Int(desiredX, y);
+            if (match3Grid == null || y < 0 || y >= match3Grid.GridSize.y)
+                return false;
+
+            bool found = false;
+            int bestDistance = int.MaxValue;
+
+            for (int x = 0; x < match3Grid.GridSize.x; x++)
+            {
+                Vector2Int candidate = new Vector2Int(x, y);
+                if (match3Grid.GetCellControllerAt(candidate) == null)
+                    continue;
+
+                int distance = Mathf.Abs(x - desiredX);
+                if (!found || distance < bestDistance || (distance == bestDistance && x > resolved.x))
+                {
+                    found = true;
+                    bestDistance = distance;
+                    resolved = candidate;
+                }
+            }
+
+            return found;
+        }
+
+        private Vector2Int ResolveActionCenter(BoosterBarAction action, Vector2Int center)
+        {
+            if (match3Grid == null)
+                return center;
+
+            Vector2Int resolved = center;
+
+            if (action != null)
+            {
+                if (action.overrideCellLocationX)
+                    resolved.x = WrapIndex(action.fixedCellLocationX, match3Grid.GridSize.x);
+
+                if (action.overrideCellLocationY)
+                    resolved.y = WrapIndex(action.fixedCellLocationY, match3Grid.GridSize.y);
+            }
+
+            if (match3Grid.GetCellControllerAt(resolved) != null)
+                return resolved;
+
+            if (action != null)
+            {
+                if (action.overrideCellLocationY && !action.overrideCellLocationX &&
+                    TryFindClosestPlayableCellInColumn(resolved.x, resolved.y, out Vector2Int sameColumn))
+                {
+                    return sameColumn;
+                }
+
+                if (action.overrideCellLocationX && !action.overrideCellLocationY &&
+                    TryFindClosestPlayableCellInRow(resolved.x, resolved.y, out Vector2Int sameRow))
+                {
+                    return sameRow;
+                }
+            }
+
+            if (TryFindClosestPlayableCell(resolved, out Vector2Int closestPlayable))
+                return closestPlayable;
+
+            return center;
+        }
+
         private IEnumerator PlayPreExecutionAnimation(BoosterBarAction action, Vector2Int center)
         {
             if (action == null || action.preExecutionAnimator == null || string.IsNullOrEmpty(action.animationName) || match3Grid == null)
                 yield break;
 
-            center.x = action.overrideCellLocationX ? action.fixedCellLocationX : center.x;
-            center.y = action.overrideCellLocationY ? action.fixedCellLocationY : center.y;
-            // If a center value is (-), It means grid size minus that value, so -1 means last cell index, -2 means second to last cell index, etc.
-            if (center.x < 0)
-                center.x = match3Grid.GridSize.x + center.x;
-            if (center.y < 0)
-                center.y = match3Grid.GridSize.y + center.y;
+            center = ResolveActionCenter(action, center);
+            if (match3Grid.GetCellControllerAt(center) == null)
+                yield break;
 
             Vector3 cellPosition = match3Grid.GetCellPositionInGrid(center);
             Animator animator = Instantiate(action.preExecutionAnimator, cellPosition, Quaternion.identity);
@@ -515,11 +654,13 @@ namespace Game
                 yield break;
             }
 
-            yield return StartCoroutine(PlayPreExecutionAnimation(bombAction, center));
+            Vector2Int targetCenter = ResolveActionCenter(bombAction, center);
+
+            yield return StartCoroutine(PlayPreExecutionAnimation(bombAction, targetCenter));
             bombAction.CurrentCount--;
-            yield return StartCoroutine(bombAction.BombThrowAnim(match3Grid.GetCellPositionInGrid(center)));
+            yield return StartCoroutine(bombAction.BombThrowAnim(match3Grid.GetCellPositionInGrid(targetCenter)));
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: "Bomb Placement"));
-            yield return StartCoroutine(match3Grid.ClearAreaAt(center, 1, false));
+            yield return StartCoroutine(match3Grid.ClearAreaAt(targetCenter, 1, false));
             yield return StartCoroutine(match3Grid.ResolveBoardAfterSpecialClear());
             isProcessing = false;
             idleTimer = 0f;
@@ -537,10 +678,12 @@ namespace Game
                 yield break;
             }
 
-            yield return StartCoroutine(PlayPreExecutionAnimation(hammerAction, center));
+            Vector2Int targetCenter = ResolveActionCenter(hammerAction, center);
+
+            yield return StartCoroutine(PlayPreExecutionAnimation(hammerAction, targetCenter));
             hammerAction.CurrentCount--;
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: hammerAction.ItemName));
-            yield return StartCoroutine(match3Grid.ClearCrossAt(center, false));
+            yield return StartCoroutine(match3Grid.ClearCrossAt(targetCenter, false));
             yield return StartCoroutine(match3Grid.ResolveBoardAfterSpecialClear());
 
             isProcessing = false;
@@ -559,10 +702,12 @@ namespace Game
                 yield break;
             }
 
-            yield return StartCoroutine(PlayPreExecutionAnimation(cannonAction, center));
+            Vector2Int targetCenter = ResolveActionCenter(cannonAction, center);
+
+            yield return StartCoroutine(PlayPreExecutionAnimation(cannonAction, targetCenter));
             cannonAction.CurrentCount--;
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: cannonAction.ItemName));
-            yield return StartCoroutine(match3Grid.ClearColumnAt(center.x, false));
+            yield return StartCoroutine(match3Grid.ClearColumnAt(targetCenter.x, false));
             yield return StartCoroutine(match3Grid.ResolveBoardAfterSpecialClear());
 
             isProcessing = false;
@@ -581,7 +726,9 @@ namespace Game
                 yield break;
             }
 
-            GridCell selectedCell = match3Grid.GetCellPublic(center);
+            Vector2Int targetCenter = ResolveActionCenter(rocketAction, center);
+
+            GridCell selectedCell = match3Grid.GetCellPublic(targetCenter);
             if (selectedCell == null || selectedCell.cellType != CellType.Normal || selectedCell.elementInfo == null ||
                 selectedCell.elementInfo.powerUpType != ElementPowerUpType.None || selectedCell.elementInfo.elementData == null)
             {
@@ -589,11 +736,11 @@ namespace Game
                 yield break;
             }
 
-            yield return StartCoroutine(PlayPreExecutionAnimation(rocketAction, center));
+            yield return StartCoroutine(PlayPreExecutionAnimation(rocketAction, targetCenter));
             rocketAction.CurrentCount--;
-            yield return StartCoroutine(rocketAction.RocketThrowAnim(match3Grid.GetCellPositionInGrid(center)));
+            yield return StartCoroutine(rocketAction.RocketThrowAnim(match3Grid.GetCellPositionInGrid(targetCenter)));
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: rocketAction.ItemName));
-            yield return StartCoroutine(match3Grid.PlaceHorizontalRocketActionAt(center));
+            yield return StartCoroutine(match3Grid.PlaceHorizontalRocketActionAt(targetCenter));
 
             isProcessing = false;
             idleTimer = 0f;
@@ -611,7 +758,9 @@ namespace Game
                 yield break;
             }
 
-            GridCell selectedCell = match3Grid.GetCellPublic(center);
+            Vector2Int targetCenter = ResolveActionCenter(discoBallAction, center);
+
+            GridCell selectedCell = match3Grid.GetCellPublic(targetCenter);
             if (selectedCell == null || selectedCell.cellType != CellType.Normal || selectedCell.elementInfo == null ||
                 selectedCell.elementInfo.powerUpType != ElementPowerUpType.None || selectedCell.elementInfo.elementData == null)
             {
@@ -619,11 +768,11 @@ namespace Game
                 yield break;
             }
 
-            yield return StartCoroutine(PlayPreExecutionAnimation(discoBallAction, center));
+            yield return StartCoroutine(PlayPreExecutionAnimation(discoBallAction, targetCenter));
             discoBallAction.CurrentCount--;
-            yield return StartCoroutine(discoBallAction.DiscoBallThrowAnim(match3Grid.GetCellPositionInGrid(center)));
+            yield return StartCoroutine(discoBallAction.DiscoBallThrowAnim(match3Grid.GetCellPositionInGrid(targetCenter)));
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: discoBallAction.ItemName));
-            yield return StartCoroutine(match3Grid.PlaceDiscoBallActionAt(center));
+            yield return StartCoroutine(match3Grid.PlaceDiscoBallActionAt(targetCenter));
 
             isProcessing = false;
             idleTimer = 0f;

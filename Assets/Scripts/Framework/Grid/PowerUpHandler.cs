@@ -1247,6 +1247,12 @@ namespace Game
                 if (cell.cellType == Grid3D.CellType.UnbreakableWall)
                     break;
 
+                if (grid.GetCellControllerAt(current) == null)
+                {
+                    current += direction;
+                    continue;
+                }
+
                 cells.Add(current);
                 current += direction;
             }

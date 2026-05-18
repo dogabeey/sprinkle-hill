@@ -60,3 +60,5 @@
 [2026-05-16 12:24:00] - Added a subtle OutBack landing ease to newly spawned refill elements in Match3Grid gravity so new drops settle into cells with a small bounce.
 [2026-05-16 12:36:00] - Updated bomb activation flow in PowerUpHandler to clear in progressive distance rings (near cells first, then farther cells), including ring-timed wall breaks and existing special-element interactions.
 [2026-05-16 12:49:00] - Fixed LevelEditor pre-placed power-ups by mapping ElementData to proper ElementPowerUpType (Bomb/Rocket/Propeller/DiscoBall/Cauldron), restoring click activation and runtime behavior.
+[2026-05-17 00:00:00] - Fixed empty-cell targeting regressions by making rocket traversal ignore non-generated cells and resolving booster override coordinates (including negative values) to valid playable cells before animation/action execution.
+[2026-05-17 00:20:00] - Refined booster override fallback targeting: when only Y (or X) is overridden and target cell is empty, resolution now keeps the same column (or row) first, preventing jumps to unrelated middle columns.
