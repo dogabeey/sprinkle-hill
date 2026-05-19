@@ -131,7 +131,7 @@ namespace Game
                 if (actionText) 
                     actionText.text = actionBarItem.ItemName;
                 if(buyButton)
-                    buyButton.gameObject.SetActive(actionBarItem.CostDefinesBuyability && actionBarItem.CurrentCount <= 0 && actionBarItem.IsAvailable());
+                    buyButton.gameObject.SetActive(actionBarItem.CostDefinesBuyability && actionBarItem.currentCount <= 0 && actionBarItem.IsAvailable());
                 if (costText)
                     costText.text = actionBarItem.GetCost().ConvertToKMB();
                 if (unlockConditionText)
@@ -139,7 +139,7 @@ namespace Game
                 if (countTextPanel)
                     countTextPanel.SetActive(actionBarItem.IsAvailable());
                 if (countText)
-                    countText.text = actionBarItem.CurrentCount > 0 ? actionBarItem.CurrentCount.ToString() : "+";
+                    countText.text = actionBarItem.currentCount > 0 ? actionBarItem.currentCount.ToString() : "+";
                 if (useButton)
                     useButton.interactable = actionBarItem.IsClickable();
                 if (canvasGroup)

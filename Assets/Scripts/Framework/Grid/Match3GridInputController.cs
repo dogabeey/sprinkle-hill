@@ -657,7 +657,7 @@ namespace Game
             Vector2Int targetCenter = ResolveActionCenter(bombAction, center);
 
             yield return StartCoroutine(PlayPreExecutionAnimation(bombAction, targetCenter));
-            bombAction.CurrentCount--;
+            bombAction.currentCount--;
             yield return StartCoroutine(bombAction.BombThrowAnim(match3Grid.GetCellPositionInGrid(targetCenter)));
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: "Bomb Placement"));
             yield return StartCoroutine(match3Grid.ClearAreaAt(targetCenter, 1, false));
@@ -681,7 +681,7 @@ namespace Game
             Vector2Int targetCenter = ResolveActionCenter(hammerAction, center);
 
             yield return StartCoroutine(PlayPreExecutionAnimation(hammerAction, targetCenter));
-            hammerAction.CurrentCount--;
+            hammerAction.currentCount--;
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: hammerAction.ItemName));
             yield return StartCoroutine(match3Grid.ClearCrossAt(targetCenter, false));
             yield return StartCoroutine(match3Grid.ResolveBoardAfterSpecialClear());
@@ -705,7 +705,7 @@ namespace Game
             Vector2Int targetCenter = ResolveActionCenter(cannonAction, center);
 
             yield return StartCoroutine(PlayPreExecutionAnimation(cannonAction, targetCenter));
-            cannonAction.CurrentCount--;
+            cannonAction.currentCount--;
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: cannonAction.ItemName));
             yield return StartCoroutine(match3Grid.ClearColumnAt(targetCenter.x, false));
             yield return StartCoroutine(match3Grid.ResolveBoardAfterSpecialClear());
@@ -737,7 +737,7 @@ namespace Game
             }
 
             yield return StartCoroutine(PlayPreExecutionAnimation(rocketAction, targetCenter));
-            rocketAction.CurrentCount--;
+            rocketAction.currentCount--;
             yield return StartCoroutine(rocketAction.RocketThrowAnim(match3Grid.GetCellPositionInGrid(targetCenter)));
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: rocketAction.ItemName));
             yield return StartCoroutine(match3Grid.PlaceHorizontalRocketActionAt(targetCenter));
@@ -769,7 +769,7 @@ namespace Game
             }
 
             yield return StartCoroutine(PlayPreExecutionAnimation(discoBallAction, targetCenter));
-            discoBallAction.CurrentCount--;
+            discoBallAction.currentCount--;
             yield return StartCoroutine(discoBallAction.DiscoBallThrowAnim(match3Grid.GetCellPositionInGrid(targetCenter)));
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: discoBallAction.ItemName));
             yield return StartCoroutine(match3Grid.PlaceDiscoBallActionAt(targetCenter));
