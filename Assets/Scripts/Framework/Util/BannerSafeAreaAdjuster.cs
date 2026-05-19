@@ -18,7 +18,7 @@ namespace Game
         {
             float bannerHeight = UnityAdsManager.Instance.bannerHeight;
             // Heighten the safe area by the banner height, so that UI elements will be placed above the banner
-            rectTarget.anchoredPosition -= new Vector2(0, bannerHeight);
+            rectTarget.anchoredPosition += new Vector2(0, bannerHeight * 2);
         }
     }
 }
