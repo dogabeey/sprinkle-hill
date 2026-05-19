@@ -73,7 +73,8 @@ public enum GameEvent
     REWARDED_AD_SHOWN = 903,
     REWARDED_AD_COMPLETED = 904,
     REWARDED_AD_FAILED = 905,
-    
+    BANNER_AD_LOADED = 906,
+
     // Sound Events
     SOUND_PLAYED = 1000,
     MUSIC_STARTED = 1001,

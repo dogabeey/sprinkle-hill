@@ -11,6 +11,7 @@ public partial class UnityAdsManager : SingletonComponent<UnityAdsManager>
 {
     public float adInterval = 300.0f; // Time interval between ads in seconds
     public int levelInterval = 2; // Time interval between ads in seconds
+    public int bannerHeight;
 
     internal UnityEvent<object, EventArgs> onAdClosedEvent = new();
     internal UnityEvent<object, LevelPlayAdError> onAdFailedShowEvent = new();
@@ -101,12 +102,8 @@ public partial class UnityAdsManager : SingletonComponent<UnityAdsManager>
     {
         interstitialAd = new LevelPlayInterstitialAd(IS_adUnitId);
         rewardedAd = new LevelPlayRewardedAd(RW_adUnitId);
+        LevelPlayBannerAd.Config bannerConfig = ConfigBanner();
 
-        LevelPlayBannerAd.Config bannerConfig = new LevelPlayBannerAd.Config.Builder()
-            .SetSize(LevelPlayAdSize.BANNER)
-            .SetPosition(LevelPlayBannerPosition.BottomCenter)
-            .SetDisplayOnLoad(true)
-            .Build();
         bannerAd = new LevelPlayBannerAd(Banner_adUnitId, bannerConfig);
 
         interstitialAd.OnAdClosed += OnAdClosed;
@@ -123,16 +120,36 @@ public partial class UnityAdsManager : SingletonComponent<UnityAdsManager>
         rewardedAd.OnAdRewarded += OnRewardedAdRewarded;
 
         bannerAd.OnAdClicked += OnBannerClicked;
+        bannerAd.OnAdLoaded += OnBannerAdLoaded;
+        bannerAd.OnAdLoadFailed += OnBannerAdFailedLoad;
 
         interstitialAd.LoadAd();
         rewardedAd.LoadAd();
         bannerAd.LoadAd();
     }
 
+    private LevelPlayBannerAd.Config ConfigBanner()
+    {
+        return new LevelPlayBannerAd.Config.Builder()
+            .SetSize(LevelPlayAdSize.CreateCustomBannerSize(Screen.width, bannerHeight))
+            .SetPosition(LevelPlayBannerPosition.BottomCenter)
+            .SetDisplayOnLoad(true)
+            .Build();
+    }
+
     private void OnBannerClicked(LevelPlayAdInfo adInfo)
     {
         Debug.Log("Banner clicked");
         onBannerClickedEvent.Invoke(this, EventArgs.Empty);
+    }
+    private void OnBannerAdLoaded(LevelPlayAdInfo adInfo)
+    {
+        Debug.Log("Banner Ad loaded");
+        EventManager.TriggerEvent(GameEvent.BANNER_AD_LOADED);
+    }
+    private void OnBannerAdFailedLoad(LevelPlayAdError error)
+    {
+        Debug.LogError($"Banner Ad failed to load: {error.ErrorMessage}");
     }
 
     void Update()
