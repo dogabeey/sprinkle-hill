@@ -95,11 +95,11 @@ namespace Game
 
             GridHelper.AnimateEmission(this, 1.5f, 0.2f);
 
-            ConstantManager constantManager = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
-            Vector3 punchScale = constantManager != null ? constantManager.elementDestroyPunchScale : new Vector3(0.25f, 0.25f, 0f);
-            float punchDuration = constantManager != null ? constantManager.elementDestroyPunchDuration : 0.2f;
-            int punchVibrato = constantManager != null ? constantManager.elementDestroyPunchVibrato : 8;
-            float punchElasticity = constantManager != null ? constantManager.elementDestroyPunchElasticity : 0.8f;
+            ConstantManager constantManager = GameManager.Instance.constantManager;
+            Vector3 punchScale = constantManager.elementDestroyPunchScale * Vector3.one;
+            float punchDuration = constantManager.elementDestroyPunchDuration;
+            int punchVibrato = constantManager.elementDestroyPunchVibrato;
+            float punchElasticity = constantManager.elementDestroyPunchElasticity;
 
             Tween destroyTween = transform.DOPunchScale(punchScale, punchDuration, punchVibrato, punchElasticity);
 

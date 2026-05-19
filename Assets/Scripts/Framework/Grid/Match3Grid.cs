@@ -1123,9 +1123,6 @@ namespace Game
 
             yield return trailObj.transform.DOMove(targetWorldPos, cm.sparklingTrailDuration).SetEase(Ease.InOutQuad).WaitForCompletion();
 
-            float shakeMag = cm.sparklingShakeBaseMagnitude + (trailIndex * cm.sparklingShakeMagnitudeIncrement);
-            GridHelper.ShakeCamera(cm.sparklingShakeDuration, shakeMag, cm.sparklingShakeVibrato, cm.sparklingShakeRandomness);
-
             // Convert element
             GridCell cell = GetCell(targetPos);
             if (cell?.elementInfo != null)
@@ -1287,7 +1284,6 @@ namespace Game
                 hasTween = true;
             }
 
-            GridHelper.ShakeCamera(duration * 0.7f, 0.08f, 8, 20f);
 
             if (hasTween)
                 yield return shuffleSeq.WaitForCompletion();
@@ -1598,9 +1594,6 @@ namespace Game
         private IEnumerator ClearMatches(List<List<Vector2Int>> matchedPositions, HashSet<Vector2Int> protectedPositions = null)
         {
             ConstantManager cm = GameManager.Instance.constantManager;
-            float shakeMag = cm.matchShakeBaseMagnitude + ((currentComboCount - 1) * cm.matchShakeComboMultiplier);
-            GridHelper.ShakeCamera(cm.matchShakeDuration, shakeMag, cm.matchShakeVibrato, cm.matchShakeRandomness);
-
             HashSet<Vector2Int> cleared = new HashSet<Vector2Int>();
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
             HashSet<Vector2Int> hiddenToReveal = new HashSet<Vector2Int>();

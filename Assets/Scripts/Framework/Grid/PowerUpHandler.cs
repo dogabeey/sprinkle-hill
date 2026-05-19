@@ -787,11 +787,6 @@ namespace Game
             if (discoBallElement != null)
                 grid.StartCoroutine(discoBallElement.DestroyElement());
 
-            GridHelper.ShakeCamera(
-                GameManager.Instance.constantManager.matchShakeDuration,
-                GameManager.Instance.constantManager.matchShakeBaseMagnitude * 1.5f,
-                GameManager.Instance.constantManager.matchShakeVibrato,
-                GameManager.Instance.constantManager.matchShakeRandomness);
         }
 
         private void DestroyDiscoBallConvertedCells(List<Vector2Int> convertedCells)
@@ -1017,12 +1012,6 @@ namespace Game
                 }
             }
 
-            float shakeMag = GameManager.Instance.constantManager.sparklingShakeBaseMagnitude + (trailIndex * 0.01f);
-            GridHelper.ShakeCamera(
-                GameManager.Instance.constantManager.sparklingShakeDuration,
-                shakeMag,
-                GameManager.Instance.constantManager.sparklingShakeVibrato,
-                GameManager.Instance.constantManager.sparklingShakeRandomness);
 
             if (trailObj != null) Object.Destroy(trailObj);
         }
@@ -1189,8 +1178,6 @@ namespace Game
             GameObject rocketCopyDown = CreateRocketCopy(rocketElement, originWorld, cm, false, -1f);
 
             if (rocketElement != null) Object.Destroy(rocketElement.gameObject);
-
-            GridHelper.ShakeCamera(cm.rocketShakeDuration, cm.rocketShakeMagnitude, cm.rocketShakeVibrato, cm.rocketShakeRandomness);
 
             HashSet<Vector2Int> processedWalls = new HashSet<Vector2Int>();
             BreakAdjacentWallsImmediate(rocketPos, processedWalls);
@@ -1466,7 +1453,6 @@ namespace Game
                 p.Play();
                 Object.Destroy(p.gameObject, p.main.duration + p.main.startLifetime.constantMax + 0.2f);
             }
-            GridHelper.ShakeCamera(cm.bombImpactShakeDuration, cm.bombImpactShakeMagnitude, cm.bombImpactShakeVibrato, cm.bombImpactShakeRandomness);
         }
 
         public void ApplySortingBoost(GridElement element, bool boost)

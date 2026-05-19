@@ -348,10 +348,5 @@ namespace Game
                     mat.DOFloat(value, EmissionProperty, duration);
             }
         }
-
-        public static void ShakeCamera(float duration, float magnitude, int vibrato, float randomness)
-        {
-            return;
-        }
     }
 }

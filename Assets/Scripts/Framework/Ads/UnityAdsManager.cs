@@ -2,10 +2,12 @@ using System;
 using UnityEngine;
 using Unity.Services.Core;
 using Unity.Services.LevelPlay;
+using Unity.Services.RemoteConfig;
 using UnityEngine.Events;
 using Game;
+using System.Threading.Tasks;
 
-public class UnityAdsManager : SingletonComponent<UnityAdsManager>
+public partial class UnityAdsManager : SingletonComponent<UnityAdsManager>
 {
     public float adInterval = 300.0f; // Time interval between ads in seconds
     public int levelInterval = 2; // Time interval between ads in seconds
@@ -53,12 +55,12 @@ public class UnityAdsManager : SingletonComponent<UnityAdsManager>
         timeSinceLastAd = 0.0f;
 
 #if UNITY_ANDROID
-        gameId = "5622038";
-        IS_adUnitId = "Interstitial_Android";
-        RW_adUnitId = "Rewarded_Android";
-        Banner_adUnitId = "Banner_Android";
+        gameId = "6118896"; // Replace with your actual Android Game ID
+        IS_adUnitId = "Interstitial_Android"; // Replace with your actual Android Ad Unit ID
+        RW_adUnitId = "Rewarded_Android"; // Replace with your actual Android Ad Unit ID
+        Banner_adUnitId = "Banner_Android"; // Replace with your actual Android Ad Unit ID
 #elif UNITY_IOS
-        gameId = "5622039"; // Replace with your actual iOS Game ID
+        gameId = "6118897"; // Replace with your actual iOS Game ID
         IS_adUnitId = "Interstitial_iOS"; // Replace with your actual iOS Ad Unit ID
         RW_adUnitId = "Rewarded_iOS"; // Replace with your actual iOS Ad Unit ID
         Banner_adUnitId = "Banner_iOS"; // Replace with your actual iOS Ad Unit ID
@@ -285,5 +287,4 @@ public class UnityAdsManager : SingletonComponent<UnityAdsManager>
             bannerAd.DestroyAd();
         }
     }
-
 }
