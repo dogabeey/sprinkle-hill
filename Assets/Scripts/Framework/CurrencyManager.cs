@@ -43,16 +43,16 @@ namespace Game
             EventManager.StartListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
             EventManager.StartListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
             EventManager.StartListening(GameEvent.LEVEL_FAILED, OnLevelCompleted);
-            EventManager.StartListening(GameEvent.SCREEN_OPENED, OnLevelCompleted);
-            EventManager.StartListening(GameEvent.SCREEN_CLOSED, OnLevelCompleted);
+            EventManager.StartListening(GameEvent.SCREEN_OPENED, OnScreenOpened);
+            EventManager.StartListening(GameEvent.SCREEN_CLOSED, OnScreenClosed);
         }
         private void OnDisable()
         {
             EventManager.StopListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
             EventManager.StopListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
             EventManager.StopListening(GameEvent.LEVEL_FAILED, OnLevelCompleted);
-            EventManager.StopListening(GameEvent.SCREEN_OPENED, OnLevelCompleted);
-            EventManager.StopListening(GameEvent.SCREEN_CLOSED, OnLevelCompleted);
+            EventManager.StopListening(GameEvent.SCREEN_OPENED, OnScreenOpened);
+            EventManager.StopListening(GameEvent.SCREEN_CLOSED, OnScreenClosed);
         }
         private void OnLevelStarted(EventParam e)
         {
@@ -61,6 +61,16 @@ namespace Game
         private void OnLevelCompleted(EventParam e)
         {
             currencyCanvasGroup.alpha = 1;
+        }
+
+        private void OnScreenOpened(EventParam e)
+        {
+            currencyCanvasGroup.alpha = 1;
+        }
+
+        private void OnScreenClosed(EventParam e)
+        {
+            currencyCanvasGroup.alpha = 0;
         }
 
         private void Start()
