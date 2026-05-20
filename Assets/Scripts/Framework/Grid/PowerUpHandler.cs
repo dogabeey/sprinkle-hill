@@ -684,6 +684,9 @@ namespace Game
             if (IsDiscoBall(firstType) && IsRocket(secondType))
                 return new DiscoBallAndRocketComboActivationStrategy(this);
 
+            if (IsDiscoBall(firstType) && IsPropeller(secondType))
+                return new DiscoBallAndPropellerComboActivationStrategy(this);
+
             if (IsDiscoBall(firstType) && secondType == ElementPowerUpType.Bomb)
                 return new DiscoBallAndBombComboActivationStrategy(this);
 
@@ -956,7 +959,7 @@ namespace Game
             }
             public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
             {
-                throw new System.NotImplementedException("Disco Ball + Propeller combo activation is not implemented yet. TODO: Converts 8 random elements to propeller, then activates them.");
+                return handler.ActivateDiscoBallAndPropellerCombo(pos);
             }
         }
         private sealed class DiscoBallAndBombComboActivationStrategy : IPowerUpActivationStrategy
@@ -1209,6 +1212,48 @@ namespace Game
             StopAndDestroyDiscoBallElement(discoBallElement, discoBallSpinTween);
         }
 
+        private IEnumerator ActivateDiscoBallAndPropellerCombo(Vector2Int discoBallPos)
+        {
+            Grid3D.GridCell discoBallCell = grid.GetCellPublic(discoBallPos);
+            if (discoBallCell?.elementInfo == null || discoBallCell.elementInfo.powerUpType != ElementPowerUpType.DiscoBall)
+                yield break;
+
+            Vector2Int propellerPos = FindAdjacentPropeller(discoBallPos);
+            if (propellerPos == discoBallPos)
+                yield break;
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.DISCO_BALL_ACTIVATE, volumeMultiplier: 1.05f, pitchOffset: 0.06f);
+
+            GridElement discoBallElement = grid.GetElementAt(discoBallPos);
+            Tween discoBallSpinTween = null;
+
+            StartDiscoBallSpin(discoBallElement, ref discoBallSpinTween);
+
+            grid.TriggerCellFeatureMatchedOverAt(discoBallPos);
+            discoBallCell.elementInfo = null;
+
+            Grid3D.GridCell propellerCell = grid.GetCellPublic(propellerPos);
+            if (propellerCell != null)
+            {
+                grid.TriggerCellFeatureMatchedOverAt(propellerPos);
+                propellerCell.elementInfo = null;
+            }
+
+            List<Vector2Int> selectedCells = GetRandomEligibleDiscoBallTargets(discoBallPos, propellerPos, StandardDiscoBallReplaceCount);
+            if (selectedCells.Count > 0)
+            {
+                yield return grid.StartCoroutine(AnimateDiscoBallPowerUpTrails(discoBallPos, selectedCells, ElementPowerUpType.Propeller));
+
+                yield return null;
+
+                List<Vector2Int> reservedTargets = ReservePropellerTargets(selectedCells);
+                yield return grid.StartCoroutine(ActivateReservedPropellerBurst(selectedCells, reservedTargets));
+            }
+
+            StopAndDestroyDiscoBallElement(discoBallElement, discoBallSpinTween);
+        }
+
         private ElementData ResolveDefaultDiscoBallTargetElement(ElementData requestedTargetElementData)
         {
             if (requestedTargetElementData != null)
@@ -1350,6 +1395,20 @@ namespace Game
             return origin;
         }
 
+        private Vector2Int FindAdjacentPropeller(Vector2Int origin)
+        {
+            Vector2Int[] offsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            for (int i = 0; i < offsets.Length; i++)
+            {
+                Vector2Int candidatePos = origin + offsets[i];
+                Grid3D.GridCell candidateCell = grid.GetCellPublic(candidatePos);
+                if (IsPropeller(candidateCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None))
+                    return candidatePos;
+            }
+
+            return origin;
+        }
+
         private Vector2Int FindAdjacentRocket(Vector2Int origin)
         {
             Vector2Int[] offsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
@@ -1446,6 +1505,11 @@ namespace Game
 
         private IEnumerator ActivatePropeller(Vector2Int propellerPos)
         {
+            return ActivatePropeller(propellerPos, PickPropellerTargetPosition(propellerPos));
+        }
+
+        private IEnumerator ActivatePropeller(Vector2Int propellerPos, Vector2Int targetPos)
+        {
             Grid3D.GridCell propellerCell = grid.GetCellPublic(propellerPos);
             if (propellerCell?.elementInfo == null || propellerCell.elementInfo.powerUpType != ElementPowerUpType.Propeller)
                 yield break;
@@ -1457,7 +1521,6 @@ namespace Game
             if (propellerElement != null)
                 propellerElement.transform.DOKill();
 
-            Vector2Int targetPos = PickPropellerTargetPosition(propellerPos);
             Vector3 targetWorldPos = grid.GetWorldPosition(targetPos);
 
             if (propellerElement != null)
@@ -1491,7 +1554,36 @@ namespace Game
             yield return grid.StartCoroutine(grid.ClearAreaAt(targetPos, 0));
         }
 
+        private IEnumerator ActivateReservedPropellerBurst(List<Vector2Int> propellerPositions, List<Vector2Int> reservedTargets)
+        {
+            if (propellerPositions == null || reservedTargets == null)
+                yield break;
+
+            int activationCount = Mathf.Min(propellerPositions.Count, reservedTargets.Count);
+            if (activationCount <= 0)
+                yield break;
+
+            float staggerDelay = Mathf.Max(0.03f, GameManager.Instance.constantManager.discoBallTrailSpawnDelay * 0.5f);
+            List<Coroutine> activationCoroutines = new List<Coroutine>(activationCount);
+
+            for (int i = 0; i < activationCount; i++)
+            {
+                activationCoroutines.Add(grid.StartCoroutine(ActivatePropeller(propellerPositions[i], reservedTargets[i])));
+
+                if (i < activationCount - 1)
+                    yield return new WaitForSeconds(staggerDelay);
+            }
+
+            for (int i = 0; i < activationCoroutines.Count; i++)
+                yield return activationCoroutines[i];
+        }
+
         private Vector2Int PickPropellerTargetPosition(Vector2Int origin)
+        {
+            return PickPropellerTargetPosition(origin, null);
+        }
+
+        private Vector2Int PickPropellerTargetPosition(Vector2Int origin, HashSet<Vector2Int> reservedTargets)
         {
             List<Vector2Int> breakableWallCells = new List<Vector2Int>();
             List<Vector2Int> hiddenElements = new List<Vector2Int>();
@@ -1506,6 +1598,9 @@ namespace Game
                 {
                     Vector2Int pos = new Vector2Int(x, y);
                     if (pos == origin)
+                        continue;
+
+                    if (reservedTargets != null && reservedTargets.Contains(pos))
                         continue;
 
                     Grid3D.GridCell cell = grid.GetCellPublic(pos);
@@ -1568,6 +1663,28 @@ namespace Game
             if (belowGarbageCandidates.Count > 0)
                 return belowGarbageCandidates[Random.Range(0, belowGarbageCandidates.Count)];
             return origin;
+        }
+
+        private List<Vector2Int> ReservePropellerTargets(List<Vector2Int> propellerPositions)
+        {
+            List<Vector2Int> reservedTargets = new List<Vector2Int>();
+            if (propellerPositions == null)
+                return reservedTargets;
+
+            HashSet<Vector2Int> usedTargets = new HashSet<Vector2Int>();
+            for (int i = 0; i < propellerPositions.Count; i++)
+            {
+                Vector2Int propellerPos = propellerPositions[i];
+                Vector2Int targetPos = PickPropellerTargetPosition(propellerPos, usedTargets);
+
+                if (targetPos == propellerPos && usedTargets.Contains(targetPos))
+                    targetPos = PickPropellerTargetPosition(propellerPos);
+
+                usedTargets.Add(targetPos);
+                reservedTargets.Add(targetPos);
+            }
+
+            return reservedTargets;
         }
 
         private IEnumerator ActivateCauldron(Vector2Int cauldronPos)

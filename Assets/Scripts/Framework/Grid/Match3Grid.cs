@@ -651,6 +651,8 @@ namespace Game
                 if ((PowerUpHandler.IsDiscoBall(firstType) && PowerUpHandler.IsDiscoBall(secondType)) ||
                     (PowerUpHandler.IsDiscoBall(firstType) && PowerUpHandler.IsRocket(secondType)) ||
                     (PowerUpHandler.IsDiscoBall(secondType) && PowerUpHandler.IsRocket(firstType)) ||
+                    (PowerUpHandler.IsDiscoBall(firstType) && PowerUpHandler.IsPropeller(secondType)) ||
+                    (PowerUpHandler.IsDiscoBall(secondType) && PowerUpHandler.IsPropeller(firstType)) ||
                     (PowerUpHandler.IsDiscoBall(firstType) && secondType == ElementPowerUpType.Bomb) ||
                     (PowerUpHandler.IsDiscoBall(secondType) && firstType == ElementPowerUpType.Bomb))
                 {
