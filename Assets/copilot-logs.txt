@@ -64,3 +64,4 @@
 [2026-05-17 00:20:00] - Refined booster override fallback targeting: when only Y (or X) is overridden and target cell is empty, resolution now keeps the same column (or row) first, preventing jumps to unrelated middle columns.
 [2026-05-18 00:00:00] - Added configurable hidden-element reveal particle effect and triggered it when hidden elements are revealed.
 [2026-05-19 00:00:00] - Refactored UnityAdsManager from deprecated MediationService APIs to modern Unity LevelPlay (Init callbacks, LevelPlayInterstitialAd/RewardedAd/BannerAd integration, updated ad event/error types, readiness checks, and lifecycle cleanup).
+[2026-05-20 17:28:17] - Implemented Disco Ball + Disco Ball swap combo to convert 15 random elements into a random element type and clear them through the combo activation flow.

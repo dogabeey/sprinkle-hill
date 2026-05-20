@@ -648,6 +648,13 @@ namespace Game
                 GameManager.Instance.soundManager.Play(ConstantManager.SOUNDS.EFFECTS.ELEMENT_SWAP);
                 GridHelper.TriggerHaptic(HapticModes.Select);
 
+                if (PowerUpHandler.IsDiscoBall(firstType) && PowerUpHandler.IsDiscoBall(secondType))
+                {
+                    yield return StartCoroutine(powerUpHandler.ActivateSwapComboAt(first, second));
+                    yield return StartCoroutine(ResolveBoardAfterSpecialClear());
+                    yield break;
+                }
+
                 // After swap, the power-up that was at 'first' is now at 'second' and vice versa
                 if (PowerUpHandler.IsSpecialPowerUp(firstType))
                 {

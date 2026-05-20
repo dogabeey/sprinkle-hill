@@ -13,6 +13,8 @@ namespace Game
     {
         private readonly Match3Grid grid;
         private const int SortingOrderBoost = 200;
+        private const int StandardDiscoBallReplaceCount = 10;
+        private const int DiscoBallComboReplaceCount = 15;
         private readonly HashSet<Vector2Int> activatingPowerUpPositions = new HashSet<Vector2Int>();
         private int activePowerUpChainCount;
         private readonly Dictionary<ElementPowerUpType, IPowerUpActivationStrategy> activationStrategies;
@@ -611,6 +613,49 @@ namespace Game
             }
         }
 
+        public IEnumerator ActivateSwapComboAt(Vector2Int firstPos, Vector2Int secondPos)
+        {
+            if (!activatingPowerUpPositions.Add(firstPos))
+                yield break;
+
+            if (!activatingPowerUpPositions.Add(secondPos))
+            {
+                activatingPowerUpPositions.Remove(firstPos);
+                yield break;
+            }
+
+            try
+            {
+                Grid3D.GridCell firstCell = grid.GetCellPublic(firstPos);
+                Grid3D.GridCell secondCell = grid.GetCellPublic(secondPos);
+                ElementPowerUpType firstType = firstCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
+                ElementPowerUpType secondType = secondCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
+
+                IPowerUpActivationStrategy strategy = GetSwapComboStrategy(firstType, secondType);
+                if (strategy == null)
+                    yield break;
+
+                activePowerUpChainCount++;
+                yield return grid.StartCoroutine(strategy.Activate(firstPos, null));
+            }
+            finally
+            {
+                if (activePowerUpChainCount > 0)
+                    activePowerUpChainCount--;
+
+                activatingPowerUpPositions.Remove(firstPos);
+                activatingPowerUpPositions.Remove(secondPos);
+            }
+        }
+
+        private IPowerUpActivationStrategy GetSwapComboStrategy(ElementPowerUpType firstType, ElementPowerUpType secondType)
+        {
+            if (IsDiscoBall(firstType) && IsDiscoBall(secondType))
+                return new DiscoBallAndDiscoBallComboActivationStrategy(this);
+
+            return null;
+        }
+
         private interface IPowerUpActivationStrategy
         {
             IEnumerator Activate(Vector2Int pos, ElementData swappedElementData);
@@ -699,7 +744,7 @@ namespace Game
             }
             public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
             {
-                throw new System.NotImplementedException("Disco Ball + Disco Ball combo activation is not implemented yet. TODO: Similar to disco ball, but convertes 15 random elements to a random designated element.");
+                return handler.ActivateDiscoBallAndDiscoBallCombo(pos);
             }
         }
         private sealed class DiscoBallAndRocketComboActivationStrategy : IPowerUpActivationStrategy
@@ -817,25 +862,7 @@ namespace Game
             if (discoBallCell?.elementInfo == null || discoBallCell.elementInfo.powerUpType != ElementPowerUpType.DiscoBall)
                 yield break;
 
-            // Fall back to any normal element on the grid if no swapped element data was provided
-            if (targetElementData == null)
-            {
-                for (int x = 0; x < grid.GridSize.x; x++)
-                {
-                    for (int y = 0; y < grid.GridSize.y; y++)
-                    {
-                        Grid3D.GridCell c = grid.GetCellPublic(new Vector2Int(x, y));
-                        if (c != null && c.cellType == Grid3D.CellType.Normal &&
-                            c.elementInfo != null && !c.elementInfo.isHidden && c.elementInfo.powerUpType == ElementPowerUpType.None &&
-                            c.elementInfo.elementData != null)
-                        {
-                            targetElementData = c.elementInfo.elementData;
-                            break;
-                        }
-                    }
-                    if (targetElementData != null) break;
-                }
-            }
+            targetElementData = ResolveDefaultDiscoBallTargetElement(targetElementData);
 
             if (targetElementData == null) yield break;
 
@@ -845,46 +872,148 @@ namespace Game
             GridElement discoBallElement = grid.GetElementAt(discoBallPos);
             Tween spinTween = null;
 
-            if (discoBallElement != null)
-            {
-                discoBallElement.transform.DOKill();
-                float spinDuration = GameManager.Instance.constantManager.discoBallSpinLoopDuration;
-                float spinDegrees = GameManager.Instance.constantManager.discoBallSpinDegreesPerLoop;
-                spinTween = discoBallElement.transform
-                    .DORotate(new Vector3(0f, 0f, spinDegrees), spinDuration, RotateMode.FastBeyond360)
-                    .SetEase(Ease.Linear)
-                    .SetRelative()
-                    .SetLoops(-1, LoopType.Restart);
-            }
+            StartDiscoBallSpin(discoBallElement, ref spinTween);
 
             // Remove logical occupancy, keep visual until trail animation finishes.
             grid.TriggerCellFeatureMatchedOverAt(discoBallPos);
             discoBallCell.elementInfo = null;
 
-            // Collect all eligible normal cells (excluding disco ball's old position)
+            List<Vector2Int> selectedCells = GetRandomEligibleDiscoBallTargets(discoBallPos, StandardDiscoBallReplaceCount);
+
+            if (selectedCells.Count > 0)
+            {
+                yield return grid.StartCoroutine(AnimateDiscoBallTrails(discoBallPos, selectedCells, targetElementData));
+                DestroyDiscoBallConvertedCells(selectedCells);
+            }
+
+            StopAndDestroyDiscoBallElement(discoBallElement, spinTween);
+
+        }
+
+        private IEnumerator ActivateDiscoBallAndDiscoBallCombo(Vector2Int primaryDiscoBallPos)
+        {
+            Grid3D.GridCell primaryCell = grid.GetCellPublic(primaryDiscoBallPos);
+            if (primaryCell?.elementInfo == null || primaryCell.elementInfo.powerUpType != ElementPowerUpType.DiscoBall)
+                yield break;
+
+            Vector2Int secondaryDiscoBallPos = FindAdjacentDiscoBall(primaryDiscoBallPos);
+            if (secondaryDiscoBallPos == primaryDiscoBallPos)
+                yield break;
+
+            ElementData designatedElementData = ResolveRandomDiscoBallComboTargetElement(primaryDiscoBallPos, secondaryDiscoBallPos);
+            if (designatedElementData == null)
+                yield break;
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.DISCO_BALL_ACTIVATE, volumeMultiplier: 1.1f, pitchOffset: -0.04f);
+
+            GridElement primaryElement = grid.GetElementAt(primaryDiscoBallPos);
+            GridElement secondaryElement = grid.GetElementAt(secondaryDiscoBallPos);
+            Tween primarySpinTween = null;
+            Tween secondarySpinTween = null;
+
+            StartDiscoBallSpin(primaryElement, ref primarySpinTween);
+            StartDiscoBallSpin(secondaryElement, ref secondarySpinTween);
+
+            grid.TriggerCellFeatureMatchedOverAt(primaryDiscoBallPos);
+            primaryCell.elementInfo = null;
+
+            Grid3D.GridCell secondaryCell = grid.GetCellPublic(secondaryDiscoBallPos);
+            if (secondaryCell != null)
+            {
+                grid.TriggerCellFeatureMatchedOverAt(secondaryDiscoBallPos);
+                secondaryCell.elementInfo = null;
+            }
+
+            List<Vector2Int> selectedCells = GetRandomEligibleDiscoBallTargets(primaryDiscoBallPos, secondaryDiscoBallPos, DiscoBallComboReplaceCount);
+            if (selectedCells.Count > 0)
+            {
+                yield return grid.StartCoroutine(AnimateDiscoBallTrails(primaryDiscoBallPos, selectedCells, designatedElementData));
+                DestroyDiscoBallConvertedCells(selectedCells);
+            }
+
+            StopAndDestroyDiscoBallElement(primaryElement, primarySpinTween);
+            StopAndDestroyDiscoBallElement(secondaryElement, secondarySpinTween);
+        }
+
+        private ElementData ResolveDefaultDiscoBallTargetElement(ElementData requestedTargetElementData)
+        {
+            if (requestedTargetElementData != null)
+                return requestedTargetElementData;
+
+            for (int x = 0; x < grid.GridSize.x; x++)
+            {
+                for (int y = 0; y < grid.GridSize.y; y++)
+                {
+                    Grid3D.GridCell cell = grid.GetCellPublic(new Vector2Int(x, y));
+                    if (!IsEligibleDiscoBallTargetCell(cell))
+                        continue;
+
+                    return cell.elementInfo.elementData;
+                }
+            }
+
+            return null;
+        }
+
+        private ElementData ResolveRandomDiscoBallComboTargetElement(params Vector2Int[] excludedPositions)
+        {
+            List<ElementData> uniqueElementTypes = new List<ElementData>();
+
+            for (int x = 0; x < grid.GridSize.x; x++)
+            {
+                for (int y = 0; y < grid.GridSize.y; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    if (IsExcludedPosition(pos, excludedPositions))
+                        continue;
+
+                    Grid3D.GridCell cell = grid.GetCellPublic(pos);
+                    if (!IsEligibleDiscoBallTargetCell(cell))
+                        continue;
+
+                    ElementData elementData = cell.elementInfo.elementData;
+                    if (elementData != null && !uniqueElementTypes.Contains(elementData))
+                        uniqueElementTypes.Add(elementData);
+                }
+            }
+
+            if (uniqueElementTypes.Count == 0)
+                return null;
+
+            return uniqueElementTypes[Random.Range(0, uniqueElementTypes.Count)];
+        }
+
+        private List<Vector2Int> GetRandomEligibleDiscoBallTargets(Vector2Int excludedPosition, int maxCount)
+        {
+            return GetRandomEligibleDiscoBallTargets(new[] { excludedPosition }, maxCount);
+        }
+
+        private List<Vector2Int> GetRandomEligibleDiscoBallTargets(Vector2Int excludedPosition1, Vector2Int excludedPosition2, int maxCount)
+        {
+            return GetRandomEligibleDiscoBallTargets(new[] { excludedPosition1, excludedPosition2 }, maxCount);
+        }
+
+        private List<Vector2Int> GetRandomEligibleDiscoBallTargets(Vector2Int[] excludedPositions, int maxCount)
+        {
             List<Vector2Int> candidates = new List<Vector2Int>();
             for (int x = 0; x < grid.GridSize.x; x++)
             {
                 for (int y = 0; y < grid.GridSize.y; y++)
                 {
                     Vector2Int pos = new Vector2Int(x, y);
-                    if (pos == discoBallPos) continue;
+                    if (IsExcludedPosition(pos, excludedPositions))
+                        continue;
+
                     Grid3D.GridCell cell = grid.GetCellPublic(pos);
-                    if (cell == null || cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null) continue;
-                    if (cell.elementInfo.isHidden) continue;
-                    if (IsSpecialPowerUp(cell.elementInfo.powerUpType)) continue;
-                    ElementData elementData = cell.elementInfo.elementData;
-                    if (elementData != null &&
-                        (elementData.HasBehavior(ElementData.ElementBehaviorFlags.NonShuffleable) ||
-                         elementData.HasBehavior(ElementData.ElementBehaviorFlags.NonSwappable)))
+                    if (!IsEligibleDiscoBallTargetCell(cell))
                         continue;
 
                     candidates.Add(pos);
                 }
             }
 
-            // Pick up to 10 random unique cells
-            int replaceCount = Mathf.Min(10, candidates.Count);
+            int replaceCount = Mathf.Min(maxCount, candidates.Count);
             List<Vector2Int> selectedCells = new List<Vector2Int>(replaceCount);
             for (int i = 0; i < replaceCount; i++)
             {
@@ -895,12 +1024,76 @@ namespace Game
                 selectedCells.Add(candidates[i]);
             }
 
-            if (selectedCells.Count > 0)
+            return selectedCells;
+        }
+
+        private bool IsEligibleDiscoBallTargetCell(Grid3D.GridCell cell)
+        {
+            if (cell == null || cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null)
+                return false;
+
+            if (cell.elementInfo.isHidden)
+                return false;
+
+            if (IsSpecialPowerUp(cell.elementInfo.powerUpType))
+                return false;
+
+            ElementData elementData = cell.elementInfo.elementData;
+            if (elementData == null)
+                return false;
+
+            if (elementData.HasBehavior(ElementData.ElementBehaviorFlags.NonShuffleable) ||
+                elementData.HasBehavior(ElementData.ElementBehaviorFlags.NonSwappable))
+                return false;
+
+            return true;
+        }
+
+        private static bool IsExcludedPosition(Vector2Int pos, Vector2Int[] excludedPositions)
+        {
+            if (excludedPositions == null)
+                return false;
+
+            for (int i = 0; i < excludedPositions.Length; i++)
             {
-                yield return grid.StartCoroutine(AnimateDiscoBallTrails(discoBallPos, selectedCells, targetElementData));
-                DestroyDiscoBallConvertedCells(selectedCells);
+                if (pos == excludedPositions[i])
+                    return true;
             }
 
+            return false;
+        }
+
+        private Vector2Int FindAdjacentDiscoBall(Vector2Int origin)
+        {
+            Vector2Int[] offsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            for (int i = 0; i < offsets.Length; i++)
+            {
+                Vector2Int candidatePos = origin + offsets[i];
+                Grid3D.GridCell candidateCell = grid.GetCellPublic(candidatePos);
+                if (candidateCell?.elementInfo?.powerUpType == ElementPowerUpType.DiscoBall)
+                    return candidatePos;
+            }
+
+            return origin;
+        }
+
+        private void StartDiscoBallSpin(GridElement discoBallElement, ref Tween spinTween)
+        {
+            if (discoBallElement == null)
+                return;
+
+            discoBallElement.transform.DOKill();
+            float spinDuration = GameManager.Instance.constantManager.discoBallSpinLoopDuration;
+            float spinDegrees = GameManager.Instance.constantManager.discoBallSpinDegreesPerLoop;
+            spinTween = discoBallElement.transform
+                .DORotate(new Vector3(0f, 0f, spinDegrees), spinDuration, RotateMode.FastBeyond360)
+                .SetEase(Ease.Linear)
+                .SetRelative()
+                .SetLoops(-1, LoopType.Restart);
+        }
+
+        private void StopAndDestroyDiscoBallElement(GridElement discoBallElement, Tween spinTween)
+        {
             if (spinTween != null)
                 spinTween.Kill();
 
