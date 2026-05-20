@@ -36,6 +36,8 @@ namespace Game
         [FoldoutGroup("Particle Systems")]
         public ParticleSystem rocketPowerupTrailParticlePrefab;
         [FoldoutGroup("Particle Systems")]
+        public ParticleSystem powerUpComboParticlePrefab;
+        [FoldoutGroup("Particle Systems")]
         public ParticleSystem hiddenElementRevealParticlePrefab;
     }
 }

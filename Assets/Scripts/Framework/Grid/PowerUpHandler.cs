@@ -15,10 +15,25 @@ namespace Game
         private const int SortingOrderBoost = 200;
         private const int StandardDiscoBallReplaceCount = 10;
         private const int DiscoBallComboReplaceCount = 15;
+        private const float ComboIntroMinRaiseHeight = 0.55f;
+        private const float ComboIntroMaxRaiseHeight = 1.1f;
+        private const float ComboIntroMinOrbitRadius = 0.25f;
+        private const float ComboIntroMaxOrbitRadius = 0.6f;
+        private const int ComboIntroSpinDegrees = 1080;
+        private const float ComboIntroMergeDuration = 0.14f;
         private readonly HashSet<Vector2Int> activatingPowerUpPositions = new HashSet<Vector2Int>();
         private int activePowerUpChainCount;
         private readonly Dictionary<ElementPowerUpType, IPowerUpActivationStrategy> activationStrategies;
         private readonly List<IPowerUpCreationStrategy> creationStrategies;
+
+        private sealed class ComboIntroResult
+        {
+            public GridElement persistentElement;
+            public GridElement disappearingElement;
+            public Vector2Int persistentGridPosition;
+            public Vector2Int disappearingGridPosition;
+            public Vector3 mergeWorldPosition;
+        }
 
         public PowerUpHandler(Match3Grid grid)
         {
@@ -636,6 +651,8 @@ namespace Game
                     yield break;
 
                 activePowerUpChainCount++;
+                ComboIntroResult comboIntroResult = new ComboIntroResult();
+                yield return grid.StartCoroutine(PlayPowerUpComboIntro(firstPos, secondPos, comboIntroResult));
                 yield return grid.StartCoroutine(strategy.Activate(firstPos, null));
             }
             finally
@@ -654,6 +671,160 @@ namespace Game
                 return new DiscoBallAndDiscoBallComboActivationStrategy(this);
 
             return null;
+        }
+
+        private IEnumerator PlayPowerUpComboIntro(Vector2Int firstPos, Vector2Int secondPos, ComboIntroResult introResult)
+        {
+            if (introResult == null)
+                yield break;
+
+            GridElement firstElement = grid.GetElementAt(firstPos);
+            GridElement secondElement = grid.GetElementAt(secondPos);
+
+            Vector3 firstStartWorld = firstElement != null ? firstElement.transform.position : grid.GetWorldPosition(firstPos);
+            Vector3 secondStartWorld = secondElement != null ? secondElement.transform.position : grid.GetWorldPosition(secondPos);
+            Vector3 comboCenter = (firstStartWorld + secondStartWorld) * 0.5f;
+            float distance = Vector3.Distance(firstStartWorld, secondStartWorld);
+            float raiseHeight = Mathf.Clamp(distance * 0.35f, ComboIntroMinRaiseHeight, ComboIntroMaxRaiseHeight);
+            float orbitRadius = Mathf.Clamp(distance * 0.5f, ComboIntroMinOrbitRadius, ComboIntroMaxOrbitRadius);
+            float raiseDuration = Mathf.Max(0.15f, GameManager.Instance.constantManager.elementSwapMoveDuration * 0.8f);
+            float spinDuration = Mathf.Max(0.3f, GameManager.Instance.constantManager.elementSwapMoveDuration * 1.4f);
+
+            Transform animationParent = grid.GridParent != null ? grid.GridParent : grid.transform;
+            GameObject orbitPivot = new GameObject("PowerUpComboIntroPivot");
+            orbitPivot.transform.SetParent(animationParent, true);
+            orbitPivot.transform.position = comboCenter + (Vector3.up * raiseHeight);
+
+            Transform firstOriginalParent = firstElement != null ? firstElement.transform.parent : null;
+            Transform secondOriginalParent = secondElement != null ? secondElement.transform.parent : null;
+
+            if (firstElement != null)
+            {
+                firstElement.transform.DOKill();
+                firstElement.transform.SetParent(orbitPivot.transform, true);
+                AdjustSortingOrder(firstElement, SortingOrderBoost);
+            }
+
+            if (secondElement != null)
+            {
+                secondElement.transform.DOKill();
+                secondElement.transform.SetParent(orbitPivot.transform, true);
+                AdjustSortingOrder(secondElement, SortingOrderBoost);
+            }
+
+            ParticleSystem comboParticle = SpawnPowerUpComboParticle(orbitPivot.transform);
+            Sequence comboSequence = DOTween.Sequence();
+
+            if (firstElement != null)
+            {
+                comboSequence.Join(firstElement.transform.DOLocalMove(new Vector3(-orbitRadius, 0f, 0f), raiseDuration).SetEase(Ease.OutBack));
+                comboSequence.Join(firstElement.transform.DOScale(1.15f, raiseDuration * 0.5f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutSine));
+            }
+
+            if (secondElement != null)
+            {
+                comboSequence.Join(secondElement.transform.DOLocalMove(new Vector3(orbitRadius, 0f, 0f), raiseDuration).SetEase(Ease.OutBack));
+                comboSequence.Join(secondElement.transform.DOScale(1.15f, raiseDuration * 0.5f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutSine));
+            }
+
+            comboSequence.Append(orbitPivot.transform
+                .DORotate(new Vector3(0f, 0f, ComboIntroSpinDegrees), spinDuration, RotateMode.FastBeyond360)
+                .SetEase(Ease.Linear)
+                .SetRelative());
+
+            yield return comboSequence.WaitForCompletion();
+
+            Sequence mergeSequence = DOTween.Sequence();
+
+            if (firstElement != null)
+            {
+                mergeSequence.Join(firstElement.transform.DOMove(comboCenter, ComboIntroMergeDuration).SetEase(Ease.InBack));
+            }
+
+            if (secondElement != null)
+            {
+                mergeSequence.Join(secondElement.transform.DOMove(comboCenter, ComboIntroMergeDuration).SetEase(Ease.InBack));
+                mergeSequence.Join(secondElement.transform.DOScale(0f, ComboIntroMergeDuration).SetEase(Ease.InBack));
+            }
+
+            if (mergeSequence.active)
+                yield return mergeSequence.WaitForCompletion();
+
+            introResult.persistentElement = firstElement;
+            introResult.disappearingElement = secondElement;
+            introResult.persistentGridPosition = firstPos;
+            introResult.disappearingGridPosition = secondPos;
+            introResult.mergeWorldPosition = comboCenter;
+
+            RestorePersistentComboElement(firstElement, firstOriginalParent, comboCenter, firstPos);
+            DestroyComboElementVisual(secondElement);
+
+            if (comboParticle != null)
+            {
+                comboParticle.transform.SetParent(null, true);
+                float particleLifetime = comboParticle.main.duration + comboParticle.main.startLifetime.constantMax + 0.2f;
+                Object.Destroy(comboParticle.gameObject, particleLifetime);
+            }
+
+            Object.Destroy(orbitPivot);
+        }
+
+        private ParticleSystem SpawnPowerUpComboParticle(Transform comboAnchor)
+        {
+            Gfx gfxManager = GameManager.Instance != null ? GameManager.Instance.gfxManager : null;
+            if (gfxManager == null || gfxManager.powerUpComboParticlePrefab == null || comboAnchor == null)
+                return null;
+
+            ParticleSystem comboParticle = Object.Instantiate(gfxManager.powerUpComboParticlePrefab, comboAnchor.position, Quaternion.identity, comboAnchor);
+            comboParticle.Play();
+            return comboParticle;
+        }
+
+        private void RestorePersistentComboElement(GridElement element, Transform originalParent, Vector3 worldPosition, Vector2Int gridPos)
+        {
+            if (element == null)
+                return;
+
+            element.transform.DOKill();
+            if (originalParent != null)
+                element.transform.SetParent(originalParent, true);
+
+            element.transform.position = worldPosition;
+
+            Grid3D.GridCell cell = grid.GetCellPublic(gridPos);
+            if (cell?.elementInfo != null)
+            {
+                element.elementInfo = cell.elementInfo;
+                element.InitElement(grid, cell.elementInfo);
+            }
+            else
+            {
+                element.transform.localScale = Vector3.one;
+            }
+
+            AdjustSortingOrder(element, -SortingOrderBoost);
+        }
+
+        private void DestroyComboElementVisual(GridElement element)
+        {
+            if (element == null)
+                return;
+
+            element.transform.DOKill();
+            grid.StartCoroutine(element.DestroyElement());
+        }
+
+        private void AdjustSortingOrder(GridElement element, int delta)
+        {
+            if (element == null || delta == 0)
+                return;
+
+            Renderer[] renderers = element.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] != null)
+                    renderers[i].sortingOrder += delta;
+            }
         }
 
         private interface IPowerUpActivationStrategy
