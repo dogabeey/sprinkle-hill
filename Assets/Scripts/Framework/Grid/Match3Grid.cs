@@ -658,9 +658,12 @@ namespace Game
                     (PowerUpHandler.IsRocket(firstType) && PowerUpHandler.IsRocket(secondType)) ||
                     (PowerUpHandler.IsRocket(firstType) && PowerUpHandler.IsPropeller(secondType)) ||
                     (PowerUpHandler.IsRocket(secondType) && PowerUpHandler.IsPropeller(firstType)) ||
+                    (PowerUpHandler.IsRocket(firstType) && secondType == ElementPowerUpType.Bomb) ||
+                    (PowerUpHandler.IsRocket(secondType) && firstType == ElementPowerUpType.Bomb) ||
                     (PowerUpHandler.IsPropeller(firstType) && PowerUpHandler.IsPropeller(secondType)) ||
                     (PowerUpHandler.IsPropeller(firstType) && secondType == ElementPowerUpType.Bomb) ||
-                    (PowerUpHandler.IsPropeller(secondType) && firstType == ElementPowerUpType.Bomb))
+                    (PowerUpHandler.IsPropeller(secondType) && firstType == ElementPowerUpType.Bomb) ||
+                    (firstType == ElementPowerUpType.Bomb && secondType == ElementPowerUpType.Bomb))
                 {
                     yield return StartCoroutine(powerUpHandler.ActivateSwapComboAt(first, second));
                     yield return StartCoroutine(ResolveBoardAfterSpecialClear());

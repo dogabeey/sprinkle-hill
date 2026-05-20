@@ -656,6 +656,16 @@ namespace Game
                     firstType = secondType;
                     secondType = tempType;
                 }
+                else if (secondType == ElementPowerUpType.Bomb && IsRocket(firstType))
+                {
+                    Vector2Int tempPos = firstPos;
+                    firstPos = secondPos;
+                    secondPos = tempPos;
+
+                    ElementPowerUpType tempType = firstType;
+                    firstType = secondType;
+                    secondType = tempType;
+                }
                 else if (IsRocket(secondType) && IsPropeller(firstType))
                 {
                     Vector2Int tempPos = firstPos;
@@ -721,6 +731,12 @@ namespace Game
 
             if (IsRocket(firstType) && IsPropeller(secondType))
                 return new RocketAndPropellerComboActivationStrategy(this);
+
+            if (firstType == ElementPowerUpType.Bomb && IsRocket(secondType))
+                return new RocketAndBombComboActivationStrategy(this);
+
+            if (firstType == ElementPowerUpType.Bomb && secondType == ElementPowerUpType.Bomb)
+                return new BombAndBombComboActivationStrategy(this);
 
             return null;
         }
@@ -1039,7 +1055,7 @@ namespace Game
             }
             public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
             {
-                throw new System.NotImplementedException("Rocket + Bomb combo activation is not implemented yet. TODO: Converts a 3x3 radius area to rockets, then activates them.");
+                return handler.ActivateRocketAndBombCombo(pos);
             }
         }
         private sealed class PropellerAndPropellerComboActivationStrategy : IPowerUpActivationStrategy
@@ -1075,7 +1091,7 @@ namespace Game
             }
             public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
             {
-                throw new System.NotImplementedException("Bomb + Bomb combo activation is not implemented yet. TODO: Works like bomb, but affects a 7x7 area instead of 5x5.");
+                return handler.ActivateBombAndBombCombo(pos);
             }
         }
 
@@ -1375,6 +1391,78 @@ namespace Game
             yield return grid.StartCoroutine(FlyRocketToTargetAndActivate(rocketPos, targetPos, rocketElement));
         }
 
+        private IEnumerator ActivateRocketAndBombCombo(Vector2Int bombPos)
+        {
+            Grid3D.GridCell bombCell = grid.GetCellPublic(bombPos);
+            if (bombCell?.elementInfo == null || bombCell.elementInfo.powerUpType != ElementPowerUpType.Bomb)
+                yield break;
+
+            Vector2Int rocketPos = FindAdjacentRocket(bombPos);
+            if (rocketPos == bombPos)
+                yield break;
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.BOMB, volumeMultiplier: 1.05f, pitchOffset: 0.02f);
+
+            GridElement bombElement = grid.GetElementAt(bombPos);
+
+            grid.TriggerCellFeatureMatchedOverAt(bombPos);
+            bombCell.elementInfo = null;
+
+            Grid3D.GridCell rocketCell = grid.GetCellPublic(rocketPos);
+            if (rocketCell != null)
+            {
+                grid.TriggerCellFeatureMatchedOverAt(rocketPos);
+                rocketCell.elementInfo = null;
+            }
+
+            List<Vector2Int> areaCells = GetEligibleCellsInSquareArea(bombPos, 1, bombPos, rocketPos);
+            if (areaCells.Count > 0)
+            {
+                ConvertCellsToPowerUp(areaCells, ElementPowerUpType.Rocket);
+                yield return null;
+
+                for (int i = 0; i < areaCells.Count; i++)
+                    yield return grid.StartCoroutine(ActivateAt(areaCells[i], null));
+            }
+
+            if (bombElement != null)
+                grid.StartCoroutine(bombElement.DestroyElement());
+        }
+
+        private IEnumerator ActivateBombAndBombCombo(Vector2Int primaryBombPos)
+        {
+            Grid3D.GridCell primaryBombCell = grid.GetCellPublic(primaryBombPos);
+            if (primaryBombCell?.elementInfo == null || primaryBombCell.elementInfo.powerUpType != ElementPowerUpType.Bomb)
+                yield break;
+
+            Vector2Int secondaryBombPos = FindAdjacentPowerUpOfType(primaryBombPos, ElementPowerUpType.Bomb);
+            if (secondaryBombPos == primaryBombPos)
+                yield break;
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.BOMB, volumeMultiplier: 1.12f, pitchOffset: -0.04f);
+
+            GridElement primaryBombElement = grid.GetElementAt(primaryBombPos);
+            Vector3 impactWorldPos = grid.GetWorldPosition(primaryBombPos);
+            PlayBombImpactEffects(impactWorldPos);
+
+            grid.TriggerCellFeatureMatchedOverAt(primaryBombPos);
+            primaryBombCell.elementInfo = null;
+
+            Grid3D.GridCell secondaryBombCell = grid.GetCellPublic(secondaryBombPos);
+            if (secondaryBombCell != null)
+            {
+                grid.TriggerCellFeatureMatchedOverAt(secondaryBombPos);
+                secondaryBombCell.elementInfo = null;
+            }
+
+            if (primaryBombElement != null)
+                grid.StartCoroutine(primaryBombElement.DestroyElement());
+
+            yield return grid.StartCoroutine(ClearBombAreaProgressive(primaryBombPos, 3, false));
+        }
+
         private IEnumerator ActivateDiscoBallAndPropellerCombo(Vector2Int discoBallPos)
         {
             Grid3D.GridCell discoBallCell = grid.GetCellPublic(discoBallPos);
@@ -1506,6 +1594,58 @@ namespace Game
             }
 
             return selectedCells;
+        }
+
+        private List<Vector2Int> GetEligibleCellsInSquareArea(Vector2Int center, int radius, params Vector2Int[] excludedPositions)
+        {
+            List<Vector2Int> cells = new List<Vector2Int>();
+
+            for (int x = center.x - radius; x <= center.x + radius; x++)
+            {
+                for (int y = center.y - radius; y <= center.y + radius; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    if (IsExcludedPosition(pos, excludedPositions))
+                        continue;
+
+                    Grid3D.GridCell cell = grid.GetCellPublic(pos);
+                    if (!IsEligibleDiscoBallTargetCell(cell))
+                        continue;
+
+                    cells.Add(pos);
+                }
+            }
+
+            return cells;
+        }
+
+        private void ConvertCellsToPowerUp(List<Vector2Int> positions, ElementPowerUpType targetPowerUpType)
+        {
+            if (positions == null)
+                return;
+
+            for (int i = 0; i < positions.Count; i++)
+            {
+                Vector2Int pos = positions[i];
+                Grid3D.GridCell cell = grid.GetCellPublic(pos);
+                if (cell?.elementInfo == null)
+                    continue;
+
+                ElementData sourceData = cell.elementInfo.elementData;
+                cell.elementInfo.elementData = ResolveVisualData(sourceData, targetPowerUpType);
+                cell.elementInfo.powerUpType = targetPowerUpType;
+                cell.elementInfo.isSparkling = false;
+                cell.elementInfo.isHidden = false;
+
+                GridElement element = grid.GetElementAt(pos);
+                if (element != null)
+                {
+                    element.elementInfo = cell.elementInfo;
+                    element.InitElement(grid, cell.elementInfo);
+                    GridHelper.SetEmission(element, 0f);
+                    ApplySortingBoost(element, targetPowerUpType == ElementPowerUpType.Bomb);
+                }
+            }
         }
 
         private bool IsEligibleDiscoBallTargetCell(Grid3D.GridCell cell)
