@@ -648,7 +648,9 @@ namespace Game
                 GameManager.Instance.soundManager.Play(ConstantManager.SOUNDS.EFFECTS.ELEMENT_SWAP);
                 GridHelper.TriggerHaptic(HapticModes.Select);
 
-                if (PowerUpHandler.IsDiscoBall(firstType) && PowerUpHandler.IsDiscoBall(secondType))
+                if ((PowerUpHandler.IsDiscoBall(firstType) && PowerUpHandler.IsDiscoBall(secondType)) ||
+                    (PowerUpHandler.IsDiscoBall(firstType) && secondType == ElementPowerUpType.Bomb) ||
+                    (PowerUpHandler.IsDiscoBall(secondType) && firstType == ElementPowerUpType.Bomb))
                 {
                     yield return StartCoroutine(powerUpHandler.ActivateSwapComboAt(first, second));
                     yield return StartCoroutine(ResolveBoardAfterSpecialClear());

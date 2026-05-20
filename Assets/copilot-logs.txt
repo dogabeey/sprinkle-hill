@@ -66,3 +66,5 @@
 [2026-05-19 00:00:00] - Refactored UnityAdsManager from deprecated MediationService APIs to modern Unity LevelPlay (Init callbacks, LevelPlayInterstitialAd/RewardedAd/BannerAd integration, updated ad event/error types, readiness checks, and lifecycle cleanup).
 [2026-05-20 17:28:17] - Implemented Disco Ball + Disco Ball swap combo to convert 15 random elements into a random element type and clear them through the combo activation flow.
 [2026-05-20 17:47:29] - Added shared power-up combo intro animation with raise/orbit spin and GfxManager combo particle before combined power-up effects execute.
+[2026-05-20 18:54:07] - Implemented Disco Ball + Bomb swap combo in PowerUpHandler by converting 8 random eligible elements into bombs and then activating those bombs.
+[2026-05-20 19:22:39] - Fixed Disco Ball + Bomb swap handling in Match3Grid so both swap orders route through combo activation instead of separate single-power-up effects, and made converted bomb activations execute deterministically.
