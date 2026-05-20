@@ -52,8 +52,8 @@ Material:
     - PixelSnap: 0
     - _Emission: 0
     - _EnableExternalAlpha: 0
-    - _HueShiftSpeed: 1.34
-    - _HueShiftStrength: 0.207
+    - _HueShiftSpeed: 3.02
+    - _HueShiftStrength: 0.291
     - _HueSpeed: 0.274
     m_Colors:
     - White: {r: 1, g: 1, b: 1, a: 1}
