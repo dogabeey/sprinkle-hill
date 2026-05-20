@@ -16,4 +16,4 @@ MonoBehaviour:
   description: Reveal %c hidden boxes
   creationCountEvent: 808
   completionEvent: 810
-  objectiveTypeSprite: {fileID: -622759365, guid: a46309d38df06264b96c750375a58bd1, type: 3}
+  objectiveTypeSprite: {fileID: -136137942, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}

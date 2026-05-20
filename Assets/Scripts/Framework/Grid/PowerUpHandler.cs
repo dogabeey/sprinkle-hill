@@ -690,6 +690,126 @@ namespace Game
                 return handler.ActivateDiscoBall(pos, swappedElementData);
             }
         }
+        private sealed class DiscoBallAndDiscoBallComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public DiscoBallAndDiscoBallComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                throw new System.NotImplementedException("Disco Ball + Disco Ball combo activation is not implemented yet. TODO: Similar to disco ball, but convertes 15 random elements to a random designated element.");
+            }
+        }
+        private sealed class DiscoBallAndRocketComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public DiscoBallAndRocketComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                throw new System.NotImplementedException("Disco Ball + Rocket combo activation is not implemented yet. TODO: Converts 8 random elements to rocket, then activates them.");
+            }
+        }
+        private sealed class DiscoBallAndPropellerComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public DiscoBallAndPropellerComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                throw new System.NotImplementedException("Disco Ball + Propeller combo activation is not implemented yet. TODO: Converts 8 random elements to propeller, then activates them.");
+            }
+        }
+        private sealed class DiscoBallAndBombComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public DiscoBallAndBombComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                throw new System.NotImplementedException("Disco Ball + Bomb combo activation is not implemented yet. TODO: Converts 8 random elements to bomb, then activates them.");
+            }
+        }
+        private sealed class RocketAndRocketComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public RocketAndRocketComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                throw new System.NotImplementedException("Rocket + Rocket combo activation is not implemented yet. TODO: Activates rocket to all four diagonal directions in addition to vertical and horizontal.");
+            }
+        }
+        private sealed class RocketAndPropellerComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public RocketAndPropellerComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                throw new System.NotImplementedException("Rocket + Propeller combo activation is not implemented yet. TODO: Flies the rocket to a random cell which a propeller would fly, then activates it.");
+            }
+        }
+        private sealed class RocketAndBombComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public RocketAndBombComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                throw new System.NotImplementedException("Rocket + Bomb combo activation is not implemented yet. TODO: Converts a 3x3 radius area to rockets, then activates them.");
+            }
+        }
+        private sealed class PropellerAndPropellerComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public PropellerAndPropellerComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                throw new System.NotImplementedException("Propeller + Propeller combo activation is not implemented yet. TODO: Actives 4 propellers at once.");
+            }
+        }
+        private sealed class PropellerAndBombComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public PropellerAndBombComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                throw new System.NotImplementedException("Propeller + Bomb combo activation is not implemented yet. TODO: Flies the bomb to a random cell which a propeller would fly, then activates it.");
+            }
+        }
+        private sealed class BombAndBombComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public BombAndBombComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                throw new System.NotImplementedException("Bomb + Bomb combo activation is not implemented yet. TODO: Works like bomb, but affects a 7x7 area instead of 5x5.");
+            }
+        }
 
         private IEnumerator ActivateDiscoBall(Vector2Int discoBallPos, ElementData targetElementData)
         {

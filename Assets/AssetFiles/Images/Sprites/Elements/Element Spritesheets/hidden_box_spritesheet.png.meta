@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 128
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
@@ -139,19 +139,19 @@ TextureImporter:
       name: hidden_box_spritesheet_0
       rect:
         serializedVersion: 2
-        x: 23
-        y: 676
-        width: 157
-        height: 186
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 0
+        y: 287
+        width: 256
+        height: 288
+      alignment: 9
+      pivot: {x: 0.50436294, y: 0.3412838}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3f9c6a9054a9e744593b9b7609df962e
+      spriteID: d961d2d99c58b9f43a86952c2903b040
       internalID: 167898339
       vertices: []
       indices: 
@@ -161,20 +161,20 @@ TextureImporter:
       name: hidden_box_spritesheet_1
       rect:
         serializedVersion: 2
-        x: 187
-        y: 674
-        width: 156
-        height: 183
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 256
+        y: 288
+        width: 256
+        height: 288
+      alignment: 9
+      pivot: {x: 0.517452, y: 0.34128392}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b4b8a1d567e6ac84a94d52ee46133655
-      internalID: -1070265065
+      spriteID: 0ab5e1354c8f38443a5e600c03386ff9
+      internalID: -1873493637
       vertices: []
       indices: 
       edges: []
@@ -183,20 +183,20 @@ TextureImporter:
       name: hidden_box_spritesheet_2
       rect:
         serializedVersion: 2
-        x: 349
-        y: 670
-        width: 157
-        height: 180
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 512
+        y: 288
+        width: 256
+        height: 288
+      alignment: 9
+      pivot: {x: 0.517452, y: 0.33352715}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1adf899c2dc6984488f588b080acfa6a
-      internalID: 45524407
+      spriteID: 3b76cfba44f2a0d4bb76db93c56289b3
+      internalID: 2091562048
       vertices: []
       indices: 
       edges: []
@@ -205,20 +205,20 @@ TextureImporter:
       name: hidden_box_spritesheet_3
       rect:
         serializedVersion: 2
-        x: 512
-        y: 667
-        width: 157
-        height: 175
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 768
+        y: 288
+        width: 256
+        height: 288
+      alignment: 9
+      pivot: {x: 0.534904, y: 0.3141361}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2da88af9ca44bf3409ba7505fb9c3892
-      internalID: 703463161
+      spriteID: e77bb54970df7fa4e840ed7ae8cf12b7
+      internalID: 1457211785
       vertices: []
       indices: 
       edges: []
@@ -227,20 +227,20 @@ TextureImporter:
       name: hidden_box_spritesheet_4
       rect:
         serializedVersion: 2
-        x: 675
-        y: 664
-        width: 157
-        height: 183
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 1024
+        y: 288
+        width: 256
+        height: 288
+      alignment: 9
+      pivot: {x: 0.5087261, y: 0.3141361}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 72f9b0575420e7845856cd2c54960023
-      internalID: 1030902146
+      spriteID: 53a11523558df26478976a1a7272814c
+      internalID: -2010001712
       vertices: []
       indices: 
       edges: []
@@ -249,20 +249,20 @@ TextureImporter:
       name: hidden_box_spritesheet_5
       rect:
         serializedVersion: 2
-        x: 839
-        y: 661
-        width: 156
-        height: 180
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 1280
+        y: 288
+        width: 256
+        height: 288
+      alignment: 9
+      pivot: {x: 0.5479932, y: 0.32964897}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 04a48dbad491e7e4cb094ba9fc407761
-      internalID: 416601054
+      spriteID: 120cb75677daa4a479776167fb4e2590
+      internalID: 1209930110
       vertices: []
       indices: 
       edges: []
@@ -271,20 +271,20 @@ TextureImporter:
       name: hidden_box_spritesheet_6
       rect:
         serializedVersion: 2
-        x: 1003
-        y: 658
-        width: 157
-        height: 185
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 0
+        y: 0
+        width: 256
+        height: 288
+      alignment: 9
+      pivot: {x: 0.49127397, y: 0.24820635}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9ca2ea507653dcf498548f86eb49c600
-      internalID: 1010138873
+      spriteID: 08d829580d72843419b795914a3310e6
+      internalID: 1716857001
       vertices: []
       indices: 
       edges: []
@@ -293,20 +293,20 @@ TextureImporter:
       name: hidden_box_spritesheet_7
       rect:
         serializedVersion: 2
-        x: 1170
-        y: 655
-        width: 157
-        height: 186
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 256
+        y: 0
+        width: 256
+        height: 288
+      alignment: 9
+      pivot: {x: 0.50436306, y: 0.21330233}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: da3bbc0db71b0ab4a9f91ce12c57fa92
-      internalID: 1855968530
+      spriteID: 2ad79382f4338644999dcffa520226a1
+      internalID: 1840504045
       vertices: []
       indices: 
       edges: []
@@ -315,20 +315,20 @@ TextureImporter:
       name: hidden_box_spritesheet_8
       rect:
         serializedVersion: 2
-        x: 1336
-        y: 653
-        width: 157
-        height: 179
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 512
+        y: 0
+        width: 256
+        height: 288
+      alignment: 9
+      pivot: {x: 0.50436306, y: 0.25984102}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 32d2c63df457be94e98236a1755c430c
-      internalID: 783265321
+      spriteID: ca698c6acb1391d44b9ac6be397e9dc7
+      internalID: 51246263
       vertices: []
       indices: 
       edges: []
@@ -337,20 +337,20 @@ TextureImporter:
       name: hidden_box_spritesheet_9
       rect:
         serializedVersion: 2
-        x: 1501
-        y: 651
-        width: 153
-        height: 169
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 768
+        y: 0
+        width: 256
+        height: 288
+      alignment: 9
+      pivot: {x: 0.51308894, y: 0.2753539}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d58d48a8f389f3c4292afd5a5902c182
-      internalID: -1444727623
+      spriteID: 48763a03afbe6504e9ead173adf54aed
+      internalID: 131427474
       vertices: []
       indices: 
       edges: []
@@ -359,20 +359,20 @@ TextureImporter:
       name: hidden_box_spritesheet_10
       rect:
         serializedVersion: 2
-        x: 21
-        y: 425
-        width: 158
-        height: 163
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 1024
+        y: 0
+        width: 256
+        height: 288
+      alignment: 9
+      pivot: {x: 0.49127436, y: 0.27923214}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9745c51bf1247754391e50bb78c9df04
-      internalID: 1197197418
+      spriteID: bc1a3cdae94a8e24bba977b88215b770
+      internalID: 1968665030
       vertices: []
       indices: 
       edges: []
@@ -381,570 +381,20 @@ TextureImporter:
       name: hidden_box_spritesheet_11
       rect:
         serializedVersion: 2
-        x: 186
-        y: 422
-        width: 158
-        height: 154
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 1280
+        y: 0
+        width: 256
+        height: 288
+      alignment: 9
+      pivot: {x: 0.5218148, y: 0.31413615}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7d9a4dd0a6dfc63409b3c0732c41bd09
-      internalID: 1152621371
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_12
-      rect:
-        serializedVersion: 2
-        x: 352
-        y: 419
-        width: 162
-        height: 150
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4a1561224acfe3243b7020bbebe71e56
-      internalID: -1490899559
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_13
-      rect:
-        serializedVersion: 2
-        x: 517
-        y: 417
-        width: 158
-        height: 140
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 745b0b29bad0cb44b96a8a259ed5f4b0
-      internalID: -595653626
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_14
-      rect:
-        serializedVersion: 2
-        x: 682
-        y: 414
-        width: 163
-        height: 129
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b72e10c26dcc9cd488425d3ec7e6837a
-      internalID: 2131895365
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_15
-      rect:
-        serializedVersion: 2
-        x: 848
-        y: 412
-        width: 161
-        height: 123
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 6b5e06e06dd7d3d4c807a16cc908a330
-      internalID: -754177304
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_16
-      rect:
-        serializedVersion: 2
-        x: 1015
-        y: 410
-        width: 161
-        height: 117
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3168c73ee0d371441a630e727fb04713
-      internalID: 1141072579
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_17
-      rect:
-        serializedVersion: 2
-        x: 1180
-        y: 409
-        width: 161
-        height: 109
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e0aec0d8aace69d4faf4ce70d0c48583
-      internalID: 1767007082
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_18
-      rect:
-        serializedVersion: 2
-        x: 1345
-        y: 408
-        width: 162
-        height: 101
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: af343a64fbf8e3a4a991f09627110436
-      internalID: 673399013
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_19
-      rect:
-        serializedVersion: 2
-        x: 1508
-        y: 407
-        width: 162
-        height: 92
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a479913b5dbcbc4449e931ef4d7661f4
-      internalID: 572789607
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_20
-      rect:
-        serializedVersion: 2
-        x: 14
-        y: 247
-        width: 175
-        height: 94
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 157b444a82b111846aed2a305975fe7d
-      internalID: -1833314498
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_21
-      rect:
-        serializedVersion: 2
-        x: 194
-        y: 243
-        width: 168
-        height: 83
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: cc84f00f43bee974a8b5cb746b785242
-      internalID: -1913595796
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_22
-      rect:
-        serializedVersion: 2
-        x: 374
-        y: 240
-        width: 169
-        height: 65
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4dc66a0f850492b48acbbff7a0972761
-      internalID: -1064020098
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_23
-      rect:
-        serializedVersion: 2
-        x: 556
-        y: 237
-        width: 170
-        height: 57
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7e46bcad84c6f2840b0377398e14b1c2
-      internalID: 1867679699
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_24
-      rect:
-        serializedVersion: 2
-        x: 736
-        y: 234
-        width: 174
-        height: 53
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ac2b7e9efa9ed1f4bb051a669734d520
-      internalID: -557753869
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_25
-      rect:
-        serializedVersion: 2
-        x: 920
-        y: 231
-        width: 174
-        height: 53
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 05b3124f4f0c7e64587f3a327f10711d
-      internalID: -430390102
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_26
-      rect:
-        serializedVersion: 2
-        x: 1107
-        y: 227
-        width: 177
-        height: 52
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3054f967c269fb04b8601a811906c86d
-      internalID: 562712229
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_27
-      rect:
-        serializedVersion: 2
-        x: 1296
-        y: 223
-        width: 178
-        height: 49
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d8f4a5b7d22294a4493d47ee4b787acf
-      internalID: -1044960748
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_28
-      rect:
-        serializedVersion: 2
-        x: 1487
-        y: 220
-        width: 173
-        height: 46
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ffacd0ddf642f0c42adff6d34730d191
-      internalID: -791143678
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_29
-      rect:
-        serializedVersion: 2
-        x: 14
-        y: 103
-        width: 190
-        height: 49
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ec324c168415d5640ba79e294b1c6ff4
-      internalID: 851158058
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_30
-      rect:
-        serializedVersion: 2
-        x: 227
-        y: 98
-        width: 191
-        height: 45
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8dd9e30789b6478499fd109184439a67
-      internalID: 2069318381
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_31
-      rect:
-        serializedVersion: 2
-        x: 440
-        y: 94
-        width: 185
-        height: 42
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 69664d2eb973ba84fb6a82071d8b48d5
-      internalID: 968791479
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_32
-      rect:
-        serializedVersion: 2
-        x: 648
-        y: 91
-        width: 187
-        height: 38
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: fc3fcc319d7c7524ebd9623c776dd7c4
-      internalID: 1651094731
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_33
-      rect:
-        serializedVersion: 2
-        x: 856
-        y: 88
-        width: 185
-        height: 36
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: f65cc8cc72af5b84a9a37df68f43d677
-      internalID: -1007065042
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_34
-      rect:
-        serializedVersion: 2
-        x: 1062
-        y: 85
-        width: 185
-        height: 36
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 383b9f3aee51cad4bbda140bb99ec748
-      internalID: -168701651
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_35
-      rect:
-        serializedVersion: 2
-        x: 1268
-        y: 82
-        width: 184
-        height: 34
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b88e3da8ccbd09a45a4b5bd6c4eb4177
-      internalID: 778385174
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: hidden_box_spritesheet_36
-      rect:
-        serializedVersion: 2
-        x: 1474
-        y: 80
-        width: 185
-        height: 32
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 91316ea83779e244ba941635e60caaf2
-      internalID: 1559361663
+      spriteID: 41e24af00d3ac1c4aab7e2b21a59a78d
+      internalID: -1205569993
       vertices: []
       indices: 
       edges: []
@@ -963,45 +413,20 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.0},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":7,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":6.0,"y":2.0},"gridSpriteSize":{"x":256.0,"y":288.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.0},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":7,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       hidden_box_spritesheet_0: 167898339
-      hidden_box_spritesheet_1: -1070265065
-      hidden_box_spritesheet_10: 1197197418
-      hidden_box_spritesheet_11: 1152621371
-      hidden_box_spritesheet_12: -1490899559
-      hidden_box_spritesheet_13: -595653626
-      hidden_box_spritesheet_14: 2131895365
-      hidden_box_spritesheet_15: -754177304
-      hidden_box_spritesheet_16: 1141072579
-      hidden_box_spritesheet_17: 1767007082
-      hidden_box_spritesheet_18: 673399013
-      hidden_box_spritesheet_19: 572789607
-      hidden_box_spritesheet_2: 45524407
-      hidden_box_spritesheet_20: -1833314498
-      hidden_box_spritesheet_21: -1913595796
-      hidden_box_spritesheet_22: -1064020098
-      hidden_box_spritesheet_23: 1867679699
-      hidden_box_spritesheet_24: -557753869
-      hidden_box_spritesheet_25: -430390102
-      hidden_box_spritesheet_26: 562712229
-      hidden_box_spritesheet_27: -1044960748
-      hidden_box_spritesheet_28: -791143678
-      hidden_box_spritesheet_29: 851158058
-      hidden_box_spritesheet_3: 703463161
-      hidden_box_spritesheet_30: 2069318381
-      hidden_box_spritesheet_31: 968791479
-      hidden_box_spritesheet_32: 1651094731
-      hidden_box_spritesheet_33: -1007065042
-      hidden_box_spritesheet_34: -168701651
-      hidden_box_spritesheet_35: 778385174
-      hidden_box_spritesheet_36: 1559361663
-      hidden_box_spritesheet_4: 1030902146
-      hidden_box_spritesheet_5: 416601054
-      hidden_box_spritesheet_6: 1010138873
-      hidden_box_spritesheet_7: 1855968530
-      hidden_box_spritesheet_8: 783265321
-      hidden_box_spritesheet_9: -1444727623
+      hidden_box_spritesheet_1: -1873493637
+      hidden_box_spritesheet_10: 1968665030
+      hidden_box_spritesheet_11: -1205569993
+      hidden_box_spritesheet_2: 2091562048
+      hidden_box_spritesheet_3: 1457211785
+      hidden_box_spritesheet_4: -2010001712
+      hidden_box_spritesheet_5: 1209930110
+      hidden_box_spritesheet_6: 1716857001
+      hidden_box_spritesheet_7: 1840504045
+      hidden_box_spritesheet_8: 51246263
+      hidden_box_spritesheet_9: 131427474
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
