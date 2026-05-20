@@ -649,6 +649,8 @@ namespace Game
                 GridHelper.TriggerHaptic(HapticModes.Select);
 
                 if ((PowerUpHandler.IsDiscoBall(firstType) && PowerUpHandler.IsDiscoBall(secondType)) ||
+                    (PowerUpHandler.IsDiscoBall(firstType) && PowerUpHandler.IsRocket(secondType)) ||
+                    (PowerUpHandler.IsDiscoBall(secondType) && PowerUpHandler.IsRocket(firstType)) ||
                     (PowerUpHandler.IsDiscoBall(firstType) && secondType == ElementPowerUpType.Bomb) ||
                     (PowerUpHandler.IsDiscoBall(secondType) && firstType == ElementPowerUpType.Bomb))
                 {

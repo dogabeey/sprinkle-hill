@@ -681,6 +681,9 @@ namespace Game
             if (IsDiscoBall(firstType) && IsDiscoBall(secondType))
                 return new DiscoBallAndDiscoBallComboActivationStrategy(this);
 
+            if (IsDiscoBall(firstType) && IsRocket(secondType))
+                return new DiscoBallAndRocketComboActivationStrategy(this);
+
             if (IsDiscoBall(firstType) && secondType == ElementPowerUpType.Bomb)
                 return new DiscoBallAndBombComboActivationStrategy(this);
 
@@ -941,7 +944,7 @@ namespace Game
             }
             public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
             {
-                throw new System.NotImplementedException("Disco Ball + Rocket combo activation is not implemented yet. TODO: Converts 8 random elements to rocket, then activates them.");
+                return handler.ActivateDiscoBallAndRocketCombo(pos);
             }
         }
         private sealed class DiscoBallAndPropellerComboActivationStrategy : IPowerUpActivationStrategy
@@ -1164,6 +1167,48 @@ namespace Game
 
         }
 
+        private IEnumerator ActivateDiscoBallAndRocketCombo(Vector2Int discoBallPos)
+        {
+            Grid3D.GridCell discoBallCell = grid.GetCellPublic(discoBallPos);
+            if (discoBallCell?.elementInfo == null || discoBallCell.elementInfo.powerUpType != ElementPowerUpType.DiscoBall)
+                yield break;
+
+            Vector2Int rocketPos = FindAdjacentRocket(discoBallPos);
+            if (rocketPos == discoBallPos)
+                yield break;
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.DISCO_BALL_ACTIVATE, volumeMultiplier: 1.05f, pitchOffset: 0.02f);
+
+            GridElement discoBallElement = grid.GetElementAt(discoBallPos);
+            Tween discoBallSpinTween = null;
+
+            StartDiscoBallSpin(discoBallElement, ref discoBallSpinTween);
+
+            grid.TriggerCellFeatureMatchedOverAt(discoBallPos);
+            discoBallCell.elementInfo = null;
+
+            Grid3D.GridCell rocketCell = grid.GetCellPublic(rocketPos);
+            if (rocketCell != null)
+            {
+                grid.TriggerCellFeatureMatchedOverAt(rocketPos);
+                rocketCell.elementInfo = null;
+            }
+
+            List<Vector2Int> selectedCells = GetRandomEligibleDiscoBallTargets(discoBallPos, rocketPos, StandardDiscoBallReplaceCount);
+            if (selectedCells.Count > 0)
+            {
+                yield return grid.StartCoroutine(AnimateDiscoBallPowerUpTrails(discoBallPos, selectedCells, ElementPowerUpType.Rocket));
+
+                yield return null;
+
+                for (int i = 0; i < selectedCells.Count; i++)
+                    yield return grid.StartCoroutine(ActivateAt(selectedCells[i], null));
+            }
+
+            StopAndDestroyDiscoBallElement(discoBallElement, discoBallSpinTween);
+        }
+
         private ElementData ResolveDefaultDiscoBallTargetElement(ElementData requestedTargetElementData)
         {
             if (requestedTargetElementData != null)
@@ -1299,6 +1344,20 @@ namespace Game
                 Vector2Int candidatePos = origin + offsets[i];
                 Grid3D.GridCell candidateCell = grid.GetCellPublic(candidatePos);
                 if (candidateCell?.elementInfo?.powerUpType == ElementPowerUpType.DiscoBall)
+                    return candidatePos;
+            }
+
+            return origin;
+        }
+
+        private Vector2Int FindAdjacentRocket(Vector2Int origin)
+        {
+            Vector2Int[] offsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            for (int i = 0; i < offsets.Length; i++)
+            {
+                Vector2Int candidatePos = origin + offsets[i];
+                Grid3D.GridCell candidateCell = grid.GetCellPublic(candidatePos);
+                if (IsRocket(candidateCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None))
                     return candidatePos;
             }
 
