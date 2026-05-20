@@ -1,5 +1,6 @@
 using DG.Tweening;
 using Game;
+using Game.SimpleJSON;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
@@ -15,7 +16,7 @@ namespace Game
     /// You can configure conditions which decides when the button will be visible or clickable. 
     /// </summary>
     [Serializable]
-    public abstract class ActionBarItem : IBuyable
+    public abstract class ActionBarItem : IBuyable, ISaveable
     {
         public abstract string ItemName { get; }
         public abstract string ItemDescription { get; }
@@ -34,16 +35,15 @@ namespace Game
         public abstract bool CostDefinesBuyability { get; } // If true, the cost of the action will be used to determine whether the action is clickable. If false, the clickability will be determined by other conditions in IsClickable() method. This is useful when you want to have actions that are only limited by count but not by resources, or actions that are limited by resources but not by count.
 
 
-        public int CurrentCount // TODO: change this to Isaveable when implementing save system
-        {
-            get => PlayerPrefs.GetInt(ItemName + "_count", startingCount);
-            set => PlayerPrefs.SetInt(ItemName + "_count", value);
-        }
+        public int currentCount;
 
         public Sprite ActionBarIcon;
         public List<IBuyable.BuyBundle> buyConfig;
         public List<IBuyable.BuyBundle> BuyConfig => buyConfig;
         public int[] BuyChoices => new int[] { 1, 5, 25 };
+
+        public string SaveId =>  "ActionBarItem_" + ItemName;
+        public SaveDataType SaveDataType => SaveDataType.WorldProgression;
 
         public bool TryBuy(IBuyable.BuyBundle buyBundle, GameObject source = null)
         {
@@ -53,7 +53,7 @@ namespace Game
                 if (CurrencyManager.Instance.GetCurrencyAmount(CostCurrency) >= endCost)
                 {
                     CurrencyManager.Instance.AddCurrency(CostCurrency, -endCost);
-                    CurrentCount += buyBundle.buyCount;
+                    currentCount += buyBundle.buyCount;
                     PlayBuyFlyToSourceFeedback(buyBundle, source);
 
                     if (source != null && source.TryGetComponent(out ActionBarView actionBarView))
@@ -74,6 +74,11 @@ namespace Game
             }
         }
 
+        public void Init()
+        {
+            SaveManager.Instance.Register(this);
+        }
+
         abstract public int GetCost();
 
         abstract public void OnClick();
@@ -91,7 +96,7 @@ namespace Game
             if (GameManager.Instance != null && GameManager.Instance.tutorialManager != null && GameManager.Instance.tutorialManager.ShouldDisableActionBar)
                 return false;
 
-            return CurrentCount > 0 || !IsAvailable();
+            return currentCount > 0 || !IsAvailable();
         }
         /// <summary>
         /// Determines whether the object is available. This is used to show or hide the locked panel.
@@ -184,6 +189,33 @@ namespace Game
             return RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, screenPoint, eventCamera, out canvasPosition);
         }
 
+        public Dictionary<string, object> Save()
+        {
+            Dictionary<string, object> saveData = new Dictionary<string, object>
+            {
+                { "currentCount", currentCount }
+            };
+            return saveData;
+        }
+
+        public bool Load(Action onLoadSuccess, Action onLoadFail)
+        {
+            JSONNode saveData = GameManager.Instance.saveManager.LoadSave(this);
+
+            if (saveData == null)
+            {
+                onLoadFail?.Invoke();
+                return false;
+            }
+
+            if (saveData.HasKey("currentCount"))
+            {
+                currentCount = saveData["currentCount"].AsInt;
+            }
+
+            onLoadSuccess?.Invoke();
+            return true;
+        }
     }
     [Serializable]
     public abstract class BoosterBarAction : ActionBarItem
@@ -259,7 +291,7 @@ namespace Game
 
         private IEnumerator AddTimeEffect()
         {
-            CurrentCount--;
+            currentCount--;
             if (ActionSuccessParticle != null)
             {
                 Transform addTimeActionTransform = GameManager.Instance.actionBarManager.GetActionBarView(this).transform;
@@ -301,7 +333,7 @@ namespace Game
         }
         public override void OnClick()
         {
-            CurrentCount--;
+            currentCount--;
             if (ActionSuccessParticle != null)
             {
                 Transform addMovesActionTransform = GameManager.Instance.actionBarManager.GetActionBarView(this).transform;
@@ -343,7 +375,7 @@ namespace Game
             Match3Grid grid = GetMatch3Grid();
             if (grid == null) return;
 
-            CurrentCount--;
+            currentCount--;
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: ItemName));
 
             if (GameManager.Instance != null)

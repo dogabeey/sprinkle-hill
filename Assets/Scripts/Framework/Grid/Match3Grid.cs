@@ -648,6 +648,28 @@ namespace Game
                 GameManager.Instance.soundManager.Play(ConstantManager.SOUNDS.EFFECTS.ELEMENT_SWAP);
                 GridHelper.TriggerHaptic(HapticModes.Select);
 
+                if ((PowerUpHandler.IsDiscoBall(firstType) && PowerUpHandler.IsDiscoBall(secondType)) ||
+                    (PowerUpHandler.IsDiscoBall(firstType) && PowerUpHandler.IsRocket(secondType)) ||
+                    (PowerUpHandler.IsDiscoBall(secondType) && PowerUpHandler.IsRocket(firstType)) ||
+                    (PowerUpHandler.IsDiscoBall(firstType) && PowerUpHandler.IsPropeller(secondType)) ||
+                    (PowerUpHandler.IsDiscoBall(secondType) && PowerUpHandler.IsPropeller(firstType)) ||
+                    (PowerUpHandler.IsDiscoBall(firstType) && secondType == ElementPowerUpType.Bomb) ||
+                    (PowerUpHandler.IsDiscoBall(secondType) && firstType == ElementPowerUpType.Bomb) ||
+                    (PowerUpHandler.IsRocket(firstType) && PowerUpHandler.IsRocket(secondType)) ||
+                    (PowerUpHandler.IsRocket(firstType) && PowerUpHandler.IsPropeller(secondType)) ||
+                    (PowerUpHandler.IsRocket(secondType) && PowerUpHandler.IsPropeller(firstType)) ||
+                    (PowerUpHandler.IsRocket(firstType) && secondType == ElementPowerUpType.Bomb) ||
+                    (PowerUpHandler.IsRocket(secondType) && firstType == ElementPowerUpType.Bomb) ||
+                    (PowerUpHandler.IsPropeller(firstType) && PowerUpHandler.IsPropeller(secondType)) ||
+                    (PowerUpHandler.IsPropeller(firstType) && secondType == ElementPowerUpType.Bomb) ||
+                    (PowerUpHandler.IsPropeller(secondType) && firstType == ElementPowerUpType.Bomb) ||
+                    (firstType == ElementPowerUpType.Bomb && secondType == ElementPowerUpType.Bomb))
+                {
+                    yield return StartCoroutine(powerUpHandler.ActivateSwapComboAt(first, second));
+                    yield return StartCoroutine(ResolveBoardAfterSpecialClear());
+                    yield break;
+                }
+
                 // After swap, the power-up that was at 'first' is now at 'second' and vice versa
                 if (PowerUpHandler.IsSpecialPowerUp(firstType))
                 {
@@ -1123,9 +1145,6 @@ namespace Game
 
             yield return trailObj.transform.DOMove(targetWorldPos, cm.sparklingTrailDuration).SetEase(Ease.InOutQuad).WaitForCompletion();
 
-            float shakeMag = cm.sparklingShakeBaseMagnitude + (trailIndex * cm.sparklingShakeMagnitudeIncrement);
-            GridHelper.ShakeCamera(cm.sparklingShakeDuration, shakeMag, cm.sparklingShakeVibrato, cm.sparklingShakeRandomness);
-
             // Convert element
             GridCell cell = GetCell(targetPos);
             if (cell?.elementInfo != null)
@@ -1287,7 +1306,6 @@ namespace Game
                 hasTween = true;
             }
 
-            GridHelper.ShakeCamera(duration * 0.7f, 0.08f, 8, 20f);
 
             if (hasTween)
                 yield return shuffleSeq.WaitForCompletion();
@@ -1598,9 +1616,6 @@ namespace Game
         private IEnumerator ClearMatches(List<List<Vector2Int>> matchedPositions, HashSet<Vector2Int> protectedPositions = null)
         {
             ConstantManager cm = GameManager.Instance.constantManager;
-            float shakeMag = cm.matchShakeBaseMagnitude + ((currentComboCount - 1) * cm.matchShakeComboMultiplier);
-            GridHelper.ShakeCamera(cm.matchShakeDuration, shakeMag, cm.matchShakeVibrato, cm.matchShakeRandomness);
-
             HashSet<Vector2Int> cleared = new HashSet<Vector2Int>();
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
             HashSet<Vector2Int> hiddenToReveal = new HashSet<Vector2Int>();

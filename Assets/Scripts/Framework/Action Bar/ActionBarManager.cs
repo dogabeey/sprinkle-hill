@@ -24,6 +24,7 @@ namespace Game
         private void Start()
         {
             DrawUI();
+            actionBarItemList.ForEach(actionBarItem => actionBarItem.Init());
         }
 
         protected virtual void DrawUI()

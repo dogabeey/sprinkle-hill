@@ -13,10 +13,36 @@ namespace Game
     {
         private readonly Match3Grid grid;
         private const int SortingOrderBoost = 200;
+        private const int StandardDiscoBallReplaceCount = 8;
+        private const int DiscoBallComboReplaceCount = 16;
+        private const float ComboIntroMinRaiseHeight = 0.55f;
+        private const float ComboIntroMaxRaiseHeight = 1.1f;
+        private const float ComboIntroMinOrbitRadius = 0.25f;
+        private const float ComboIntroMaxOrbitRadius = 0.6f;
+        private const int ComboIntroSpinDegrees = 1080;
+        private const float ComboIntroMergeDuration = 0.14f;
         private readonly HashSet<Vector2Int> activatingPowerUpPositions = new HashSet<Vector2Int>();
         private int activePowerUpChainCount;
         private readonly Dictionary<ElementPowerUpType, IPowerUpActivationStrategy> activationStrategies;
         private readonly List<IPowerUpCreationStrategy> creationStrategies;
+
+        private sealed class ComboIntroResult
+        {
+            public GridElement persistentElement;
+            public GridElement disappearingElement;
+            public Vector2Int persistentGridPosition;
+            public Vector2Int disappearingGridPosition;
+            public Vector3 mergeWorldPosition;
+        }
+
+        private enum SwapComboVisualType
+        {
+            None,
+            DiscoBallAndDiscoBall,
+            DiscoBallAndRocket,
+            DiscoBallAndPropeller,
+            DiscoBallAndBomb
+        }
 
         public PowerUpHandler(Match3Grid grid)
         {
@@ -611,6 +637,330 @@ namespace Game
             }
         }
 
+        public IEnumerator ActivateSwapComboAt(Vector2Int firstPos, Vector2Int secondPos)
+        {
+            if (!activatingPowerUpPositions.Add(firstPos))
+                yield break;
+
+            if (!activatingPowerUpPositions.Add(secondPos))
+            {
+                activatingPowerUpPositions.Remove(firstPos);
+                yield break;
+            }
+
+            try
+            {
+                Grid3D.GridCell firstCell = grid.GetCellPublic(firstPos);
+                Grid3D.GridCell secondCell = grid.GetCellPublic(secondPos);
+                ElementPowerUpType firstType = firstCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
+                ElementPowerUpType secondType = secondCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
+
+                if (IsDiscoBall(secondType) && !IsDiscoBall(firstType))
+                {
+                    Vector2Int tempPos = firstPos;
+                    firstPos = secondPos;
+                    secondPos = tempPos;
+
+                    ElementPowerUpType tempType = firstType;
+                    firstType = secondType;
+                    secondType = tempType;
+                }
+                else if (secondType == ElementPowerUpType.Bomb && IsRocket(firstType))
+                {
+                    Vector2Int tempPos = firstPos;
+                    firstPos = secondPos;
+                    secondPos = tempPos;
+
+                    ElementPowerUpType tempType = firstType;
+                    firstType = secondType;
+                    secondType = tempType;
+                }
+                else if (IsRocket(secondType) && IsPropeller(firstType))
+                {
+                    Vector2Int tempPos = firstPos;
+                    firstPos = secondPos;
+                    secondPos = tempPos;
+
+                    ElementPowerUpType tempType = firstType;
+                    firstType = secondType;
+                    secondType = tempType;
+                }
+                else if (secondType == ElementPowerUpType.Bomb && IsPropeller(firstType))
+                {
+                    Vector2Int tempPos = firstPos;
+                    firstPos = secondPos;
+                    secondPos = tempPos;
+
+                    ElementPowerUpType tempType = firstType;
+                    firstType = secondType;
+                    secondType = tempType;
+                }
+
+                IPowerUpActivationStrategy strategy = GetSwapComboStrategy(firstType, secondType);
+                if (strategy == null)
+                    yield break;
+
+                activePowerUpChainCount++;
+                ComboIntroResult comboIntroResult = new ComboIntroResult();
+                SwapComboVisualType comboVisualType = ResolveSwapComboVisualType(strategy);
+                yield return grid.StartCoroutine(PlayPowerUpComboIntro(firstPos, secondPos, comboVisualType, comboIntroResult));
+                yield return grid.StartCoroutine(strategy.Activate(firstPos, null));
+            }
+            finally
+            {
+                if (activePowerUpChainCount > 0)
+                    activePowerUpChainCount--;
+
+                activatingPowerUpPositions.Remove(firstPos);
+                activatingPowerUpPositions.Remove(secondPos);
+            }
+        }
+
+        private IPowerUpActivationStrategy GetSwapComboStrategy(ElementPowerUpType firstType, ElementPowerUpType secondType)
+        {
+            if (IsDiscoBall(firstType) && IsDiscoBall(secondType))
+                return new DiscoBallAndDiscoBallComboActivationStrategy(this);
+
+            if (IsDiscoBall(firstType) && IsRocket(secondType))
+                return new DiscoBallAndRocketComboActivationStrategy(this);
+
+            if (IsDiscoBall(firstType) && IsPropeller(secondType))
+                return new DiscoBallAndPropellerComboActivationStrategy(this);
+
+            if (IsDiscoBall(firstType) && secondType == ElementPowerUpType.Bomb)
+                return new DiscoBallAndBombComboActivationStrategy(this);
+
+            if (IsPropeller(firstType) && IsPropeller(secondType))
+                return new PropellerAndPropellerComboActivationStrategy(this);
+
+            if (firstType == ElementPowerUpType.Bomb && IsPropeller(secondType))
+                return new PropellerAndBombComboActivationStrategy(this);
+
+            if (IsRocket(firstType) && IsRocket(secondType))
+                return new RocketAndRocketComboActivationStrategy(this);
+
+            if (IsRocket(firstType) && IsPropeller(secondType))
+                return new RocketAndPropellerComboActivationStrategy(this);
+
+            if (firstType == ElementPowerUpType.Bomb && IsRocket(secondType))
+                return new RocketAndBombComboActivationStrategy(this);
+
+            if (firstType == ElementPowerUpType.Bomb && secondType == ElementPowerUpType.Bomb)
+                return new BombAndBombComboActivationStrategy(this);
+
+            return null;
+        }
+
+        private IEnumerator PlayPowerUpComboIntro(Vector2Int firstPos, Vector2Int secondPos, SwapComboVisualType comboVisualType, ComboIntroResult introResult)
+        {
+            if (introResult == null)
+                yield break;
+
+            GridElement firstElement = grid.GetElementAt(firstPos);
+            GridElement secondElement = grid.GetElementAt(secondPos);
+            Sprite comboMergeSprite = ResolveDiscoBallComboMergeSprite(comboVisualType);
+
+            Vector3 firstStartWorld = firstElement != null ? firstElement.transform.position : grid.GetWorldPosition(firstPos);
+            Vector3 secondStartWorld = secondElement != null ? secondElement.transform.position : grid.GetWorldPosition(secondPos);
+            Vector3 comboCenter = (firstStartWorld + secondStartWorld) * 0.5f;
+            float distance = Vector3.Distance(firstStartWorld, secondStartWorld);
+            float raiseHeight = Mathf.Clamp(distance * 0.35f, ComboIntroMinRaiseHeight, ComboIntroMaxRaiseHeight);
+            float orbitRadius = Mathf.Clamp(distance * 0.5f, ComboIntroMinOrbitRadius, ComboIntroMaxOrbitRadius);
+            float raiseDuration = Mathf.Max(0.15f, GameManager.Instance.constantManager.elementSwapMoveDuration * 0.8f);
+            float spinDuration = Mathf.Max(0.3f, GameManager.Instance.constantManager.elementSwapMoveDuration * 1.4f);
+
+            Transform animationParent = grid.GridParent != null ? grid.GridParent : grid.transform;
+            GameObject orbitPivot = new GameObject("PowerUpComboIntroPivot");
+            orbitPivot.transform.SetParent(animationParent, true);
+            orbitPivot.transform.position = comboCenter + (Vector3.up * raiseHeight);
+
+            Transform firstOriginalParent = firstElement != null ? firstElement.transform.parent : null;
+            Transform secondOriginalParent = secondElement != null ? secondElement.transform.parent : null;
+
+            if (firstElement != null)
+            {
+                firstElement.transform.DOKill();
+                firstElement.transform.SetParent(orbitPivot.transform, true);
+                AdjustSortingOrder(firstElement, SortingOrderBoost);
+            }
+
+            if (secondElement != null)
+            {
+                secondElement.transform.DOKill();
+                secondElement.transform.SetParent(orbitPivot.transform, true);
+                AdjustSortingOrder(secondElement, SortingOrderBoost);
+            }
+
+            ParticleSystem comboParticle = SpawnPowerUpComboParticle(orbitPivot.transform);
+            Sequence comboSequence = DOTween.Sequence();
+
+            if (firstElement != null)
+            {
+                comboSequence.Join(firstElement.transform.DOLocalMove(new Vector3(-orbitRadius, 0f, 0f), raiseDuration).SetEase(Ease.OutBack));
+                comboSequence.Join(firstElement.transform.DOScale(1.15f, raiseDuration * 0.5f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutSine));
+            }
+
+            if (secondElement != null)
+            {
+                comboSequence.Join(secondElement.transform.DOLocalMove(new Vector3(orbitRadius, 0f, 0f), raiseDuration).SetEase(Ease.OutBack));
+                comboSequence.Join(secondElement.transform.DOScale(1.15f, raiseDuration * 0.5f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutSine));
+            }
+
+            comboSequence.Append(orbitPivot.transform
+                .DORotate(new Vector3(0f, 0f, ComboIntroSpinDegrees), spinDuration, RotateMode.FastBeyond360)
+                .SetEase(Ease.Linear)
+                .SetRelative());
+
+            yield return comboSequence.WaitForCompletion();
+
+            Sequence mergeSequence = DOTween.Sequence();
+
+            if (comboMergeSprite != null)
+            {
+                ApplyComboMergeSprite(firstElement, comboMergeSprite);
+                ApplyComboMergeSprite(secondElement, comboMergeSprite);
+            }
+
+            if (firstElement != null)
+            {
+                mergeSequence.Join(firstElement.transform.DOMove(comboCenter, ComboIntroMergeDuration).SetEase(Ease.InBack));
+            }
+
+            if (secondElement != null)
+            {
+                mergeSequence.Join(secondElement.transform.DOMove(comboCenter, ComboIntroMergeDuration).SetEase(Ease.InBack));
+                mergeSequence.Join(secondElement.transform.DOScale(0f, ComboIntroMergeDuration).SetEase(Ease.InBack));
+            }
+
+            if (mergeSequence.active)
+                yield return mergeSequence.WaitForCompletion();
+
+            introResult.persistentElement = firstElement;
+            introResult.disappearingElement = secondElement;
+            introResult.persistentGridPosition = firstPos;
+            introResult.disappearingGridPosition = secondPos;
+            introResult.mergeWorldPosition = comboCenter;
+
+            RestorePersistentComboElement(firstElement, firstOriginalParent, comboCenter, firstPos);
+            if (comboMergeSprite != null)
+                ApplyComboMergeSprite(firstElement, comboMergeSprite);
+            DestroyComboElementVisual(secondElement);
+
+            if (comboParticle != null)
+            {
+                comboParticle.transform.SetParent(null, true);
+                float particleLifetime = comboParticle.main.duration + comboParticle.main.startLifetime.constantMax + 0.2f;
+                Object.Destroy(comboParticle.gameObject, particleLifetime);
+            }
+
+            Object.Destroy(orbitPivot);
+        }
+
+        private SwapComboVisualType ResolveSwapComboVisualType(IPowerUpActivationStrategy strategy)
+        {
+            if (strategy is DiscoBallAndDiscoBallComboActivationStrategy)
+                return SwapComboVisualType.DiscoBallAndDiscoBall;
+
+            if (strategy is DiscoBallAndRocketComboActivationStrategy)
+                return SwapComboVisualType.DiscoBallAndRocket;
+
+            if (strategy is DiscoBallAndPropellerComboActivationStrategy)
+                return SwapComboVisualType.DiscoBallAndPropeller;
+
+            if (strategy is DiscoBallAndBombComboActivationStrategy)
+                return SwapComboVisualType.DiscoBallAndBomb;
+
+            return SwapComboVisualType.None;
+        }
+
+        private Sprite ResolveDiscoBallComboMergeSprite(SwapComboVisualType comboVisualType)
+        {
+            Gfx gfxManager = GameManager.Instance != null ? GameManager.Instance.gfxManager : null;
+            if (gfxManager == null)
+                return null;
+
+            switch (comboVisualType)
+            {
+                case SwapComboVisualType.DiscoBallAndDiscoBall:
+                    return gfxManager.discoBallAndDiscoBallComboSprite;
+                case SwapComboVisualType.DiscoBallAndRocket:
+                    return gfxManager.discoBallAndRocketComboSprite;
+                case SwapComboVisualType.DiscoBallAndPropeller:
+                    return gfxManager.discoBallAndPropellerComboSprite;
+                case SwapComboVisualType.DiscoBallAndBomb:
+                    return gfxManager.discoBallAndBombComboSprite;
+                default:
+                    return null;
+            }
+        }
+
+        private void ApplyComboMergeSprite(GridElement element, Sprite comboSprite)
+        {
+            if (element == null || comboSprite == null)
+                return;
+
+            if (element.elementRenderer is SpriteRenderer spriteRenderer)
+                spriteRenderer.sprite = comboSprite;
+        }
+
+        private ParticleSystem SpawnPowerUpComboParticle(Transform comboAnchor)
+        {
+            Gfx gfxManager = GameManager.Instance != null ? GameManager.Instance.gfxManager : null;
+            if (gfxManager == null || gfxManager.powerUpComboParticlePrefab == null || comboAnchor == null)
+                return null;
+
+            ParticleSystem comboParticle = Object.Instantiate(gfxManager.powerUpComboParticlePrefab, comboAnchor.position, Quaternion.identity, comboAnchor);
+            comboParticle.Play();
+            return comboParticle;
+        }
+
+        private void RestorePersistentComboElement(GridElement element, Transform originalParent, Vector3 worldPosition, Vector2Int gridPos)
+        {
+            if (element == null)
+                return;
+
+            element.transform.DOKill();
+            if (originalParent != null)
+                element.transform.SetParent(originalParent, true);
+
+            element.transform.position = worldPosition;
+
+            Grid3D.GridCell cell = grid.GetCellPublic(gridPos);
+            if (cell?.elementInfo != null)
+            {
+                element.elementInfo = cell.elementInfo;
+                element.InitElement(grid, cell.elementInfo);
+            }
+            else
+            {
+                element.transform.localScale = Vector3.one;
+            }
+
+            AdjustSortingOrder(element, -SortingOrderBoost);
+        }
+
+        private void DestroyComboElementVisual(GridElement element)
+        {
+            if (element == null)
+                return;
+
+            element.transform.DOKill();
+            grid.StartCoroutine(element.DestroyElement());
+        }
+
+        private void AdjustSortingOrder(GridElement element, int delta)
+        {
+            if (element == null || delta == 0)
+                return;
+
+            Renderer[] renderers = element.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] != null)
+                    renderers[i].sortingOrder += delta;
+            }
+        }
+
         private interface IPowerUpActivationStrategy
         {
             IEnumerator Activate(Vector2Int pos, ElementData swappedElementData);
@@ -690,6 +1040,126 @@ namespace Game
                 return handler.ActivateDiscoBall(pos, swappedElementData);
             }
         }
+        private sealed class DiscoBallAndDiscoBallComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public DiscoBallAndDiscoBallComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                return handler.ActivateDiscoBallAndDiscoBallCombo(pos);
+            }
+        }
+        private sealed class DiscoBallAndRocketComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public DiscoBallAndRocketComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                return handler.ActivateDiscoBallAndRocketCombo(pos);
+            }
+        }
+        private sealed class DiscoBallAndPropellerComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public DiscoBallAndPropellerComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                return handler.ActivateDiscoBallAndPropellerCombo(pos);
+            }
+        }
+        private sealed class DiscoBallAndBombComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public DiscoBallAndBombComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                return handler.ActivateDiscoBallAndBombCombo(pos);
+            }
+        }
+        private sealed class RocketAndRocketComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public RocketAndRocketComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                return handler.ActivateRocketAndRocketCombo(pos);
+            }
+        }
+        private sealed class RocketAndPropellerComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public RocketAndPropellerComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                return handler.ActivateRocketAndPropellerCombo(pos);
+            }
+        }
+        private sealed class RocketAndBombComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public RocketAndBombComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                return handler.ActivateRocketAndBombCombo(pos);
+            }
+        }
+        private sealed class PropellerAndPropellerComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public PropellerAndPropellerComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                return handler.ActivatePropellerAndPropellerCombo(pos);
+            }
+        }
+        private sealed class PropellerAndBombComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public PropellerAndBombComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                return handler.ActivatePropellerAndBombCombo(pos);
+            }
+        }
+        private sealed class BombAndBombComboActivationStrategy : IPowerUpActivationStrategy
+        {
+            private readonly PowerUpHandler handler;
+            public BombAndBombComboActivationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+            public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
+            {
+                return handler.ActivateBombAndBombCombo(pos);
+            }
+        }
 
         private IEnumerator ActivateDiscoBall(Vector2Int discoBallPos, ElementData targetElementData)
         {
@@ -697,25 +1167,7 @@ namespace Game
             if (discoBallCell?.elementInfo == null || discoBallCell.elementInfo.powerUpType != ElementPowerUpType.DiscoBall)
                 yield break;
 
-            // Fall back to any normal element on the grid if no swapped element data was provided
-            if (targetElementData == null)
-            {
-                for (int x = 0; x < grid.GridSize.x; x++)
-                {
-                    for (int y = 0; y < grid.GridSize.y; y++)
-                    {
-                        Grid3D.GridCell c = grid.GetCellPublic(new Vector2Int(x, y));
-                        if (c != null && c.cellType == Grid3D.CellType.Normal &&
-                            c.elementInfo != null && !c.elementInfo.isHidden && c.elementInfo.powerUpType == ElementPowerUpType.None &&
-                            c.elementInfo.elementData != null)
-                        {
-                            targetElementData = c.elementInfo.elementData;
-                            break;
-                        }
-                    }
-                    if (targetElementData != null) break;
-                }
-            }
+            targetElementData = ResolveDefaultDiscoBallTargetElement(targetElementData);
 
             if (targetElementData == null) yield break;
 
@@ -725,46 +1177,478 @@ namespace Game
             GridElement discoBallElement = grid.GetElementAt(discoBallPos);
             Tween spinTween = null;
 
-            if (discoBallElement != null)
-            {
-                discoBallElement.transform.DOKill();
-                float spinDuration = GameManager.Instance.constantManager.discoBallSpinLoopDuration;
-                float spinDegrees = GameManager.Instance.constantManager.discoBallSpinDegreesPerLoop;
-                spinTween = discoBallElement.transform
-                    .DORotate(new Vector3(0f, 0f, spinDegrees), spinDuration, RotateMode.FastBeyond360)
-                    .SetEase(Ease.Linear)
-                    .SetRelative()
-                    .SetLoops(-1, LoopType.Restart);
-            }
+            StartDiscoBallSpin(discoBallElement, ref spinTween);
 
             // Remove logical occupancy, keep visual until trail animation finishes.
             grid.TriggerCellFeatureMatchedOverAt(discoBallPos);
             discoBallCell.elementInfo = null;
 
-            // Collect all eligible normal cells (excluding disco ball's old position)
+            List<Vector2Int> selectedCells = GetRandomEligibleDiscoBallTargets(discoBallPos, StandardDiscoBallReplaceCount);
+
+            if (selectedCells.Count > 0)
+            {
+                yield return grid.StartCoroutine(AnimateDiscoBallTrails(discoBallPos, selectedCells, targetElementData));
+                DestroyDiscoBallConvertedCells(selectedCells);
+            }
+
+            StopAndDestroyDiscoBallElement(discoBallElement, spinTween);
+
+        }
+
+        private IEnumerator ActivateDiscoBallAndDiscoBallCombo(Vector2Int primaryDiscoBallPos)
+        {
+            Grid3D.GridCell primaryCell = grid.GetCellPublic(primaryDiscoBallPos);
+            if (primaryCell?.elementInfo == null || primaryCell.elementInfo.powerUpType != ElementPowerUpType.DiscoBall)
+                yield break;
+
+            Vector2Int secondaryDiscoBallPos = FindAdjacentDiscoBall(primaryDiscoBallPos);
+            if (secondaryDiscoBallPos == primaryDiscoBallPos)
+                yield break;
+
+            ElementData designatedElementData = ResolveRandomDiscoBallComboTargetElement(primaryDiscoBallPos, secondaryDiscoBallPos);
+            if (designatedElementData == null)
+                yield break;
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.DISCO_BALL_ACTIVATE, volumeMultiplier: 1.1f, pitchOffset: -0.04f);
+
+            GridElement primaryElement = grid.GetElementAt(primaryDiscoBallPos);
+            GridElement secondaryElement = grid.GetElementAt(secondaryDiscoBallPos);
+            Tween primarySpinTween = null;
+            Tween secondarySpinTween = null;
+
+            StartDiscoBallSpin(primaryElement, ref primarySpinTween);
+            StartDiscoBallSpin(secondaryElement, ref secondarySpinTween);
+
+            grid.TriggerCellFeatureMatchedOverAt(primaryDiscoBallPos);
+            primaryCell.elementInfo = null;
+
+            Grid3D.GridCell secondaryCell = grid.GetCellPublic(secondaryDiscoBallPos);
+            if (secondaryCell != null)
+            {
+                grid.TriggerCellFeatureMatchedOverAt(secondaryDiscoBallPos);
+                secondaryCell.elementInfo = null;
+            }
+
+            List<Vector2Int> selectedCells = GetRandomEligibleDiscoBallTargets(primaryDiscoBallPos, secondaryDiscoBallPos, DiscoBallComboReplaceCount);
+            if (selectedCells.Count > 0)
+            {
+                yield return grid.StartCoroutine(AnimateDiscoBallTrails(primaryDiscoBallPos, selectedCells, designatedElementData));
+                DestroyDiscoBallConvertedCells(selectedCells);
+            }
+
+            StopAndDestroyDiscoBallElement(primaryElement, primarySpinTween);
+            StopAndDestroyDiscoBallElement(secondaryElement, secondarySpinTween);
+        }
+
+        private IEnumerator ActivateDiscoBallAndBombCombo(Vector2Int discoBallPos)
+        {
+            Grid3D.GridCell discoBallCell = grid.GetCellPublic(discoBallPos);
+            if (discoBallCell?.elementInfo == null || discoBallCell.elementInfo.powerUpType != ElementPowerUpType.DiscoBall)
+                yield break;
+
+            Vector2Int bombPos = FindAdjacentPowerUpOfType(discoBallPos, ElementPowerUpType.Bomb);
+            if (bombPos == discoBallPos)
+                yield break;
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.DISCO_BALL_ACTIVATE, volumeMultiplier: 1.05f, pitchOffset: -0.02f);
+
+            GridElement discoBallElement = grid.GetElementAt(discoBallPos);
+            Tween discoBallSpinTween = null;
+
+            StartDiscoBallSpin(discoBallElement, ref discoBallSpinTween);
+
+            grid.TriggerCellFeatureMatchedOverAt(discoBallPos);
+            discoBallCell.elementInfo = null;
+
+            Grid3D.GridCell bombCell = grid.GetCellPublic(bombPos);
+            if (bombCell != null)
+            {
+                grid.TriggerCellFeatureMatchedOverAt(bombPos);
+                bombCell.elementInfo = null;
+            }
+
+            List<Vector2Int> selectedCells = GetRandomEligibleDiscoBallTargets(discoBallPos, bombPos, StandardDiscoBallReplaceCount);
+            if (selectedCells.Count > 0)
+            {
+                yield return grid.StartCoroutine(AnimateDiscoBallPowerUpTrails(discoBallPos, selectedCells, ElementPowerUpType.Bomb));
+
+                yield return null;
+
+                for (int i = 0; i < selectedCells.Count; i++)
+                    yield return grid.StartCoroutine(ActivateAt(selectedCells[i], null));
+            }
+
+            StopAndDestroyDiscoBallElement(discoBallElement, discoBallSpinTween);
+
+        }
+
+        private IEnumerator ActivateDiscoBallAndRocketCombo(Vector2Int discoBallPos)
+        {
+            Grid3D.GridCell discoBallCell = grid.GetCellPublic(discoBallPos);
+            if (discoBallCell?.elementInfo == null || discoBallCell.elementInfo.powerUpType != ElementPowerUpType.DiscoBall)
+                yield break;
+
+            Vector2Int rocketPos = FindAdjacentRocket(discoBallPos);
+            if (rocketPos == discoBallPos)
+                yield break;
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.DISCO_BALL_ACTIVATE, volumeMultiplier: 1.05f, pitchOffset: 0.02f);
+
+            GridElement discoBallElement = grid.GetElementAt(discoBallPos);
+            Tween discoBallSpinTween = null;
+
+            StartDiscoBallSpin(discoBallElement, ref discoBallSpinTween);
+
+            grid.TriggerCellFeatureMatchedOverAt(discoBallPos);
+            discoBallCell.elementInfo = null;
+
+            Grid3D.GridCell rocketCell = grid.GetCellPublic(rocketPos);
+            if (rocketCell != null)
+            {
+                grid.TriggerCellFeatureMatchedOverAt(rocketPos);
+                rocketCell.elementInfo = null;
+            }
+
+            List<Vector2Int> selectedCells = GetRandomEligibleDiscoBallTargets(discoBallPos, rocketPos, StandardDiscoBallReplaceCount);
+            if (selectedCells.Count > 0)
+            {
+                yield return grid.StartCoroutine(AnimateDiscoBallPowerUpTrails(discoBallPos, selectedCells, ElementPowerUpType.Rocket));
+
+                yield return null;
+
+                for (int i = 0; i < selectedCells.Count; i++)
+                    yield return grid.StartCoroutine(ActivateAt(selectedCells[i], null));
+            }
+
+            StopAndDestroyDiscoBallElement(discoBallElement, discoBallSpinTween);
+        }
+
+        private IEnumerator ActivatePropellerAndPropellerCombo(Vector2Int firstPropellerPos)
+        {
+            Grid3D.GridCell firstPropellerCell = grid.GetCellPublic(firstPropellerPos);
+            if (firstPropellerCell?.elementInfo == null || firstPropellerCell.elementInfo.powerUpType != ElementPowerUpType.Propeller)
+                yield break;
+
+            Vector2Int secondPropellerPos = FindAdjacentPropeller(firstPropellerPos);
+            if (secondPropellerPos == firstPropellerPos)
+                yield break;
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.ROCKET, volumeMultiplier: 1.05f, pitchOffset: 0.14f);
+
+            GridElement sourcePropellerElement = grid.GetElementAt(firstPropellerPos);
+
+            grid.TriggerCellFeatureMatchedOverAt(firstPropellerPos);
+            firstPropellerCell.elementInfo = null;
+
+            Grid3D.GridCell secondPropellerCell = grid.GetCellPublic(secondPropellerPos);
+            if (secondPropellerCell != null)
+            {
+                grid.TriggerCellFeatureMatchedOverAt(secondPropellerPos);
+                secondPropellerCell.elementInfo = null;
+            }
+
+            List<Vector2Int> reservedTargets = ReservePropellerTargets(firstPropellerPos, 4, firstPropellerPos, secondPropellerPos);
+            if (reservedTargets.Count > 0)
+                yield return grid.StartCoroutine(ActivatePropellerBurstFromOrigin(firstPropellerPos, sourcePropellerElement, reservedTargets));
+
+            if (sourcePropellerElement != null)
+                grid.StartCoroutine(sourcePropellerElement.DestroyElement());
+        }
+
+        private IEnumerator ActivatePropellerAndBombCombo(Vector2Int bombPos)
+        {
+            Grid3D.GridCell bombCell = grid.GetCellPublic(bombPos);
+            if (bombCell?.elementInfo == null || bombCell.elementInfo.powerUpType != ElementPowerUpType.Bomb)
+                yield break;
+
+            Vector2Int propellerPos = FindAdjacentPropeller(bombPos);
+            if (propellerPos == bombPos)
+                yield break;
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.ROCKET, volumeMultiplier: 1.05f, pitchOffset: -0.02f);
+
+            GridElement bombElement = grid.GetElementAt(bombPos);
+            Vector2Int targetPos = PickPropellerTargetPosition(propellerPos, new HashSet<Vector2Int> { bombPos, propellerPos });
+
+            grid.TriggerCellFeatureMatchedOverAt(bombPos);
+            bombCell.elementInfo = null;
+
+            Grid3D.GridCell propellerCell = grid.GetCellPublic(propellerPos);
+            if (propellerCell != null)
+            {
+                grid.TriggerCellFeatureMatchedOverAt(propellerPos);
+                propellerCell.elementInfo = null;
+            }
+
+            yield return grid.StartCoroutine(FlyBombToTargetAndActivate(bombPos, targetPos, bombElement));
+        }
+
+        private IEnumerator ActivateRocketAndRocketCombo(Vector2Int firstRocketPos)
+        {
+            Grid3D.GridCell firstRocketCell = grid.GetCellPublic(firstRocketPos);
+            ElementPowerUpType firstRocketType = firstRocketCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
+            if (!IsRocket(firstRocketType))
+                yield break;
+
+            Vector2Int secondRocketPos = FindAdjacentRocket(firstRocketPos);
+            if (secondRocketPos == firstRocketPos)
+                yield break;
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+
+            GridElement rocketElement = grid.GetElementAt(firstRocketPos);
+
+            grid.TriggerCellFeatureMatchedOverAt(firstRocketPos);
+            firstRocketCell.elementInfo = null;
+
+            Grid3D.GridCell secondRocketCell = grid.GetCellPublic(secondRocketPos);
+            if (secondRocketCell != null)
+            {
+                grid.TriggerCellFeatureMatchedOverAt(secondRocketPos);
+                secondRocketCell.elementInfo = null;
+            }
+
+            Vector2Int[] rocketDirections =
+            {
+                Vector2Int.right,
+                Vector2Int.left,
+                Vector2Int.up,
+                Vector2Int.down,
+                new Vector2Int(1, 1),
+                new Vector2Int(-1, 1),
+                new Vector2Int(1, -1),
+                new Vector2Int(-1, -1)
+            };
+
+            yield return grid.StartCoroutine(ActivateRocketBurst(firstRocketPos, rocketElement, rocketDirections, clearSourceCell: false, clearOriginCell: false, preLaunchDelay: 0.1f, pitchOffset: 0.04f));
+        }
+
+        private IEnumerator ActivateRocketAndPropellerCombo(Vector2Int rocketPos)
+        {
+            Grid3D.GridCell rocketCell = grid.GetCellPublic(rocketPos);
+            ElementPowerUpType rocketType = rocketCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
+            if (!IsRocket(rocketType))
+                yield break;
+
+            Vector2Int propellerPos = FindAdjacentPropeller(rocketPos);
+            if (propellerPos == rocketPos)
+                yield break;
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+
+            GridElement rocketElement = grid.GetElementAt(rocketPos);
+            Vector2Int targetPos = PickPropellerTargetPosition(propellerPos, new HashSet<Vector2Int> { rocketPos, propellerPos });
+
+            grid.TriggerCellFeatureMatchedOverAt(rocketPos);
+            rocketCell.elementInfo = null;
+
+            Grid3D.GridCell propellerCell = grid.GetCellPublic(propellerPos);
+            if (propellerCell != null)
+            {
+                grid.TriggerCellFeatureMatchedOverAt(propellerPos);
+                propellerCell.elementInfo = null;
+            }
+
+            yield return grid.StartCoroutine(FlyRocketToTargetAndActivate(rocketPos, targetPos, rocketElement));
+        }
+
+        private IEnumerator ActivateRocketAndBombCombo(Vector2Int bombPos)
+        {
+            Grid3D.GridCell bombCell = grid.GetCellPublic(bombPos);
+            if (bombCell?.elementInfo == null || bombCell.elementInfo.powerUpType != ElementPowerUpType.Bomb)
+                yield break;
+
+            Vector2Int rocketPos = FindAdjacentRocket(bombPos);
+            if (rocketPos == bombPos)
+                yield break;
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.BOMB, volumeMultiplier: 1.05f, pitchOffset: 0.02f);
+
+            GridElement bombElement = grid.GetElementAt(bombPos);
+
+            grid.TriggerCellFeatureMatchedOverAt(bombPos);
+            bombCell.elementInfo = null;
+
+            Grid3D.GridCell rocketCell = grid.GetCellPublic(rocketPos);
+            if (rocketCell != null)
+            {
+                grid.TriggerCellFeatureMatchedOverAt(rocketPos);
+                rocketCell.elementInfo = null;
+            }
+
+            List<Vector2Int> areaCells = GetEligibleCellsInSquareArea(bombPos, 1, bombPos, rocketPos);
+            if (areaCells.Count > 0)
+            {
+                ConvertCellsToPowerUp(areaCells, ElementPowerUpType.Rocket);
+                yield return null;
+
+                for (int i = 0; i < areaCells.Count; i++)
+                    yield return grid.StartCoroutine(ActivateAt(areaCells[i], null));
+            }
+
+            if (bombElement != null)
+                grid.StartCoroutine(bombElement.DestroyElement());
+        }
+
+        private IEnumerator ActivateBombAndBombCombo(Vector2Int primaryBombPos)
+        {
+            Grid3D.GridCell primaryBombCell = grid.GetCellPublic(primaryBombPos);
+            if (primaryBombCell?.elementInfo == null || primaryBombCell.elementInfo.powerUpType != ElementPowerUpType.Bomb)
+                yield break;
+
+            Vector2Int secondaryBombPos = FindAdjacentPowerUpOfType(primaryBombPos, ElementPowerUpType.Bomb);
+            if (secondaryBombPos == primaryBombPos)
+                yield break;
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.BOMB, volumeMultiplier: 1.12f, pitchOffset: -0.04f);
+
+            GridElement primaryBombElement = grid.GetElementAt(primaryBombPos);
+            Vector3 impactWorldPos = grid.GetWorldPosition(primaryBombPos);
+            PlayBombImpactEffects(impactWorldPos);
+
+            grid.TriggerCellFeatureMatchedOverAt(primaryBombPos);
+            primaryBombCell.elementInfo = null;
+
+            Grid3D.GridCell secondaryBombCell = grid.GetCellPublic(secondaryBombPos);
+            if (secondaryBombCell != null)
+            {
+                grid.TriggerCellFeatureMatchedOverAt(secondaryBombPos);
+                secondaryBombCell.elementInfo = null;
+            }
+
+            if (primaryBombElement != null)
+                grid.StartCoroutine(primaryBombElement.DestroyElement());
+
+            yield return grid.StartCoroutine(ClearBombAreaProgressive(primaryBombPos, 3, false));
+        }
+
+        private IEnumerator ActivateDiscoBallAndPropellerCombo(Vector2Int discoBallPos)
+        {
+            Grid3D.GridCell discoBallCell = grid.GetCellPublic(discoBallPos);
+            if (discoBallCell?.elementInfo == null || discoBallCell.elementInfo.powerUpType != ElementPowerUpType.DiscoBall)
+                yield break;
+
+            Vector2Int propellerPos = FindAdjacentPropeller(discoBallPos);
+            if (propellerPos == discoBallPos)
+                yield break;
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.DISCO_BALL_ACTIVATE, volumeMultiplier: 1.05f, pitchOffset: 0.06f);
+
+            GridElement discoBallElement = grid.GetElementAt(discoBallPos);
+            Tween discoBallSpinTween = null;
+
+            StartDiscoBallSpin(discoBallElement, ref discoBallSpinTween);
+
+            grid.TriggerCellFeatureMatchedOverAt(discoBallPos);
+            discoBallCell.elementInfo = null;
+
+            Grid3D.GridCell propellerCell = grid.GetCellPublic(propellerPos);
+            if (propellerCell != null)
+            {
+                grid.TriggerCellFeatureMatchedOverAt(propellerPos);
+                propellerCell.elementInfo = null;
+            }
+
+            List<Vector2Int> selectedCells = GetRandomEligibleDiscoBallTargets(discoBallPos, propellerPos, StandardDiscoBallReplaceCount);
+            if (selectedCells.Count > 0)
+            {
+                yield return grid.StartCoroutine(AnimateDiscoBallPowerUpTrails(discoBallPos, selectedCells, ElementPowerUpType.Propeller));
+
+                yield return null;
+
+                List<Vector2Int> reservedTargets = ReservePropellerTargets(selectedCells);
+                yield return grid.StartCoroutine(ActivateReservedPropellerBurst(selectedCells, reservedTargets));
+            }
+
+            StopAndDestroyDiscoBallElement(discoBallElement, discoBallSpinTween);
+        }
+
+        private ElementData ResolveDefaultDiscoBallTargetElement(ElementData requestedTargetElementData)
+        {
+            if (requestedTargetElementData != null)
+                return requestedTargetElementData;
+
+            for (int x = 0; x < grid.GridSize.x; x++)
+            {
+                for (int y = 0; y < grid.GridSize.y; y++)
+                {
+                    Grid3D.GridCell cell = grid.GetCellPublic(new Vector2Int(x, y));
+                    if (!IsEligibleDiscoBallTargetCell(cell))
+                        continue;
+
+                    return cell.elementInfo.elementData;
+                }
+            }
+
+            return null;
+        }
+
+        private ElementData ResolveRandomDiscoBallComboTargetElement(params Vector2Int[] excludedPositions)
+        {
+            List<ElementData> uniqueElementTypes = new List<ElementData>();
+
+            for (int x = 0; x < grid.GridSize.x; x++)
+            {
+                for (int y = 0; y < grid.GridSize.y; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    if (IsExcludedPosition(pos, excludedPositions))
+                        continue;
+
+                    Grid3D.GridCell cell = grid.GetCellPublic(pos);
+                    if (!IsEligibleDiscoBallTargetCell(cell))
+                        continue;
+
+                    ElementData elementData = cell.elementInfo.elementData;
+                    if (elementData != null && !uniqueElementTypes.Contains(elementData))
+                        uniqueElementTypes.Add(elementData);
+                }
+            }
+
+            if (uniqueElementTypes.Count == 0)
+                return null;
+
+            return uniqueElementTypes[Random.Range(0, uniqueElementTypes.Count)];
+        }
+
+        private List<Vector2Int> GetRandomEligibleDiscoBallTargets(Vector2Int excludedPosition, int maxCount)
+        {
+            return GetRandomEligibleDiscoBallTargets(new[] { excludedPosition }, maxCount);
+        }
+
+        private List<Vector2Int> GetRandomEligibleDiscoBallTargets(Vector2Int excludedPosition1, Vector2Int excludedPosition2, int maxCount)
+        {
+            return GetRandomEligibleDiscoBallTargets(new[] { excludedPosition1, excludedPosition2 }, maxCount);
+        }
+
+        private List<Vector2Int> GetRandomEligibleDiscoBallTargets(Vector2Int[] excludedPositions, int maxCount)
+        {
             List<Vector2Int> candidates = new List<Vector2Int>();
             for (int x = 0; x < grid.GridSize.x; x++)
             {
                 for (int y = 0; y < grid.GridSize.y; y++)
                 {
                     Vector2Int pos = new Vector2Int(x, y);
-                    if (pos == discoBallPos) continue;
+                    if (IsExcludedPosition(pos, excludedPositions))
+                        continue;
+
                     Grid3D.GridCell cell = grid.GetCellPublic(pos);
-                    if (cell == null || cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null) continue;
-                    if (cell.elementInfo.isHidden) continue;
-                    if (IsSpecialPowerUp(cell.elementInfo.powerUpType)) continue;
-                    ElementData elementData = cell.elementInfo.elementData;
-                    if (elementData != null &&
-                        (elementData.HasBehavior(ElementData.ElementBehaviorFlags.NonShuffleable) ||
-                         elementData.HasBehavior(ElementData.ElementBehaviorFlags.NonSwappable)))
+                    if (!IsEligibleDiscoBallTargetCell(cell))
                         continue;
 
                     candidates.Add(pos);
                 }
             }
 
-            // Pick up to 10 random unique cells
-            int replaceCount = Mathf.Min(10, candidates.Count);
+            int replaceCount = Mathf.Min(maxCount, candidates.Count);
             List<Vector2Int> selectedCells = new List<Vector2Int>(replaceCount);
             for (int i = 0; i < replaceCount; i++)
             {
@@ -775,23 +1659,176 @@ namespace Game
                 selectedCells.Add(candidates[i]);
             }
 
-            if (selectedCells.Count > 0)
+            return selectedCells;
+        }
+
+        private List<Vector2Int> GetEligibleCellsInSquareArea(Vector2Int center, int radius, params Vector2Int[] excludedPositions)
+        {
+            List<Vector2Int> cells = new List<Vector2Int>();
+
+            for (int x = center.x - radius; x <= center.x + radius; x++)
             {
-                yield return grid.StartCoroutine(AnimateDiscoBallTrails(discoBallPos, selectedCells, targetElementData));
-                DestroyDiscoBallConvertedCells(selectedCells);
+                for (int y = center.y - radius; y <= center.y + radius; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    if (IsExcludedPosition(pos, excludedPositions))
+                        continue;
+
+                    Grid3D.GridCell cell = grid.GetCellPublic(pos);
+                    if (!IsEligibleDiscoBallTargetCell(cell))
+                        continue;
+
+                    cells.Add(pos);
+                }
             }
 
+            return cells;
+        }
+
+        private void ConvertCellsToPowerUp(List<Vector2Int> positions, ElementPowerUpType targetPowerUpType)
+        {
+            if (positions == null)
+                return;
+
+            for (int i = 0; i < positions.Count; i++)
+            {
+                Vector2Int pos = positions[i];
+                Grid3D.GridCell cell = grid.GetCellPublic(pos);
+                if (cell?.elementInfo == null)
+                    continue;
+
+                ElementData sourceData = cell.elementInfo.elementData;
+                cell.elementInfo.elementData = ResolveVisualData(sourceData, targetPowerUpType);
+                cell.elementInfo.powerUpType = targetPowerUpType;
+                cell.elementInfo.isSparkling = false;
+                cell.elementInfo.isHidden = false;
+
+                GridElement element = grid.GetElementAt(pos);
+                if (element != null)
+                {
+                    element.elementInfo = cell.elementInfo;
+                    element.InitElement(grid, cell.elementInfo);
+                    GridHelper.SetEmission(element, 0f);
+                    ApplySortingBoost(element, targetPowerUpType == ElementPowerUpType.Bomb);
+                }
+            }
+        }
+
+        private bool IsEligibleDiscoBallTargetCell(Grid3D.GridCell cell)
+        {
+            if (cell == null || cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null)
+                return false;
+
+            if (cell.elementInfo.isHidden)
+                return false;
+
+            if (IsSpecialPowerUp(cell.elementInfo.powerUpType))
+                return false;
+
+            ElementData elementData = cell.elementInfo.elementData;
+            if (elementData == null)
+                return false;
+
+            if (elementData.HasBehavior(ElementData.ElementBehaviorFlags.NonShuffleable) ||
+                elementData.HasBehavior(ElementData.ElementBehaviorFlags.NonSwappable))
+                return false;
+
+            return true;
+        }
+
+        private static bool IsExcludedPosition(Vector2Int pos, Vector2Int[] excludedPositions)
+        {
+            if (excludedPositions == null)
+                return false;
+
+            for (int i = 0; i < excludedPositions.Length; i++)
+            {
+                if (pos == excludedPositions[i])
+                    return true;
+            }
+
+            return false;
+        }
+
+        private Vector2Int FindAdjacentDiscoBall(Vector2Int origin)
+        {
+            Vector2Int[] offsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            for (int i = 0; i < offsets.Length; i++)
+            {
+                Vector2Int candidatePos = origin + offsets[i];
+                Grid3D.GridCell candidateCell = grid.GetCellPublic(candidatePos);
+                if (candidateCell?.elementInfo?.powerUpType == ElementPowerUpType.DiscoBall)
+                    return candidatePos;
+            }
+
+            return origin;
+        }
+
+        private Vector2Int FindAdjacentPropeller(Vector2Int origin)
+        {
+            Vector2Int[] offsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            for (int i = 0; i < offsets.Length; i++)
+            {
+                Vector2Int candidatePos = origin + offsets[i];
+                Grid3D.GridCell candidateCell = grid.GetCellPublic(candidatePos);
+                if (IsPropeller(candidateCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None))
+                    return candidatePos;
+            }
+
+            return origin;
+        }
+
+        private Vector2Int FindAdjacentRocket(Vector2Int origin)
+        {
+            Vector2Int[] offsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            for (int i = 0; i < offsets.Length; i++)
+            {
+                Vector2Int candidatePos = origin + offsets[i];
+                Grid3D.GridCell candidateCell = grid.GetCellPublic(candidatePos);
+                if (IsRocket(candidateCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None))
+                    return candidatePos;
+            }
+
+            return origin;
+        }
+
+        private Vector2Int FindAdjacentPowerUpOfType(Vector2Int origin, ElementPowerUpType powerUpType)
+        {
+            Vector2Int[] offsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            for (int i = 0; i < offsets.Length; i++)
+            {
+                Vector2Int candidatePos = origin + offsets[i];
+                Grid3D.GridCell candidateCell = grid.GetCellPublic(candidatePos);
+                if (candidateCell?.elementInfo?.powerUpType == powerUpType)
+                    return candidatePos;
+            }
+
+            return origin;
+        }
+
+        private void StartDiscoBallSpin(GridElement discoBallElement, ref Tween spinTween)
+        {
+            if (discoBallElement == null)
+                return;
+
+            discoBallElement.transform.DOKill();
+            float spinDuration = GameManager.Instance.constantManager.discoBallSpinLoopDuration;
+            float spinDegrees = GameManager.Instance.constantManager.discoBallSpinDegreesPerLoop;
+            spinTween = discoBallElement.transform
+                .DORotate(new Vector3(0f, 0f, spinDegrees), spinDuration, RotateMode.FastBeyond360)
+                .SetEase(Ease.Linear)
+                .SetRelative()
+                .SetLoops(-1, LoopType.Restart);
+        }
+
+        private void StopAndDestroyDiscoBallElement(GridElement discoBallElement, Tween spinTween)
+        {
             if (spinTween != null)
                 spinTween.Kill();
 
             if (discoBallElement != null)
                 grid.StartCoroutine(discoBallElement.DestroyElement());
 
-            GridHelper.ShakeCamera(
-                GameManager.Instance.constantManager.matchShakeDuration,
-                GameManager.Instance.constantManager.matchShakeBaseMagnitude * 1.5f,
-                GameManager.Instance.constantManager.matchShakeVibrato,
-                GameManager.Instance.constantManager.matchShakeRandomness);
         }
 
         private void DestroyDiscoBallConvertedCells(List<Vector2Int> convertedCells)
@@ -837,6 +1874,11 @@ namespace Game
 
         private IEnumerator ActivatePropeller(Vector2Int propellerPos)
         {
+            return ActivatePropeller(propellerPos, PickPropellerTargetPosition(propellerPos));
+        }
+
+        private IEnumerator ActivatePropeller(Vector2Int propellerPos, Vector2Int targetPos)
+        {
             Grid3D.GridCell propellerCell = grid.GetCellPublic(propellerPos);
             if (propellerCell?.elementInfo == null || propellerCell.elementInfo.powerUpType != ElementPowerUpType.Propeller)
                 yield break;
@@ -848,7 +1890,6 @@ namespace Game
             if (propellerElement != null)
                 propellerElement.transform.DOKill();
 
-            Vector2Int targetPos = PickPropellerTargetPosition(propellerPos);
             Vector3 targetWorldPos = grid.GetWorldPosition(targetPos);
 
             if (propellerElement != null)
@@ -882,7 +1923,134 @@ namespace Game
             yield return grid.StartCoroutine(grid.ClearAreaAt(targetPos, 0));
         }
 
+        private IEnumerator ActivatePropellerBurstFromOrigin(Vector2Int originPos, GridElement sourcePropellerElement, List<Vector2Int> targetPositions)
+        {
+            if (targetPositions == null || targetPositions.Count == 0)
+                yield break;
+
+            float staggerDelay = Mathf.Max(0.03f, GameManager.Instance.constantManager.discoBallTrailSpawnDelay * 0.45f);
+            List<Coroutine> flightCoroutines = new List<Coroutine>(targetPositions.Count);
+
+            for (int i = 0; i < targetPositions.Count; i++)
+            {
+                flightCoroutines.Add(grid.StartCoroutine(FlyTemporaryPropellerToTarget(originPos, targetPositions[i], sourcePropellerElement, i)));
+
+                if (i < targetPositions.Count - 1)
+                    yield return new WaitForSeconds(staggerDelay);
+            }
+
+            for (int i = 0; i < flightCoroutines.Count; i++)
+                yield return flightCoroutines[i];
+        }
+
+        private IEnumerator FlyTemporaryPropellerToTarget(Vector2Int originPos, Vector2Int targetPos, GridElement sourcePropellerElement, int burstIndex)
+        {
+            Vector3 startWorldPos = grid.GetWorldPosition(originPos);
+            Vector3 targetWorldPos = grid.GetWorldPosition(targetPos);
+            GameObject propellerCopy = CreateTemporaryElementCopy(sourcePropellerElement, startWorldPos, "PropellerComboCopy");
+
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.ROCKET, volumeMultiplier: 0.8f, pitchOffset: 0.06f + Mathf.Clamp(burstIndex * 0.02f, 0f, 0.12f));
+
+            if (propellerCopy != null)
+            {
+                float travelDuration = 0.3f;
+                float arcHeight = Mathf.Clamp(Vector3.Distance(startWorldPos, targetWorldPos) * 0.22f, 0.3f, 0.9f);
+                Vector3 midPoint = Vector3.Lerp(startWorldPos, targetWorldPos, 0.5f) + (Vector3.up * arcHeight);
+
+                Sequence travelSequence = DOTween.Sequence();
+                travelSequence.Join(
+                    propellerCopy.transform
+                        .DOPath(new[] { startWorldPos, midPoint, targetWorldPos }, travelDuration, PathType.CatmullRom)
+                        .SetEase(Ease.InOutSine)
+                        .SetOptions(false));
+                travelSequence.Join(
+                    propellerCopy.transform
+                        .DORotate(new Vector3(0f, 0f, 1080f), travelDuration, RotateMode.FastBeyond360)
+                        .SetEase(Ease.Linear)
+                        .SetRelative());
+
+                yield return travelSequence.WaitForCompletion();
+                Object.Destroy(propellerCopy);
+            }
+            else
+            {
+                yield return new WaitForSeconds(0.3f);
+            }
+
+            yield return grid.StartCoroutine(grid.ClearAreaAt(targetPos, 0));
+        }
+
+        private IEnumerator FlyBombToTargetAndActivate(Vector2Int bombPos, Vector2Int targetPos, GridElement bombElement)
+        {
+            Vector3 startWorldPos = bombElement != null ? bombElement.transform.position : grid.GetWorldPosition(bombPos);
+            Vector3 targetWorldPos = grid.GetWorldPosition(targetPos);
+
+            if (bombElement != null)
+            {
+                bombElement.transform.DOKill();
+
+                Transform tempParent = grid.GridParent != null ? grid.GridParent : grid.transform;
+                bombElement.transform.SetParent(tempParent, true);
+
+                float travelDuration = 0.32f;
+                float arcHeight = Mathf.Clamp(Vector3.Distance(startWorldPos, targetWorldPos) * 0.2f, 0.3f, 0.85f);
+                Vector3 midPoint = Vector3.Lerp(startWorldPos, targetWorldPos, 0.5f) + (Vector3.up * arcHeight);
+
+                Sequence travelSequence = DOTween.Sequence();
+                travelSequence.Join(
+                    bombElement.transform
+                        .DOPath(new[] { startWorldPos, midPoint, targetWorldPos }, travelDuration, PathType.CatmullRom)
+                        .SetEase(Ease.InOutSine)
+                        .SetOptions(false));
+                travelSequence.Join(
+                    bombElement.transform
+                        .DORotate(new Vector3(0f, 0f, 720f), travelDuration, RotateMode.FastBeyond360)
+                        .SetEase(Ease.Linear)
+                        .SetRelative());
+
+                yield return travelSequence.WaitForCompletion();
+                grid.StartCoroutine(bombElement.DestroyElement());
+            }
+            else
+            {
+                yield return new WaitForSeconds(0.32f);
+            }
+
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.BOMB);
+            PlayBombImpactEffects(targetWorldPos);
+            yield return grid.StartCoroutine(ClearBombAreaProgressive(targetPos, 2, false));
+        }
+
+        private IEnumerator ActivateReservedPropellerBurst(List<Vector2Int> propellerPositions, List<Vector2Int> reservedTargets)
+        {
+            if (propellerPositions == null || reservedTargets == null)
+                yield break;
+
+            int activationCount = Mathf.Min(propellerPositions.Count, reservedTargets.Count);
+            if (activationCount <= 0)
+                yield break;
+
+            float staggerDelay = Mathf.Max(0.03f, GameManager.Instance.constantManager.discoBallTrailSpawnDelay * 0.5f);
+            List<Coroutine> activationCoroutines = new List<Coroutine>(activationCount);
+
+            for (int i = 0; i < activationCount; i++)
+            {
+                activationCoroutines.Add(grid.StartCoroutine(ActivatePropeller(propellerPositions[i], reservedTargets[i])));
+
+                if (i < activationCount - 1)
+                    yield return new WaitForSeconds(staggerDelay);
+            }
+
+            for (int i = 0; i < activationCoroutines.Count; i++)
+                yield return activationCoroutines[i];
+        }
+
         private Vector2Int PickPropellerTargetPosition(Vector2Int origin)
+        {
+            return PickPropellerTargetPosition(origin, null);
+        }
+
+        private Vector2Int PickPropellerTargetPosition(Vector2Int origin, HashSet<Vector2Int> reservedTargets)
         {
             List<Vector2Int> breakableWallCells = new List<Vector2Int>();
             List<Vector2Int> hiddenElements = new List<Vector2Int>();
@@ -897,6 +2065,9 @@ namespace Game
                 {
                     Vector2Int pos = new Vector2Int(x, y);
                     if (pos == origin)
+                        continue;
+
+                    if (reservedTargets != null && reservedTargets.Contains(pos))
                         continue;
 
                     Grid3D.GridCell cell = grid.GetCellPublic(pos);
@@ -961,6 +2132,72 @@ namespace Game
             return origin;
         }
 
+        private List<Vector2Int> ReservePropellerTargets(List<Vector2Int> propellerPositions)
+        {
+            List<Vector2Int> reservedTargets = new List<Vector2Int>();
+            if (propellerPositions == null)
+                return reservedTargets;
+
+            HashSet<Vector2Int> usedTargets = new HashSet<Vector2Int>();
+            for (int i = 0; i < propellerPositions.Count; i++)
+            {
+                Vector2Int propellerPos = propellerPositions[i];
+                Vector2Int targetPos = PickPropellerTargetPosition(propellerPos, usedTargets);
+
+                if (targetPos == propellerPos && usedTargets.Contains(targetPos))
+                    targetPos = PickPropellerTargetPosition(propellerPos);
+
+                usedTargets.Add(targetPos);
+                reservedTargets.Add(targetPos);
+            }
+
+            return reservedTargets;
+        }
+
+        private List<Vector2Int> ReservePropellerTargets(Vector2Int originPos, int count, params Vector2Int[] blockedPositions)
+        {
+            List<Vector2Int> reservedTargets = new List<Vector2Int>();
+            if (count <= 0)
+                return reservedTargets;
+
+            HashSet<Vector2Int> usedTargets = new HashSet<Vector2Int>();
+            if (blockedPositions != null)
+            {
+                for (int i = 0; i < blockedPositions.Length; i++)
+                    usedTargets.Add(blockedPositions[i]);
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                Vector2Int targetPos = PickPropellerTargetPosition(originPos, usedTargets);
+                if (usedTargets.Contains(targetPos))
+                    break;
+
+                usedTargets.Add(targetPos);
+                reservedTargets.Add(targetPos);
+            }
+
+            return reservedTargets;
+        }
+
+        private GameObject CreateTemporaryElementCopy(GridElement sourceElement, Vector3 origin, string objectName)
+        {
+            GameObject copy = new GameObject(objectName);
+            copy.transform.position = origin;
+
+            if (sourceElement != null && sourceElement.elementRenderer is SpriteRenderer srcSR)
+            {
+                SpriteRenderer sr = copy.AddComponent<SpriteRenderer>();
+                sr.sprite = srcSR.sprite;
+                sr.material = srcSR.material;
+                sr.sortingLayerID = srcSR.sortingLayerID;
+                sr.sortingOrder = srcSR.sortingOrder + SortingOrderBoost;
+                sr.color = srcSR.color;
+            }
+
+            return copy;
+        }
+
         private IEnumerator ActivateCauldron(Vector2Int cauldronPos)
         {
             if (!grid.IsCauldronReadyAt(cauldronPos))
@@ -979,6 +2216,23 @@ namespace Game
             for (int i = 0; i < targets.Count; i++)
             {
                 grid.StartCoroutine(AnimateSingleDiscoTrail(sourceWorldPos, targets[i], targetElementData, trailIndex));
+                trailIndex++;
+                yield return new WaitForSeconds(cm.discoBallTrailSpawnDelay);
+            }
+
+            float totalWait = cm.discoBallTrailDuration + cm.discoBallTrailSpawnDelay * Mathf.Max(0, targets.Count - 1);
+            yield return new WaitForSeconds(totalWait);
+        }
+
+        private IEnumerator AnimateDiscoBallPowerUpTrails(Vector2Int sourcePos, List<Vector2Int> targets, ElementPowerUpType targetPowerUpType)
+        {
+            ConstantManager cm = GameManager.Instance.constantManager;
+            Vector3 sourceWorldPos = grid.GetWorldPosition(sourcePos);
+
+            int trailIndex = 0;
+            for (int i = 0; i < targets.Count; i++)
+            {
+                grid.StartCoroutine(AnimateSingleDiscoPowerUpTrail(sourceWorldPos, targets[i], targetPowerUpType, trailIndex));
                 trailIndex++;
                 yield return new WaitForSeconds(cm.discoBallTrailSpawnDelay);
             }
@@ -1017,12 +2271,41 @@ namespace Game
                 }
             }
 
-            float shakeMag = GameManager.Instance.constantManager.sparklingShakeBaseMagnitude + (trailIndex * 0.01f);
-            GridHelper.ShakeCamera(
-                GameManager.Instance.constantManager.sparklingShakeDuration,
-                shakeMag,
-                GameManager.Instance.constantManager.sparklingShakeVibrato,
-                GameManager.Instance.constantManager.sparklingShakeRandomness);
+
+            if (trailObj != null) Object.Destroy(trailObj);
+        }
+
+        private IEnumerator AnimateSingleDiscoPowerUpTrail(Vector3 sourcePos, Vector2Int targetPos, ElementPowerUpType targetPowerUpType, int trailIndex)
+        {
+            ConstantManager cm = GameManager.Instance.constantManager;
+            Vector3 targetWorldPos = grid.GetWorldPosition(targetPos);
+
+            GameObject trailObj = Object.Instantiate(cm.sparklingTrailPrefab, sourcePos, Quaternion.identity);
+
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.DISCO_BALL_TRAIL, volumeMultiplier: 0.75f, pitchOffset: Mathf.Clamp(trailIndex * 0.01f, 0f, 0.12f));
+
+            Tween trailTween = trailObj.transform.DOMove(targetWorldPos, cm.discoBallTrailDuration).SetEase(Ease.OutQuad);
+            if (trailTween != null && trailTween.active)
+                yield return trailTween.WaitForCompletion();
+
+            Grid3D.GridCell cell = grid.GetCellPublic(targetPos);
+            if (cell?.elementInfo != null)
+            {
+                ElementData sourceData = cell.elementInfo.elementData;
+                cell.elementInfo.elementData = ResolveVisualData(sourceData, targetPowerUpType);
+                cell.elementInfo.powerUpType = targetPowerUpType;
+                cell.elementInfo.isSparkling = false;
+                cell.elementInfo.isHidden = false;
+
+                GridElement element = grid.GetElementAt(targetPos);
+                if (element != null)
+                {
+                    element.elementInfo = cell.elementInfo;
+                    element.InitElement(grid, cell.elementInfo);
+                    GridHelper.SetEmission(element, 0f);
+                    ApplySortingBoost(element, targetPowerUpType == ElementPowerUpType.Bomb);
+                }
+            }
 
             if (trailObj != null) Object.Destroy(trailObj);
         }
@@ -1059,6 +2342,31 @@ namespace Game
             grid.TriggerCellFeatureMatchedOverAt(bombPos);
             bombCell.elementInfo = null;
             yield return grid.StartCoroutine(ClearBombAreaProgressive(bombPos, 2, false));
+        }
+
+        private IEnumerator ActivateRocket(Vector2Int rocketPos)
+        {
+            Grid3D.GridCell rocketCell = grid.GetCellPublic(rocketPos);
+            ElementPowerUpType rocketType = rocketCell?.elementInfo?.powerUpType ?? ElementPowerUpType.None;
+            if (!IsRocket(rocketType))
+                yield break;
+
+            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+
+            GridElement rocketElement = grid.GetElementAt(rocketPos);
+
+            grid.TriggerCellFeatureMatchedOverAt(rocketPos);
+            rocketCell.elementInfo = null;
+
+            Vector2Int[] rocketDirections =
+            {
+                Vector2Int.right,
+                Vector2Int.left,
+                Vector2Int.up,
+                Vector2Int.down
+            };
+
+            yield return grid.StartCoroutine(ActivateRocketBurst(rocketPos, rocketElement, rocketDirections, clearSourceCell: false, clearOriginCell: false, preLaunchDelay: 0.1f));
         }
 
         private IEnumerator ClearBombAreaProgressive(Vector2Int center, int radius, bool allowConditionedBreakableWalls)
@@ -1140,41 +2448,15 @@ namespace Game
                 grid.StartCoroutine(matchedElement.DestroyElement());
         }
 
-        private IEnumerator ActivateRocket(Vector2Int rocketPos)
+        private IEnumerator ActivateRocketBurst(Vector2Int rocketPos, GridElement rocketElement, Vector2Int[] directions, bool clearSourceCell, bool clearOriginCell, float preLaunchDelay, float volumeMultiplier = 1f, float pitchOffset = 0f)
         {
-            EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
-            yield return new WaitForSeconds(0.1f);
-            PlayEffect(ConstantManager.SOUNDS.EFFECTS.ROCKET);
+            if (preLaunchDelay > 0f)
+                yield return new WaitForSeconds(preLaunchDelay);
 
-            GridElement rocketElement = grid.GetElementAt(rocketPos);
-            grid.TriggerCellFeatureMatchedOverAt(rocketPos);
-            grid.GetCellPublic(rocketPos).elementInfo = null;
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.ROCKET, volumeMultiplier, pitchOffset);
 
             Vector3 originWorld = grid.GetWorldPosition(rocketPos);
             ConstantManager cm = GameManager.Instance.constantManager;
-
-            Vector2Int dirRight = Vector2Int.right;
-            Vector2Int dirLeft = Vector2Int.left;
-            Vector2Int dirUp = Vector2Int.up;
-            Vector2Int dirDown = Vector2Int.down;
-
-            List<Vector2Int> rightCells = CollectLineCells(rocketPos, dirRight);
-            List<Vector2Int> leftCells = CollectLineCells(rocketPos, dirLeft);
-            List<Vector2Int> upCells = CollectLineCells(rocketPos, dirUp);
-            List<Vector2Int> downCells = CollectLineCells(rocketPos, dirDown);
-
-            Vector3 rightEnd = rightCells.Count > 0
-                ? grid.GetWorldPosition(rightCells[rightCells.Count - 1]) + (Vector3)(Vector2)dirRight * 0.5f
-                : originWorld + (Vector3)(Vector2)dirRight * 0.5f;
-            Vector3 leftEnd = leftCells.Count > 0
-                ? grid.GetWorldPosition(leftCells[leftCells.Count - 1]) + (Vector3)(Vector2)dirLeft * 0.5f
-                : originWorld + (Vector3)(Vector2)dirLeft * 0.5f;
-            Vector3 upEnd = upCells.Count > 0
-                ? grid.GetWorldPosition(upCells[upCells.Count - 1]) + (Vector3)(Vector2)dirUp * 0.5f
-                : originWorld + (Vector3)(Vector2)dirUp * 0.5f;
-            Vector3 downEnd = downCells.Count > 0
-                ? grid.GetWorldPosition(downCells[downCells.Count - 1]) + (Vector3)(Vector2)dirDown * 0.5f
-                : originWorld + (Vector3)(Vector2)dirDown * 0.5f;
 
             if (rocketElement != null)
             {
@@ -1183,31 +2465,42 @@ namespace Game
                 for (int i = 0; i < cols.Length; i++) cols[i].enabled = false;
             }
 
-            GameObject rocketCopyRight = CreateRocketCopy(rocketElement, originWorld, cm, true, 1f);
-            GameObject rocketCopyLeft = CreateRocketCopy(rocketElement, originWorld, cm, true, -1f);
-            GameObject rocketCopyUp = CreateRocketCopy(rocketElement, originWorld, cm, false, 1f);
-            GameObject rocketCopyDown = CreateRocketCopy(rocketElement, originWorld, cm, false, -1f);
-
-            if (rocketElement != null) Object.Destroy(rocketElement.gameObject);
-
-            GridHelper.ShakeCamera(cm.rocketShakeDuration, cm.rocketShakeMagnitude, cm.rocketShakeVibrato, cm.rocketShakeRandomness);
-
             HashSet<Vector2Int> processedWalls = new HashSet<Vector2Int>();
+
+            if (clearSourceCell)
+            {
+                grid.TriggerCellFeatureMatchedOverAt(rocketPos);
+                Grid3D.GridCell sourceCell = grid.GetCellPublic(rocketPos);
+                if (sourceCell != null)
+                    sourceCell.elementInfo = null;
+            }
+
+            if (clearOriginCell)
+                ClearLineCellImmediate(rocketPos, processedWalls);
+
+            List<GameObject> rocketCopies = new List<GameObject>(directions.Length);
+            List<Coroutine> travelCoroutines = new List<Coroutine>(directions.Length);
+
+            for (int i = 0; i < directions.Length; i++)
+            {
+                Vector2Int direction = directions[i];
+                List<Vector2Int> lineCells = CollectLineCells(rocketPos, direction);
+                Vector3 lineEnd = GetRocketLineEnd(originWorld, lineCells, direction);
+                GameObject rocketCopy = CreateRocketCopyForDirection(rocketElement, originWorld, cm, direction);
+                rocketCopies.Add(rocketCopy);
+                travelCoroutines.Add(grid.StartCoroutine(TravelRocketCopy(rocketCopy, originWorld, lineEnd, lineCells, cm, processedWalls)));
+            }
+
+            if (rocketElement != null)
+                Object.Destroy(rocketElement.gameObject);
+
             BreakAdjacentWallsImmediate(rocketPos, processedWalls);
 
-            Coroutine travelRight = grid.StartCoroutine(TravelRocketCopy(rocketCopyRight, originWorld, rightEnd, rightCells, cm, processedWalls));
-            Coroutine travelLeft = grid.StartCoroutine(TravelRocketCopy(rocketCopyLeft, originWorld, leftEnd, leftCells, cm, processedWalls));
-            Coroutine travelUp = grid.StartCoroutine(TravelRocketCopy(rocketCopyUp, originWorld, upEnd, upCells, cm, processedWalls));
-            Coroutine travelDown = grid.StartCoroutine(TravelRocketCopy(rocketCopyDown, originWorld, downEnd, downCells, cm, processedWalls));
-
-            yield return travelRight;
-            Object.Destroy(rocketCopyRight);
-            yield return travelLeft;
-            Object.Destroy(rocketCopyLeft);
-            yield return travelUp;
-            Object.Destroy(rocketCopyUp);
-            yield return travelDown;
-            Object.Destroy(rocketCopyDown);
+            for (int i = 0; i < travelCoroutines.Count; i++)
+            {
+                yield return travelCoroutines[i];
+                Object.Destroy(rocketCopies[i]);
+            }
         }
 
         private void CollectAffectedWallsForRocketLine(List<Vector2Int> lineCells, HashSet<Vector2Int> walls)
@@ -1233,6 +2526,13 @@ namespace Game
 
                 CollectAdjacentWalls(pos, walls);
             }
+        }
+
+        private Vector3 GetRocketLineEnd(Vector3 originWorld, List<Vector2Int> lineCells, Vector2Int direction)
+        {
+            return lineCells.Count > 0
+                ? grid.GetWorldPosition(lineCells[lineCells.Count - 1]) + (Vector3)(Vector2)direction * 0.5f
+                : originWorld + (Vector3)(Vector2)direction * 0.5f;
         }
 
         private List<Vector2Int> CollectLineCells(Vector2Int origin, Vector2Int direction)
@@ -1271,7 +2571,7 @@ namespace Game
             }
         }
 
-        private GameObject CreateRocketCopy(GridElement sourceElement, Vector3 origin, ConstantManager cm, bool isHorizontal, float directionSign)
+        private GameObject CreateRocketCopyForDirection(GridElement sourceElement, Vector3 origin, ConstantManager cm, Vector2Int direction)
         {
             GameObject copy = new GameObject("RocketCopy");
             copy.transform.position = origin;
@@ -1285,15 +2585,8 @@ namespace Game
                 sr.sortingOrder = srcSR.sortingOrder + SortingOrderBoost;
                 sr.color = srcSR.color;
 
-                if (isHorizontal)
-                {
-                    copy.transform.rotation = Quaternion.Euler(0f, 0f, 90f);
-                    sr.flipY = directionSign < 0f;
-                }
-                else
-                {
-                    copy.transform.rotation = Quaternion.Euler(0f, 0f, directionSign > 0f ? 0f : 180f);
-                }
+                float rotationZ = -Vector2.SignedAngle(Vector2.up, new Vector2(direction.x, direction.y));
+                copy.transform.rotation = Quaternion.Euler(0f, 0f, rotationZ);
             }
 
             if (cm.rocketTrailParticlePrefab != null)
@@ -1304,6 +2597,52 @@ namespace Game
             }
 
             return copy;
+        }
+
+        private IEnumerator FlyRocketToTargetAndActivate(Vector2Int rocketPos, Vector2Int targetPos, GridElement rocketElement)
+        {
+            Vector3 startWorldPos = rocketElement != null ? rocketElement.transform.position : grid.GetWorldPosition(rocketPos);
+            Vector3 targetWorldPos = grid.GetWorldPosition(targetPos);
+
+            if (rocketElement != null)
+            {
+                rocketElement.transform.DOKill();
+
+                Transform tempParent = grid.GridParent != null ? grid.GridParent : grid.transform;
+                rocketElement.transform.SetParent(tempParent, true);
+
+                float travelDuration = 0.3f;
+                float arcHeight = Mathf.Clamp(Vector3.Distance(startWorldPos, targetWorldPos) * 0.2f, 0.3f, 0.85f);
+                Vector3 midPoint = Vector3.Lerp(startWorldPos, targetWorldPos, 0.5f) + (Vector3.up * arcHeight);
+
+                Sequence travelSequence = DOTween.Sequence();
+                travelSequence.Join(
+                    rocketElement.transform
+                        .DOPath(new[] { startWorldPos, midPoint, targetWorldPos }, travelDuration, PathType.CatmullRom)
+                        .SetEase(Ease.InOutSine)
+                        .SetOptions(false));
+                travelSequence.Join(
+                    rocketElement.transform
+                        .DORotate(new Vector3(0f, 0f, 720f), travelDuration, RotateMode.FastBeyond360)
+                        .SetEase(Ease.Linear)
+                        .SetRelative());
+
+                yield return travelSequence.WaitForCompletion();
+            }
+            else
+            {
+                yield return new WaitForSeconds(0.3f);
+            }
+
+            Vector2Int[] rocketDirections =
+            {
+                Vector2Int.right,
+                Vector2Int.left,
+                Vector2Int.up,
+                Vector2Int.down
+            };
+
+            yield return grid.StartCoroutine(ActivateRocketBurst(targetPos, rocketElement, rocketDirections, clearSourceCell: false, clearOriginCell: true, preLaunchDelay: 0f, volumeMultiplier: 1f, pitchOffset: 0.02f));
         }
 
         private IEnumerator TravelRocketCopy(GameObject rocketCopy, Vector3 start, Vector3 end, List<Vector2Int> cellsInOrder, ConstantManager cm, HashSet<Vector2Int> processedWalls)
@@ -1435,27 +2774,6 @@ namespace Game
             grid.StartCoroutine(grid.BreakWallAt(wallPos));
         }
 
-        private IEnumerator AnimateBombFlight(GridElement bombElement, Vector3 target)
-        {
-            if (bombElement == null) yield break;
-            Transform t = bombElement.transform;
-            if (t == null)
-                yield break;
-
-            Vector3 start = t.position;
-            float duration = Mathf.Max(0.25f, GameManager.Instance.constantManager.elementSwapMoveDuration * 2f);
-
-            Vector3 mid = Vector3.Lerp(start, target, 0.5f) + Vector3.up * 1.1f;
-            Vector3[] path = { start, mid, target };
-
-            Sequence seq = DOTween.Sequence();
-            seq.Join(t.DOPath(path, duration, PathType.CatmullRom).SetEase(Ease.OutQuad).SetOptions(false));
-            seq.Join(t.DORotate(new Vector3(0f, 0f, 540f), duration, RotateMode.FastBeyond360).SetEase(Ease.Linear).SetRelative());
-            seq.Join(t.DOScale(1.18f, duration * 0.45f).SetLoops(2, LoopType.Yoyo).SetEase(Ease.InOutSine));
-            if (seq != null && seq.active)
-                yield return seq.WaitForCompletion();
-        }
-
         private void PlayBombImpactEffects(Vector3 impactPos)
         {
             ConstantManager cm = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
@@ -1466,7 +2784,6 @@ namespace Game
                 p.Play();
                 Object.Destroy(p.gameObject, p.main.duration + p.main.startLifetime.constantMax + 0.2f);
             }
-            GridHelper.ShakeCamera(cm.bombImpactShakeDuration, cm.bombImpactShakeMagnitude, cm.bombImpactShakeVibrato, cm.bombImpactShakeRandomness);
         }
 
         public void ApplySortingBoost(GridElement element, bool boost)

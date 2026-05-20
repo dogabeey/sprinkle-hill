@@ -6,21 +6,18 @@ using DG.Tweening;
 using TMPro;
 using Sirenix.OdinInspector;
 using UnityEngine.UI;
+using Game.SimpleJSON;
 
 namespace Game
 {
-    public partial class CurrencyManager : SingletonComponent<CurrencyManager>
+    public partial class CurrencyManager : SingletonComponent<CurrencyManager>, ISaveable
     {
         [Serializable]
         [InlineEditor]
         public class CurrencyInfo
         {
             public CurrencyModel currencyModel;
-            public float Amount
-            {
-                get => PlayerPrefs.GetFloat("Currency_" + currencyModel.currencyID, currencyModel.startingAmount);
-                set => PlayerPrefs.SetFloat("Currency_" + currencyModel.currencyID, value);
-            }
+            public float amount;
         }
 
         [Header("References")]
@@ -37,21 +34,25 @@ namespace Game
 
         private readonly List<CurrencyElement> currencyElements = new List<CurrencyElement>();
 
+        public string SaveId => "currency_management";
+
+        public SaveDataType SaveDataType => SaveDataType.WorldProgression;
+
         private void OnEnable()
         {
             EventManager.StartListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
             EventManager.StartListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
             EventManager.StartListening(GameEvent.LEVEL_FAILED, OnLevelCompleted);
-            EventManager.StartListening(GameEvent.SCREEN_OPENED, OnLevelCompleted);
-            EventManager.StartListening(GameEvent.SCREEN_CLOSED, OnLevelCompleted);
+            EventManager.StartListening(GameEvent.SCREEN_OPENED, OnScreenOpened);
+            EventManager.StartListening(GameEvent.SCREEN_CLOSED, OnScreenClosed);
         }
         private void OnDisable()
         {
             EventManager.StopListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
             EventManager.StopListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
             EventManager.StopListening(GameEvent.LEVEL_FAILED, OnLevelCompleted);
-            EventManager.StopListening(GameEvent.SCREEN_OPENED, OnLevelCompleted);
-            EventManager.StopListening(GameEvent.SCREEN_CLOSED, OnLevelCompleted);
+            EventManager.StopListening(GameEvent.SCREEN_OPENED, OnScreenOpened);
+            EventManager.StopListening(GameEvent.SCREEN_CLOSED, OnScreenClosed);
         }
         private void OnLevelStarted(EventParam e)
         {
@@ -62,8 +63,19 @@ namespace Game
             currencyCanvasGroup.alpha = 1;
         }
 
+        private void OnScreenOpened(EventParam e)
+        {
+            currencyCanvasGroup.alpha = 1;
+        }
+
+        private void OnScreenClosed(EventParam e)
+        {
+            currencyCanvasGroup.alpha = 0;
+        }
+
         private void Start()
         {
+            SaveManager.Instance.Register(this);
             currencyElements.Clear();
 
             foreach (var currencyInfo in currencyInfos)
@@ -71,7 +83,7 @@ namespace Game
                 CurrencyElement instantiatedElement = Instantiate(currencyElementPrefab, currencyContainer);
                 instantiatedElement.currencyTransform = instantiatedElement.transform;
                 instantiatedElement.currencyText = instantiatedElement.GetComponentInChildren<TMP_Text>();
-                StartCoroutine(instantiatedElement.UpdateCurrencyUI(currencyInfo.currencyModel, currencyInfo.Amount));
+                StartCoroutine(instantiatedElement.UpdateCurrencyUI(currencyInfo.currencyModel, currencyInfo.amount));
                 currencyElements.Add(instantiatedElement);
             }
         }
@@ -93,7 +105,7 @@ namespace Game
                 yield return StartCoroutine(AddCurrencyAnimationCoroutine(currencyInfo, sourceScreenPos, element.currencyTransform.position, amount));
             }
 
-            currencyInfo.Amount += amount;
+            currencyInfo.amount += amount;
             NotifyCurrencyChanged(currencyInfo.currencyModel, amount);
         }
 
@@ -102,7 +114,7 @@ namespace Game
         {
             int spriteAmount = Mathf.Max(1, Mathf.CeilToInt(Mathf.Abs(amount) * currencySpriteMultiplier));
             spriteAmount = Mathf.Min(spriteAmount, 30);
-            float startAmount = currencyInfo.Amount;
+            float startAmount = currencyInfo.amount;
 
             if (currencySpritePrefab != null && currencyAnimationContainer != null)
             {
@@ -140,7 +152,7 @@ namespace Game
                 yield return new WaitForSeconds(totalAnimDuration);
             }
 
-            currencyInfo.Amount = startAmount + amount;
+            currencyInfo.amount = startAmount + amount;
             NotifyCurrencyChanged(currencyInfo.currencyModel, amount);
 
             yield break;
@@ -158,12 +170,50 @@ namespace Game
         internal float GetCurrencyAmount(CurrencyModel costCurrency)
         {
             CurrencyInfo info = currencyInfos.Find(x => x.currencyModel == costCurrency);
-            return info != null ? info.Amount : 0f;
+            return info != null ? info.amount : 0f;
         }
 
         internal Sprite GetCurrencySprite(CurrencyModel costCurrency)
         {
             return costCurrency.currencyIcon;
+        }
+
+        public Dictionary<string, object> Save()
+        {
+            var saveData = new Dictionary<string, object>();
+            foreach (var currencyInfo in currencyInfos)
+            {
+                if (currencyInfo.currencyModel != null)
+                {
+                    saveData[currencyInfo.currencyModel.currencyID] = currencyInfo.amount;
+                }
+            }
+
+            return saveData;
+        }
+
+        public bool Load(Action onLoadSuccess, Action onLoadFail)
+        {
+            JSONNode saveData = GameManager.Instance.saveManager.LoadSave(this);
+
+            if (saveData == null)
+            {
+                onLoadFail?.Invoke();
+                return false;
+            }
+
+            foreach (var currencyInfo in currencyInfos)
+            {
+                if (currencyInfo.currencyModel != null)
+                {
+                    string currencyID = currencyInfo.currencyModel.currencyID;
+                    if (saveData[currencyID] != null)
+                    {
+                        currencyInfo.amount = saveData[currencyID].AsFloat;
+                    }
+                }
+            }
+            return true;
         }
     }
 }

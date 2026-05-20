@@ -5,6 +5,7 @@ Shader "Universal Render Pipeline/Sprites/HueShift"
         [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
         _Color ("Tint", Color) = (1,1,1,1)
         _HueShiftSpeed ("Hue Shift Speed", Range(0, 10)) = 1.0
+        _HueShiftStrength ("Hue Shift Strength", Range(0, 1)) = 1.0
         _Emission ("Emission", Range(0, 5)) = 0
         [MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
         [HideInInspector] _RendererColor ("RendererColor", Color) = (1,1,1,1)
@@ -62,6 +63,7 @@ Shader "Universal Render Pipeline/Sprites/HueShift"
                 half4 _Color;
                 half4 _RendererColor;
                 half _HueShiftSpeed;
+                half _HueShiftStrength;
                 half _Emission;
             CBUFFER_END
 
@@ -117,7 +119,8 @@ Shader "Universal Render Pipeline/Sprites/HueShift"
                     hsv.x = frac(hsv.x + (_Time.y * _HueShiftSpeed * 0.1));
                     
                     // Convert back to RGB
-                    finalColor.rgb = HSVtoRGB(hsv) * finalColor.a;
+                    float3 shiftedRgb = HSVtoRGB(hsv) * finalColor.a;
+                    finalColor.rgb = lerp(finalColor.rgb, shiftedRgb, saturate(_HueShiftStrength));
                 }
 
                 finalColor.rgb += _Emission;

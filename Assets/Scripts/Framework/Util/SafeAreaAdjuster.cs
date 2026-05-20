@@ -18,12 +18,12 @@ namespace Game
             All = Left | Right | Top | Bottom
         }
 
-        [SerializeField] private SafeAreaDirection adjustDirections = SafeAreaDirection.Top;
-        [SerializeField] private Vector2 additionalPadding = Vector2.zero;
-        [SerializeField] private bool usePercentBasedPadding;
-        [SerializeField] private float minimumSafeAreaInsetPixels;
-        [SerializeField] private bool watchSafeAreaChanges = true;
-        [SerializeField] private bool ignoreInEditor = true;
+        [SerializeField] protected SafeAreaDirection adjustDirections = SafeAreaDirection.Top;
+        [SerializeField] protected Vector2 additionalPadding = Vector2.zero;
+        [SerializeField] protected bool usePercentBasedPadding;
+        [SerializeField] protected float minimumSafeAreaInsetPixels;
+        [SerializeField] protected bool watchSafeAreaChanges = true;
+        [SerializeField] protected bool ignoreInEditor = true;
 
         private RectTransform targetRect;
         private Vector2 initialAnchoredPosition;
@@ -33,25 +33,25 @@ namespace Game
         private Vector2Int lastScreenSize;
         private ScreenOrientation lastOrientation;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             EnsureRectTransform();
             CaptureInitialPosition();
-            ApplySafeArea();
+            ApplySafeArea(Screen.safeArea);
         }
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             EnsureRectTransform();
             CaptureInitialPosition();
-            ApplySafeArea();
+            ApplySafeArea(Screen.safeArea);
         }
 
-        private void OnValidate()
+        protected virtual void OnValidate()
         {
             EnsureRectTransform();
             CaptureInitialPosition();
-            ApplySafeArea();
+            ApplySafeArea(Screen.safeArea);
         }
 
         private void Update()
@@ -60,10 +60,10 @@ namespace Game
                 return;
 
             if (HasSafeAreaStateChanged())
-                ApplySafeArea();
+                ApplySafeArea(Screen.safeArea);
         }
 
-        public void ApplySafeArea()
+        public void ApplySafeArea(Rect safeArea)
         {
             if (ignoreInEditor && Application.isEditor && !Application.isPlaying)
                 return;
@@ -73,8 +73,6 @@ namespace Game
                 return;
 
             CaptureInitialPosition();
-
-            Rect safeArea = Screen.safeArea;
             float leftInset = safeArea.xMin;
             float rightInset = Screen.width - safeArea.xMax;
             float bottomInset = safeArea.yMin;
@@ -122,13 +120,13 @@ namespace Game
             targetRect.anchoredPosition = initialAnchoredPosition;
         }
 
-        private void EnsureRectTransform()
+        protected void EnsureRectTransform()
         {
             if (targetRect == null)
                 targetRect = GetComponent<RectTransform>();
         }
 
-        private void CaptureInitialPosition()
+        protected void CaptureInitialPosition()
         {
             if (targetRect == null)
                 return;
@@ -161,7 +159,7 @@ namespace Game
 
             initialAnchoredPosition = targetRect.anchoredPosition;
             hasCapturedInitialPosition = true;
-            ApplySafeArea();
+            ApplySafeArea(Screen.safeArea);
         }
 #endif
     }

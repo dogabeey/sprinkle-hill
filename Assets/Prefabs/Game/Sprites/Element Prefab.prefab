@@ -434,7 +434,7 @@ SpriteRenderer:
   m_Size: {x: 0.8515625, y: 0.828125}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
 --- !u!1 &6532699754744590328
 GameObject:
@@ -512,7 +512,7 @@ MonoBehaviour:
     cauldronProgress: 0
   elementAnimator: {fileID: 8132023732941228010}
   elementRenderer: {fileID: 482629601680886882}
-  hiddenSprite: {fileID: -622759365, guid: a46309d38df06264b96c750375a58bd1, type: 3}
+  hiddenSprite: {fileID: -136137942, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
   ownerGrid: {fileID: 0}
   highlightSprite: {fileID: 961667231535525662}
   cauldronProgressBackground: {fileID: 452525878563324029}
