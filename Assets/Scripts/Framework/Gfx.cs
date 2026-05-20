@@ -39,5 +39,13 @@ namespace Game
         public ParticleSystem powerUpComboParticlePrefab;
         [FoldoutGroup("Particle Systems")]
         public ParticleSystem hiddenElementRevealParticlePrefab;
+        [FoldoutGroup("Power Up Combo Sprites")]
+        public Sprite discoBallAndDiscoBallComboSprite;
+        [FoldoutGroup("Power Up Combo Sprites")]
+        public Sprite discoBallAndRocketComboSprite;
+        [FoldoutGroup("Power Up Combo Sprites")]
+        public Sprite discoBallAndPropellerComboSprite;
+        [FoldoutGroup("Power Up Combo Sprites")]
+        public Sprite discoBallAndBombComboSprite;
     }
 }

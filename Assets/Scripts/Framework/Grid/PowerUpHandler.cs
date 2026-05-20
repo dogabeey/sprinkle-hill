@@ -693,7 +693,7 @@ namespace Game
 
                 activePowerUpChainCount++;
                 ComboIntroResult comboIntroResult = new ComboIntroResult();
-                yield return grid.StartCoroutine(PlayPowerUpComboIntro(firstPos, secondPos, comboIntroResult));
+                yield return grid.StartCoroutine(PlayPowerUpComboIntro(firstPos, secondPos, firstType, secondType, comboIntroResult));
                 yield return grid.StartCoroutine(strategy.Activate(firstPos, null));
             }
             finally
@@ -741,13 +741,14 @@ namespace Game
             return null;
         }
 
-        private IEnumerator PlayPowerUpComboIntro(Vector2Int firstPos, Vector2Int secondPos, ComboIntroResult introResult)
+        private IEnumerator PlayPowerUpComboIntro(Vector2Int firstPos, Vector2Int secondPos, ElementPowerUpType firstType, ElementPowerUpType secondType, ComboIntroResult introResult)
         {
             if (introResult == null)
                 yield break;
 
             GridElement firstElement = grid.GetElementAt(firstPos);
             GridElement secondElement = grid.GetElementAt(secondPos);
+            Sprite comboMergeSprite = ResolveDiscoBallComboMergeSprite(firstType, secondType);
 
             Vector3 firstStartWorld = firstElement != null ? firstElement.transform.position : grid.GetWorldPosition(firstPos);
             Vector3 secondStartWorld = secondElement != null ? secondElement.transform.position : grid.GetWorldPosition(secondPos);
@@ -804,6 +805,12 @@ namespace Game
 
             Sequence mergeSequence = DOTween.Sequence();
 
+            if (comboMergeSprite != null)
+            {
+                ApplyComboMergeSprite(firstElement, comboMergeSprite);
+                ApplyComboMergeSprite(secondElement, comboMergeSprite);
+            }
+
             if (firstElement != null)
             {
                 mergeSequence.Join(firstElement.transform.DOMove(comboCenter, ComboIntroMergeDuration).SetEase(Ease.InBack));
@@ -835,6 +842,39 @@ namespace Game
             }
 
             Object.Destroy(orbitPivot);
+        }
+
+        private Sprite ResolveDiscoBallComboMergeSprite(ElementPowerUpType firstType, ElementPowerUpType secondType)
+        {
+            if (!IsDiscoBall(firstType) && !IsDiscoBall(secondType))
+                return null;
+
+            Gfx gfxManager = GameManager.Instance != null ? GameManager.Instance.gfxManager : null;
+            if (gfxManager == null)
+                return null;
+
+            if (IsDiscoBall(firstType) && IsDiscoBall(secondType))
+                return gfxManager.discoBallAndDiscoBallComboSprite;
+
+            if (IsRocket(firstType) || IsRocket(secondType))
+                return gfxManager.discoBallAndRocketComboSprite;
+
+            if (IsPropeller(firstType) || IsPropeller(secondType))
+                return gfxManager.discoBallAndPropellerComboSprite;
+
+            if (firstType == ElementPowerUpType.Bomb || secondType == ElementPowerUpType.Bomb)
+                return gfxManager.discoBallAndBombComboSprite;
+
+            return null;
+        }
+
+        private void ApplyComboMergeSprite(GridElement element, Sprite comboSprite)
+        {
+            if (element == null || comboSprite == null)
+                return;
+
+            if (element.elementRenderer is SpriteRenderer spriteRenderer)
+                spriteRenderer.sprite = comboSprite;
         }
 
         private ParticleSystem SpawnPowerUpComboParticle(Transform comboAnchor)

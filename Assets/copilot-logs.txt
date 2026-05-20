@@ -74,3 +74,5 @@
 [2026-05-20 20:04:51] - Implemented Propeller + Propeller and Propeller + Bomb swap combos in PowerUpHandler and Match3Grid, adding four-target burst propeller launches from the combo origin and bomb flight-to-target activation using propeller target selection.
 [2026-05-20 20:28:20] - Implemented Rocket + Propeller and Rocket + Rocket swap combos in PowerUpHandler and Match3Grid by adding flown-rocket activation to propeller-style targets and generalized rocket bursts with diagonal directions for double-rocket combos.
 [2026-05-20 20:39:35] - Implemented Bomb + Rocket and Bomb + Bomb swap combos in PowerUpHandler and Match3Grid, adding 3x3 area rocket conversion/activation and expanded 7x7 bomb explosions for double-bomb combos.
+[2026-05-20 20:50:54] - Added configurable Disco Ball combo merge sprites in Gfx and updated PowerUpHandler combo intro so Disco Ball combinations switch to the configured combo sprite during the final merge animation.
+[2026-05-20 21:28:02] - Fixed Disco Ball combo merge sprite selection in PowerUpHandler by using the normalized swap combo types from ActivateSwapComboAt instead of re-reading grid state during the intro animation.
