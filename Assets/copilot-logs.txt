@@ -72,3 +72,4 @@
 [2026-05-20 19:41:41] - Implemented Disco Ball + Propeller swap combo in PowerUpHandler and Match3Grid by converting 8 random eligible elements into propellers and then activating them for both swap orders.
 [2026-05-20 19:52:31] - Updated Disco Ball + Propeller combo to reserve propeller targets up front and launch converted propellers in a rapid stagger to reduce overlap and sequential waiting.
 [2026-05-20 20:04:51] - Implemented Propeller + Propeller and Propeller + Bomb swap combos in PowerUpHandler and Match3Grid, adding four-target burst propeller launches from the combo origin and bomb flight-to-target activation using propeller target selection.
+[2026-05-20 20:28:20] - Implemented Rocket + Propeller and Rocket + Rocket swap combos in PowerUpHandler and Match3Grid by adding flown-rocket activation to propeller-style targets and generalized rocket bursts with diagonal directions for double-rocket combos.
