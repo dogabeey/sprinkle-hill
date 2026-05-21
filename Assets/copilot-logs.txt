@@ -79,3 +79,9 @@
 [2026-05-20 21:54:38] - Reworked Disco Ball combo merge sprite selection in PowerUpHandler to resolve sprites directly from the resolved combo strategy, preventing non-double-disco combos from using the discoBallAndDiscoBallComboSprite.
 [2026-05-20 21:58:59] - Added a configurable hue shift strength property to SpriteHueShift.shader so hue shifting can be blended with the original sprite color instead of always applying at full intensity.
 [2026-05-20 22:01:08] - Fixed Disco Ball combo intro visuals in PowerUpHandler by reapplying the resolved combo merge sprite after restoring the persistent merged element, preventing it from reverting to the normal Disco Ball sprite before activation.
+[2026-05-21 00:00:00] - Updated glass behavior so adjacent matches crack it, gravity drops no longer damage it, and direct power-up clears now damage glass cells they hit.
+[2026-05-21 00:10:00] - Added URP SpriteBlurredGlass shader with screen-space tiled blur/frost masks, sprite-background blur blending, and sorting-layer or opaque-texture scene sampling options.
+[2026-05-21 00:20:00] - Added URP sprite shader Assets/Shaders/SpriteSeamlessOverlayMask.shader with world-space overlay sampling and local overlay mask support for seamless texture blending across adjacent sprites.
+[2026-05-21 00:40:00] - Added second local overlay mask texture support to SpriteSeamlessOverlayMask shader and combined both masks multiplicatively for layered mask control.
+[2026-05-21 00:50:00] - Updated SpriteSeamlessOverlayMask to replace the second mask with a second world-space overlay texture layer (with independent color/strength) blended on top through the existing local overlay mask.
+[2026-05-21 01:00:00] - Updated SpriteSeamlessOverlayMask so the second overlay texture uses the same world-space UV and sampler behavior as the first overlay layer to remove quadrant-split appearance.

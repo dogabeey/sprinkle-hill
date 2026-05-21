@@ -107,6 +107,7 @@ namespace Game
                                     cellController.gridSprite.color = selectedSet != null
                                         ? selectedSet.GetColorForTile(new Vector2Int(i, j), currentColor)
                                         : currentColor;
+
                                 }
                             }
 
@@ -414,8 +415,8 @@ namespace Game
             Color currentColor = cellController.featureSprite.color;
             cellController.featureSprite.color = featureSet.GetColorForTile(new Vector2Int(x, y), sourceCell, currentColor);
 
-            Material currentMaterial = cellController.featureSprite.sharedMaterial;
-            cellController.featureSprite.sharedMaterial = featureSet.GetMaterialForTile(new Vector2Int(x, y), sourceCell, currentMaterial);
+            if(featureSet.tileMaterial != null)
+                cellController.featureSprite.sharedMaterial = featureSet.tileMaterial;
         }
 
         private Sprite DetermineFeatureTileType(Grid3D.GridCell[,] gridCells, int x, int y, DrawStartingCorner drawStartingCorner, CellFeature feature, int featureGroupIndex, TileSpriteSet selectedSet)
