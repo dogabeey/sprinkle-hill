@@ -1843,6 +1843,12 @@ namespace Game
                 if (cell == null || cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null)
                     continue;
 
+                if (cell.cellFeature is GlassFeature)
+                {
+                    grid.DamageGlassFeatureAt(pos);
+                    continue;
+                }
+
                 GridElement matchedElement = grid.GetElementAt(pos);
                 grid.TriggerCellFeatureMatchedOverAt(pos);
                 grid.TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
@@ -2411,6 +2417,12 @@ namespace Game
                 return;
             }
 
+            if (cell.cellFeature is GlassFeature)
+            {
+                grid.DamageGlassFeatureAt(pos);
+                return;
+            }
+
             if (cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null)
                 return;
 
@@ -2705,16 +2717,15 @@ namespace Game
                 return;
             }
 
-            if (cell.elementInfo == null)
+            if (cell.cellFeature is GlassFeature)
             {
+                grid.DamageGlassFeatureAt(pos);
                 BreakAdjacentWallsImmediate(pos, processedWalls);
                 return;
             }
 
-            if (cell.cellFeature is GlassFeature)
+            if (cell.elementInfo == null)
             {
-                grid.TriggerCellFeatureMatchedOverAt(pos);
-                grid.TriggerCellFeatureMatchedAdjacentToAt(pos, cell, grid.GetElementAt(pos));
                 BreakAdjacentWallsImmediate(pos, processedWalls);
                 return;
             }

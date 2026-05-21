@@ -217,15 +217,6 @@ namespace Game
                 CollectGlassGroupAt(center + adjacentOffsets[i], groups);
         }
 
-        private void CollectGlassGroupBelowDropTarget(Vector2Int landingPos, HashSet<GlassGroupId> groups)
-        {
-            if (groups == null)
-                return;
-
-            Vector2Int belowPos = new Vector2Int(landingPos.x, landingPos.y + 1);
-            CollectGlassGroupAt(belowPos, groups);
-        }
-
         private void RefreshCellFeatureVisual(Vector2Int pos)
         {
             if (tileGenerationData == null)
@@ -1743,11 +1734,15 @@ namespace Game
             }
         }
 
-        private void DamageGlassAtPosition(Vector2Int pos)
+        public bool DamageGlassFeatureAt(Vector2Int pos)
         {
+            GridCell cell = GetCell(pos);
+            if (!(cell?.cellFeature is GlassFeature))
+                return false;
+
             HashSet<GlassGroupId> groupsToDamage = new HashSet<GlassGroupId>();
             CollectGlassGroupAt(pos, groupsToDamage);
-            DamageGlassGroupsForMatch(groupsToDamage);
+            return DamageGlassGroupsForMatch(groupsToDamage);
         }
 
         private Vector2Int? FindMergeTarget(List<Vector2Int> group, HashSet<Vector2Int> protectedPositions)
@@ -1896,8 +1891,6 @@ namespace Game
         {
             EventManager.TriggerEvent(GameEvent.GRAVITY_STARTED);
 
-            HashSet<GlassGroupId> glassGroupsToDamageByDrop = new HashSet<GlassGroupId>();
-
             ConstantManager cm = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
             float fallSpeed = cm != null ? cm.elementFallSpeed : 3.3f;
 
@@ -2012,7 +2005,6 @@ namespace Game
                         {
                             readCell.elementInfo = null;
                             targetCell.elementInfo = movingInfo;
-                            CollectGlassGroupBelowDropTarget(targetPos, glassGroupsToDamageByDrop);
 
                             if (generatedTiles.TryGetValue(readPos, out GridCellController fromTile) &&
                                 generatedTiles.TryGetValue(targetPos, out GridCellController toTile) &&
@@ -2050,7 +2042,6 @@ namespace Game
                             powerUpType = ElementPowerUpType.None
                         };
                         targetCell.elementInfo = newInfo;
-                        CollectGlassGroupBelowDropTarget(targetPos, glassGroupsToDamageByDrop);
 
                         if (generatedTiles.TryGetValue(targetPos, out GridCellController targetTile) && targetTile != null)
                         {
@@ -2074,13 +2065,6 @@ namespace Game
 
             generatedElements.RemoveAll(el => el == null);
             if (hasTween) yield return gravitySeq.WaitForCompletion();
-
-            bool brokeGlassDuringGravity = DamageGlassGroupsForMatch(glassGroupsToDamageByDrop);
-            if (brokeGlassDuringGravity)
-            {
-                yield return StartCoroutine(ApplyGravity());
-                yield break;
-            }
 
             RunOccupancySanityPass();
 

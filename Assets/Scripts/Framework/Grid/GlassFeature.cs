@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using System.Linq;
@@ -6,15 +7,16 @@ using System.Linq;
 namespace Game
 {
     /// <summary>
-    /// Glass breaks when an element is matched over it, and it can have different sprites based on how much health it has left. It does not accept elements, 
-    /// so elements will pass through it when they fall. It also does not trigger matches when elements fall through it, so it won't cause chain reactions. 
+    /// Glass cracks when an element is matched in an adjacent cell or when a power-up effect hits its cell.
+    /// It can have different sprites based on how much health it has left. It does not accept elements,
+    /// so elements will pass through it when they fall. Falling alone does not damage it.
     /// </summary>
     [CreateAssetMenu(menuName = "Game/Cell Feature/Glass...")]
     public class GlassFeature : CellFeature
     {
         [Min(1)] public int defaultGroupHealth = 1;
         public List<GlassDamageSpritePair> damageSprites = new List<GlassDamageSpritePair>();
-        public override bool AcceptElements => false;
+        public override bool AcceptElements => true;
 
         public Sprite GetDamageSprite(int missingHealth)
         {
@@ -31,6 +33,15 @@ namespace Game
 
         public override void OnElementMatchedAdjacentToTheCell(Grid3D.GridCell thisCell, Grid3D.GridCell matchedCell, GridElement element)
         {
+            if (thisCell == null)
+                return;
+
+            Match3Grid grid = element != null ? element.ownerGrid as Match3Grid : Object.FindObjectOfType<Match3Grid>();
+
+            if (grid == null)
+                return;
+
+            grid.DamageGlassFeatureAt(thisCell.coordinates);
         }
     }
     [System.Serializable]
