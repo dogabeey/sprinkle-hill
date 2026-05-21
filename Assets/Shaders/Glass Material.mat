@@ -20,19 +20,18 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Blurred Glass
-  m_Shader: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
+  m_Name: Glass Material
+  m_Shader: {fileID: 4800000, guid: ce499fb1624f689468c9a4afb4864e4f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
+  m_ValidKeywords: []
+  m_InvalidKeywords:
   - _SURFACE_TYPE_TRANSPARENT
-  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2987
-  stringTagMap:
-    RenderType: Transparent
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
   - DepthOnly
@@ -61,6 +60,22 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _OverlayMaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OverlayMaskTex2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OverlayTex:
+        m_Texture: {fileID: 2800000, guid: 0706ced93314bd44f9baefb45b85e4a8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OverlayTex2:
+        m_Texture: {fileID: 2800000, guid: 4b4b1d49547b1254889a3e5132a67841, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - PixelSnap: 0
@@ -79,22 +94,32 @@ Material:
     - _EnableExternalAlpha: 0
     - _FrostStrength: 0.38
     - _GlassOpacity: 0.512
+    - _MaskSoftness: 0.369
+    - _MaskThreshold: 0
+    - _OverlayScale: 1
+    - _OverlayStrength: 1
+    - _OverlayStrength2: 1
     - _QueueOffset: -13
     - _SampleGI: 0
     - _SrcBlend: 5
     - _SrcBlendAlpha: 1
     - _Surface: 1
     - _UseOpaqueTextureFallback: 0
+    - _UseSpriteAlphaAsMask: 1
     - _XRMotionVectorsPass: 1
     - _ZWrite: 0
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BlurMaskOffset: {r: 1.49, g: 0, b: 0, a: 0}
     - _BlurMaskTiling: {r: 5, g: 5, b: 0, a: 0}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0, g: 0.9372196, b: 1, a: 1}
     - _FrostColor: {r: 0, g: 0.55049276, b: 1, a: 1}
     - _FrostMaskOffset: {r: 0, g: 0, b: 0, a: 0}
     - _FrostMaskTiling: {r: 1, g: 1, b: 0, a: 0}
+    - _OverlayColor: {r: 0, g: 0.9200537, b: 1, a: 1}
+    - _OverlayColor2: {r: 1, g: 1, b: 1, a: 1}
+    - _OverlayWorldOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _OverlayWorldTiling: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
