@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34cdb16ba66f3394ca9d5fbeb985b8db, type: 3}
   m_Name: Glass Tile
   m_EditorClassIdentifier: 
+  tileMaterial: {fileID: 2100000, guid: e439529e4f109a44fa3f375cc4ed10fc, type: 2}
   colorRuleset:
-    rid: 1021877479918010515
+    rid: 8850482960931750278
   topLeftCorner: {fileID: 120667313, guid: eeb43e0ebd4b7a047a883b2e77204591, type: 3}
   topRightCorner: {fileID: 262520162, guid: eeb43e0ebd4b7a047a883b2e77204591, type: 3}
   bottomLeftCorner: {fileID: -1553399037, guid: eeb43e0ebd4b7a047a883b2e77204591, type: 3}
@@ -47,9 +48,8 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 1021877479918010515
-      type: {class: CheckerboardColorRuleSet, ns: Game, asm: Game}
+    - rid: 8850482960931750278
+      type: {class: SingleColorRuleSet, ns: Game, asm: Game}
       data:
         blendMode: 0
-        color1: {r: 1, g: 1, b: 1, a: 0.7372549}
-        color2: {r: 1, g: 1, b: 1, a: 0.7372549}
+        color: {r: 0, g: 0, b: 0, a: 0}

@@ -18,15 +18,19 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 57518144097086d48b74e6e8f6400ad1, type: 2}
     - target: {fileID: 2395681802986520704, guid: 6f18e130bf811584b8ef0f44cfd6bd9e, type: 3}
       propertyPath: ShapeModule.radius.value
-      value: 0.03
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2395681802986520704, guid: 6f18e130bf811584b8ef0f44cfd6bd9e, type: 3}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2395681802986520704, guid: 6f18e130bf811584b8ef0f44cfd6bd9e, type: 3}
       propertyPath: InitialModule.startSize.scalar
-      value: 2
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2395681802986520704, guid: 6f18e130bf811584b8ef0f44cfd6bd9e, type: 3}
       propertyPath: InitialModule.startSize.minScalar
-      value: 2
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2395681802986520704, guid: 6f18e130bf811584b8ef0f44cfd6bd9e, type: 3}
       propertyPath: InitialModule.startSpeed.minScalar
@@ -34,7 +38,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2395681802986520704, guid: 6f18e130bf811584b8ef0f44cfd6bd9e, type: 3}
       propertyPath: EmissionModule.m_Bursts.Array.data[0].countCurve.scalar
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 9109221813558176859, guid: 6f18e130bf811584b8ef0f44cfd6bd9e, type: 3}
       propertyPath: m_LocalPosition.x

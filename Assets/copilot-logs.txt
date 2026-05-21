@@ -80,3 +80,4 @@
 [2026-05-20 21:58:59] - Added a configurable hue shift strength property to SpriteHueShift.shader so hue shifting can be blended with the original sprite color instead of always applying at full intensity.
 [2026-05-20 22:01:08] - Fixed Disco Ball combo intro visuals in PowerUpHandler by reapplying the resolved combo merge sprite after restoring the persistent merged element, preventing it from reverting to the normal Disco Ball sprite before activation.
 [2026-05-21 00:00:00] - Updated glass behavior so adjacent matches crack it, gravity drops no longer damage it, and direct power-up clears now damage glass cells they hit.
+[2026-05-21 00:10:00] - Added URP SpriteBlurredGlass shader with screen-space tiled blur/frost masks, sprite-background blur blending, and sorting-layer or opaque-texture scene sampling options.

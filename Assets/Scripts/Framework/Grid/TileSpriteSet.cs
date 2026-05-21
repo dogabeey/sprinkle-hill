@@ -8,6 +8,7 @@ namespace Game
     [CreateAssetMenu(fileName = "TileSpriteSet", menuName = "Game/Tile Sprite Set", order = 2)]
     public class TileSpriteSet : ScriptableObject
     {
+        public Material tileMaterial;
         [SerializeReference] public ColorRuleSet colorRuleset;
         [PreviewField] public Sprite topLeftCorner;
         [PreviewField] public Sprite topRightCorner;
@@ -55,7 +56,7 @@ namespace Game
 
         public Material GetMaterialForTile(Vector2Int coordinates, Grid3D.GridCell cell, Material currentMaterial)
         {
-            if (colorRuleset == null)
+            if (tileMaterial == null)
                 return currentMaterial;
 
             Material ruleMaterial = colorRuleset.GetTileMaterial(coordinates, cell);
