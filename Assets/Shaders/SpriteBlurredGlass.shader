@@ -1,218 +1,195 @@
-Shader "Universal Render Pipeline/Sprites/BlurredGlass"
+Shader "Custom/URP/SpriteIceEffect"
 {
     Properties
     {
-        [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
-        _Color ("Tint", Color) = (1,1,1,1)
+        [MainTexture] _MainTex ("Sprite Texture", 2D) = "white" {}
+        [MainColor] _Color ("Tint", Color) = (1,1,1,1)
 
-        _BlurMask ("Blur Mask", 2D) = "white" {}
-        _BlurMaskTiling ("Blur Mask Tiling", Vector) = (1,1,0,0)
-        _BlurMaskOffset ("Blur Mask Offset", Vector) = (0,0,0,0)
-        _BlurStrength ("Blur Strength", Range(0, 8)) = 1
-        _BlurSamples ("Blur Samples", Range(0, 1)) = 1
-
-        _FrostMask ("Frost Mask", 2D) = "white" {}
-        _FrostMaskTiling ("Frost Mask Tiling", Vector) = (1,1,0,0)
-        _FrostMaskOffset ("Frost Mask Offset", Vector) = (0,0,0,0)
-        _FrostStrength ("Frost Strength", Range(0, 1)) = 0.5
+        _IceColor ("Ice Color", Color) = (0.6, 0.9, 1.0, 1.0)
         _FrostColor ("Frost Color", Color) = (1,1,1,1)
 
-        _GlassOpacity ("Glass Opacity", Range(0, 1)) = 0.35
-        _BackgroundBlend ("Background Blend", Range(0, 1)) = 1
-        [Toggle] _UseOpaqueTextureFallback ("Use Opaque Texture Fallback", Float) = 0
+        _NoiseTex ("Noise Texture", 2D) = "white" {}
+        _CrackTex ("Crack Texture", 2D) = "black" {}
 
-        [MaterialToggle] PixelSnap ("Pixel Snap", Float) = 0
-        [HideInInspector] _RendererColor ("RendererColor", Color) = (1,1,1,1)
-        [PerRendererData] _AlphaTex ("External Alpha", 2D) = "white" {}
-        [PerRendererData] _EnableExternalAlpha ("Enable External Alpha", Float) = 0
+        _FreezeAmount ("Freeze Amount", Range(0,1)) = 1
+        _EdgeFreeze ("Edge Freeze", Range(0,5)) = 2
+
+        _NoiseScale ("Noise Scale", Float) = 4
+        _NoiseStrength ("Noise Strength", Range(0,1)) = 0.3
+        _NoiseSpeed ("Noise Speed", Float) = 0.15
+
+        _ShimmerStrength ("Shimmer Strength", Range(0,2)) = 0.5
+        _ShimmerSpeed ("Shimmer Speed", Float) = 2
+
+        _CrackStrength ("Crack Strength", Range(0,1)) = 0.5
+        _EmissionStrength ("Emission Strength", Range(0,5)) = 1
     }
 
     SubShader
     {
         Tags
         {
-            "Queue"="Transparent"
-            "IgnoreProjector"="True"
-            "RenderType"="Transparent"
-            "PreviewType"="Plane"
-            "CanUseSpriteAtlas"="True"
             "RenderPipeline"="UniversalPipeline"
+            "Queue"="Transparent"
+            "RenderType"="Transparent"
         }
 
-        Cull Off
-        Lighting Off
-        ZWrite Off
         Blend SrcAlpha OneMinusSrcAlpha
+        Cull Off
+        ZWrite Off
 
         Pass
         {
+            Name "SpriteIce"
+
             HLSLPROGRAM
+
             #pragma vertex vert
             #pragma fragment frag
-            #pragma multi_compile_instancing
 
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
             struct Attributes
             {
                 float4 positionOS : POSITION;
-                float2 uv         : TEXCOORD0;
-                float4 color      : COLOR;
-                UNITY_VERTEX_INPUT_INSTANCE_ID
+                float2 uv : TEXCOORD0;
+                float4 color : COLOR;
             };
 
             struct Varyings
             {
-                float4 positionCS     : SV_POSITION;
-                float2 uv             : TEXCOORD0;
-                float4 color          : COLOR;
-                float4 screenPosition : TEXCOORD1;
-                UNITY_VERTEX_OUTPUT_STEREO
+                float4 positionHCS : SV_POSITION;
+                float2 uv : TEXCOORD0;
+                float4 color : COLOR;
+                float4 screenPos : TEXCOORD1;
             };
 
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
-            TEXTURE2D(_BlurMask);
-            SAMPLER(sampler_BlurMask);
-            TEXTURE2D(_FrostMask);
-            SAMPLER(sampler_FrostMask);
 
-            TEXTURE2D_X(_CameraOpaqueTexture);
-            SAMPLER(sampler_CameraOpaqueTexture);
-            TEXTURE2D_X(_CameraSortingLayerTexture);
-            SAMPLER(sampler_CameraSortingLayerTexture);
+            TEXTURE2D(_NoiseTex);
+            SAMPLER(sampler_NoiseTex);
+
+            TEXTURE2D(_CrackTex);
+            SAMPLER(sampler_CrackTex);
 
             CBUFFER_START(UnityPerMaterial)
                 float4 _MainTex_ST;
-                half4 _Color;
-                half4 _RendererColor;
+                float4 _Color;
+                float4 _IceColor;
+                float4 _FrostColor;
 
-                float4 _BlurMaskTiling;
-                float4 _BlurMaskOffset;
-                float _BlurStrength;
-                float _BlurSamples;
+                float _FreezeAmount;
+                float _EdgeFreeze;
 
-                float4 _FrostMaskTiling;
-                float4 _FrostMaskOffset;
-                half _FrostStrength;
-                half4 _FrostColor;
+                float _NoiseScale;
+                float _NoiseStrength;
+                float _NoiseSpeed;
 
-                half _GlassOpacity;
-                half _BackgroundBlend;
-                half _UseOpaqueTextureFallback;
+                float _ShimmerStrength;
+                float _ShimmerSpeed;
+
+                float _CrackStrength;
+                float _EmissionStrength;
             CBUFFER_END
-
-            float2 GetScreenUV(float4 screenPosition)
-            {
-                float2 uv = screenPosition.xy / max(screenPosition.w, 0.0001);
-                #if UNITY_UV_STARTS_AT_TOP
-                uv.y = 1.0 - uv.y;
-                #endif
-                return uv;
-            }
-
-            float2 GetScreenTiledUV(float2 screenUV, float4 tiling, float4 offset)
-            {
-                return screenUV * tiling.xy + offset.xy;
-            }
-
-            half SampleBlurMask(float2 screenUV)
-            {
-                float2 blurMaskUV = GetScreenTiledUV(screenUV, _BlurMaskTiling, _BlurMaskOffset);
-                return SAMPLE_TEXTURE2D(_BlurMask, sampler_BlurMask, blurMaskUV).r;
-            }
-
-            half SampleFrostMask(float2 screenUV)
-            {
-                float2 frostMaskUV = GetScreenTiledUV(screenUV, _FrostMaskTiling, _FrostMaskOffset);
-                return SAMPLE_TEXTURE2D(_FrostMask, sampler_FrostMask, frostMaskUV).r;
-            }
-
-            half3 SampleSceneColor(float2 screenUV)
-            {
-                if (_UseOpaqueTextureFallback > 0.5h)
-                    return SAMPLE_TEXTURE2D_X(_CameraOpaqueTexture, sampler_CameraOpaqueTexture, screenUV).rgb;
-
-                return SAMPLE_TEXTURE2D_X(_CameraSortingLayerTexture, sampler_CameraSortingLayerTexture, screenUV).rgb;
-            }
-
-            half3 SampleSceneBlur(float2 screenUV, float2 texelSize, float blurRadius, half blurMask, half quality)
-            {
-                float2 blurOffset = texelSize * blurRadius * blurMask;
-                half3 center = SampleSceneColor(screenUV);
-
-                if (blurMask <= 0.001h || blurRadius <= 0.001)
-                    return center;
-
-                half3 blurred = center;
-                half weight = 1.0h;
-
-                half3 crossBlur =
-                    SampleSceneColor(screenUV + float2( blurOffset.x, 0.0)) +
-                    SampleSceneColor(screenUV + float2(-blurOffset.x, 0.0)) +
-                    SampleSceneColor(screenUV + float2(0.0,  blurOffset.y)) +
-                    SampleSceneColor(screenUV + float2(0.0, -blurOffset.y));
-
-                blurred += crossBlur;
-                weight += 4.0h;
-
-                if (quality > 0.5)
-                {
-                    half2 diagonalOffset = blurOffset * 0.70710678;
-                    blurred +=
-                        SampleSceneColor(screenUV + float2( diagonalOffset.x,  diagonalOffset.y)) +
-                        SampleSceneColor(screenUV + float2(-diagonalOffset.x,  diagonalOffset.y)) +
-                        SampleSceneColor(screenUV + float2( diagonalOffset.x, -diagonalOffset.y)) +
-                        SampleSceneColor(screenUV + float2(-diagonalOffset.x, -diagonalOffset.y));
-                    weight += 4.0h;
-                }
-
-                return blurred / max(weight, 1.0h);
-            }
 
             Varyings vert(Attributes IN)
             {
                 Varyings OUT;
-                UNITY_SETUP_INSTANCE_ID(IN);
-                UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
 
-                VertexPositionInputs positionInputs = GetVertexPositionInputs(IN.positionOS.xyz);
-                OUT.positionCS = positionInputs.positionCS;
-                OUT.screenPosition = ComputeScreenPos(positionInputs.positionCS);
+                OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
                 OUT.uv = TRANSFORM_TEX(IN.uv, _MainTex);
-                OUT.color = IN.color * _Color * _RendererColor;
+                OUT.color = IN.color;
+                OUT.screenPos = ComputeScreenPos(OUT.positionHCS);
+
                 return OUT;
             }
 
             half4 frag(Varyings IN) : SV_Target
             {
-                half4 spriteSample = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.uv);
-                half4 spriteColor = spriteSample * IN.color;
+                float2 uv = IN.uv;
 
-                float2 screenUV = GetScreenUV(IN.screenPosition);
-                float2 opaqueTexelSize = _ScaledScreenParams.zw;
+                half4 baseCol = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, uv);
+                baseCol *= _Color;
+                baseCol *= IN.color;
 
-                half blurMask = SampleBlurMask(screenUV);
-                half frostMask = SampleFrostMask(screenUV);
+                float alpha = baseCol.a;
 
-                half3 blurredScene = SampleSceneBlur(screenUV, opaqueTexelSize, _BlurStrength, blurMask, _BlurSamples);
-                half3 sceneThroughGlass = lerp(spriteColor.rgb, blurredScene, saturate(_BackgroundBlend));
+                // Animated noise
+                float2 noiseUV = uv * _NoiseScale;
+                noiseUV += float2(_Time.y * _NoiseSpeed,
+                                  _Time.y * _NoiseSpeed * 0.5);
 
-                half frostAmount = saturate(frostMask * _FrostStrength);
-                half3 frostedSprite = lerp(spriteColor.rgb, _FrostColor.rgb * spriteColor.rgb, frostAmount);
+                float noise =
+                    SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, noiseUV).r;
 
-                half spriteAlpha = spriteColor.a;
-                half glassAlpha = saturate(spriteAlpha * _GlassOpacity);
-                half visibleBackgroundFactor = saturate((1.0h - spriteAlpha) * blurMask);
+                // Crack texture
+                float crack =
+                    SAMPLE_TEXTURE2D(_CrackTex, sampler_CrackTex, uv * 2.0).r;
 
-                half3 finalRgb = lerp(frostedSprite, sceneThroughGlass, visibleBackgroundFactor);
-                half finalAlpha = saturate(glassAlpha + visibleBackgroundFactor * _BackgroundBlend);
+                // Edge freezing
+                float2 centeredUV = abs(uv - 0.5) * 2.0;
 
-                return half4(finalRgb, finalAlpha);
+                float edge =
+                    saturate(pow(max(centeredUV.x, centeredUV.y),
+                                   _EdgeFreeze));
+
+                // Freeze mask
+                float freezeMask =
+                    saturate(_FreezeAmount +
+                             edge * 0.5 +
+                             noise * 0.2);
+
+                // Frost overlay
+                float2 screenUV = IN.screenPos.xy / max(IN.screenPos.w, 0.0001);
+                float2 shimmerNoiseUV = screenUV * _NoiseScale;
+                shimmerNoiseUV += float2(_Time.y * _NoiseSpeed,
+                                         _Time.y * _NoiseSpeed * 0.5);
+                float shimmerNoise =
+                    SAMPLE_TEXTURE2D(_NoiseTex, sampler_NoiseTex, shimmerNoiseUV).r;
+
+                float frost = noise * freezeMask;
+
+                // Shimmer
+                float shimmer =
+                    sin((screenUV.x + screenUV.y + _Time.y * _ShimmerSpeed) * 15.0);
+
+                shimmer = saturate(shimmer);
+                shimmer *= shimmerNoise;
+                shimmer *= _ShimmerStrength;
+
+                // Ice tint
+                float3 iceTint =
+                    lerp(baseCol.rgb,
+                         _IceColor.rgb,
+                         freezeMask);
+
+                // Frost blend
+                iceTint =
+                    lerp(iceTint,
+                         _FrostColor.rgb,
+                         frost * _NoiseStrength);
+
+                // Cracks
+                iceTint *=
+                    lerp(1.0,
+                         crack,
+                         _CrackStrength * freezeMask);
+
+                // Emission
+                float3 emission =
+                    _IceColor.rgb *
+                    shimmer *
+                    _EmissionStrength;
+
+                float3 finalColor = iceTint + emission;
+
+                return half4(finalColor, alpha);
             }
+
             ENDHLSL
         }
     }
 
-    Fallback "Sprites/Default"
+    FallBack "Sprites/Default"
 }

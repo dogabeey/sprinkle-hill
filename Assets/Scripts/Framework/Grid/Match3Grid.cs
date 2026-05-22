@@ -57,6 +57,7 @@ namespace Game
         private static readonly CurrencyModel MatchRewardCurrency;
         private int currentComboCount = 0;
         private PowerUpHandler powerUpHandler;
+        private readonly Dictionary<Vector2Int, ParticleSystem> activeCellFeatureIdleParticles = new Dictionary<Vector2Int, ParticleSystem>();
 
         private LevelScene_Match3Game Match3Level => GameManager.Instance != null ? GameManager.Instance.CurrentLevel as LevelScene_Match3Game : null;
 
@@ -70,6 +71,71 @@ namespace Game
             fx.Play();
             float lifeTime = fx.main.duration + fx.main.startLifetime.constantMax + 0.2f;
             Destroy(fx.gameObject, lifeTime);
+        }
+
+        private void SyncCellFeatureIdleParticleAt(Vector2Int pos)
+        {
+            GridCell cell = GetCell(pos);
+            CellFeature feature = cell != null ? cell.cellFeature : null;
+
+            if (feature == null || feature.idleParticleEffect == null)
+            {
+                StopCellFeatureIdleParticleAt(pos);
+                return;
+            }
+
+            if (!generatedTiles.TryGetValue(pos, out GridCellController tile) || tile == null)
+            {
+                StopCellFeatureIdleParticleAt(pos);
+                return;
+            }
+
+            if (activeCellFeatureIdleParticles.TryGetValue(pos, out ParticleSystem existing) && existing != null)
+            {
+                if (existing.transform.parent == tile.transform)
+                    return;
+
+                Destroy(existing.gameObject);
+                activeCellFeatureIdleParticles.Remove(pos);
+            }
+
+            ParticleSystem idleFx = Instantiate(feature.idleParticleEffect, tile.transform.position, Quaternion.identity, tile.transform);
+            idleFx.Play();
+            activeCellFeatureIdleParticles[pos] = idleFx;
+        }
+
+        private void StopCellFeatureIdleParticleAt(Vector2Int pos)
+        {
+            if (!activeCellFeatureIdleParticles.TryGetValue(pos, out ParticleSystem fx))
+                return;
+
+            if (fx != null)
+                Destroy(fx.gameObject);
+
+            activeCellFeatureIdleParticles.Remove(pos);
+        }
+
+        private void SyncAllCellFeatureIdleParticles()
+        {
+            EnsureGridCells();
+
+            List<Vector2Int> stalePositions = new List<Vector2Int>();
+            foreach (Vector2Int trackedPos in activeCellFeatureIdleParticles.Keys)
+            {
+                if (trackedPos.x < 0 || trackedPos.y < 0 || trackedPos.x >= gridSize.x || trackedPos.y >= gridSize.y)
+                    stalePositions.Add(trackedPos);
+            }
+
+            for (int i = 0; i < stalePositions.Count; i++)
+                StopCellFeatureIdleParticleAt(stalePositions[i]);
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    SyncCellFeatureIdleParticleAt(new Vector2Int(x, y));
+                }
+            }
         }
 
         public void PlayCellFeatureDestroyEffectAt(CellFeature feature, Vector2Int pos)
@@ -179,6 +245,7 @@ namespace Game
         {
             LockedAreaFeature.InitializeForGrid(this);
             RefreshAllGlassDamageIndicators();
+            SyncAllCellFeatureIdleParticles();
         }
 
         // ------------------------------------------------------------------
@@ -234,6 +301,7 @@ namespace Game
                         continue;
 
                     tileGenerationData.ApplyFeatureSprite(tile, gridCells, refreshPos.x, refreshPos.y, TileData.DrawStartingCorner.TopLeft);
+                    SyncCellFeatureIdleParticleAt(refreshPos);
 
                     if (tile.damageIndicator != null)
                     {
@@ -483,6 +551,7 @@ namespace Game
 
                         PlayCellFeatureDestroyEffect(destroyedFeature, pos);
                         RefreshCellFeatureVisual(pos);
+                        StopCellFeatureIdleParticleAt(pos);
                     }
                 }
                 else
@@ -1469,6 +1538,7 @@ namespace Game
                 EnsureAtLeastOneMoveAvailable(elementPool);
 
             RefreshAllGlassDamageIndicators();
+            SyncAllCellFeatureIdleParticles();
         }
 
         private void InitializeBreakableWallVisuals()

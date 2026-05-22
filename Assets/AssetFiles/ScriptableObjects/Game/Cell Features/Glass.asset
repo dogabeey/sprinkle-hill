@@ -15,6 +15,7 @@ MonoBehaviour:
   tileSpriteSet: {fileID: 11400000, guid: 9712bc8a119975a4fa5e866d3dabf47f, type: 2}
   featureIcon: {fileID: 444081177, guid: eeb43e0ebd4b7a047a883b2e77204591, type: 3}
   spriteLayerIndex: 4
+  idleParticleEffect: {fileID: 0}
   destroyParticleEffect: {fileID: 9101700452171790528, guid: 1bef21c7670fdbf47b1c1bef147242ad, type: 3}
   defaultGroupHealth: 4
   damageSprites:

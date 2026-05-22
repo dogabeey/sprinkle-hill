@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd567b4ecb2599643a9d8e24b3610941, type: 3}
-  m_Name: Lemon
+  m_Name: Macaron
   m_EditorClassIdentifier: 
-  displayName: Lemon
-  displayColor: {r: 1, g: 0.9372188, b: 0, a: 0}
-  displayIcon: {fileID: -163688047, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
-  breakableWallOverride: {fileID: -657277845, guid: d773595130d903044a6b836c8069db57, type: 3}
+  displayName: Macaron
+  displayColor: {r: 0.3306582, g: 0.8679245, b: 0.07778566, a: 0}
+  displayIcon: {fileID: 1014660156, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
+  breakableWallOverride: {fileID: -436425150, guid: d773595130d903044a6b836c8069db57, type: 3}
   elementMesh: {fileID: 0}
   elementMaterial: {fileID: 0}
   gridCoverage: {x: 1, y: 1}
+  behaviorFlags: 0
   defaultIdleAnimation: idle
   animationController: {fileID: 0}
   cauldronChargeRequired: 8

@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd567b4ecb2599643a9d8e24b3610941, type: 3}
-  m_Name: Strawberry
+  m_Name: Cake
   m_EditorClassIdentifier: 
-  displayName: Strawberry
+  displayName: Cake
   displayColor: {r: 1, g: 0.042452812, b: 0.042452812, a: 0}
-  displayIcon: {fileID: 1038001037, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
+  displayIcon: {fileID: 1685303835, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
   breakableWallOverride: {fileID: -2113816928, guid: d773595130d903044a6b836c8069db57, type: 3}
   elementMesh: {fileID: 0}
   elementMaterial: {fileID: 0}
   gridCoverage: {x: 1, y: 1}
+  behaviorFlags: 0
   defaultIdleAnimation: idle
   animationController: {fileID: 0}
   cauldronChargeRequired: 8

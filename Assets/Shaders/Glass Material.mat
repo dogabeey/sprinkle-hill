@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Glass Material
-  m_Shader: {fileID: 4800000, guid: ce499fb1624f689468c9a4afb4864e4f, type: 3}
+  m_Shader: {fileID: 4800000, guid: d503d04516ce0104bbc506217c9c71f0, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -52,12 +52,20 @@ Material:
         m_Texture: {fileID: 2800000, guid: 0706ced93314bd44f9baefb45b85e4a8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _CrackTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 1}
     - _FrostMask:
         m_Texture: {fileID: 2800000, guid: 0706ced93314bd44f9baefb45b85e4a8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: eeb43e0ebd4b7a047a883b2e77204591, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: 0706ced93314bd44f9baefb45b85e4a8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OverlayMaskTex:
@@ -87,20 +95,29 @@ Material:
     - _BlendOp: 0
     - _BlurSamples: 0.548
     - _BlurStrength: 3.52
+    - _CrackStrength: 0
     - _Cull: 2
     - _Cutoff: 0.5
     - _DstBlend: 10
     - _DstBlendAlpha: 10
+    - _EdgeFreeze: 5
+    - _EmissionStrength: 1.29
     - _EnableExternalAlpha: 0
+    - _FreezeAmount: 1
     - _FrostStrength: 0.38
     - _GlassOpacity: 0.512
     - _MaskSoftness: 0.369
     - _MaskThreshold: 0
+    - _NoiseScale: 4
+    - _NoiseSpeed: 0.13
+    - _NoiseStrength: 1
     - _OverlayScale: 1
     - _OverlayStrength: 1
     - _OverlayStrength2: 1
     - _QueueOffset: -13
     - _SampleGI: 0
+    - _ShimmerSpeed: 0
+    - _ShimmerStrength: 1.224
     - _SrcBlend: 5
     - _SrcBlendAlpha: 1
     - _Surface: 1
@@ -112,12 +129,13 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _BlurMaskOffset: {r: 1.49, g: 0, b: 0, a: 0}
     - _BlurMaskTiling: {r: 5, g: 5, b: 0, a: 0}
-    - _Color: {r: 0, g: 0.9372196, b: 1, a: 1}
-    - _FrostColor: {r: 0, g: 0.55049276, b: 1, a: 1}
+    - _Color: {r: 0.11792451, g: 0.93699443, b: 1, a: 1}
+    - _FrostColor: {r: 0.2216981, g: 0.7721522, b: 1, a: 1}
     - _FrostMaskOffset: {r: 0, g: 0, b: 0, a: 0}
     - _FrostMaskTiling: {r: 1, g: 1, b: 0, a: 0}
-    - _OverlayColor: {r: 0, g: 0.9200537, b: 1, a: 1}
-    - _OverlayColor2: {r: 1, g: 1, b: 1, a: 1}
+    - _IceColor: {r: 0.5518868, g: 0.9662238, b: 1, a: 1}
+    - _OverlayColor: {r: 0, g: 0.90434813, b: 1, a: 1}
+    - _OverlayColor2: {r: 0, g: 0.8239019, b: 1, a: 1}
     - _OverlayWorldOffset: {r: 0, g: 0, b: 0, a: 0}
     - _OverlayWorldTiling: {r: 0.1, g: 0.1, b: 0, a: 0}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}

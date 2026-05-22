@@ -85,3 +85,5 @@
 [2026-05-21 00:40:00] - Added second local overlay mask texture support to SpriteSeamlessOverlayMask shader and combined both masks multiplicatively for layered mask control.
 [2026-05-21 00:50:00] - Updated SpriteSeamlessOverlayMask to replace the second mask with a second world-space overlay texture layer (with independent color/strength) blended on top through the existing local overlay mask.
 [2026-05-21 01:00:00] - Updated SpriteSeamlessOverlayMask so the second overlay texture uses the same world-space UV and sampler behavior as the first overlay layer to remove quadrant-split appearance.
+[2026-05-21 01:10:00] - Implemented CellFeature idle particle lifecycle in Match3Grid: per-cell idle effects now spawn for active cell features, stay attached to the tile, refresh with feature visuals, and are cleaned up when features are removed/destroyed.
+[2026-05-22 15:56:34] - Updated SpriteBlurredGlass shader shimmer to use screen-space phase and screen-space noise for seamless shimmer across adjacent sprites.
