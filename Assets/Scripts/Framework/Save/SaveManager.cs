@@ -111,8 +111,11 @@ namespace Game
             {
                 foreach (SaveData saveData in saveDatas)
                 {
-                    Dictionary<string, object> saveJson = new Dictionary<string, object>();
                     string saveString = saveData.saveDataType.ToString();
+                    string directoryPath = GetSaveFilePath(saveData.isGlobalProfile);
+                    string filePath = $"{directoryPath}/{saveString}.json";
+                    Dictionary<string, object> saveJson = LoadExistingSaveDictionary(filePath);
+
                     for (int i = 0; i < saveables.Count; i++)
                     {
                         if (saveables[i].SaveDataType != saveData.saveDataType)
@@ -128,14 +131,27 @@ namespace Game
                         {
                             saveJson.Add(saveables[i].SaveId, saveables[i].Save());
                         }
-                        System.IO.Directory.CreateDirectory($"{GetSaveFilePath(saveData.isGlobalProfile)}");
-
-                        System.IO.File.WriteAllText($"{GetSaveFilePath(saveData.isGlobalProfile)}/{saveString}.json", JsonConvert.SerializeObject(saveJson));
                     }
+
+                    System.IO.Directory.CreateDirectory(directoryPath);
+                    System.IO.File.WriteAllText(filePath, JsonConvert.SerializeObject(saveJson));
                 }
             }
 
             onSaveComplete?.Invoke();
+        }
+
+        private static Dictionary<string, object> LoadExistingSaveDictionary(string filePath)
+        {
+            if (!System.IO.File.Exists(filePath))
+                return new Dictionary<string, object>();
+
+            string fileContents = System.IO.File.ReadAllText(filePath);
+            if (string.IsNullOrWhiteSpace(fileContents))
+                return new Dictionary<string, object>();
+
+            Dictionary<string, object> existingSave = JsonConvert.DeserializeObject<Dictionary<string, object>>(fileContents);
+            return existingSave ?? new Dictionary<string, object>();
         }
 
 

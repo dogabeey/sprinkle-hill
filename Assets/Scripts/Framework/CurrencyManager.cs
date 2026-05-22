@@ -38,6 +38,17 @@ namespace Game
 
         public SaveDataType SaveDataType => SaveDataType.WorldProgression;
 
+        protected override void Awake()
+        {
+            base.Awake();
+            SaveManager.Instance.Register(this);
+
+            if (!Load(null, null))
+            {
+                ApplyDefaultCurrencyAmounts();
+            }
+        }
+
         private void OnEnable()
         {
             EventManager.StartListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
@@ -75,7 +86,6 @@ namespace Game
 
         private void Start()
         {
-            SaveManager.Instance.Register(this);
             currencyElements.Clear();
 
             foreach (var currencyInfo in currencyInfos)
@@ -85,6 +95,21 @@ namespace Game
                 instantiatedElement.currencyText = instantiatedElement.GetComponentInChildren<TMP_Text>();
                 StartCoroutine(instantiatedElement.UpdateCurrencyUI(currencyInfo.currencyModel, currencyInfo.amount));
                 currencyElements.Add(instantiatedElement);
+            }
+        }
+
+        private void ApplyDefaultCurrencyAmounts()
+        {
+            if (currencyInfos == null)
+                return;
+
+            for (int i = 0; i < currencyInfos.Count; i++)
+            {
+                CurrencyInfo currencyInfo = currencyInfos[i];
+                if (currencyInfo?.currencyModel == null)
+                    continue;
+
+                currencyInfo.amount = currencyInfo.currencyModel.startingAmount;
             }
         }
 
@@ -213,6 +238,8 @@ namespace Game
                     }
                 }
             }
+
+            onLoadSuccess?.Invoke();
             return true;
         }
     }

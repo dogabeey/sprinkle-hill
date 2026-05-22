@@ -77,6 +77,11 @@ namespace Game
         public void Init()
         {
             SaveManager.Instance.Register(this);
+
+            if (!Load(null, null))
+            {
+                currentCount = startingCount;
+            }
         }
 
         abstract public int GetCost();

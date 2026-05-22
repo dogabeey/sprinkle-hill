@@ -21,10 +21,14 @@ namespace Game
 
         internal List<ActionBarView> actionBarViews = new List<ActionBarView>();
 
+        private void Awake()
+        {
+
+            actionBarItemList.ForEach(actionBarItem => actionBarItem.Init());
+        }
         private void Start()
         {
             DrawUI();
-            actionBarItemList.ForEach(actionBarItem => actionBarItem.Init());
         }
 
         protected virtual void DrawUI()
