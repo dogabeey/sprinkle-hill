@@ -11,7 +11,7 @@ namespace Game
 
         public Button toggleSettingsButton;
         public GridLayoutGroup layoutGroup;
-        public Button restartButton;
+        public Button restartButton, nextLevelToggle;
         public Toggle musicToggle, sfxToggle, vibrationToggle, consentToggle;
 
         private void Awake()
@@ -58,6 +58,11 @@ namespace Game
                     AnalyticsManager.Instance.currentConsentState = EndUserConsent.GetConsentState();
                 }
             });
+            nextLevelToggle.onClick.AddListener(() =>
+            {
+                GameManager.Instance.LoadNextLevel();
+                ScreenManager.Instance.CloseAllScreens();
+            });
         }
 
         public override void InitUI(EventParam eventParam)
@@ -101,6 +106,9 @@ namespace Game
             sfxToggle.gameObject.SetActive(true);
             vibrationToggle.gameObject.SetActive(true);
             restartButton.gameObject.SetActive(true);
+            consentToggle.gameObject.SetActive(true);
+            // If the build is in developer mode, show the next level button
+            nextLevelToggle.gameObject.SetActive(Debug.isDebugBuild);
 
             yield return DOVirtual.Float(0, 50, 0.3f, (value) =>
             {

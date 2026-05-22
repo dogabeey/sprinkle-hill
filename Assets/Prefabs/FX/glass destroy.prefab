@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: glass destroy
       objectReference: {fileID: 0}
+    - target: {fileID: 1562228107864518133, guid: 6f18e130bf811584b8ef0f44cfd6bd9e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e439529e4f109a44fa3f375cc4ed10fc, type: 2}
     - target: {fileID: 2192144657987395655, guid: 6f18e130bf811584b8ef0f44cfd6bd9e, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 

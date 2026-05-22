@@ -49,21 +49,21 @@ Material:
     - _EmissionBase: 0
     - _EmissionMaskStrength: 1
     - _EnableExternalAlpha: 0
-    - _FlowIntensity: 2.07
+    - _FlowIntensity: 8
     - _FlowSharpness: 0.1
     - _GlitchContrast: 6.95
-    - _GlitchSpeed: 3.5
+    - _GlitchSpeed: 17.6
     - _GlitchStrength: 0
-    - _GlitchThreshold: 0.49
+    - _GlitchThreshold: 0.112
     - _PulseCurve: 3.64
     - _PulseMax: 1
     - _PulseMin: 0.05
     - _PulsePhase: 1.75
     - _PulseSpeed: 4
     - _SecondaryDistortionStrength: 0
-    - _StaticIntensity: 0.5
-    - _StaticNoiseTiling: 128
-    - _StaticScanDensity: 12.5
+    - _StaticIntensity: 2.34
+    - _StaticNoiseTiling: 1
+    - _StaticScanDensity: 96.9
     - _StaticScanSpeed: 7.3
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

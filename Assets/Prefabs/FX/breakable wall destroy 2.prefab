@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: breakable wall destroy 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1562228107864518133, guid: 6f18e130bf811584b8ef0f44cfd6bd9e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1eab0de3f05c478458040fcf07ea2b6a, type: 2}
     - target: {fileID: 2192144657987395655, guid: 6f18e130bf811584b8ef0f44cfd6bd9e, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34cdb16ba66f3394ca9d5fbeb985b8db, type: 3}
   m_Name: Electric Cell Tile Data
   m_EditorClassIdentifier: 
+  tileMaterial: {fileID: 2100000, guid: b89d20f6f855aab44a97cd037ca06884, type: 2}
   colorRuleset:
     rid: 8850482694404178011
   topLeftCorner: {fileID: 120667313, guid: eaaa9774a3baa604bb51951d080b9551, type: 3}
