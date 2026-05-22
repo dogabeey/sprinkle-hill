@@ -87,3 +87,4 @@
 [2026-05-21 01:00:00] - Updated SpriteSeamlessOverlayMask so the second overlay texture uses the same world-space UV and sampler behavior as the first overlay layer to remove quadrant-split appearance.
 [2026-05-21 01:10:00] - Implemented CellFeature idle particle lifecycle in Match3Grid: per-cell idle effects now spawn for active cell features, stay attached to the tile, refresh with feature visuals, and are cleaned up when features are removed/destroyed.
 [2026-05-22 15:56:34] - Updated SpriteBlurredGlass shader shimmer to use screen-space phase and screen-space noise for seamless shimmer across adjacent sprites.
+[2026-05-22 16:05:00] - Updated Match3Grid garbage bag gravity clearing so garbage bags also clear when the cell directly below is empty/outside grid, in addition to clearing at the bottom playable row.

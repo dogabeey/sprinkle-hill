@@ -2009,7 +2009,7 @@ namespace Game
                         GridElementInfo movingInfo = readCell?.elementInfo;
                         if (movingInfo?.elementData == null) continue;
 
-                    if (IsGarbageBagData(movingInfo.elementData) && readY == bottomMostNormalY)
+                    if (IsGarbageBagData(movingInfo.elementData) && ShouldGarbageBagClearAt(x, readY, bottomMostNormalY))
                     {
                         TriggerCellFeatureMatchedOverAt(readPos);
                         NotifyGarbageBagCleaned(readPos, movingInfo.elementData);
@@ -2041,7 +2041,7 @@ namespace Game
                         GridCell targetCell = GetCell(targetPos);
                         if (targetCell == null) continue;
 
-                        if (IsGarbageBagData(movingInfo.elementData) && targetY == bottomMostNormalY)
+                        if (IsGarbageBagData(movingInfo.elementData) && ShouldGarbageBagClearAt(x, targetY, bottomMostNormalY))
                         {
                             TriggerCellFeatureMatchedOverAt(readPos);
                             NotifyGarbageBagCleaned(targetPos, movingInfo.elementData);
@@ -2514,6 +2514,15 @@ namespace Game
             }
 
             return -1;
+        }
+
+        private bool ShouldGarbageBagClearAt(int x, int y, int bottomMostNormalY)
+        {
+            if (y == bottomMostNormalY)
+                return true;
+
+            GridCell belowCell = GetCell(new Vector2Int(x, y + 1));
+            return belowCell == null || belowCell.cellType == CellType.Empty;
         }
 
         private List<List<int>> BuildColumnSections(int x)
