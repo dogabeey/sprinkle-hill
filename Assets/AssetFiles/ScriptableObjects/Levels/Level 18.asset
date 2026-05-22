@@ -4430,7 +4430,7 @@ MonoBehaviour:
     requiredCount: 0
     generatedCount: {x: 0, y: 0}
     isCompleted: 0
-  - objectiveType: {fileID: 11400000, guid: e0d1cebd48e06954a806f8db005d56d5, type: 2}
+  - objectiveType: {fileID: 11400000, guid: bc27c85d73dea714589531fcf14549f0, type: 2}
     isProcedurallyGenerated: 0
     autoCountRequiredCount: 1
     tiedToLockedArea: 0

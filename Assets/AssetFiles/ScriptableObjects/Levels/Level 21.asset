@@ -5013,7 +5013,7 @@ MonoBehaviour:
   objectives:
   - objectiveType: {fileID: 11400000, guid: 597d5ed959f10e54eac8f874f1e6421d, type: 2}
     isProcedurallyGenerated: 0
-    autoCountRequiredCount: 0
+    autoCountRequiredCount: 1
     tiedToLockedArea: 0
     lockedAreaIndex: 0
     scriptableObjectParameter: {fileID: 0}
