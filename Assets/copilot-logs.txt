@@ -90,3 +90,4 @@
 [2026-05-22 16:05:00] - Updated Match3Grid garbage bag gravity clearing so garbage bags also clear when the cell directly below is empty/outside grid, in addition to clearing at the bottom playable row.
 [2026-05-23 00:23:36] - Fixed CurrencyManager loading by invoking Load during startup before building the UI, adding a default starting amount fallback, and restoring the missing load success callback.
 [2026-05-23 00:34:12] - Fixed CurrencyManager save/load persistence by registering/loading in Awake and updating SaveManager to preserve existing save blocks in shared save files.
+[2026-05-23 01:58:18] - Added OUTLET_CREATED event dispatch in Match3Grid when power outlet elements are generated on the board.

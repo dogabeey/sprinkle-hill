@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectiveTypeName: Power Outlet
   description: Activate %c outlet(s)
-  creationCountEvent: 0
-  completionEvent: 814
+  creationCountEvent: 814
+  completionEvent: 815
   objectiveTypeSprite: {fileID: -1294166768, guid: a46309d38df06264b96c750375a58bd1, type: 3}

@@ -1531,6 +1531,14 @@ namespace Game
                             paramScriptable: cell.elementInfo.elementData
                         ));
                     }
+
+                    if (IsPowerOutletData(cell.elementInfo.elementData))
+                    {
+                        EventManager.TriggerEvent(GameEvent.OUTLET_CREATED, new EventParam(
+                            vectorList: new Vector3[] { new Vector3(cell.coordinates.x, cell.coordinates.y, 0f) },
+                            paramScriptable: cell.elementInfo.elementData
+                        ));
+                    }
                 }
             }
 
