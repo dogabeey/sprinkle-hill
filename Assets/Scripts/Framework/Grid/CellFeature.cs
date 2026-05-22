@@ -16,6 +16,7 @@ namespace Game
         public TileSpriteSet tileSpriteSet;
         public Sprite featureIcon;
         public int spriteLayerIndex;
+        public ParticleSystem idleParticleEffect;
         public ParticleSystem destroyParticleEffect;
 
         /// <summary>
