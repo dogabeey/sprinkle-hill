@@ -1,15 +1,15 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine; using Game.EventManagement;
+using UnityEngine; 
+using Game.EventManagement;
 using UnityEngine.UI;
+using Game.Singleton;
 
 namespace Game
 {
-    public class ScreenManager : MonoBehaviour
-    {
-        public static ScreenManager Instance => GameManager.Instance.screenManager;
-
+    public class ScreenManager : SingletonComponent<ScreenManager>
+	{
         public Image backgroundImage; // This is toggled when a screen is open to darken the background.
 
         public List<GameScreen> screens = new List<GameScreen>();

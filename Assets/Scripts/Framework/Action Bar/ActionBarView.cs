@@ -80,9 +80,9 @@ namespace Game
 
         private void RefreshAllActionBarViews()
         {
-            if (GameManager.Instance != null && GameManager.Instance.actionBarManager != null)
+            if (GameManager.Instance != null && ActionBarManager.Instance != null)
             {
-                foreach (ActionBarView view in GameManager.Instance.actionBarManager.actionBarViews)
+                foreach (ActionBarView view in ActionBarManager.Instance.actionBarViews)
                 {
                     if (view != null)
                         view.DrawUI();

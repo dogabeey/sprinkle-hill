@@ -70,7 +70,7 @@ namespace Game
 
         public bool Load(Action onLoadSuccess = null, Action onLoadFail = null)
         {
-            JSONNode json = GameManager.Instance.saveManager.LoadSave(this);
+            JSONNode json = SaveManager.Instance.LoadSave(this);
 
             if (json == null)
             {

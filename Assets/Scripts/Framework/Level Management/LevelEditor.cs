@@ -905,7 +905,7 @@ namespace Game
                 if (value.elementInfo.isHidden)
                 {
                     Rect cornerRect = new Rect(elementRect.xMax - elementRect.width * 0.3f, elementRect.yMax - elementRect.height * 0.3f, elementRect.width * 0.3f, elementRect.height * 0.3f);
-                    DrawSprite(cornerRect, GameManager.Instance.gfxManager.hiddenIndicatorIcon);
+                    DrawSprite(cornerRect, Gfx.Instance.hiddenIndicatorIcon);
                 }
             }
         }
@@ -938,11 +938,11 @@ namespace Game
                     break;
                 case Grid3D.CellType.BreakableWall:
                     if(value.cellHealth <= 1)
-                        DrawSprite(rect, GameManager.Instance.gfxManager.breakableWallIcon);
+                        DrawSprite(rect, Gfx.Instance.breakableWallIcon);
                     else if (value.cellHealth == 2)
-                        DrawSprite(rect, GameManager.Instance.gfxManager.breakableWallIcon2);
+                        DrawSprite(rect, Gfx.Instance.breakableWallIcon2);
                     else if (value.cellHealth >= 3)
-                        DrawSprite(rect, GameManager.Instance.gfxManager.breakableWallIcon3);
+                        DrawSprite(rect, Gfx.Instance.breakableWallIcon3);
                     if (value.breakableWallElementCondition != null)
                         DrawSprite(rect, value.breakableWallElementCondition.breakableWallOverride);
                     break;

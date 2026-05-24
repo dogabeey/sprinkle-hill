@@ -114,7 +114,7 @@ namespace Game
 
         private void DirectiveTextAnim()
         {
-            var tutorialManager = GameManager.Instance.tutorialManager;
+            var tutorialManager = TutorialManager.Instance;
             if (tutorialManager != null && tutorialManager.directiveText != null)
             {
                 tutorialManager.directiveText.transform.DOKill();
@@ -176,7 +176,7 @@ namespace Game
 
         private void DirectiveTextAnim()
         {
-            var tutorialManager = GameManager.Instance.tutorialManager;
+            var tutorialManager = TutorialManager.Instance;
             if (tutorialManager != null && tutorialManager.directiveText != null)
             {
                 tutorialManager.directiveText.transform.DOKill();

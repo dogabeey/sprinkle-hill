@@ -1,4 +1,6 @@
-using UnityEngine; using Game.EventManagement;
+using UnityEngine; 
+using Game.EventManagement;
+using Game.Singleton;
 
 namespace Game
 {
@@ -15,7 +17,7 @@ namespace Game
         ConsentPopup,
     }
 
-    public class ConstantManager : MonoBehaviour
+    public class ConstantManager : SingletonComponent<ConstantManager>
     {
         [Header("General")]
         public float loadingScreenDuration = 1f;

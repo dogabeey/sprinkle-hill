@@ -39,9 +39,9 @@ namespace Game
         private void OnBuyButtonClicked(IBuyable.BuyBundle buyBundle)
         {
             GameObject objectSource = null;
-            if (buyBundle?.buyableReference is ActionBarItem actionBarItem && GameManager.Instance != null && GameManager.Instance.actionBarManager != null)
+            if (buyBundle?.buyableReference is ActionBarItem actionBarItem && GameManager.Instance != null && ActionBarManager.Instance != null)
             {
-                ActionBarView matchingActionBarView = GameManager.Instance.actionBarManager.GetActionBarView(actionBarItem);
+                ActionBarView matchingActionBarView = ActionBarManager.Instance.GetActionBarView(actionBarItem);
                 if (matchingActionBarView != null)
                     objectSource = matchingActionBarView.gameObject;
             }

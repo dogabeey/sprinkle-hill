@@ -95,7 +95,7 @@ namespace Game
 
             GridHelper.AnimateEmission(this, 1.5f, 0.2f);
 
-            ConstantManager constantManager = GameManager.Instance.constantManager;
+            ConstantManager constantManager = ConstantManager.Instance;
             Vector3 punchScale = constantManager.elementDestroyPunchScale * Vector3.one;
             float punchDuration = constantManager.elementDestroyPunchDuration;
             int punchVibrato = constantManager.elementDestroyPunchVibrato;

@@ -416,7 +416,7 @@ namespace Game
             if (GameManager.Instance == null)
                 return null;
 
-            return GameManager.Instance.actionBarManager;
+            return ActionBarManager.Instance;
         }
 
         private IEnumerable GetAllActionNames()

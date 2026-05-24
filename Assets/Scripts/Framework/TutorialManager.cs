@@ -5,13 +5,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEngine; using Game.EventManagement;
+using UnityEngine; 
+using Game.EventManagement;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using Game.Singleton;
 
 namespace Game
 {
-    public partial class TutorialManager : SerializedMonoBehaviour
+    public partial class TutorialManager : SingletonComponent<TutorialManager>
     {
         public List<TutorialStep> tutorialSteps = new List<TutorialStep>();
         public Transform animationObjectParent; // Parent for tutorial animation objects that is set at tutorialAnimation.tutorialObject. If null, animations will be parented to the first canvas in the scene.
@@ -32,6 +34,7 @@ namespace Game
 
         private void OnEnable()
         {
+
             UpdateSerializationDepths();
             ResetTutorialSteps();
 

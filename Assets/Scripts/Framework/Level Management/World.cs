@@ -39,7 +39,7 @@ namespace Game
 
         protected void Awake()
         {
-            GameManager.Instance.saveManager.Register(this);
+            SaveManager.Instance.Register(this);
             if(!Load())
             {
                 lastPlayedLevelIndex = 0;
@@ -64,7 +64,7 @@ namespace Game
 
         public bool Load(Action onLoadSuccess = null, Action onLoadFail = null)
         {
-            JSONNode saveData = GameManager.Instance.saveManager.LoadSave(this);
+            JSONNode saveData = SaveManager.Instance.LoadSave(this);
 
             if (saveData == null)
             {

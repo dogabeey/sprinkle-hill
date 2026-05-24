@@ -706,7 +706,7 @@ namespace Game
                 EventManager.TriggerEvent(GameEvent.ELEMENTS_SWAPPED, new EventParam(
                     vectorList: new Vector3[] { new Vector3(first.x, first.y, 0), new Vector3(second.x, second.y, 0) }
                 ));
-                GameManager.Instance.soundManager.Play(ConstantManager.SOUNDS.EFFECTS.ELEMENT_SWAP);
+                SoundManager.Instance.Play(ConstantManager.SOUNDS.EFFECTS.ELEMENT_SWAP);
                 GridHelper.TriggerHaptic(HapticModes.Select);
 
                 if ((PowerUpHandler.IsDiscoBall(firstType) && PowerUpHandler.IsDiscoBall(secondType)) ||
@@ -764,7 +764,7 @@ namespace Game
             EventManager.TriggerEvent(GameEvent.ELEMENTS_SWAPPED, new EventParam(
                 vectorList: new Vector3[] { new Vector3(first.x, first.y, 0), new Vector3(second.x, second.y, 0) }
             ));
-            GameManager.Instance.soundManager.Play(ConstantManager.SOUNDS.EFFECTS.ELEMENT_SWAP);
+            SoundManager.Instance.Play(ConstantManager.SOUNDS.EFFECTS.ELEMENT_SWAP);
             GridHelper.TriggerHaptic(HapticModes.Select);
             yield return StartCoroutine(MatchProcess(first, second));
         }
@@ -782,7 +782,7 @@ namespace Game
                 currentComboCount++;
                 GameObject matchOrigin = GetMatchOriginObject(matchedGroups);
                 RewardCurrencyForCombo(currentComboCount, matchOrigin);
-                GameManager.Instance.soundManager.Play(ConstantManager.SOUNDS.EFFECTS.MATCH, pitchOffset: currentComboCount * 0.1f);
+                SoundManager.Instance.Play(ConstantManager.SOUNDS.EFFECTS.MATCH, pitchOffset: currentComboCount * 0.1f);
                 GridHelper.TriggerHaptic(HapticModes.Confirm);
 
                 LevelScene_Match3Game level = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
@@ -973,8 +973,8 @@ namespace Game
                 }
             }
 
-            //GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is BombPlacementAction).CurrentCount--;
-            yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
+            //ActionBarManager.Instance.actionBarItemList.Find(item => item is BombPlacementAction).CurrentCount--;
+            yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
 
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
@@ -1031,7 +1031,7 @@ namespace Game
                     StartCoroutine(matchedElement.DestroyElement());
             }
 
-            yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
+            yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
 
@@ -1093,7 +1093,7 @@ namespace Game
                     StartCoroutine(matchedElement.DestroyElement());
             }
 
-            yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
+            yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
 
@@ -1149,7 +1149,7 @@ namespace Game
                 GridElement sparklingElement = sTile.GetComponentInChildren<GridElement>();
                 if (sparklingElement != null)
                     yield return sparklingElement.transform.DOLocalMove(tTile.transform.position - sTile.transform.position,
-                        GameManager.Instance.constantManager.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
+                        ConstantManager.Instance.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
             }
 
             // Collect convertible positions
@@ -1175,13 +1175,13 @@ namespace Game
             GridElement toDestroy = GetElementAt(sparklingPos);
             if (toDestroy != null) StartCoroutine(toDestroy.DestroyElement());
 
-            yield return new WaitForSeconds(GameManager.Instance.constantManager.matchClearDelay);
+            yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
             yield return StartCoroutine(MatchProcess(targetPos, sparklingPos));
         }
 
         private IEnumerator AnimateSparklingTrails(Vector2Int sourcePos, List<Vector2Int> targets, ElementData sparklingData)
         {
-            ConstantManager cm = GameManager.Instance.constantManager;
+            ConstantManager cm = ConstantManager.Instance;
             if (!generatedTiles.TryGetValue(sourcePos, out GridCellController sourceTile)) yield break;
 
             Vector3 sourceWorldPos = sourceTile.transform.position;
@@ -1338,7 +1338,7 @@ namespace Game
             if (!layoutReady)
                 EnsureAtLeastOneMoveAvailable(elementPool);
 
-            float duration = Mathf.Max(0.2f, GameManager.Instance.constantManager.elementSwapMoveDuration * 1.35f);
+            float duration = Mathf.Max(0.2f, ConstantManager.Instance.elementSwapMoveDuration * 1.35f);
             Sequence shuffleSeq = DOTween.Sequence();
             bool hasTween = false;
 
@@ -1394,7 +1394,7 @@ namespace Game
 
             GridElement firstEl = firstTile.GetComponentInChildren<GridElement>();
             GridElement secondEl = secondTile.GetComponentInChildren<GridElement>();
-            float dur = GameManager.Instance.constantManager.elementSwapMoveDuration;
+            float dur = ConstantManager.Instance.elementSwapMoveDuration;
 
             if (firstEl != null && secondEl != null)
             {
@@ -1685,7 +1685,7 @@ namespace Game
         // ------------------------------------------------------------------
         private IEnumerator ClearMatches(List<List<Vector2Int>> matchedPositions, HashSet<Vector2Int> protectedPositions = null)
         {
-            ConstantManager cm = GameManager.Instance.constantManager;
+            ConstantManager cm = ConstantManager.Instance;
             HashSet<Vector2Int> cleared = new HashSet<Vector2Int>();
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
             HashSet<Vector2Int> hiddenToReveal = new HashSet<Vector2Int>();
@@ -1846,7 +1846,7 @@ namespace Game
 
             GridHelper.SetEmission(element, 1.5f);
 
-            float dur = Mathf.Max(0.08f, GameManager.Instance.constantManager.elementSwapMoveDuration * 0.6f);
+            float dur = Mathf.Max(0.08f, ConstantManager.Instance.elementSwapMoveDuration * 0.6f);
             Tween move = t.DOMove(targetTile.transform.position, dur).SetEase(Ease.InBack);
 
             EventManager.TriggerEvent(GameEvent.ELEMENT_DESTROYED,
@@ -1970,7 +1970,7 @@ namespace Game
         {
             EventManager.TriggerEvent(GameEvent.GRAVITY_STARTED);
 
-            ConstantManager cm = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
+            ConstantManager cm = GameManager.Instance != null ? ConstantManager.Instance : null;
             float fallSpeed = cm != null ? cm.elementFallSpeed : 3.3f;
 
             EnsureGridCells();
@@ -2377,8 +2377,8 @@ namespace Game
 
         private static Vector3 GetCauldronArcPeak(Vector3 start, Vector3 target)
         {
-            float elementMaxHeight = GameManager.Instance.constantManager.elementToCauldronMaxHeight;
-            float elementHeightMultiplier = GameManager.Instance.constantManager.elementToCauldronHeightMultiplier;
+            float elementMaxHeight = ConstantManager.Instance.elementToCauldronMaxHeight;
+            float elementHeightMultiplier = ConstantManager.Instance.elementToCauldronHeightMultiplier;
 
             Vector3 midpoint = Vector3.Lerp(start, target, 0.5f);
             float distance = Vector3.Distance(start, target);

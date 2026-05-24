@@ -6,20 +6,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEditor;
-using UnityEngine; using Game.EventManagement;
+using UnityEngine; 
+using Game.EventManagement;
+using Game.Singleton;
 
 namespace Game
 {
-    public class SaveManager : MonoBehaviour
-    {
-        public static SaveManager Instance
-        {
-            get
-            {
-                return GameManager.Instance.saveManager;
-            }
-        }
-
+    public class SaveManager : SingletonComponent<SaveManager>
+	{
         #region Member Variables
 
         private List<ISaveable> saveables;

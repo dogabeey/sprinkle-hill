@@ -221,7 +221,7 @@ namespace Game
 
         public bool Load(Action onLoadSuccess, Action onLoadFail)
         {
-            JSONNode saveData = GameManager.Instance.saveManager.LoadSave(this);
+            JSONNode saveData = SaveManager.Instance.LoadSave(this);
 
             if (saveData == null)
             {

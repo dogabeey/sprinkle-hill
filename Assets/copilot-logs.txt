@@ -91,3 +91,4 @@
 [2026-05-23 00:23:36] - Fixed CurrencyManager loading by invoking Load during startup before building the UI, adding a default starting amount fallback, and restoring the missing load success callback.
 [2026-05-23 00:34:12] - Fixed CurrencyManager save/load persistence by registering/loading in Awake and updating SaveManager to preserve existing save blocks in shared save files.
 [2026-05-23 01:58:18] - Added OUTLET_CREATED event dispatch in Match3Grid when power outlet elements are generated on the board.
+[2026-05-24 19:38:39] - Fixed recursive singleton Instance properties in SaveManager, ScreenManager, and SoundManager that were freezing Unity on Play.

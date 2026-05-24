@@ -11,11 +11,11 @@ namespace Game
 		public string[] randomList;
 		public void Play(string soundName)
         {
-			GameManager.Instance.soundManager.Play(soundName);
+			SoundManager.Instance.Play(soundName);
         }
 		public void PlayRandom()
         {
-			GameManager.Instance.soundManager.Play(randomList[Random.Range(0, randomList.Length - 1)]);
+			SoundManager.Instance.Play(randomList[Random.Range(0, randomList.Length - 1)]);
         }
 	}
 }

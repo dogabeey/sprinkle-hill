@@ -131,7 +131,7 @@ namespace Game
             SpawnResolution resolution = new SpawnResolution();
             HashSet<Vector2Int> claimedPositions = new HashSet<Vector2Int>();
 
-            ConstantManager constantManager = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
+            ConstantManager constantManager = GameManager.Instance != null ? ConstantManager.Instance : null;
 
             for (int i = 0; i < creationStrategies.Count; i++)
             {
@@ -766,8 +766,8 @@ namespace Game
             float distance = Vector3.Distance(firstStartWorld, secondStartWorld);
             float raiseHeight = Mathf.Clamp(distance * 0.35f, ComboIntroMinRaiseHeight, ComboIntroMaxRaiseHeight);
             float orbitRadius = Mathf.Clamp(distance * 0.5f, ComboIntroMinOrbitRadius, ComboIntroMaxOrbitRadius);
-            float raiseDuration = Mathf.Max(0.15f, GameManager.Instance.constantManager.elementSwapMoveDuration * 0.8f);
-            float spinDuration = Mathf.Max(0.3f, GameManager.Instance.constantManager.elementSwapMoveDuration * 1.4f);
+            float raiseDuration = Mathf.Max(0.15f, ConstantManager.Instance.elementSwapMoveDuration * 0.8f);
+            float spinDuration = Mathf.Max(0.3f, ConstantManager.Instance.elementSwapMoveDuration * 1.4f);
 
             Transform animationParent = grid.GridParent != null ? grid.GridParent : grid.transform;
             GameObject orbitPivot = new GameObject("PowerUpComboIntroPivot");
@@ -875,7 +875,7 @@ namespace Game
 
         private Sprite ResolveDiscoBallComboMergeSprite(SwapComboVisualType comboVisualType)
         {
-            Gfx gfxManager = GameManager.Instance != null ? GameManager.Instance.gfxManager : null;
+            Gfx gfxManager = GameManager.Instance != null ? Gfx.Instance : null;
             if (gfxManager == null)
                 return null;
 
@@ -905,7 +905,7 @@ namespace Game
 
         private ParticleSystem SpawnPowerUpComboParticle(Transform comboAnchor)
         {
-            Gfx gfxManager = GameManager.Instance != null ? GameManager.Instance.gfxManager : null;
+            Gfx gfxManager = GameManager.Instance != null ? Gfx.Instance : null;
             if (gfxManager == null || gfxManager.powerUpComboParticlePrefab == null || comboAnchor == null)
                 return null;
 
@@ -1812,8 +1812,8 @@ namespace Game
                 return;
 
             discoBallElement.transform.DOKill();
-            float spinDuration = GameManager.Instance.constantManager.discoBallSpinLoopDuration;
-            float spinDegrees = GameManager.Instance.constantManager.discoBallSpinDegreesPerLoop;
+            float spinDuration = ConstantManager.Instance.discoBallSpinLoopDuration;
+            float spinDegrees = ConstantManager.Instance.discoBallSpinDegreesPerLoop;
             spinTween = discoBallElement.transform
                 .DORotate(new Vector3(0f, 0f, spinDegrees), spinDuration, RotateMode.FastBeyond360)
                 .SetEase(Ease.Linear)
@@ -1934,7 +1934,7 @@ namespace Game
             if (targetPositions == null || targetPositions.Count == 0)
                 yield break;
 
-            float staggerDelay = Mathf.Max(0.03f, GameManager.Instance.constantManager.discoBallTrailSpawnDelay * 0.45f);
+            float staggerDelay = Mathf.Max(0.03f, ConstantManager.Instance.discoBallTrailSpawnDelay * 0.45f);
             List<Coroutine> flightCoroutines = new List<Coroutine>(targetPositions.Count);
 
             for (int i = 0; i < targetPositions.Count; i++)
@@ -2036,7 +2036,7 @@ namespace Game
             if (activationCount <= 0)
                 yield break;
 
-            float staggerDelay = Mathf.Max(0.03f, GameManager.Instance.constantManager.discoBallTrailSpawnDelay * 0.5f);
+            float staggerDelay = Mathf.Max(0.03f, ConstantManager.Instance.discoBallTrailSpawnDelay * 0.5f);
             List<Coroutine> activationCoroutines = new List<Coroutine>(activationCount);
 
             for (int i = 0; i < activationCount; i++)
@@ -2215,7 +2215,7 @@ namespace Game
 
         private IEnumerator AnimateDiscoBallTrails(Vector2Int sourcePos, List<Vector2Int> targets, ElementData targetElementData)
         {
-            ConstantManager cm = GameManager.Instance.constantManager;
+            ConstantManager cm = ConstantManager.Instance;
             Vector3 sourceWorldPos = grid.GetWorldPosition(sourcePos);
 
             int trailIndex = 0;
@@ -2232,7 +2232,7 @@ namespace Game
 
         private IEnumerator AnimateDiscoBallPowerUpTrails(Vector2Int sourcePos, List<Vector2Int> targets, ElementPowerUpType targetPowerUpType)
         {
-            ConstantManager cm = GameManager.Instance.constantManager;
+            ConstantManager cm = ConstantManager.Instance;
             Vector3 sourceWorldPos = grid.GetWorldPosition(sourcePos);
 
             int trailIndex = 0;
@@ -2249,7 +2249,7 @@ namespace Game
 
         private IEnumerator AnimateSingleDiscoTrail(Vector3 sourcePos, Vector2Int targetPos, ElementData targetElementData, int trailIndex)
         {
-            ConstantManager cm = GameManager.Instance.constantManager;
+            ConstantManager cm = ConstantManager.Instance;
             Vector3 targetWorldPos = grid.GetWorldPosition(targetPos);
 
             GameObject trailObj = Object.Instantiate(cm.sparklingTrailPrefab, sourcePos, Quaternion.identity);
@@ -2283,7 +2283,7 @@ namespace Game
 
         private IEnumerator AnimateSingleDiscoPowerUpTrail(Vector3 sourcePos, Vector2Int targetPos, ElementPowerUpType targetPowerUpType, int trailIndex)
         {
-            ConstantManager cm = GameManager.Instance.constantManager;
+            ConstantManager cm = ConstantManager.Instance;
             Vector3 targetWorldPos = grid.GetWorldPosition(targetPos);
 
             GameObject trailObj = Object.Instantiate(cm.sparklingTrailPrefab, sourcePos, Quaternion.identity);
@@ -2378,7 +2378,7 @@ namespace Game
         private IEnumerator ClearBombAreaProgressive(Vector2Int center, int radius, bool allowConditionedBreakableWalls)
         {
             HashSet<Vector2Int> processedWalls = new HashSet<Vector2Int>();
-            float ringDelay = Mathf.Max(0.02f, GameManager.Instance.constantManager.matchClearDelay * 0.35f);
+            float ringDelay = Mathf.Max(0.02f, ConstantManager.Instance.matchClearDelay * 0.35f);
 
             for (int ring = 0; ring <= radius; ring++)
             {
@@ -2468,7 +2468,7 @@ namespace Game
             PlayEffect(ConstantManager.SOUNDS.EFFECTS.ROCKET, volumeMultiplier, pitchOffset);
 
             Vector3 originWorld = grid.GetWorldPosition(rocketPos);
-            ConstantManager cm = GameManager.Instance.constantManager;
+            ConstantManager cm = ConstantManager.Instance;
 
             if (rocketElement != null)
             {
@@ -2787,7 +2787,7 @@ namespace Game
 
         private void PlayBombImpactEffects(Vector3 impactPos)
         {
-            ConstantManager cm = GameManager.Instance != null ? GameManager.Instance.constantManager : null;
+            ConstantManager cm = GameManager.Instance != null ? ConstantManager.Instance : null;
             if (cm == null) return;
             if (cm.bombImpactParticlePrefab != null)
             {
@@ -2821,10 +2821,10 @@ namespace Game
 
         private void PlayEffect(string effectId, float volumeMultiplier = 1f, float pitchOffset = 0f)
         {
-            if (GameManager.Instance == null || GameManager.Instance.soundManager == null)
+            if (GameManager.Instance == null || SoundManager.Instance == null)
                 return;
 
-            GameManager.Instance.soundManager.Play(effectId, false, 0f, volumeMultiplier, pitchOffset);
+            SoundManager.Instance.Play(effectId, false, 0f, volumeMultiplier, pitchOffset);
         }
 
         private static Vector2Int PickPreferred(HashSet<Vector2Int> groupSet, Vector2Int[] candidates, Vector2Int init1, Vector2Int init2)

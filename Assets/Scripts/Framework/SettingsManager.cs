@@ -72,7 +72,7 @@ namespace Game
         public void SetMusicVolume(float value)
         {
             MusicVolume = value;
-            GameManager.Instance.soundManager.loopingAudioSources.ForEach(p =>
+            SoundManager.Instance.loopingAudioSources.ForEach(p =>
             {
                 p.audioSource.volume = MusicVolume;
             });
@@ -80,7 +80,7 @@ namespace Game
         public void SetSFXVolume(float value)
         {
             SfxVolume = value;
-            GameManager.Instance.soundManager.playingAudioSources.ForEach(p =>
+            SoundManager.Instance.playingAudioSources.ForEach(p =>
             {
                 p.audioSource.volume = SfxVolume;
             });

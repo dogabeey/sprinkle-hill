@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using UnityEngine; using Game.EventManagement;
 using UnityEngine.UI;
 using Game.Singleton;
-using Game.EventManagement;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -17,27 +16,6 @@ namespace Game
 
     public class GameManager : SingletonComponent<GameManager>
     {
-        [FoldoutGroup("Managers")]
-        public EventManager eventManager;
-        [FoldoutGroup("Managers")]
-        public SoundManager soundManager;
-        [FoldoutGroup("Managers")]
-        public SaveManager saveManager;
-        [FoldoutGroup("Managers")]
-        public ConstantManager constantManager;
-        [FoldoutGroup("Managers")]
-        public Gfx gfxManager;
-        [FoldoutGroup("Managers")]
-        public TutorialManager tutorialManager;
-        [FoldoutGroup("Managers")]
-        public ActionBarManager actionBarManager;
-        [FoldoutGroup("Managers")]
-        public ScreenManager screenManager;
-        [FoldoutGroup("Managers")]
-        public FeatureTracker featureTracker;
-        [FoldoutGroup("Managers")]
-        public PoolingManager poolingManager;
-
         [FoldoutGroup("Settings")]
         public bool showFeatureProgressScreen;
         [FoldoutGroup("Settings")]
@@ -175,18 +153,6 @@ namespace Game
 
         private void Update()
         {
-        }
-        private void OnApplicationQuit()
-        {
-            eventManager.OnApplicationQuit();
-            soundManager.OnApplicationQuit();
-            saveManager.OnApplicationQuit();
-        }
-        private void OnApplicationPause(bool pause)
-        {
-            eventManager.OnApplicationPause();
-            soundManager.OnApplicationPause();
-            saveManager.OnApplicationPause();
         }
 
         public void LoadLevel(LevelScene levelScene)

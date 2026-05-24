@@ -2,9 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine; using Game.EventManagement;
+using UnityEngine; 
+using Game.EventManagement;
 using UnityEngine.UI;
 using Game.EventManagement;
+using Game.Singleton;
 
 namespace Game
 {
@@ -12,7 +14,7 @@ namespace Game
     /// Action bar manager holds the current action bar items the player can use. The action bar item prefabs added to the list will be 
     /// instantiated and placed in the appropriate positions. This class can be extended to add more functionality to the drawing process.
     /// </summary>
-    public class ActionBarManager : MonoBehaviour
+    public class ActionBarManager : SingletonComponent<ActionBarManager>
     { 
         public ActionBarView actionBarViewPrefab;
         [SerializeReference]

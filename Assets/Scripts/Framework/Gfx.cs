@@ -1,11 +1,13 @@
 ﻿using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine; using Game.EventManagement;
+using UnityEngine; 
+using Game.EventManagement;
+using Game.Singleton;
 
 namespace Game
 {
-    public class Gfx : MonoBehaviour
+    public class Gfx : SingletonComponent<Gfx>
     {
         [FoldoutGroup("Editor Icons")]
         public Sprite breakableWallIcon, breakableWallIcon2, breakableWallIcon3;

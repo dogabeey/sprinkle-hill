@@ -58,7 +58,7 @@ namespace Game
 
         public virtual void PlayRevealEffect()
         {
-            var gfxManager = GameManager.Instance != null ? GameManager.Instance.gfxManager : null;
+            var gfxManager = GameManager.Instance != null ? Gfx.Instance : null;
             if (gfxManager == null)
                 return;
 
@@ -316,10 +316,10 @@ namespace Game
 
         public static void TriggerHaptic(HapticModes mode)
         {
-            if (GameManager.Instance == null || GameManager.Instance.soundManager == null)
+            if (GameManager.Instance == null || SoundManager.Instance == null)
                 return;
 
-            if (!GameManager.Instance.soundManager.IsVibrationOn)
+            if (!SoundManager.Instance.IsVibrationOn)
                 return;
 
             TapticWave.TriggerHaptic(mode);

@@ -647,7 +647,7 @@ namespace Game
         {
             ClearHintVisuals();
             isProcessing = true;
-            BombPlacementAction bombAction = GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is BombPlacementAction) as BombPlacementAction;
+            BombPlacementAction bombAction = ActionBarManager.Instance.actionBarItemList.Find(item => item is BombPlacementAction) as BombPlacementAction;
             if (bombAction == null)
             {
                 isProcessing = false;
@@ -671,7 +671,7 @@ namespace Game
             ClearHintVisuals();
             isProcessing = true;
 
-            HammerAction hammerAction = GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is HammerAction) as HammerAction;
+            HammerAction hammerAction = ActionBarManager.Instance.actionBarItemList.Find(item => item is HammerAction) as HammerAction;
             if (hammerAction == null)
             {
                 isProcessing = false;
@@ -695,7 +695,7 @@ namespace Game
             ClearHintVisuals();
             isProcessing = true;
 
-            CannonAction cannonAction = GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is CannonAction) as CannonAction;
+            CannonAction cannonAction = ActionBarManager.Instance.actionBarItemList.Find(item => item is CannonAction) as CannonAction;
             if (cannonAction == null)
             {
                 isProcessing = false;
@@ -719,7 +719,7 @@ namespace Game
             ClearHintVisuals();
             isProcessing = true;
 
-            PlaceRocketAction rocketAction = GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is PlaceRocketAction) as PlaceRocketAction;
+            PlaceRocketAction rocketAction = ActionBarManager.Instance.actionBarItemList.Find(item => item is PlaceRocketAction) as PlaceRocketAction;
             if (rocketAction == null)
             {
                 isProcessing = false;
@@ -751,7 +751,7 @@ namespace Game
             ClearHintVisuals();
             isProcessing = true;
 
-            PlaceDiscoBallAction discoBallAction = GameManager.Instance.actionBarManager.actionBarItemList.Find(item => item is PlaceDiscoBallAction) as PlaceDiscoBallAction;
+            PlaceDiscoBallAction discoBallAction = ActionBarManager.Instance.actionBarItemList.Find(item => item is PlaceDiscoBallAction) as PlaceDiscoBallAction;
             if (discoBallAction == null)
             {
                 isProcessing = false;
@@ -799,17 +799,17 @@ namespace Game
 
         private bool IsTutorialInputAllowed(GameObject targetObject)
         {
-            if (GameManager.Instance == null || GameManager.Instance.tutorialManager == null)
+            if (GameManager.Instance == null || TutorialManager.Instance == null)
                 return true;
 
-            return GameManager.Instance.tutorialManager.IsElementInteractionAllowed(targetObject);
+            return TutorialManager.Instance.IsElementInteractionAllowed(targetObject);
         }
 
         private bool ShouldBlockHintsForTutorial()
         {
             return GameManager.Instance != null
-                && GameManager.Instance.tutorialManager != null
-                && GameManager.Instance.tutorialManager.HasActiveStep;
+                && TutorialManager.Instance != null
+                && TutorialManager.Instance.HasActiveStep;
         }
 
         private bool ShouldBlockBoardInput()

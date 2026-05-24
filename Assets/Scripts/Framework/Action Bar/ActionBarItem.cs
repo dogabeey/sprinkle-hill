@@ -99,7 +99,7 @@ namespace Game
         /// <returns>true if the object is clickable; otherwise, false.</returns>
         virtual public bool IsClickable()
         {
-            if (GameManager.Instance != null && GameManager.Instance.tutorialManager != null && GameManager.Instance.tutorialManager.ShouldDisableActionBar)
+            if (GameManager.Instance != null && TutorialManager.Instance != null && TutorialManager.Instance.ShouldDisableActionBar)
                 return false;
 
             return currentCount > 0 || !IsAvailable();
@@ -206,7 +206,7 @@ namespace Game
 
         public bool Load(Action onLoadSuccess, Action onLoadFail)
         {
-            JSONNode saveData = GameManager.Instance.saveManager.LoadSave(this);
+            JSONNode saveData = SaveManager.Instance.LoadSave(this);
 
             if (saveData == null)
             {
@@ -241,15 +241,6 @@ namespace Game
         public override bool CostDefinesBuyability => true;
         public override CurrencyModel CostCurrency => GameManager.Instance.cashCurrency;
 
-        private IEnumerable GetAllFeatures()
-        {
-            ValueDropdownList<UnlockableFeature> features = new ValueDropdownList<UnlockableFeature>();
-            foreach (UnlockableFeature feature in GameManager.Instance.featureTracker.features)
-            {
-                features.Add(feature.featureName, feature);
-            }
-            return features;
-        }
         public override bool IsAvailable()
         {
             return World.Instance.lastPlayedLevelIndex >= unlockedLevel /* || (tiedFeature != null && tiedFeature.IsUnlocked(World.Instance.lastPlayedLevelIndex))*/;
@@ -275,7 +266,7 @@ namespace Game
         public override string ClickabilityExplanation => "";
         public override string AvailabilityExplanation => $"Level {unlockedLevel}";
 
-        public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.addTimePowerupTrailParticlePrefab;
+        public override ParticleSystem ActionSuccessParticle => Gfx.Instance.addTimePowerupTrailParticlePrefab;
 
         public override bool IsVisible()
         {
@@ -300,7 +291,7 @@ namespace Game
             currentCount--;
             if (ActionSuccessParticle != null)
             {
-                Transform addTimeActionTransform = GameManager.Instance.actionBarManager.GetActionBarView(this).transform;
+                Transform addTimeActionTransform = ActionBarManager.Instance.GetActionBarView(this).transform;
                 Transform timerTextTransform = GameManager.Instance.upperPanelUI.timerText.transform;
                 ParticleSystem particle = GameObject.Instantiate(ActionSuccessParticle, addTimeActionTransform.position, Quaternion.identity);
                 particle.transform.DOMove(timerTextTransform.position, 1f).OnComplete(() => {
@@ -328,7 +319,7 @@ namespace Game
         public override string VisibilityExplanation => "";
         public override string ClickabilityExplanation => "";
         public override string AvailabilityExplanation => $"Level {unlockedLevel}";
-        public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.addMovesPowerupTrailParticlePrefab;
+        public override ParticleSystem ActionSuccessParticle => Gfx.Instance.addMovesPowerupTrailParticlePrefab;
         public override bool IsVisible()
         {
             // Return true if current level stage is a moves level, otherwise return false. This is to ensure that the add moves action is only visible in moves levels.
@@ -342,7 +333,7 @@ namespace Game
             currentCount--;
             if (ActionSuccessParticle != null)
             {
-                Transform addMovesActionTransform = GameManager.Instance.actionBarManager.GetActionBarView(this).transform;
+                Transform addMovesActionTransform = ActionBarManager.Instance.GetActionBarView(this).transform;
                 Transform movesTextTransform = GameManager.Instance.upperPanelUI.timerText.transform;
                 ParticleSystem particle = GameObject.Instantiate(ActionSuccessParticle, addMovesActionTransform.position, Quaternion.identity);
                 particle.transform.DOMove(movesTextTransform.position, 1f).OnComplete(() => {
@@ -363,7 +354,7 @@ namespace Game
 
         public override string ItemName => "Shuffle";
         public override string ItemDescription => "Shuffles the board.";
-        public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.shufflePowerupTrailParticlePrefab;
+        public override ParticleSystem ActionSuccessParticle => Gfx.Instance.shufflePowerupTrailParticlePrefab;
         public override float BaseCost => 0;
         public override float CostIncrement => 0;
         public override float CostAcceleration => 0;
@@ -409,7 +400,7 @@ namespace Game
     {
         public override string ItemName => "Bomb Placement";
         public override string ItemDescription => "Places a bomb on the board, then detonates it.";
-        public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.bombPowerupTrailParticlePrefab;
+        public override ParticleSystem ActionSuccessParticle => Gfx.Instance.bombPowerupTrailParticlePrefab;
         public override float BaseCost => 0;
         public override float CostIncrement => 0;
         public override float CostAcceleration => 0;
@@ -436,7 +427,7 @@ namespace Game
 
         public IEnumerator BombThrowAnim(Vector3 targetCellLocation)
         {
-            Vector3 bombThrowActionPos = GameManager.Instance.actionBarManager.GetActionBarView(this).transform.position;
+            Vector3 bombThrowActionPos = ActionBarManager.Instance.GetActionBarView(this).transform.position;
             bombThrowActionPos.z = targetCellLocation.z; // Ensure the particle is on the same plane as the target cell
             ParticleSystem particle = GameObject.Instantiate(ActionSuccessParticle, bombThrowActionPos, Quaternion.identity);
             yield return particle.transform.DOMove(targetCellLocation, 0.5f).SetEase(Ease.Linear).WaitForCompletion();
@@ -454,7 +445,7 @@ namespace Game
     {
         public override string ItemName => "Place Disco Ball";
         public override string ItemDescription => "Places a disco ball on the board.";
-        public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.discoBallPowerupTrailParticlePrefab;
+        public override ParticleSystem ActionSuccessParticle => Gfx.Instance.discoBallPowerupTrailParticlePrefab;
         public override float BaseCost => 0;
         public override float CostIncrement => 0;
         public override float CostAcceleration => 0;
@@ -480,7 +471,7 @@ namespace Game
 
         public IEnumerator DiscoBallThrowAnim(Vector3 targetCellLocation)
         {
-            Vector3 actionPos = GameManager.Instance.actionBarManager.GetActionBarView(this).transform.position;
+            Vector3 actionPos = ActionBarManager.Instance.GetActionBarView(this).transform.position;
             actionPos.z = targetCellLocation.z;
             ParticleSystem particle = GameObject.Instantiate(ActionSuccessParticle, actionPos, Quaternion.identity);
             yield return particle.transform.DOMove(targetCellLocation, 0.5f).SetEase(Ease.Linear).WaitForCompletion();
@@ -498,7 +489,7 @@ namespace Game
     {
         public override string ItemName => "Place Rocket";
         public override string ItemDescription => "Places a rocket on the board";
-        public override ParticleSystem ActionSuccessParticle => GameManager.Instance.gfxManager.rocketPowerupTrailParticlePrefab;
+        public override ParticleSystem ActionSuccessParticle => Gfx.Instance.rocketPowerupTrailParticlePrefab;
         public override float BaseCost => 0;
         public override float CostIncrement => 0;
         public override float CostAcceleration => 0;
@@ -523,7 +514,7 @@ namespace Game
 
         public IEnumerator RocketThrowAnim(Vector3 targetCellLocation)
         {
-            Vector3 actionPos = GameManager.Instance.actionBarManager.GetActionBarView(this).transform.position;
+            Vector3 actionPos = ActionBarManager.Instance.GetActionBarView(this).transform.position;
             actionPos.z = targetCellLocation.z;
             ParticleSystem particle = GameObject.Instantiate(ActionSuccessParticle, actionPos, Quaternion.identity);
             yield return particle.transform.DOMove(targetCellLocation, 0.5f).SetEase(Ease.Linear).WaitForCompletion();
