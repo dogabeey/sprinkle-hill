@@ -2,7 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Globalization;
 using TMPro;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 
 namespace Game
 {

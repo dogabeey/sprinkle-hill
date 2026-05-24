@@ -2,7 +2,7 @@ using Game;
 using Sirenix.OdinInspector;
 using System;
 using TMPro;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 using UnityEngine.UI;
 
 public partial class DialogueUI : UIElement

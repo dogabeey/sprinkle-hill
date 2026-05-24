@@ -1,5 +1,5 @@
 using DG.Tweening;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 using UnityEngine.UI;
 
 namespace Game

@@ -1,7 +1,7 @@
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 using UnityEngine.Events;
 
 namespace Game

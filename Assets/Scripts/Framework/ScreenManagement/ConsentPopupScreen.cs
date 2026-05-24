@@ -1,5 +1,5 @@
 using UnityEngine.UI;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 using Unity.Services.Core;
 using UnityEngine.UnityConsent;
 

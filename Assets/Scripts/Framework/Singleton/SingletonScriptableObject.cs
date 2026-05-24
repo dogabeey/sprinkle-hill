@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game
+namespace Game.Singleton
 {
 	public abstract class SingletonScriptableObject<T> : ScriptableObject where T : ScriptableObject
 	{

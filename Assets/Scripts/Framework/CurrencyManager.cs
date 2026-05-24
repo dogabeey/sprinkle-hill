@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 using DG.Tweening;
 using TMPro;
 using Sirenix.OdinInspector;
 using UnityEngine.UI;
 using Game.SimpleJSON;
+using Game.Singleton;
+using Game.EventManagement;
 
 namespace Game
 {

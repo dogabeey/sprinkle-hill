@@ -1,4 +1,4 @@
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 
 [CreateAssetMenu(fileName = "ObjectiveType", menuName = "Game/Objective Type...")]
 public class ObjectiveType : ScriptableObject

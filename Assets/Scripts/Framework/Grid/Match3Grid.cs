@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using MobileHapticsProFreeEdition;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
+using Game.EventManagement;
 
 namespace Game
 {

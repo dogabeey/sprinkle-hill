@@ -4,7 +4,7 @@ using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 
 public abstract class UIElement : MonoBehaviour
 {

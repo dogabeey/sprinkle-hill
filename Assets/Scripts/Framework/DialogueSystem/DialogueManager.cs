@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 
 public class DialogueManager : MonoBehaviour
 {

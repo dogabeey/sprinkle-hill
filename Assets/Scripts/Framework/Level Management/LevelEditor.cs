@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

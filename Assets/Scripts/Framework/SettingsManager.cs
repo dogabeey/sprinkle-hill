@@ -2,10 +2,11 @@ using Game.SimpleJSON;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
+using Game.Singleton;
 
 namespace Game
 {

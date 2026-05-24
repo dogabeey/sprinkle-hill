@@ -39,7 +39,7 @@
 
 #endregion License and information
 
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 
 namespace Game.SimpleJSON
 {

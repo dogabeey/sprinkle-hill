@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 using Game.SimpleJSON;
 using Sirenix.Utilities;
 using System;

@@ -4,7 +4,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
+using Game.Singleton;
+using Game.EventManagement;
 
 namespace Game
 {

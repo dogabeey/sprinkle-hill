@@ -1,6 +1,6 @@
 using DG.Tweening;
 using TMPro;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 using UnityEngine.UI;
 
 namespace Game

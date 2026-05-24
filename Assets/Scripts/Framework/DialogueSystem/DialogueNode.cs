@@ -1,7 +1,7 @@
 using Game;
 using Sirenix.OdinInspector;
 using TMPro;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 using UnityEngine.UI;
 
 [System.Serializable]

@@ -1,5 +1,5 @@
-using UnityEngine;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
+using UnityEngine; using Game.EventManagement;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using System.Linq;

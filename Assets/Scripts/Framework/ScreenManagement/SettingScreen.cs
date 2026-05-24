@@ -1,5 +1,5 @@
 using System.Collections;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 using UnityEngine.UI;
 using DG.Tweening;
 using UnityEngine.UnityConsent;

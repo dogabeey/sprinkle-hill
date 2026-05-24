@@ -1,7 +1,7 @@
 using System.Collections;
 using System;
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 using Unity.VisualScripting;
 using Game.SimpleJSON;
 

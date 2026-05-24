@@ -1,5 +1,5 @@
 using Sirenix.OdinInspector;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 using UnityEngine.UI;
 using TMPro;
 

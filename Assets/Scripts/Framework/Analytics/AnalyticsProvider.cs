@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 
 using UnityEngine.Analytics;
 using Unity.Services.Core;

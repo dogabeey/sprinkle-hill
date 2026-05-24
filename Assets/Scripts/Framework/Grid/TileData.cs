@@ -2,7 +2,7 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 using UnityEngine.Rendering;
 
 namespace Game

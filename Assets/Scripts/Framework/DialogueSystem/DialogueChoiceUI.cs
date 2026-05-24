@@ -1,5 +1,5 @@
 using TMPro;
-using UnityEngine;
+using UnityEngine; using Game.EventManagement;
 using UnityEngine.UI;
 
 public class DialogueChoiceUI : MonoBehaviour

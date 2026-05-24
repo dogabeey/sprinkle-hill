@@ -1,4 +1,5 @@
-using UnityEngine;
+using UnityEngine; 
+using Game.EventManagement;
 
 namespace Game
 {
@@ -16,9 +17,9 @@ namespace Game
         }
         private void OnBannerAdOpened(EventParam e)
         {
-            float bannerHeight = UnityAdsManager.Instance.bannerHeight;
-            // Heighten the safe area by the banner height, so that UI elements will be placed above the banner
-            rectTarget.anchoredPosition += new Vector2(0, bannerHeight);
+            float bannerHeight = e.paramFloat;
+			// Heighten the safe area by the banner height, so that UI elements will be placed above the banner
+			rectTarget.anchoredPosition += new Vector2(0, bannerHeight);
         }
     }
 }
