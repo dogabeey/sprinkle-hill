@@ -2,7 +2,7 @@ using DG.Tweening;
 using Sirenix.OdinInspector;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine; using Game.EventManagement;
+using UnityEngine; 
 
 public class MeshRendererRandomizer : MonoBehaviour
 {

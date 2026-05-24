@@ -1,4 +1,4 @@
-using UnityEngine; using Game.EventManagement;
+using UnityEngine; 
 using UnityEngine.UI;
 
 public class CircularLayoutGroup : LayoutGroup

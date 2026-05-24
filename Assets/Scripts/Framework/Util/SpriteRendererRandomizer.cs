@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using UnityEngine; using Game.EventManagement;
+using UnityEngine; 
 
 public class SpriteRendererRandomizer : MonoBehaviour
 {

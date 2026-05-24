@@ -33,7 +33,7 @@ namespace Game
 
             addMovesButton.onClick.RemoveAllListeners();
             addMovesButton.onClick.AddListener(() =>
-            {
+            { 
                 ScreenManager.Instance.CloseAllScreens();
                 (GameManager.Instance.CurrentLevel as LevelScene_Match3Game).BuyExtraMovesOrTime();
                 // Restore the game state to what it was before the lose condition was triggered, so that the player can continue playing after buying extra moves or time

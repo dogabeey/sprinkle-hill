@@ -1,4 +1,4 @@
-using UnityEngine; using Game.EventManagement;
+using UnityEngine; 
 using System.Collections;
 
 // For usage apply the script directly to the element you wish to apply parallaxing
