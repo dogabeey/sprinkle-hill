@@ -1564,7 +1564,7 @@ namespace Game
                     cell.cellHealth = Mathf.Max(1, cell.cellHealth);
 
                     if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile is BreakableWall breakableWall)
-                        breakableWall.InitializeHealth(cell.cellHealth);
+                        breakableWall.SetHealth(cell.cellHealth, true);
                 }
             }
         }
@@ -1893,7 +1893,7 @@ namespace Game
                 Vector3 wallScale = wallTile.transform.localScale;
 
                 if (wallTile is BreakableWall breakable)
-                    breakable.InitializeHealth(cell.cellHealth);
+                    breakable.SetHealth(cell.cellHealth, false);
 
                 if (cell.cellHealth <= 0)
                 {

@@ -22,22 +22,13 @@ namespace Game
         [SerializeField] private string breakTriggerName = "Break";
         [SerializeField] private float breakAnimationDuration = 0.25f;
 
-        public void InitializeHealth(int health)
+        public void SetHealth(int health, bool initialSet)
         {
-            CurrentHealth = Mathf.Max(0, health);
+            currentHealth = Mathf.Max(0, health);
+            UpdateHealthObjects(initialSet);
         }
 
-        public int CurrentHealth
-        {
-            get => currentHealth;
-            set
-            {
-                currentHealth = Mathf.Max(0, value);
-                UpdateHealthObjects();
-            }
-        }
-
-        private void UpdateHealthObjects()
+        private void UpdateHealthObjects(bool initialSet)
         {
             foreach (var healthObjectByHealth in healthObjectsByHealth)
             {
@@ -46,10 +37,9 @@ namespace Game
                     bool shouldBeActive = currentHealth >= healthObjectByHealth.healthThreshold;
                     if (healthObjectByHealth.healthObject.activeSelf && !shouldBeActive)
                     {
-                        ParticleSystem breakParticleInstance = healthObjectByHealth.breakParticle != null ? Instantiate(healthObjectByHealth.breakParticle, healthObjectByHealth.healthObject.transform.position, Quaternion.identity) : null;
-                        if (breakParticleInstance != null)
+                        if (healthObjectByHealth.breakParticle != null && !initialSet)
                         {
-                            breakParticleInstance.Play();
+                            ParticleSystem breakParticleInstance = healthObjectByHealth.breakParticle != null ? Instantiate(healthObjectByHealth.breakParticle, healthObjectByHealth.healthObject.transform.position, Quaternion.identity) : null;
                         }
                     }
                         healthObjectByHealth.healthObject.SetActive(shouldBeActive);
