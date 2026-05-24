@@ -13,7 +13,6 @@ namespace Game
     public class RemoteConfigManager : MonoBehaviour
     {
         public static RemoteConfigManager Instance { get; private set; }
-
         public bool IsInitialized { get; private set; }
 
         public event Action OnRemoteConfigLoaded;
@@ -69,44 +68,41 @@ namespace Game
 
         private void ApplyAllRemoteConfigs()
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (var assembly in assemblies)
+            Assembly assembly = typeof(RemoteConfigManager).Assembly;
+            Type[] types;
+
+            try
             {
-                Type[] types;
+                types = assembly.GetTypes();
+            }
+            catch
+            {
+                return;
+            }
 
-                try
-                {
-                    types = assembly.GetTypes();
-                }
-                catch
-                {
-                    continue;
-                }
+            foreach (var type in types)
+            {
+                var fields = type.GetFields(
+                    BindingFlags.Public |
+                    BindingFlags.NonPublic |
+                    BindingFlags.Static
+                );
 
-                foreach (var type in types)
+                foreach (var field in fields)
                 {
-                    var fields = type.GetFields(
-                        BindingFlags.Public |
-                        BindingFlags.NonPublic |
-                        BindingFlags.Static
-                    );
+                    var attribute = field.GetCustomAttribute<RemoteConfigAttribute>();
 
-                    foreach (var field in fields)
+                    if (attribute == null)
+                        continue;
+
+                    if (TryGetRemoteValue(out object value, field.FieldType, attribute))
                     {
-                        var attribute = field.GetCustomAttribute<RemoteConfigAttribute>();
-
-                        if (attribute == null)
-                            continue;
-
-                        if (TryGetRemoteValue(out object value, field.FieldType, attribute))
-                        {
-                            field.SetValue(null, value);
-                        }
-
-                        Debug.Log(
-                            $"[RemoteConfig] {type.Name}.{field.Name} = {value}"
-                        );
+                        field.SetValue(null, value);
                     }
+
+                    Debug.Log(
+                        $"[RemoteConfig] {type.Name}.{field.Name} = {value}"
+                    );
                 }
             }
         }
