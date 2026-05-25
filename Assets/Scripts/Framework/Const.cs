@@ -1,6 +1,8 @@
 using UnityEngine; 
 using Game.EventManagement;
 using Game.Singleton;
+using System.Collections;
+using System;
 
 namespace Game
 {
@@ -20,6 +22,7 @@ namespace Game
     public class ConstantManager : SingletonComponent<ConstantManager>
     {
         [Header("General")]
+        [RemoteConfig("loading_screen_duration", 1f)]
         public float loadingScreenDuration = 1f;
         [Header("Element Animation")]
         [RemoteConfig("element_swap_move_duration", 0.3f)]
@@ -135,6 +138,65 @@ namespace Game
                 public const string GEM = "Gem";
                 public const string TOKEN = "Token";
             }
+        }
+
+        private void Start()
+        {
+            InitializeRemoteConfig();
+        }
+
+        private void InitializeRemoteConfig()
+        {
+            // Ensure that the RemoteConfig values are applied to the ConstantManager fields
+            RemoteConfigManager.Instance.OnRemoteConfigLoaded += () =>
+            {
+                Debug.Log("Remote Config loaded, applying values to ConstantManager.");
+                ApplyRemoteConfigValues();
+            };
+            // If Remote Config is already initialized, apply the values immediately
+            if (RemoteConfigManager.Instance.IsInitialized)
+            {
+                ApplyRemoteConfigValues();
+            }
+        }
+
+        private void ApplyRemoteConfigValues()
+        {
+            loadingScreenDuration = RemoteConfigManager.Instance.GetFloat("loading_screen_duration", ref loadingScreenDuration);
+            elementSwapMoveDuration = RemoteConfigManager.Instance.GetFloat("element_swap_move_duration", ref elementSwapMoveDuration);
+            elementFallSpeed = RemoteConfigManager.Instance.GetFloat("element_fall_speed", ref elementFallSpeed);
+            matchClearDelay = RemoteConfigManager.Instance.GetFloat("match_clear_delay", ref matchClearDelay);
+            elementDestroyPunchScale = RemoteConfigManager.Instance.GetFloat("element_destroy_punch_scale", ref elementDestroyPunchScale);
+            elementDestroyPunchDuration = RemoteConfigManager.Instance.GetFloat("element_destroy_punch_duration", ref elementDestroyPunchDuration);
+            elementDestroyPunchVibrato = RemoteConfigManager.Instance.GetInt("element_destroy_punch_vibrato", ref elementDestroyPunchVibrato);
+            elementDestroyPunchElasticity = RemoteConfigManager.Instance.GetFloat("element_destroy_punch_elasticity", ref elementDestroyPunchElasticity);
+            discoBallTrailDuration = RemoteConfigManager.Instance.GetFloat("disco_ball_trail_duration", ref discoBallTrailDuration);
+            discoBallTrailSpawnDelay = RemoteConfigManager.Instance.GetFloat("disco_ball_trail_spawn_delay", ref discoBallTrailSpawnDelay);
+            discoBallEmissionPeak = RemoteConfigManager.Instance.GetFloat("disco_ball_emission_peak", ref discoBallEmissionPeak);
+            discoBallEmissionResetDelay = RemoteConfigManager.Instance.GetFloat("disco_ball_emission_reset_delay", ref discoBallEmissionResetDelay);
+            discoBallSpinLoopDuration = RemoteConfigManager.Instance.GetFloat("disco_ball_spin_loop_duration", ref discoBallSpinLoopDuration);
+            discoBallSpinDegreesPerLoop = RemoteConfigManager.Instance.GetFloat("disco_ball_spin_degrees_per_loop", ref discoBallSpinDegreesPerLoop);
+            sparklingTrailDuration = RemoteConfigManager.Instance.GetFloat("sparkling_trail_duration", ref sparklingTrailDuration);
+            sparklingTrailSpawnDelay = RemoteConfigManager.Instance.GetFloat("sparkling_trail_spawn_delay", ref sparklingTrailSpawnDelay);
+            sparklingTrailFadeDelay = RemoteConfigManager.Instance.GetFloat("sparkling_trail_fade_delay", ref sparklingTrailFadeDelay);
+            bombImpactShakeDuration = RemoteConfigManager.Instance.GetFloat("bomb_impact_shake_duration", ref bombImpactShakeDuration);
+            bombImpactShakeMagnitude = RemoteConfigManager.Instance.GetFloat("bomb_impact_shake_magnitude", ref bombImpactShakeMagnitude);
+            bombImpactShakeVibrato = RemoteConfigManager.Instance.GetInt("bomb_impact_shake_vibrato", ref bombImpactShakeVibrato);
+            bombImpactShakeRandomness = RemoteConfigManager.Instance.GetFloat("bomb_impact_shake_randomness", ref bombImpactShakeRandomness);
+            rocketTravelSpeed = RemoteConfigManager.Instance.GetFloat("rocket_travel_speed", ref rocketTravelSpeed);
+            elementToCauldronMaxHeight = RemoteConfigManager.Instance.GetFloat("element_to_cauldron_max_height", ref elementToCauldronMaxHeight);
+            elementToCauldronHeightMultiplier = RemoteConfigManager.Instance.GetFloat("element_to_cauldron_height_multiplier", ref elementToCauldronHeightMultiplier);
+            maxBombCount = RemoteConfigManager.Instance.GetInt("max_bomb_count", ref maxBombCount);
+            maxBombIndirectCount = RemoteConfigManager.Instance.GetInt("max_bomb_indirect_count", ref maxBombIndirectCount);
+            maxRocketCount = RemoteConfigManager.Instance.GetInt("max_rocket_count", ref maxRocketCount);
+            maxRocketIndirectCount = RemoteConfigManager.Instance.GetInt("max_rocket_indirect_count", ref maxRocketIndirectCount);
+            maxPropellerCount = RemoteConfigManager.Instance.GetInt("max_propeller_count", ref maxPropellerCount);
+            maxPropellerIndirectCount = RemoteConfigManager.Instance.GetInt("max_propeller_indirect_count", ref maxPropellerIndirectCount);
+            maxDiscoBallCount = RemoteConfigManager.Instance.GetInt("max_disco_ball_count", ref maxDiscoBallCount);
+            maxDiscoBallIndirectCount = RemoteConfigManager.Instance.GetInt("max_disco_ball_indirect_count", ref maxDiscoBallIndirectCount);
+            maxCauldronCount = RemoteConfigManager.Instance.GetInt("max_cauldron_count", ref maxCauldronCount);
+            maxCauldronIndirectCount = RemoteConfigManager.Instance.GetInt("max_cauldron_indirect_count", ref maxCauldronIndirectCount);
+
         }
     }
 }

@@ -6,28 +6,19 @@ using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.RemoteConfig;
 using UnityEngine;
+using Game.Singleton;
 
 namespace Game
 {
 
-    public class RemoteConfigManager : MonoBehaviour
+    public class RemoteConfigManager : SingletonComponent<RemoteConfigManager>
     {
-        public static RemoteConfigManager Instance { get; private set; }
         public bool IsInitialized { get; private set; }
 
         public event Action OnRemoteConfigLoaded;
 
-        private async void Awake()
+        private async void Start()
         {
-            if (Instance != null)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-
             await InitializeAsync();
         }
 
@@ -59,102 +50,52 @@ namespace Game
         {
             Debug.Log($"Remote Config fetched from: {response.requestOrigin}");
 
-            ApplyAllRemoteConfigs();
-
             IsInitialized = true;
 
             OnRemoteConfigLoaded?.Invoke();
         }
 
-        private void ApplyAllRemoteConfigs()
-        {
-            Assembly assembly = typeof(RemoteConfigManager).Assembly;
-            Type[] types;
-
-            try
-            {
-                types = assembly.GetTypes();
-            }
-            catch
-            {
-                return;
-            }
-
-            foreach (var type in types)
-            {
-                var fields = type.GetFields(
-                    BindingFlags.Public |
-                    BindingFlags.NonPublic |
-                    BindingFlags.Static
-                );
-
-                foreach (var field in fields)
-                {
-                    var attribute = field.GetCustomAttribute<RemoteConfigAttribute>();
-
-                    if (attribute == null)
-                        continue;
-
-                    if (TryGetRemoteValue(out object value, field.FieldType, attribute))
-                    {
-                        field.SetValue(null, value);
-                    }
-
-                    Debug.Log(
-                        $"[RemoteConfig] {type.Name}.{field.Name} = {value}"
-                    );
-                }
-            }
-        }
-
-        private bool TryGetRemoteValue(out object value, Type fieldType, RemoteConfigAttribute attribute)
-        {
-            string key = attribute.Key;
-            object defaultValue = attribute.DefaultValue;
-
-            var config = RemoteConfigService.Instance.appConfig;
-
-            if (fieldType == typeof(int))
-            {
-                value = config.GetInt(key, (int)defaultValue);
-                return true;
-            }
-
-            if (fieldType == typeof(float))
-            {
-                value = config.GetFloat(key, Convert.ToSingle(defaultValue));
-                return true;
-            }
-
-            if (fieldType == typeof(bool))
-            {
-                value = config.GetBool(key, (bool)defaultValue);
-                return true;
-            }
-
-            if (fieldType == typeof(string))
-            {
-                value = config.GetString(key, (string)defaultValue);
-                return true;
-            }
-
-            if (fieldType == typeof(long))
-            {
-                value = config.GetLong(key, Convert.ToInt64(defaultValue));
-                return true;
-            }
-
-            Debug.LogWarning(
-                $"Unsupported RemoteConfig field type: {fieldType.Name}"
-            );
-
-            value = null;
-            return false;
-        }
 
         private void OnDestroy()
         {
             RemoteConfigService.Instance.FetchCompleted -= OnFetchCompleted;
+        }
+
+        public float GetFloat(string v, ref float currentValue)
+        {
+            currentValue = RemoteConfigService.Instance.appConfig.GetFloat(v, currentValue);
+            return currentValue;
+        }
+        public float GetFloat(string v, float defaultValue)
+        {
+            return RemoteConfigService.Instance.appConfig.GetFloat(v, defaultValue);
+        }
+        public int GetInt(string v, ref int currentValue)
+        {
+            currentValue = RemoteConfigService.Instance.appConfig.GetInt(v, currentValue);
+            return currentValue;
+        }
+        public int GetInt(string v, int defaultValue)
+        {
+            return RemoteConfigService.Instance.appConfig.GetInt(v, defaultValue);
+        }
+        public string GetString(string v, ref string currentValue)
+        {
+            currentValue = RemoteConfigService.Instance.appConfig.GetString(v, currentValue);
+            return currentValue;
+        }
+        public string GetString(string v, string defaultValue)
+        {
+            return RemoteConfigService.Instance.appConfig.GetString(v, defaultValue);
+        }
+        public bool GetBool(string v, ref bool currentValue)
+        {
+            currentValue = RemoteConfigService.Instance.appConfig.GetBool(v, currentValue);
+            return currentValue;
+        }
+        public bool GetBool(string v, bool defaultValue)
+        {
+            return RemoteConfigService.Instance.appConfig.GetBool(v, defaultValue);
         }
 
         public struct UserAttributes
