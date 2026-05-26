@@ -179,7 +179,7 @@ namespace Game
                 yield break;
 
             ElementData selectedElementData = cell.elementInfo.elementData;
-            powerUpHandler.CreatePowerUpAt(center, selectedElementData, ElementPowerUpType.Rocket);
+            powerUpHandler.CreatePowerUpAt(center, selectedElementData, ElementPowerUpType.HorizontalRocket);
             yield break;
         }
 

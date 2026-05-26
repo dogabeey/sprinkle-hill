@@ -63,7 +63,8 @@ namespace Game
                 new DiscoBallCreationStrategy(this),
                 new PropellerCreationStrategy(this),
                 new BombCreationStrategy(this),
-                new RocketCreationStrategy(this)
+                new VerticalRocketCreationStrategy(this),
+                new HorizontalRocketCreationStrategy(this)
             };
         }
 
@@ -159,7 +160,7 @@ namespace Game
             if (strategyType == typeof(BombCreationStrategy))
                 return GetPowerUpCount(ElementPowerUpType.Bomb) >= GetLimit(context.isIndirectCreation, constantManager.maxBombCount, constantManager.maxBombIndirectCount);
 
-            if (strategyType == typeof(RocketCreationStrategy))
+            if (strategyType == typeof(VerticalRocketCreationStrategy) || strategyType == typeof(HorizontalRocketCreationStrategy))
             {
                 int rocketCount = GetPowerUpCount(ElementPowerUpType.Rocket)
                                   + GetPowerUpCount(ElementPowerUpType.HorizontalRocket)
@@ -322,7 +323,7 @@ namespace Game
             return uniqueCount >= 4;
         }
 
-        public List<SpawnRequest> FindRocketSpawns(List<List<Vector2Int>> matchedGroups, Vector2Int init1, Vector2Int init2, HashSet<Vector2Int> claimedPositions = null)
+        public List<SpawnRequest> FindVerticalRocketSpawns(List<List<Vector2Int>> matchedGroups, Vector2Int init1, Vector2Int init2, HashSet<Vector2Int> claimedPositions = null)
         {
             List<SpawnRequest> spawns = new List<SpawnRequest>();
             HashSet<Vector2Int> used = new HashSet<Vector2Int>();
@@ -340,7 +341,6 @@ namespace Game
                 if (src == null) continue;
                 bool found = false;
 
-                // Horizontal runs
                 for (int y = 0; y < grid.GridSize.y && !found; y++)
                 {
                     int run = 0;
@@ -354,10 +354,9 @@ namespace Game
                             if (run >= 4)
                             {
                                 Vector2Int sp = PickPreferredFromSet(runPos, init1, init2);
-                                // Skip if this position was already claimed by a higher-priority power-up
                                 if (claimedPositions != null && claimedPositions.Contains(sp)) { found = true; break; }
                                 if (used.Add(sp))
-                                    spawns.Add(new SpawnRequest { position = sp, sourceData = src, powerUpType = ElementPowerUpType.Rocket });
+                                    spawns.Add(new SpawnRequest { position = sp, sourceData = src, powerUpType = ElementPowerUpType.VerticalRocket });
                                 found = true; break;
                             }
                             run = 0; runPos.Clear();
@@ -365,7 +364,27 @@ namespace Game
                     }
                 }
 
-                // Vertical runs
+            }
+            return spawns;
+        }
+
+        public List<SpawnRequest> FindHorizontalRocketSpawns(List<List<Vector2Int>> matchedGroups, Vector2Int init1, Vector2Int init2, HashSet<Vector2Int> claimedPositions = null)
+        {
+            List<SpawnRequest> spawns = new List<SpawnRequest>();
+            HashSet<Vector2Int> used = new HashSet<Vector2Int>();
+
+            for (int g = 0; g < matchedGroups.Count; g++)
+            {
+                List<Vector2Int> group = matchedGroups[g];
+                if (group == null || group.Count < 4) continue;
+
+                if (group.Count >= 5) continue;
+
+                HashSet<Vector2Int> groupSet = new HashSet<Vector2Int>(group);
+                ElementData src = grid.GetCellPublic(group[0])?.elementInfo?.elementData;
+                if (src == null) continue;
+                bool found = false;
+
                 for (int x = 0; x < grid.GridSize.x && !found; x++)
                 {
                     int run = 0;
@@ -379,10 +398,9 @@ namespace Game
                             if (run >= 4)
                             {
                                 Vector2Int sp = PickPreferredFromSet(runPos, init1, init2);
-                                // Skip if this position was already claimed by a higher-priority power-up
                                 if (claimedPositions != null && claimedPositions.Contains(sp)) { found = true; break; }
                                 if (used.Add(sp))
-                                    spawns.Add(new SpawnRequest { position = sp, sourceData = src, powerUpType = ElementPowerUpType.Rocket });
+                                    spawns.Add(new SpawnRequest { position = sp, sourceData = src, powerUpType = ElementPowerUpType.HorizontalRocket });
                                 found = true; break;
                             }
                             run = 0; runPos.Clear();
@@ -544,11 +562,11 @@ namespace Game
             }
         }
 
-        private sealed class RocketCreationStrategy : IPowerUpCreationStrategy
+        private sealed class VerticalRocketCreationStrategy : IPowerUpCreationStrategy
         {
             private readonly PowerUpHandler handler;
 
-            public RocketCreationStrategy(PowerUpHandler handler)
+            public VerticalRocketCreationStrategy(PowerUpHandler handler)
             {
                 this.handler = handler;
             }
@@ -557,7 +575,31 @@ namespace Game
 
             public void CollectSpawns(CreationContext context, SpawnResolution resolution, HashSet<Vector2Int> claimedPositions)
             {
-                List<SpawnRequest> spawns = handler.FindRocketSpawns(context.matchedGroups, context.init1, context.init2, claimedPositions);
+                List<SpawnRequest> spawns = handler.FindVerticalRocketSpawns(context.matchedGroups, context.init1, context.init2, claimedPositions);
+                for (int i = 0; i < spawns.Count; i++)
+                {
+                    SpawnRequest spawn = spawns[i];
+                    resolution.rocketSpawns.Add(spawn);
+                    resolution.protectedPositions.Add(spawn.position);
+                    claimedPositions.Add(spawn.position);
+                }
+            }
+        }
+
+        private sealed class HorizontalRocketCreationStrategy : IPowerUpCreationStrategy
+        {
+            private readonly PowerUpHandler handler;
+
+            public HorizontalRocketCreationStrategy(PowerUpHandler handler)
+            {
+                this.handler = handler;
+            }
+
+            public bool IsEnabled(CreationContext context) => context.allowRocket;
+
+            public void CollectSpawns(CreationContext context, SpawnResolution resolution, HashSet<Vector2Int> claimedPositions)
+            {
+                List<SpawnRequest> spawns = handler.FindHorizontalRocketSpawns(context.matchedGroups, context.init1, context.init2, claimedPositions);
                 for (int i = 0; i < spawns.Count; i++)
                 {
                     SpawnRequest spawn = spawns[i];
@@ -1306,6 +1348,7 @@ namespace Game
             discoBallCell.elementInfo = null;
 
             Grid3D.GridCell rocketCell = grid.GetCellPublic(rocketPos);
+            ElementPowerUpType rocketType = rocketCell?.elementInfo?.powerUpType ?? ElementPowerUpType.Rocket;
             if (rocketCell != null)
             {
                 grid.TriggerCellFeatureMatchedOverAt(rocketPos);
@@ -1315,7 +1358,7 @@ namespace Game
             List<Vector2Int> selectedCells = GetRandomEligibleDiscoBallTargets(discoBallPos, rocketPos, StandardDiscoBallReplaceCount);
             if (selectedCells.Count > 0)
             {
-                yield return grid.StartCoroutine(AnimateDiscoBallPowerUpTrails(discoBallPos, selectedCells, ElementPowerUpType.Rocket));
+                yield return grid.StartCoroutine(AnimateDiscoBallPowerUpTrails(discoBallPos, selectedCells, rocketType));
 
                 yield return null;
 
@@ -1454,7 +1497,7 @@ namespace Game
                 propellerCell.elementInfo = null;
             }
 
-            yield return grid.StartCoroutine(FlyRocketToTargetAndActivate(rocketPos, targetPos, rocketElement));
+            yield return grid.StartCoroutine(FlyRocketToTargetAndActivate(rocketPos, targetPos, rocketElement, rocketType));
         }
 
         private IEnumerator ActivateRocketAndBombCombo(Vector2Int bombPos)
@@ -1476,6 +1519,7 @@ namespace Game
             bombCell.elementInfo = null;
 
             Grid3D.GridCell rocketCell = grid.GetCellPublic(rocketPos);
+            ElementPowerUpType rocketType = rocketCell?.elementInfo?.powerUpType ?? ElementPowerUpType.Rocket;
             if (rocketCell != null)
             {
                 grid.TriggerCellFeatureMatchedOverAt(rocketPos);
@@ -1485,7 +1529,7 @@ namespace Game
             List<Vector2Int> areaCells = GetEligibleCellsInSquareArea(bombPos, 1, bombPos, rocketPos);
             if (areaCells.Count > 0)
             {
-                ConvertCellsToPowerUp(areaCells, ElementPowerUpType.Rocket);
+                ConvertCellsToPowerUp(areaCells, rocketType);
                 yield return null;
 
                 for (int i = 0; i < areaCells.Count; i++)
@@ -2364,15 +2408,38 @@ namespace Game
             grid.TriggerCellFeatureMatchedOverAt(rocketPos);
             rocketCell.elementInfo = null;
 
-            Vector2Int[] rocketDirections =
+            Vector2Int[] rocketDirections = GetRocketDirections(rocketType);
+
+            yield return grid.StartCoroutine(ActivateRocketBurst(rocketPos, rocketElement, rocketDirections, clearSourceCell: false, clearOriginCell: false, preLaunchDelay: 0.1f));
+        }
+
+        private static Vector2Int[] GetRocketDirections(ElementPowerUpType rocketType)
+        {
+            if (rocketType == ElementPowerUpType.HorizontalRocket)
+            {
+                return new[]
+                {
+                    Vector2Int.right,
+                    Vector2Int.left
+                };
+            }
+
+            if (rocketType == ElementPowerUpType.VerticalRocket)
+            {
+                return new[]
+                {
+                    Vector2Int.up,
+                    Vector2Int.down
+                };
+            }
+
+            return new[]
             {
                 Vector2Int.right,
                 Vector2Int.left,
                 Vector2Int.up,
                 Vector2Int.down
             };
-
-            yield return grid.StartCoroutine(ActivateRocketBurst(rocketPos, rocketElement, rocketDirections, clearSourceCell: false, clearOriginCell: false, preLaunchDelay: 0.1f));
         }
 
         private IEnumerator ClearBombAreaProgressive(Vector2Int center, int radius, bool allowConditionedBreakableWalls)
@@ -2611,7 +2678,7 @@ namespace Game
             return copy;
         }
 
-        private IEnumerator FlyRocketToTargetAndActivate(Vector2Int rocketPos, Vector2Int targetPos, GridElement rocketElement)
+        private IEnumerator FlyRocketToTargetAndActivate(Vector2Int rocketPos, Vector2Int targetPos, GridElement rocketElement, ElementPowerUpType rocketType)
         {
             Vector3 startWorldPos = rocketElement != null ? rocketElement.transform.position : grid.GetWorldPosition(rocketPos);
             Vector3 targetWorldPos = grid.GetWorldPosition(targetPos);
@@ -2646,13 +2713,7 @@ namespace Game
                 yield return new WaitForSeconds(0.3f);
             }
 
-            Vector2Int[] rocketDirections =
-            {
-                Vector2Int.right,
-                Vector2Int.left,
-                Vector2Int.up,
-                Vector2Int.down
-            };
+            Vector2Int[] rocketDirections = GetRocketDirections(rocketType);
 
             yield return grid.StartCoroutine(ActivateRocketBurst(targetPos, rocketElement, rocketDirections, clearSourceCell: false, clearOriginCell: true, preLaunchDelay: 0f, volumeMultiplier: 1f, pitchOffset: 0.02f));
         }
@@ -2813,7 +2874,8 @@ namespace Game
             GameManager gm = GameManager.Instance;
             if (gm == null) return sourceData;
             if (type == ElementPowerUpType.Bomb && gm.bombElementData != null) return gm.bombElementData;
-            if (IsRocket(type) && gm.rocketElementData != null) return gm.rocketElementData;
+            if ((type == ElementPowerUpType.Rocket || type == ElementPowerUpType.HorizontalRocket) && gm.horizontalRocketElementData != null) return gm.horizontalRocketElementData;
+            if (type == ElementPowerUpType.VerticalRocket && gm.verticalRocketElementData != null) return gm.verticalRocketElementData;
             if (IsPropeller(type) && gm.propellerElementData != null) return gm.propellerElementData;
             if (IsDiscoBall(type) && gm.discoBallElementData != null) return gm.discoBallElementData;
             return sourceData;

@@ -136,8 +136,11 @@ namespace Game
             if (manager.bombElementData == data)
                 return ElementPowerUpType.Bomb;
 
-            if (manager.rocketElementData == data)
-                return ElementPowerUpType.Rocket;
+            if (manager.horizontalRocketElementData == data)
+                return ElementPowerUpType.HorizontalRocket;
+
+            if (manager.verticalRocketElementData == data)
+                return ElementPowerUpType.VerticalRocket;
 
             if (manager.propellerElementData == data)
                 return ElementPowerUpType.Propeller;
@@ -768,13 +771,19 @@ namespace Game
                         }
                     }
                     // Power-Up Options (Rocket, Bomb, Propeller, Disco Ball)
-                    ElementData rocketData = GameManager.Instance.rocketElementData;
+                    ElementData horizontalRocketData = GameManager.Instance.horizontalRocketElementData;
+                    ElementData verticalRocketData = GameManager.Instance.verticalRocketElementData;
                     ElementData bombData = GameManager.Instance.bombElementData;
                     ElementData propellerData = GameManager.Instance.propellerElementData;
                     ElementData discoBallData = GameManager.Instance.discoBallElementData;
-                    menu.AddItem(new GUIContent($"Element/Power-Ups/{rocketData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == rocketData, () =>
+                    menu.AddItem(new GUIContent($"Element/Power-Ups/{horizontalRocketData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == horizontalRocketData, () =>
                     {
-                        value.elementInfo = CreateElementInfo(rocketData);
+                        value.elementInfo = CreateElementInfo(horizontalRocketData);
+                        MarkDirty();
+                    });
+                    menu.AddItem(new GUIContent($"Element/Power-Ups/{verticalRocketData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == verticalRocketData, () =>
+                    {
+                        value.elementInfo = CreateElementInfo(verticalRocketData);
                         MarkDirty();
                     });
                     menu.AddItem(new GUIContent($"Element/Power-Ups/{bombData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == bombData, () =>

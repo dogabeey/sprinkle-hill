@@ -27,7 +27,9 @@ namespace Game
         [FoldoutGroup("Element Definitions")]
         public ElementData bombElementData;
         [FoldoutGroup("Element Definitions")]
-        public ElementData rocketElementData;
+        public ElementData horizontalRocketElementData;
+        [FoldoutGroup("Element Definitions")]
+        public ElementData verticalRocketElementData;
         [FoldoutGroup("Element Definitions")]
         public ElementData propellerElementData;
         [FoldoutGroup("Element Definitions")]
