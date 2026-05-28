@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Disco Ball
   displayColor: {r: 0.745283, g: 0.6142448, b: 0.045701336, a: 0}
-  displayIcon: {fileID: 524596139, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
+  displayIcon: {fileID: -1949253524, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
   breakableWallOverride: {fileID: 0}
   elementMesh: {fileID: 0}
   elementMaterial: {fileID: 2100000, guid: 035d63c1a56c6f34ea11118379f18c0f, type: 2}

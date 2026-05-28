@@ -44,15 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 073f2e7c68f0d2243987fc020d905a76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
+  dontDestroyOnLoad: 1
   tutorialSteps:
   - {fileID: 11400000, guid: b71aef537cde7dc47a731839858a4b86, type: 2}
   - {fileID: 11400000, guid: beab77d328698014dbbc481afce5067d, type: 2}

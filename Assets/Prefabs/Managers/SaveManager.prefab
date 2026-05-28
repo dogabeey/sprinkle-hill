@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 277f4e85b6b014290b72f2c1b279e421, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game::Game.SaveManager
+  dontDestroyOnLoad: 1
   saveDatas:
   - saveDataType: 0
     isGlobalProfile: 0

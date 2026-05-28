@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5092102555726562431
 Transform:
   m_ObjectHideFlags: 0
@@ -47,3 +47,4 @@ MonoBehaviour:
   dontDestroyOnLoad: 1
   adInterval: 60
   levelInterval: 2
+  bannerHeight: 70

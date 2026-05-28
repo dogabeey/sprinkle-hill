@@ -120,22 +120,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 1
-  eventManager: {fileID: 0}
-  soundManager: {fileID: 0}
-  saveManager: {fileID: 0}
-  constantManager: {fileID: 0}
-  gfxManager: {fileID: 0}
-  tutorialManager: {fileID: 0}
-  actionBarManager: {fileID: 0}
-  screenManager: {fileID: 0}
-  featureTracker: {fileID: 0}
-  poolingManager: {fileID: 0}
   showFeatureProgressScreen: 0
   cashCurrency: {fileID: 11400000, guid: 31b1c667ab353af4a80bfe0daaa96451, type: 2}
   premiumCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
   autoShuffleWhenOutOfPossibleMoves: 1
   bombElementData: {fileID: 11400000, guid: 2f83e159c6b368646a1f9d8e7ec081e9, type: 2}
-  rocketElementData: {fileID: 11400000, guid: 56c62304f3d4a6c428379f3845a428a7, type: 2}
+  horizontalRocketElementData: {fileID: 11400000, guid: 4260243d8e138d54bb90296194b69f84, type: 2}
+  verticalRocketElementData: {fileID: 11400000, guid: 56c62304f3d4a6c428379f3845a428a7, type: 2}
   propellerElementData: {fileID: 11400000, guid: 154ee2fd4a3a356489c4482e8b443c06, type: 2}
   discoBallElementData: {fileID: 11400000, guid: 24c241fb46e7d3447b4a3d140a9cda60, type: 2}
   cauldronElementData: {fileID: 11400000, guid: f531cb99e5512e14fbf93538678a6278, type: 2}

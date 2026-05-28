@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac45fb6691dccf04c92337e06a00594d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dontDestroyOnLoad: 1
   actionBarViewPrefab: {fileID: 230861821462889445, guid: 9e234be0c7761a34aaf9d63c420f9995, type: 3}
   actionBarItemList:
   - rid: 1021877643594432513
@@ -60,6 +61,7 @@ MonoBehaviour:
       type: {class: AddTimeAction, ns: Game, asm: Game}
       data:
         startingCount: 3
+        currentCount: 0
         ActionBarIcon: {fileID: -238066524, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
         buyConfig:
         - buyCount: 3
@@ -84,6 +86,7 @@ MonoBehaviour:
       type: {class: AddMovesAction, ns: Game, asm: Game}
       data:
         startingCount: 3
+        currentCount: 0
         ActionBarIcon: {fileID: 177486326, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
         buyConfig:
         - buyCount: 3
@@ -108,6 +111,7 @@ MonoBehaviour:
       type: {class: HammerAction, ns: Game, asm: Game}
       data:
         startingCount: 0
+        currentCount: 0
         ActionBarIcon: {fileID: -1379819299, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
         buyConfig:
         - buyCount: 3
@@ -119,7 +123,7 @@ MonoBehaviour:
         - buyCount: 25
           discountPercentage: 0.25
           buySprite: {fileID: -571819677, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
-        preExecutionAnimator: {fileID: 3490327515930101110, guid: 2c72308a58ed09b45b42f2f80b2f71fc, type: 3}
+        preExecutionAnimator: {fileID: 3490327515930101110, guid: 68dadf668f1c25c49b2d686970add31d, type: 3}
         animationName: hammer_anim
         unlockedLevel: 0
         buyCost: 50
@@ -131,6 +135,7 @@ MonoBehaviour:
       type: {class: CannonAction, ns: Game, asm: Game}
       data:
         startingCount: 0
+        currentCount: 0
         ActionBarIcon: {fileID: 1334718345, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
         buyConfig:
         - buyCount: 3
@@ -143,7 +148,7 @@ MonoBehaviour:
           discountPercentage: 0.25
           buySprite: {fileID: 1382202287, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
         preExecutionAnimator: {fileID: 3490327515930101110, guid: 2c72308a58ed09b45b42f2f80b2f71fc, type: 3}
-        animationName: hammer_anim
+        animationName: cannon_anim
         unlockedLevel: 1
         buyCost: 50
         overrideCellLocationX: 0
@@ -154,6 +159,7 @@ MonoBehaviour:
       type: {class: ShuffleAction, ns: Game, asm: Game}
       data:
         startingCount: 0
+        currentCount: 0
         ActionBarIcon: {fileID: 1175953842, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
         buyConfig:
         - buyCount: 3

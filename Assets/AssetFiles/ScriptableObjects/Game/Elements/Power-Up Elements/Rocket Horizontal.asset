@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bd567b4ecb2599643a9d8e24b3610941, type: 3}
-  m_Name: Rolling Pin - Default
+  m_Name: Rocket Horizontal
   m_EditorClassIdentifier: 
-  displayName: Rolling Pin
+  displayName: Rocket
   displayColor: {r: 0.745283, g: 0.6142448, b: 0.045701336, a: 0}
-  displayIcon: {fileID: -1949253524, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
+  displayIcon: {fileID: 433923414, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
   breakableWallOverride: {fileID: 0}
   elementMesh: {fileID: 0}
   elementMaterial: {fileID: 2100000, guid: 035d63c1a56c6f34ea11118379f18c0f, type: 2}

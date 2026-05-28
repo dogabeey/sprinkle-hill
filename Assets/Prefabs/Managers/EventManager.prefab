@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a5411e12104bf647a113285caddaedb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game::EventManager
+  dontDestroyOnLoad: 1
   eventQueueProcessingInterval: 0
   activeListeners: []
   totalListenerCount: 0
