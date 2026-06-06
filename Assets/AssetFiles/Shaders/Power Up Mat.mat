@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Power Up Mat
-  m_Shader: {fileID: 4800000, guid: 073ea26303906c149ae3fd4b05f7f578, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: b81e381af07adcd46a7f0e8e8f5c9cdd, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -27,8 +27,12 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Distortion_Texture:
+        m_Texture: {fileID: 2800000, guid: 0706ced93314bd44f9baefb45b85e4a8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: dcd6b4c60e9ba6948a2408a8afbdca43, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTexture:
@@ -50,17 +54,23 @@ Material:
     m_Ints: []
     m_Floats:
     - PixelSnap: 0
+    - _Distortion_Speed: 0
+    - _Distortion_Strength: 0
     - _Emission: 0
     - _EnableExternalAlpha: 0
     - _HueShiftSpeed: 3.02
     - _HueShiftStrength: 0.291
     - _HueSpeed: 0.274
+    - _Rotate: 0
     m_Colors:
     - White: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Distortion_Direction: {r: 1, g: 1, b: 0, a: 0}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _MainColor: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+    - _Spherize: {r: 0, g: 0, b: 0, a: 0}
+    - _Twirl: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &2083951085654080915
