@@ -103,6 +103,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -315,7 +316,6 @@ GameObject:
   - component: {fileID: 7454406005558373596}
   - component: {fileID: 475692780729967440}
   - component: {fileID: 3195395052200355077}
-  - component: {fileID: 7871563151929769007}
   m_Layer: 5
   m_Name: Feature Panel
   m_TagString: Untagged
@@ -421,32 +421,6 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
   m_EffectDistance: {x: 5, y: -5}
   m_UseGraphicAlpha: 1
---- !u!114 &7871563151929769007
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3743903270123063898}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6158a6414676a2459acf2db53f47e89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animator: {fileID: 475692780729967440}
-  playAnimationName: 
-  closeAnimationName: 
-  isPersistent: 0
-  titleText: {fileID: 0}
-  featureNameText: {fileID: 0}
-  progressText: {fileID: 6019790280919823233}
-  featureIconImage: {fileID: 5016274988826890478}
-  progressFillImage: {fileID: 4852759253729867655}
-  continueButton: {fileID: 937172436059249434}
-  allFeaturesUnlockedTitle: All Features Unlocked
-  allFeaturesUnlockedMessage: You unlocked all available features.
-  progressFormat: "Unlock at level {0} \u2022 {1} level left"
-  progressFormatPlural: "Unlock at level {0} \u2022 {1} levels left"
 --- !u!1 &4320816731533210628
 GameObject:
   m_ObjectHideFlags: 0
@@ -550,6 +524,7 @@ MonoBehaviour:
   m_VerticalAlignment: 4096
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -807,6 +782,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -834,7 +810,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 2.300171, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 1
