@@ -90,7 +90,7 @@ public class UpperPanelUI : UIElement
             if (objective == null || objective.tiedToLockedArea)
                 return;
 
-            ObjectiveUINode node = Instantiate(objectiveNodePrefab, transform);
+            ObjectiveUINode node = Instantiate(objectiveNodePrefab, objectivesContainer.transform);
             node.Initialize(objective);
             objectiveNodes.Add(node);
         });
