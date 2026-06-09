@@ -403,7 +403,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7c97fab2fd969a44daa5d8305e629a8c, type: 2}
+  - {fileID: 2100000, guid: 035d63c1a56c6f34ea11118379f18c0f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -426,7 +426,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -544277971, guid: 8c13a9348c5804941ac0263072b45742, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 83fb9e37405defa4897e5dcd2304b3c6, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -434,7 +434,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
 --- !u!1 &6532699754744590328
 GameObject:
@@ -448,6 +448,7 @@ GameObject:
   - component: {fileID: 8349045300224855682}
   - component: {fileID: 43135049299317513}
   - component: {fileID: 8132023732941228010}
+  - component: {fileID: 112948443755987821}
   m_Layer: 14
   m_Name: Element Prefab
   m_TagString: Untagged
@@ -486,14 +487,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
-    SerializedFormat: 0
-    SerializedBytes: 2d01090000006700720069006400430065006c006c007300
+    SerializedFormat: 2
+    SerializedBytes: 
     ReferencedUnityObjects: []
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
-    SerializationNodes: []
+    SerializationNodes:
+    - Name: gridCells
+      Entry: 6
+      Data: 
   gridElementPrefab: {fileID: 0}
   tileGenerationData: {fileID: 0}
   parent: {fileID: 0}
@@ -509,6 +513,7 @@ MonoBehaviour:
     cauldronProgress: 0
   elementAnimator: {fileID: 8132023732941228010}
   elementRenderer: {fileID: 482629601680886882}
+  powerUpActivationString: activate
   hiddenSprite: {fileID: -136137942, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
   ownerGrid: {fileID: 0}
   highlightSprite: {fileID: 961667231535525662}
@@ -571,7 +576,7 @@ Animator:
   m_GameObject: {fileID: 6532699754744590328}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: adb5b707a9c84d346bec2bf2a7044866, type: 2}
+  m_Controller: {fileID: 9100000, guid: cb78fcfe153a4514991876745d866bf6, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -583,6 +588,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &112948443755987821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6532699754744590328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10c02a821af558041989434843f3b931, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Util::WarpableSpriteModifier
+  rendererReference: {fileID: 482629601680886882}
+  mainTexture: {fileID: 0}
+  twirl: {x: 0, y: 0}
+  scale: {x: 1, y: 1}
+  spherize: {x: 0, y: 0}
+  distortionTexture: {fileID: 0}
+  distortionStrength: 0
+  distortionSpeed: 0
+  distortionDirection: {x: 0, y: 0}
 --- !u!1 &8666773576842715989
 GameObject:
   m_ObjectHideFlags: 0

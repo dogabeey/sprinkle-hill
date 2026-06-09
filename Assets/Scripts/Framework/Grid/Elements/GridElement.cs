@@ -213,6 +213,10 @@ namespace Game
                 elementAnimator.Play(stateHash, 0, 0f);
                 currentAnimationLayerIndex = 0;
             }
+
+            // Re-apply visual setup after animator has been bound and play called.
+            // Some animator controllers may reset SpriteRenderer properties on rebind; reapply to ensure the element sprite/material is visible.
+            SetElement();
         }
 
         private int ResolveAnimationLayer()

@@ -5,6 +5,8 @@ public class WarpableSpriteModifier : MonoBehaviour
 {
     private const string mainTextureId = "_MainTex";
     private const string twirlId = "_Twirl";
+    private const string spherizeId = "_Spherize";
+    private const string scaleId = "_Scale";
     private const string distortionTextureId = "_Distortion_Texture";
     private const string distortionStrengthId = "_Distortion_Strength";
     private const string distortionSpeedId = "_Distortion_Speed";
@@ -16,6 +18,10 @@ public class WarpableSpriteModifier : MonoBehaviour
     public Texture2D mainTexture;
     [OnValueChanged(nameof(SetMaterialValues))]
     public Vector2 twirl;
+    [OnValueChanged(nameof(SetMaterialValues))]
+    public Vector2 scale;
+    [OnValueChanged(nameof(SetMaterialValues))]
+    public Vector2 spherize;
     [OnValueChanged(nameof(SetMaterialValues))]
     public Texture2D distortionTexture;
     [OnValueChanged(nameof(SetMaterialValues))]
@@ -40,11 +46,15 @@ public class WarpableSpriteModifier : MonoBehaviour
 
     private void SetMaterialValues()
     {
-        rendererReference.material.SetTexture(mainTextureId, mainTexture);
-        rendererReference.material.SetVector(twirlId, twirl);
-        rendererReference.material.SetTexture(distortionTextureId, distortionTexture);
-        rendererReference.material.SetFloat(distortionStrengthId, distortionStrength);
-        rendererReference.material.SetFloat(distortionSpeedId, distortionSpeed);
-        rendererReference.material.SetVector(distortionDirectionId, distortionDirection);
+        if(mainTexture)
+            rendererReference.sharedMaterial.SetTexture(mainTextureId, mainTexture);
+        if(distortionTexture)
+            rendererReference.sharedMaterial.SetTexture(distortionTextureId, distortionTexture);
+        rendererReference.sharedMaterial.SetFloat(distortionStrengthId, distortionStrength);
+        rendererReference.sharedMaterial.SetFloat(distortionSpeedId, distortionSpeed);
+        rendererReference.sharedMaterial.SetVector(twirlId, twirl);
+        rendererReference.sharedMaterial.SetVector(distortionDirectionId, distortionDirection);
+        rendererReference.sharedMaterial.SetVector(spherizeId, spherize);
+        rendererReference.sharedMaterial.SetVector(scaleId, scale);
     }
 }

@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayName: Disco Ball
   displayColor: {r: 0.745283, g: 0.6142448, b: 0.045701336, a: 0}
-  displayIcon: {fileID: -1949253524, guid: 3899bea7d0e8fc2419cc2165f3389326, type: 3}
+  displayIcon: {fileID: 21300000, guid: 05ff407d46c12fa47aad8eb2db6440c3, type: 3}
   breakableWallOverride: {fileID: 0}
   elementMesh: {fileID: 0}
   elementMaterial: {fileID: 2100000, guid: 035d63c1a56c6f34ea11118379f18c0f, type: 2}
   gridCoverage: {x: 1, y: 1}
   behaviorFlags: 0
   defaultIdleAnimation: idle
-  animationController: {fileID: 0}
+  animationController: {fileID: 9100000, guid: ed9036486894c5446834702ed304b893, type: 2}
   cauldronChargeRequired: 8
   cauldronChargeRadius: 1
   cauldronExplosionParticle: {fileID: 0}
