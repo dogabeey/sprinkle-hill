@@ -4,5 +4,10 @@
   <Project Path="Haptics.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="DOTween.Modules.csproj" />
+  <Project Path="Game.Util.csproj" />
+  <Project Path="Game.Singleton.csproj" />
+  <Project Path="Game.EventManagement.csproj" />
+  <Project Path="Game.Ads.csproj" />
   <Project Path="Sirenix.OdinInspector.Modules.UnityMathematics.csproj" />
+  <Project Path="Game.RemoteConfig.csproj" />
 </Solution>

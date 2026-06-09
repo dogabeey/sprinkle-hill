@@ -35,6 +35,40 @@ namespace Game
             public Vector3 mergeWorldPosition;
         }
 
+        private IEnumerator WaitForActivationAnimation(Animator animator, string triggerName)
+        {
+            if (animator == null || string.IsNullOrEmpty(triggerName))
+                yield break;
+
+            // Wait until animator is in a state that contains the trigger name or until a timeout.
+            float timeout = 1.5f; // fallback maximum wait
+            float timer = 0f;
+
+            // If animator has no runtime controller, skip wait
+            if (animator.runtimeAnimatorController == null)
+                yield break;
+
+            // Try to detect animation by observing animator's state changes.
+            int layer = 0;
+            AnimatorStateInfo prevState = animator.GetCurrentAnimatorStateInfo(layer);
+            while (timer < timeout)
+            {
+                AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(layer);
+                if (state.fullPathHash != prevState.fullPathHash)
+                {
+                    // state changed; assume animation started
+                    float remaining = state.length * (1f - state.normalizedTime);
+                    // safety clamp
+                    remaining = Mathf.Min(remaining, timeout - timer);
+                    yield return new WaitForSeconds(remaining);
+                    yield break;
+                }
+
+                timer += 0.02f;
+                yield return new WaitForSeconds(0.02f);
+            }
+        }
+
         private enum SwapComboVisualType
         {
             None,
@@ -668,6 +702,24 @@ namespace Game
                     yield break;
 
                 activePowerUpChainCount++;
+
+                // If the element at position has an animator and a power-up activation trigger name,
+                // play the activation animation first and wait for it to complete before running the power-up.
+                GridElement elem = grid.GetElementAt(pos);
+                if (elem != null && elem.elementAnimator != null && !string.IsNullOrEmpty(elem.powerUpActivationString))
+                {
+                    bool triggered = false;
+                    try
+                    {
+                        elem.elementAnimator.SetTrigger(elem.powerUpActivationString);
+                        triggered = true;
+                    }
+                    catch { triggered = false; }
+
+                    if (triggered)
+                        yield return grid.StartCoroutine(WaitForActivationAnimation(elem.elementAnimator, elem.powerUpActivationString));
+                }
+
                 yield return grid.StartCoroutine(strategy.Activate(pos, swappedElementData));
             }
             finally
@@ -1031,6 +1083,7 @@ namespace Game
             {
                 this.handler = handler;
             }
+
 
             public IEnumerator Activate(Vector2Int pos, ElementData swappedElementData)
             {
