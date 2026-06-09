@@ -1619,6 +1619,14 @@ PrefabInstance:
       propertyPath: m_SortingOrder
       value: 34
       objectReference: {fileID: 0}
+    - target: {fileID: 5461160753145643669, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
+      propertyPath: boundsOffset.x
+      value: 0.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461160753145643669, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
+      propertyPath: boundsOffset.y
+      value: 0.55
+      objectReference: {fileID: 0}
     - target: {fileID: 5783798625139703641, guid: 4fc2a4e35f3f6544ab4094dd531ba0a2, type: 3}
       propertyPath: m_Name
       value: Game Camera
@@ -9306,6 +9314,34 @@ PrefabInstance:
     - target: {fileID: 1976157443442181173, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -0.000015258789
+      objectReference: {fileID: 0}
+    - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 3eddcb9acef16ee4ab6b081e58f55784, type: 2}
+    - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_fontColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_fontColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_fontColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 320891412821721280, guid: 3eddcb9acef16ee4ab6b081e58f55784, type: 2}
+    - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 2210623753114222868, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2734847600849076859, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
       propertyPath: m_Name
