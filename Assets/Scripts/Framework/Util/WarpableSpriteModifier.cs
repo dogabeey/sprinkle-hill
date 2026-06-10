@@ -46,15 +46,31 @@ public class WarpableSpriteModifier : MonoBehaviour
 
     private void SetMaterialValues()
     {
-        if(mainTexture)
-            rendererReference.sharedMaterial.SetTexture(mainTextureId, mainTexture);
-        if(distortionTexture)
-            rendererReference.sharedMaterial.SetTexture(distortionTextureId, distortionTexture);
-        rendererReference.sharedMaterial.SetFloat(distortionStrengthId, distortionStrength);
-        rendererReference.sharedMaterial.SetFloat(distortionSpeedId, distortionSpeed);
-        rendererReference.sharedMaterial.SetVector(twirlId, twirl);
-        rendererReference.sharedMaterial.SetVector(distortionDirectionId, distortionDirection);
-        rendererReference.sharedMaterial.SetVector(spherizeId, spherize);
-        rendererReference.sharedMaterial.SetVector(scaleId, scale);
+        if(Application.isPlaying)
+        {
+            if (mainTexture)
+                rendererReference.sharedMaterial.SetTexture(mainTextureId, mainTexture);
+            if (distortionTexture)
+                rendererReference.sharedMaterial.SetTexture(distortionTextureId, distortionTexture);
+            rendererReference.sharedMaterial.SetFloat(distortionStrengthId, distortionStrength);
+            rendererReference.sharedMaterial.SetFloat(distortionSpeedId, distortionSpeed);
+            rendererReference.sharedMaterial.SetVector(twirlId, twirl);
+            rendererReference.sharedMaterial.SetVector(distortionDirectionId, distortionDirection);
+            rendererReference.sharedMaterial.SetVector(spherizeId, spherize);
+            rendererReference.sharedMaterial.SetVector(scaleId, scale);
+        }
+        else
+        {
+            if (mainTexture)
+                rendererReference.material.SetTexture(mainTextureId, mainTexture);
+            if (distortionTexture)
+                rendererReference.material.SetTexture(distortionTextureId, distortionTexture);
+            rendererReference.material.SetFloat(distortionStrengthId, distortionStrength);
+            rendererReference.material.SetFloat(distortionSpeedId, distortionSpeed);
+            rendererReference.material.SetVector(twirlId, twirl);
+            rendererReference.material.SetVector(distortionDirectionId, distortionDirection);
+            rendererReference.material.SetVector(spherizeId, spherize);
+            rendererReference.material.SetVector(scaleId, scale);
+        }
     }
 }

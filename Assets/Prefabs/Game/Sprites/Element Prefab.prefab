@@ -373,7 +373,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.044}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1337520625376934877}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -448,7 +448,6 @@ GameObject:
   - component: {fileID: 8349045300224855682}
   - component: {fileID: 43135049299317513}
   - component: {fileID: 8132023732941228010}
-  - component: {fileID: 112948443755987821}
   m_Layer: 14
   m_Name: Element Prefab
   m_TagString: Untagged
@@ -467,7 +466,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 613, y: 454, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 2287969813573312064}
   - {fileID: 5222261282993086708}
@@ -517,9 +516,6 @@ MonoBehaviour:
   hiddenSprite: {fileID: -136137942, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
   ownerGrid: {fileID: 0}
   highlightSprite: {fileID: 961667231535525662}
-  cauldronProgressBackground: {fileID: 452525878563324029}
-  cauldronProgressFill: {fileID: 6525688557494473808}
-  cauldronReadyIndicator: {fileID: 0}
 --- !u!61 &43135049299317513
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -588,27 +584,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &112948443755987821
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6532699754744590328}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10c02a821af558041989434843f3b931, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Game.Util::WarpableSpriteModifier
-  rendererReference: {fileID: 482629601680886882}
-  mainTexture: {fileID: 0}
-  twirl: {x: 0, y: 0}
-  scale: {x: 1, y: 1}
-  spherize: {x: 0, y: 0}
-  distortionTexture: {fileID: 0}
-  distortionStrength: 0
-  distortionSpeed: 0
-  distortionDirection: {x: 0, y: 0}
 --- !u!1 &8666773576842715989
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,0 +1,154 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &4273444915182901040
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1337520625376934877, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1337520625376934877, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1337520625376934877, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1337520625376934877, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1337520625376934877, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1337520625376934877, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1337520625376934877, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1337520625376934877, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1337520625376934877, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1337520625376934877, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6532699754744590328, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+      propertyPath: m_Name
+      value: Powerup Element Prefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 8349045300224855682, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 8349045300224855682, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+    m_RemovedComponents:
+    - {fileID: 8349045300224855682, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6532699754744590328, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8061407164080176044}
+    - targetCorrespondingSourceObject: {fileID: 6532699754744590328, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8571447136287000644}
+  m_SourcePrefab: {fileID: 100100000, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+--- !u!212 &3897536458422220846 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 961667231535525662, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+  m_PrefabInstance: {fileID: 4273444915182901040}
+  m_PrefabAsset: {fileID: 0}
+--- !u!212 &4466716041512885074 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 482629601680886882, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+  m_PrefabInstance: {fileID: 4273444915182901040}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &5446140567651029210 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 8132023732941228010, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+  m_PrefabInstance: {fileID: 4273444915182901040}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7054497744630069448 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6532699754744590328, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+  m_PrefabInstance: {fileID: 4273444915182901040}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8061407164080176044
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7054497744630069448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce915ebd9a027fb4889308d73c8f4394, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game::Game.PowerupGridElement
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: gridCells
+      Entry: 6
+      Data: 
+  gridElementPrefab: {fileID: 0}
+  tileGenerationData: {fileID: 0}
+  parent: {fileID: 0}
+  gridSize: {x: 0, y: 0}
+  tileGeneratedAxes: 3
+  reversedAxes: 2
+  elementInfo:
+    elementData: {fileID: 0}
+    randomElement: 0
+    isSparkling: 0
+    isHidden: 0
+    powerUpType: 0
+    cauldronProgress: 0
+  elementAnimator: {fileID: 5446140567651029210}
+  elementRenderer: {fileID: 4466716041512885074}
+  powerUpActivationString: activate
+  hiddenSprite: {fileID: 0}
+  ownerGrid: {fileID: 0}
+  highlightSprite: {fileID: 3897536458422220846}
+--- !u!114 &8571447136287000644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7054497744630069448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10c02a821af558041989434843f3b931, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Util::WarpableSpriteModifier
+  rendererReference: {fileID: 4466716041512885074}
+  mainTexture: {fileID: 0}
+  twirl: {x: 0, y: 0}
+  scale: {x: 1, y: 1}
+  spherize: {x: 0, y: 0}
+  distortionTexture: {fileID: 0}
+  distortionStrength: 0
+  distortionSpeed: 0
+  distortionDirection: {x: 0, y: 0}
