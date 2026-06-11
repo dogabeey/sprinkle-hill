@@ -95,3 +95,4 @@
 [2026-05-23 01:58:18] - Added OUTLET_CREATED event dispatch in Match3Grid when power outlet elements are generated on the board.
 [2026-05-24 19:38:39] - Fixed recursive singleton Instance properties in SaveManager, ScreenManager, and SoundManager that were freezing Unity on Play.
 [2026-05-26 20:32:25] - Split rocket power-up handling into horizontal and vertical variants: added separate GameManager element references, directional rocket spawn strategies, orientation-aware rocket activation/combo conversion, and LevelEditor support for both rocket types.
+[2026-05-26 20:45:33] - Fixed horizontal and vertical rocket destroy animation rotation: modified CreateRocketCopyForDirection to only apply rotation for omnidirectional rockets (ElementPowerUpType.Rocket), keeping horizontal and vertical rocket sprites unrotated during flight and destruction.

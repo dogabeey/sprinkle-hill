@@ -17,9 +17,6 @@ namespace Game
         [FoldoutGroup("Match3/Cauldron")]
         public SpriteRenderer cauldronReadyIndicator;
 
-        private Vector3 cauldronFillBaseScale;
-        private bool cauldronFillCached;
-
         public override void InitElement(Grid3D ownerGrid, GridElementInfo elementInfo)
         {
             base.InitElement(ownerGrid, elementInfo);

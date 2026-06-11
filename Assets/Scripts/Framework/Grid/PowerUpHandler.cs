@@ -1521,7 +1521,7 @@ namespace Game
                 new Vector2Int(-1, -1)
             };
 
-            yield return grid.StartCoroutine(ActivateRocketBurst(firstRocketPos, rocketElement, rocketDirections, clearSourceCell: false, clearOriginCell: false, preLaunchDelay: 0.1f, pitchOffset: 0.04f));
+            yield return grid.StartCoroutine(ActivateRocketBurst(firstRocketPos, rocketElement, rocketDirections, ElementPowerUpType.Rocket, clearSourceCell: false, clearOriginCell: false, preLaunchDelay: 0.1f, pitchOffset: 0.04f));
         }
 
         private IEnumerator ActivateRocketAndPropellerCombo(Vector2Int rocketPos)
@@ -2463,7 +2463,7 @@ namespace Game
 
             Vector2Int[] rocketDirections = GetRocketDirections(rocketType);
 
-            yield return grid.StartCoroutine(ActivateRocketBurst(rocketPos, rocketElement, rocketDirections, clearSourceCell: false, clearOriginCell: false, preLaunchDelay: 0.1f));
+            yield return grid.StartCoroutine(ActivateRocketBurst(rocketPos, rocketElement, rocketDirections, rocketType, clearSourceCell: false, clearOriginCell: false, preLaunchDelay: 0.1f));
         }
 
         private static Vector2Int[] GetRocketDirections(ElementPowerUpType rocketType)
@@ -2580,7 +2580,7 @@ namespace Game
                 grid.StartCoroutine(matchedElement.DestroyElement());
         }
 
-        private IEnumerator ActivateRocketBurst(Vector2Int rocketPos, GridElement rocketElement, Vector2Int[] directions, bool clearSourceCell, bool clearOriginCell, float preLaunchDelay, float volumeMultiplier = 1f, float pitchOffset = 0f)
+        private IEnumerator ActivateRocketBurst(Vector2Int rocketPos, GridElement rocketElement, Vector2Int[] directions, ElementPowerUpType rocketType, bool clearSourceCell, bool clearOriginCell, float preLaunchDelay, float volumeMultiplier = 1f, float pitchOffset = 0f)
         {
             if (preLaunchDelay > 0f)
                 yield return new WaitForSeconds(preLaunchDelay);
@@ -2618,7 +2618,7 @@ namespace Game
                 Vector2Int direction = directions[i];
                 List<Vector2Int> lineCells = CollectLineCells(rocketPos, direction);
                 Vector3 lineEnd = GetRocketLineEnd(originWorld, lineCells, direction);
-                GameObject rocketCopy = CreateRocketCopyForDirection(rocketElement, originWorld, cm, direction);
+                GameObject rocketCopy = CreateRocketCopyForDirection(rocketElement, originWorld, cm, direction, rocketType);
                 rocketCopies.Add(rocketCopy);
                 travelCoroutines.Add(grid.StartCoroutine(TravelRocketCopy(rocketCopy, originWorld, lineEnd, lineCells, cm, processedWalls)));
             }
@@ -2703,7 +2703,7 @@ namespace Game
             }
         }
 
-        private GameObject CreateRocketCopyForDirection(GridElement sourceElement, Vector3 origin, ConstantManager cm, Vector2Int direction)
+        private GameObject CreateRocketCopyForDirection(GridElement sourceElement, Vector3 origin, ConstantManager cm, Vector2Int direction, ElementPowerUpType rocketType)
         {
             GameObject copy = new GameObject("RocketCopy");
             copy.transform.position = origin;
@@ -2717,8 +2717,12 @@ namespace Game
                 sr.sortingOrder = srcSR.sortingOrder + SortingOrderBoost;
                 sr.color = srcSR.color;
 
-                float rotationZ = -Vector2.SignedAngle(Vector2.up, new Vector2(direction.x, direction.y));
-                copy.transform.rotation = Quaternion.Euler(0f, 0f, rotationZ);
+                // Only rotate for omnidirectional rockets; horizontal and vertical rockets don't need rotation
+                if (rocketType == ElementPowerUpType.Rocket)
+                {
+                    float rotationZ = -Vector2.SignedAngle(Vector2.up, new Vector2(direction.x, direction.y));
+                    copy.transform.rotation = Quaternion.Euler(0f, 0f, rotationZ);
+                }
             }
 
             if (cm.rocketTrailParticlePrefab != null)
@@ -2768,7 +2772,7 @@ namespace Game
 
             Vector2Int[] rocketDirections = GetRocketDirections(rocketType);
 
-            yield return grid.StartCoroutine(ActivateRocketBurst(targetPos, rocketElement, rocketDirections, clearSourceCell: false, clearOriginCell: true, preLaunchDelay: 0f, volumeMultiplier: 1f, pitchOffset: 0.02f));
+            yield return grid.StartCoroutine(ActivateRocketBurst(targetPos, rocketElement, rocketDirections, rocketType, clearSourceCell: false, clearOriginCell: true, preLaunchDelay: 0f, volumeMultiplier: 1f, pitchOffset: 0.02f));
         }
 
         private IEnumerator TravelRocketCopy(GameObject rocketCopy, Vector3 start, Vector3 end, List<Vector2Int> cellsInOrder, ConstantManager cm, HashSet<Vector2Int> processedWalls)

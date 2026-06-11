@@ -2,7 +2,7 @@
   "$schema": "https://ugs-config-schemas.unity3d.com/v1/remote-config.schema.json",
   "entries": {
     "loading_screen_duration": 1.0,
-    "element_swap_move_duration": 0.25,
+    "element_swap_move_duration": 0.3,
     "element_fall_speed": 10.0,
     "match_clear_delay": 0.3,
     "element_destroy_punch_scale": 0.25,
