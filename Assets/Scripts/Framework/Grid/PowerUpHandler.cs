@@ -1278,12 +1278,12 @@ namespace Game
             grid.TriggerCellFeatureMatchedOverAt(discoBallPos);
             discoBallCell.elementInfo = null;
 
-            List<Vector2Int> selectedCells = GetRandomEligibleDiscoBallTargets(discoBallPos, StandardDiscoBallReplaceCount);
+            List<Vector2Int> matchingCells = GetAllCellsWithElement(targetElementData);
 
-            if (selectedCells.Count > 0)
+            if (matchingCells.Count > 0)
             {
-                yield return grid.StartCoroutine(AnimateDiscoBallTrails(discoBallPos, selectedCells, targetElementData));
-                DestroyDiscoBallConvertedCells(selectedCells);
+                yield return grid.StartCoroutine(AnimateDiscoBallTrails(discoBallPos, matchingCells, targetElementData));
+                DestroyDiscoBallConvertedCells(matchingCells);
             }
 
             StopAndDestroyDiscoBallElement(discoBallElement, spinTween);
@@ -1514,11 +1514,7 @@ namespace Game
                 Vector2Int.right,
                 Vector2Int.left,
                 Vector2Int.up,
-                Vector2Int.down,
-                new Vector2Int(1, 1),
-                new Vector2Int(-1, 1),
-                new Vector2Int(1, -1),
-                new Vector2Int(-1, -1)
+                Vector2Int.down
             };
 
             yield return grid.StartCoroutine(ActivateRocketBurst(firstRocketPos, rocketElement, rocketDirections, ElementPowerUpType.Rocket, clearSourceCell: false, clearOriginCell: false, preLaunchDelay: 0.1f, pitchOffset: 0.04f));
@@ -1673,19 +1669,7 @@ namespace Game
             if (requestedTargetElementData != null)
                 return requestedTargetElementData;
 
-            for (int x = 0; x < grid.GridSize.x; x++)
-            {
-                for (int y = 0; y < grid.GridSize.y; y++)
-                {
-                    Grid3D.GridCell cell = grid.GetCellPublic(new Vector2Int(x, y));
-                    if (!IsEligibleDiscoBallTargetCell(cell))
-                        continue;
-
-                    return cell.elementInfo.elementData;
-                }
-            }
-
-            return null;
+            return GetMostCommonElementOnGrid();
         }
 
         private ElementData ResolveRandomDiscoBallComboTargetElement(params Vector2Int[] excludedPositions)
@@ -1724,6 +1708,66 @@ namespace Game
         private List<Vector2Int> GetRandomEligibleDiscoBallTargets(Vector2Int excludedPosition1, Vector2Int excludedPosition2, int maxCount)
         {
             return GetRandomEligibleDiscoBallTargets(new[] { excludedPosition1, excludedPosition2 }, maxCount);
+        }
+
+        private ElementData GetMostCommonElementOnGrid()
+        {
+            Dictionary<ElementData, int> elementCounts = new Dictionary<ElementData, int>();
+
+            for (int x = 0; x < grid.GridSize.x; x++)
+            {
+                for (int y = 0; y < grid.GridSize.y; y++)
+                {
+                    Grid3D.GridCell cell = grid.GetCellPublic(new Vector2Int(x, y));
+                    if (!IsEligibleDiscoBallTargetCell(cell))
+                        continue;
+
+                    ElementData elementData = cell.elementInfo.elementData;
+                    if (elementData == null)
+                        continue;
+
+                    if (!elementCounts.ContainsKey(elementData))
+                        elementCounts[elementData] = 0;
+
+                    elementCounts[elementData]++;
+                }
+            }
+
+            ElementData mostCommon = null;
+            int maxCount = 0;
+
+            foreach (var kvp in elementCounts)
+            {
+                if (kvp.Value > maxCount)
+                {
+                    maxCount = kvp.Value;
+                    mostCommon = kvp.Key;
+                }
+            }
+
+            return mostCommon;
+        }
+
+        private List<Vector2Int> GetAllCellsWithElement(ElementData targetElement)
+        {
+            List<Vector2Int> cells = new List<Vector2Int>();
+
+            for (int x = 0; x < grid.GridSize.x; x++)
+            {
+                for (int y = 0; y < grid.GridSize.y; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    Grid3D.GridCell cell = grid.GetCellPublic(pos);
+
+                    if (cell == null || cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null)
+                        continue;
+
+                    if (cell.elementInfo.elementData == targetElement)
+                        cells.Add(pos);
+                }
+            }
+
+            return cells;
         }
 
         private List<Vector2Int> GetRandomEligibleDiscoBallTargets(Vector2Int[] excludedPositions, int maxCount)
