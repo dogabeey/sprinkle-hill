@@ -7549,6 +7549,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7114163460302476252, guid: a35631570f0f3554b9d3fe323ff6999c, type: 3}
+      propertyPath: bombComboImpactRadius
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7114163460302476252, guid: a35631570f0f3554b9d3fe323ff6999c, type: 3}
       propertyPath: discoBallEmissionOnTrailArrival
       value: 2
       objectReference: {fileID: 0}

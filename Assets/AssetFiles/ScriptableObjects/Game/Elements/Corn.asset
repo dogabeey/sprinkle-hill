@@ -17,7 +17,7 @@ MonoBehaviour:
   displayIcon: {fileID: -1969473945, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
   breakableWallOverride: {fileID: 0}
   elementMesh: {fileID: 0}
-  elementMaterial: {fileID: -876546973899608171, guid: 10156f27186ad0244a814099c40a66d2, type: 3}
+  elementMaterial: {fileID: 2100000, guid: 54b3f1c87eaa272419885ea38978a867, type: 2}
   gridCoverage: {x: 1, y: 1}
   behaviorFlags: 0
   defaultIdleAnimation: idle

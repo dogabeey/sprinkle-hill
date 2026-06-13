@@ -79,7 +79,9 @@ namespace Game
         public float elementToCauldronMaxHeight = 0.75f;
         [RemoteConfig("element_to_cauldron_height_multiplier", 0.5f)]
         public float elementToCauldronHeightMultiplier = 0.5f;
-
+        [Header("Power-Up Settings")]
+        [Min (1)] public int bombImpactRadius = 1;
+        [Min (1)] public int bombComboImpactRadius = 1;
         [Header("Power-Up Spawn Limits")]
         [RemoteConfig("max_bomb_count", 3)]
         [Min(0)] public int maxBombCount = 3;

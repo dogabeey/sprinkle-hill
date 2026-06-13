@@ -1650,7 +1650,7 @@ namespace Game
             if (primaryBombElement != null)
                 grid.StartCoroutine(primaryBombElement.DestroyElement());
 
-            yield return grid.StartCoroutine(ClearBombAreaProgressive(primaryBombPos, 3, false));
+            yield return grid.StartCoroutine(ClearBombAreaProgressive(primaryBombPos, ConstantManager.Instance.bombComboImpactRadius, false));
         }
 
         private IEnumerator ActivateDiscoBallAndPropellerCombo(Vector2Int discoBallPos)
@@ -1672,7 +1672,7 @@ namespace Game
             StartDiscoBallSpin(discoBallElement, ref discoBallSpinTween);
 
             grid.TriggerCellFeatureMatchedOverAt(discoBallPos);
-            discoBallCell.elementInfo = null;
+            discoBallCell.elementInfo = null; 
 
             Grid3D.GridCell propellerCell = grid.GetCellPublic(propellerPos);
             if (propellerCell != null)
@@ -2540,7 +2540,7 @@ namespace Game
 
             grid.TriggerCellFeatureMatchedOverAt(bombPos);
             bombCell.elementInfo = null;
-            yield return grid.StartCoroutine(ClearBombAreaProgressive(bombPos, 2, false));
+            yield return grid.StartCoroutine(ClearBombAreaProgressive(bombPos, ConstantManager.Instance.bombImpactRadius, false));
         }
 
         private IEnumerator ActivateRocket(Vector2Int rocketPos)
