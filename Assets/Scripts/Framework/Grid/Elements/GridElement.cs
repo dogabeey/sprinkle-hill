@@ -148,12 +148,9 @@ namespace Game
                         spriteRenderer.sprite = visualInfo.displayIcon;
                     }
 
-                    if (elementInfo != null && elementInfo.powerUpType != ElementPowerUpType.None)
+                    if (visualInfo.elementMaterial != null)
                     {
-                        if (visualInfo.elementMaterial != null)
-                        {
-                            spriteRenderer.sharedMaterial = visualInfo.elementMaterial;
-                        }
+                        spriteRenderer.sharedMaterial = visualInfo.elementMaterial;
                     }
                 }
             }

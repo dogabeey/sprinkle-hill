@@ -14,7 +14,6 @@ namespace Game
         private readonly Match3Grid grid;
         private const int SortingOrderBoost = 200;
         private const int StandardDiscoBallReplaceCount = 8;
-        private const int DiscoBallComboReplaceCount = 16;
         private const float ComboIntroMinRaiseHeight = 0.55f;
         private const float ComboIntroMaxRaiseHeight = 1.1f;
         private const float ComboIntroMinOrbitRadius = 0.25f;
@@ -367,7 +366,7 @@ namespace Game
                 List<Vector2Int> group = matchedGroups[g];
                 if (group == null || group.Count < 4) continue;
 
-                // Groups of 5+ are reserved for Disco Ball — skip entirely
+                // Groups of 5+ are reserved for Disco Ball ï¿½ skip entirely
                 if (group.Count >= 5) continue;
 
                 HashSet<Vector2Int> groupSet = new HashSet<Vector2Int>(group);
@@ -1258,66 +1257,86 @@ namespace Game
 
         private IEnumerator ActivateDiscoBall(Vector2Int discoBallPos, ElementData targetElementData)
         {
+            // Validate disco ball presence at the position before proceeding with activation.
             Grid3D.GridCell discoBallCell = grid.GetCellPublic(discoBallPos);
             if (discoBallCell?.elementInfo == null || discoBallCell.elementInfo.powerUpType != ElementPowerUpType.DiscoBall)
                 yield break;
 
+            // If target element data is null (which can happen if the disco ball was activated via a match that doesn't contain any regular elements, like a 4-match), resolve to a default target element type (e.g. the most common element type on the board) to ensure the disco ball still does something impactful.
             targetElementData = ResolveDefaultDiscoBallTargetElement(targetElementData);
 
             if (targetElementData == null) yield break;
 
+            // Event Trigger
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+
+            // Sound Effect
             PlayEffect(ConstantManager.SOUNDS.EFFECTS.DISCO_BALL_ACTIVATE);
 
+            // Visual: Start spinning the disco ball.
             GridElement discoBallElement = grid.GetElementAt(discoBallPos);
             Tween spinTween = null;
-
             StartDiscoBallSpin(discoBallElement, ref spinTween);
 
             // Remove logical occupancy, keep visual until trail animation finishes.
             grid.TriggerCellFeatureMatchedOverAt(discoBallPos);
             discoBallCell.elementInfo = null;
 
+            // Send trails to all cells containing the target element, then destroy those elements.
             List<Vector2Int> matchingCells = GetAllCellsWithElement(targetElementData);
-
             if (matchingCells.Count > 0)
             {
                 yield return grid.StartCoroutine(AnimateDiscoBallTrails(discoBallPos, matchingCells, targetElementData));
                 DestroyDiscoBallConvertedCells(matchingCells);
             }
 
+
+            // Clear disco ball
             StopAndDestroyDiscoBallElement(discoBallElement, spinTween);
 
         }
 
         private IEnumerator ActivateDiscoBallAndDiscoBallCombo(Vector2Int primaryDiscoBallPos)
         {
+            // Validate primary disco ball presence at the position before proceeding with activation.
             Grid3D.GridCell primaryCell = grid.GetCellPublic(primaryDiscoBallPos);
             if (primaryCell?.elementInfo == null || primaryCell.elementInfo.powerUpType != ElementPowerUpType.DiscoBall)
                 yield break;
 
+            // Find secondary disco ball and validate its presence.
             Vector2Int secondaryDiscoBallPos = FindAdjacentDiscoBall(primaryDiscoBallPos);
             if (secondaryDiscoBallPos == primaryDiscoBallPos)
                 yield break;
 
+            // Determine target element type for the combo. This can be based on the swapped element data if the combo was triggered by a swap, 
+            // or it can be resolved to most common element type if both disco balls were activated via matches that don't contain any regular elements.
             ElementData designatedElementData = ResolveRandomDiscoBallComboTargetElement(primaryDiscoBallPos, secondaryDiscoBallPos);
             if (designatedElementData == null)
                 yield break;
 
+            // Event Trigger
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
+
+            // Sound Effect
             PlayEffect(ConstantManager.SOUNDS.EFFECTS.DISCO_BALL_ACTIVATE, volumeMultiplier: 1.1f, pitchOffset: -0.04f);
 
+            // Visual: Start spinning the disco balls.  
             GridElement primaryElement = grid.GetElementAt(primaryDiscoBallPos);
             GridElement secondaryElement = grid.GetElementAt(secondaryDiscoBallPos);
             Tween primarySpinTween = null;
             Tween secondarySpinTween = null;
 
+            // Trigger the primary disco ball's spin first, then the secondary.
             StartDiscoBallSpin(primaryElement, ref primarySpinTween);
             StartDiscoBallSpin(secondaryElement, ref secondarySpinTween);
 
+            // Remove logical occupancy, keep visuals until trail animation finishes.
             grid.TriggerCellFeatureMatchedOverAt(primaryDiscoBallPos);
             primaryCell.elementInfo = null;
 
+            // For the secondary disco ball, we can trigger its matched over event and clear its element info immediately since the primary disco 
+            // ball's trails will cover the entire path to the secondary, so there won't be a visual gap exposing the absence of the secondary 
+            // disco ball's visual until the trails start animating.
             Grid3D.GridCell secondaryCell = grid.GetCellPublic(secondaryDiscoBallPos);
             if (secondaryCell != null)
             {
@@ -1325,15 +1344,29 @@ namespace Game
                 secondaryCell.elementInfo = null;
             }
 
-            List<Vector2Int> selectedCells = GetRandomEligibleDiscoBallTargets(primaryDiscoBallPos, secondaryDiscoBallPos, DiscoBallComboReplaceCount);
+            // Pick all elements in the entire grid since disco+disco should destroy all elements.
+            List<Vector2Int> selectedCells = GetAllCellsInGrid();
             if (selectedCells.Count > 0)
             {
-                yield return grid.StartCoroutine(AnimateDiscoBallTrails(primaryDiscoBallPos, selectedCells, designatedElementData));
+                grid.StartCoroutine(AnimateDiscoBallTrails(primaryDiscoBallPos, selectedCells, designatedElementData));
                 DestroyDiscoBallConvertedCells(selectedCells);
             }
 
             StopAndDestroyDiscoBallElement(primaryElement, primarySpinTween);
             StopAndDestroyDiscoBallElement(secondaryElement, secondarySpinTween);
+        }
+
+        private List<Vector2Int> GetAllCellsInGrid()
+        {
+            List<Vector2Int> allCells = new List<Vector2Int>();
+            for (int x = 0; x < grid.GridSize.x; x++)
+            {
+                for (int y = 0; y < grid.GridSize.y; y++)
+                {
+                    allCells.Add(new Vector2Int(x, y));
+                }
+            }
+            return allCells;
         }
 
         private IEnumerator ActivateDiscoBallAndBombCombo(Vector2Int discoBallPos)
@@ -2413,8 +2446,8 @@ namespace Game
                 {
                     element.elementInfo = cell.elementInfo;
                     element.InitElement(grid, cell.elementInfo);
-                    GridHelper.SetEmission(element, cm.discoBallEmissionPeak);
-                    grid.StartCoroutine(ResetElementEmission(element, cm.discoBallEmissionResetDelay));
+                    GridHelper.SetEmission(element, cm.discoBallEmissionOnTrailArrival);
+                    //grid.StartCoroutine(ResetElementEmission(element, cm.discoBallEmissionResetDelay));
                 }
             }
 
@@ -2449,8 +2482,9 @@ namespace Game
                 {
                     element.elementInfo = cell.elementInfo;
                     element.InitElement(grid, cell.elementInfo);
-                    GridHelper.SetEmission(element, 0f);
+                    GridHelper.SetEmission(element, cm.discoBallEmissionOnTrailArrival);
                     ApplySortingBoost(element, targetPowerUpType == ElementPowerUpType.Bomb);
+                    grid.StartCoroutine(ResetElementEmission(element, cm.discoBallEmissionResetDelay));
                 }
             }
 

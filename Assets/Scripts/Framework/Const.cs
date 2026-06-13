@@ -48,6 +48,8 @@ namespace Game
         public float discoBallTrailSpawnDelay = 0.02f;
         [RemoteConfig("disco_ball_emission_peak", 3f)]
         public float discoBallEmissionPeak = 3f;
+        [RemoteConfig("disco_ball_emission_on_trail_arrival", 2.5f)]
+        public float discoBallEmissionOnTrailArrival = 2.5f;
         [RemoteConfig("disco_ball_emission_reset_delay", 0.08f)]
         public float discoBallEmissionResetDelay = 0.08f;
         [RemoteConfig("disco_ball_spin_loop_duration", 0.12f)]
@@ -166,6 +168,7 @@ namespace Game
             discoBallTrailDuration = RemoteConfigManager.Instance.GetFloat("disco_ball_trail_duration", ref discoBallTrailDuration, pathToConfigFile);
             discoBallTrailSpawnDelay = RemoteConfigManager.Instance.GetFloat("disco_ball_trail_spawn_delay", ref discoBallTrailSpawnDelay, pathToConfigFile);
             discoBallEmissionPeak = RemoteConfigManager.Instance.GetFloat("disco_ball_emission_peak", ref discoBallEmissionPeak, pathToConfigFile);
+            discoBallEmissionOnTrailArrival = RemoteConfigManager.Instance.GetFloat("disco_ball_emission_on_trail_arrival", ref discoBallEmissionOnTrailArrival, pathToConfigFile);
             discoBallEmissionResetDelay = RemoteConfigManager.Instance.GetFloat("disco_ball_emission_reset_delay", ref discoBallEmissionResetDelay, pathToConfigFile);
             discoBallSpinLoopDuration = RemoteConfigManager.Instance.GetFloat("disco_ball_spin_loop_duration", ref discoBallSpinLoopDuration, pathToConfigFile);
             discoBallSpinDegreesPerLoop = RemoteConfigManager.Instance.GetFloat("disco_ball_spin_degrees_per_loop", ref discoBallSpinDegreesPerLoop, pathToConfigFile);

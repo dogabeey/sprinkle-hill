@@ -15,12 +15,13 @@ MonoBehaviour:
   displayName: Olive Oil
   displayColor: {r: 0.8078432, g: 0.69803923, b: 0, a: 0}
   displayIcon: {fileID: 260866373, guid: 7bff2f0a2180c7d42b06c776cacfe804, type: 3}
+  breakableWallOverride: {fileID: 0}
   elementMesh: {fileID: 0}
-  elementMaterial: {fileID: 0}
+  elementMaterial: {fileID: -876546973899608171, guid: 10156f27186ad0244a814099c40a66d2, type: 3}
   gridCoverage: {x: 1, y: 1}
+  behaviorFlags: 0
   defaultIdleAnimation: idle
   animationController: {fileID: 0}
-  isCauldron: 0
   cauldronChargeRequired: 8
   cauldronChargeRadius: 1
   cauldronExplosionParticle: {fileID: 0}
