@@ -1310,7 +1310,7 @@ namespace Game
 
             // Determine target element type for the combo. This can be based on the swapped element data if the combo was triggered by a swap, 
             // or it can be resolved to most common element type if both disco balls were activated via matches that don't contain any regular elements.
-            ElementData designatedElementData = ResolveRandomDiscoBallComboTargetElement(primaryDiscoBallPos, secondaryDiscoBallPos);
+            ElementData designatedElementData = ResolveDefaultDiscoBallTargetElement(null);
             if (designatedElementData == null)
                 yield break;
 
@@ -1397,15 +1397,14 @@ namespace Game
                 bombCell.elementInfo = null;
             }
 
-            List<Vector2Int> selectedCells = GetRandomEligibleDiscoBallTargets(discoBallPos, bombPos, StandardDiscoBallReplaceCount);
+            List<Vector2Int> selectedCells = GetDiscoBallComboTargetCells(discoBallPos, bombPos);
             if (selectedCells.Count > 0)
             {
                 yield return grid.StartCoroutine(AnimateDiscoBallPowerUpTrails(discoBallPos, selectedCells, ElementPowerUpType.Bomb));
 
                 yield return null;
 
-                for (int i = 0; i < selectedCells.Count; i++)
-                    yield return grid.StartCoroutine(ActivateAt(selectedCells[i], null));
+                yield return grid.StartCoroutine(ActivatePowerUpsAtOnce(selectedCells));
             }
 
             StopAndDestroyDiscoBallElement(discoBallElement, discoBallSpinTween);
@@ -1441,15 +1440,14 @@ namespace Game
                 rocketCell.elementInfo = null;
             }
 
-            List<Vector2Int> selectedCells = GetRandomEligibleDiscoBallTargets(discoBallPos, rocketPos, StandardDiscoBallReplaceCount);
+            List<Vector2Int> selectedCells = GetDiscoBallComboTargetCells(discoBallPos, rocketPos);
             if (selectedCells.Count > 0)
             {
                 yield return grid.StartCoroutine(AnimateDiscoBallPowerUpTrails(discoBallPos, selectedCells, rocketType));
 
                 yield return null;
 
-                for (int i = 0; i < selectedCells.Count; i++)
-                    yield return grid.StartCoroutine(ActivateAt(selectedCells[i], null));
+                yield return grid.StartCoroutine(ActivatePowerUpsAtOnce(selectedCells));
             }
 
             StopAndDestroyDiscoBallElement(discoBallElement, discoBallSpinTween);
@@ -1683,7 +1681,7 @@ namespace Game
                 propellerCell.elementInfo = null;
             }
 
-            List<Vector2Int> selectedCells = GetRandomEligibleDiscoBallTargets(discoBallPos, propellerPos, StandardDiscoBallReplaceCount);
+            List<Vector2Int> selectedCells = GetDiscoBallComboTargetCells(discoBallPos, propellerPos);
             if (selectedCells.Count > 0)
             {
                 yield return grid.StartCoroutine(AnimateDiscoBallPowerUpTrails(discoBallPos, selectedCells, ElementPowerUpType.Propeller));
@@ -1703,6 +1701,19 @@ namespace Game
                 return requestedTargetElementData;
 
             return GetMostCommonElementOnGrid();
+        }
+
+        private List<Vector2Int> GetDiscoBallComboTargetCells(params Vector2Int[] excludedPositions)
+        {
+            ElementData targetElementData = ResolveDefaultDiscoBallTargetElement(null);
+            if (targetElementData == null)
+                return new List<Vector2Int>();
+
+            List<Vector2Int> targetCells = GetAllCellsWithElement(targetElementData);
+            if (excludedPositions != null && excludedPositions.Length > 0)
+                targetCells.RemoveAll(pos => IsExcludedPosition(pos, excludedPositions));
+
+            return targetCells;
         }
 
         private ElementData ResolveRandomDiscoBallComboTargetElement(params Vector2Int[] excludedPositions)
@@ -2210,16 +2221,23 @@ namespace Game
             if (activationCount <= 0)
                 yield break;
 
-            float staggerDelay = Mathf.Max(0.03f, ConstantManager.Instance.discoBallTrailSpawnDelay * 0.5f);
             List<Coroutine> activationCoroutines = new List<Coroutine>(activationCount);
 
             for (int i = 0; i < activationCount; i++)
-            {
                 activationCoroutines.Add(grid.StartCoroutine(ActivatePropeller(propellerPositions[i], reservedTargets[i])));
 
-                if (i < activationCount - 1)
-                    yield return new WaitForSeconds(staggerDelay);
-            }
+            for (int i = 0; i < activationCoroutines.Count; i++)
+                yield return activationCoroutines[i];
+        }
+
+        private IEnumerator ActivatePowerUpsAtOnce(List<Vector2Int> positions)
+        {
+            if (positions == null || positions.Count == 0)
+                yield break;
+
+            List<Coroutine> activationCoroutines = new List<Coroutine>(positions.Count);
+            for (int i = 0; i < positions.Count; i++)
+                activationCoroutines.Add(grid.StartCoroutine(ActivateAt(positions[i], null)));
 
             for (int i = 0; i < activationCoroutines.Count; i++)
                 yield return activationCoroutines[i];
