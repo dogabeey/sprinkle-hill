@@ -530,7 +530,7 @@ namespace Game
     [Serializable]
     public class CannonAction : BoosterBarAction
     {
-        public override string ItemName => "Cannon";
+        public override string ItemName => "Cutter";
         public override string ItemDescription => "Destroys the entire column of the clicked cell.";
         public override ParticleSystem ActionSuccessParticle => null;
         public override float BaseCost => 0;
@@ -554,6 +554,40 @@ namespace Game
             if (inputController == null) return;
 
             inputController.BeginCannonPlacement();
+        }
+
+        private Match3GridInputController GetInputController()
+        {
+            return UnityEngine.Object.FindObjectOfType<Match3GridInputController>();
+        }
+    }
+    [Serializable]
+    public class TorchAction : BoosterBarAction
+    {
+        public override string ItemName => "Torch";
+        public override string ItemDescription => "Destroys the entire row of the clicked cell.";
+        public override ParticleSystem ActionSuccessParticle => null;
+        public override float BaseCost => 0;
+        public override float CostIncrement => 0;
+        public override float CostAcceleration => 0;
+        public override string VisibilityExplanation => "";
+        public override string ClickabilityExplanation => "";
+        public override string AvailabilityExplanation => $"Level {unlockedLevel}";
+
+        public override bool IsVisible() => true;
+
+        public override bool IsSelected()
+        {
+            Match3GridInputController inputController = GetInputController();
+            return inputController != null && inputController.IsPlacementActionActive(nameof(TorchAction));
+        }
+
+        public override void OnClick()
+        {
+            Match3GridInputController inputController = GetInputController();
+            if (inputController == null) return;
+
+            inputController.BeginTorchPlacement();
         }
 
         private Match3GridInputController GetInputController()

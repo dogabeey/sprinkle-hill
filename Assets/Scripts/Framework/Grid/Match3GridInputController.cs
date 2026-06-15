@@ -1,8 +1,10 @@
-using UnityEngine; using Game.EventManagement;
+using UnityEngine;
+using Game.EventManagement;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using static Game.Grid3D;
+using System;
 
 namespace Game
 {
@@ -38,6 +40,7 @@ namespace Game
             DiscoBall,
             Rocket,
             Cannon,
+            Torch,
             Hammer
         }
 
@@ -390,6 +393,12 @@ namespace Game
             isPlacementReady = false;
         }
 
+        public void BeginTorchPlacement()
+        {
+            pendingPlacementAction = PendingPlacementAction.Torch;
+            isPlacementReady = false;
+        }
+
         public void BeginHammerPlacement()
         {
             pendingPlacementAction = PendingPlacementAction.Hammer;
@@ -637,10 +646,38 @@ namespace Game
             {
                 StartCoroutine(CannonPlacementRoutine(cell.Coordinates));
             }
+            else if (actionToPlace == PendingPlacementAction.Torch)
+            {
+                StartCoroutine(TorchPlacementRoutine(cell.Coordinates));
+            }
             else if (actionToPlace == PendingPlacementAction.Hammer)
             {
                 StartCoroutine(HammerPlacementRoutine(cell.Coordinates));
             }
+        }
+
+        private IEnumerator TorchPlacementRoutine(Vector2Int coordinates)
+        {
+            ClearHintVisuals();
+            isProcessing = true;
+
+            TorchAction torchAction = ActionBarManager.Instance.actionBarItemList.Find(item => item is TorchAction) as TorchAction;
+            if (torchAction == null)
+            {
+                isProcessing = false;
+                yield break;
+            }
+
+            Vector2Int targetCenter = ResolveActionCenter(torchAction, coordinates);
+
+            yield return StartCoroutine(PlayPreExecutionAnimation(torchAction, targetCenter));
+            torchAction.currentCount--;
+            EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: torchAction.ItemName));
+            yield return StartCoroutine(match3Grid.ClearRowAt(targetCenter.y, false));
+            yield return StartCoroutine(match3Grid.ResolveBoardAfterSpecialClear());
+
+            isProcessing = false;
+            idleTimer = 0f;
         }
 
         private IEnumerator BombPlacementRoutine(Vector2Int center)

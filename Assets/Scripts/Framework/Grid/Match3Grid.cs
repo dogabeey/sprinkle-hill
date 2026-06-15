@@ -979,6 +979,61 @@ namespace Game
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
 
+        public IEnumerator ClearRowAt(int y, bool allowConditionedBreakableWalls = true)
+        {
+            if (y < 0 || y >= gridSize.y)
+                yield break;
+
+            HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
+
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                Vector2Int pos = new Vector2Int(x, y);
+                GridCell cell = GetCell(pos);
+                if (cell == null)
+                    continue;
+
+                if (cell.cellType == CellType.BreakableWall)
+                {
+                    if (allowConditionedBreakableWalls || cell.breakableWallElementCondition == null)
+                        wallsToBreak.Add(pos);
+                    continue;
+                }
+
+                if (cell.cellType != CellType.Normal || cell.elementInfo == null)
+                    continue;
+
+                GridElement matchedElement = GetElementAt(pos);
+                TriggerCellFeatureMatchedOverAt(pos);
+                TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+
+                if (TryRevealHiddenBoxAt(pos))
+                    continue;
+
+                if (IsGarbageBagData(cell.elementInfo.elementData))
+                    continue;
+
+                if (IsPowerGeneratorData(cell.elementInfo.elementData))
+                    continue;
+
+                if (PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType))
+                {
+                    StartCoroutine(powerUpHandler.ActivateAt(pos, null));
+                    continue;
+                }
+
+                if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron)
+                    continue;
+
+                NotifyElementCleared(pos);
+                cell.elementInfo = null;
+                if (matchedElement != null)
+                    StartCoroutine(matchedElement.DestroyElement());
+            }
+
+            yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
+            yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
+        }
         public IEnumerator ClearColumnAt(int columnX, bool allowConditionedBreakableWalls = true)
         {
             if (columnX < 0 || columnX >= gridSize.x)
@@ -3107,5 +3162,6 @@ namespace Game
 
             currencyManager.AddCurrency(GameManager.Instance.cashCurrency, Mathf.Max(1, comboCount), null);
         }
+
     }
 }
