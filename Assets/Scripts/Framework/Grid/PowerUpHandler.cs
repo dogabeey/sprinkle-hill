@@ -260,17 +260,8 @@ namespace Game
                     int rightLen = 0;
                     while (groupSet.Contains(pivot + (Vector2Int.right * (rightLen + 1)))) rightLen++;
 
-                    bool hasLShape =
-                        IsValidBombL(upLen, leftLen) ||
-                        IsValidBombL(upLen, rightLen) ||
-                        IsValidBombL(downLen, leftLen) ||
-                        IsValidBombL(downLen, rightLen);
-
-                    bool hasTShape =
-                        IsValidBombT(upLen, leftLen, rightLen) ||
-                        IsValidBombT(downLen, leftLen, rightLen) ||
-                        IsValidBombT(leftLen, upLen, downLen) ||
-                        IsValidBombT(rightLen, upLen, downLen);
+                    bool hasLShape = HasBombLShape(upLen, downLen, leftLen, rightLen);
+                    bool hasTShape = HasBombTShape(upLen, downLen, leftLen, rightLen);
 
                     if (!hasLShape && !hasTShape)
                         continue;
@@ -288,6 +279,30 @@ namespace Game
                 }
             }
             return spawns;
+        }
+
+        private static bool HasBombLShape(int upLen, int downLen, int leftLen, int rightLen)
+        {
+            return IsValidBombL(upLen, leftLen) ||
+                   IsValidBombL(upLen, rightLen) ||
+                   IsValidBombL(downLen, leftLen) ||
+                   IsValidBombL(downLen, rightLen);
+        }
+
+        private static bool HasBombTShape(int upLen, int downLen, int leftLen, int rightLen)
+        {
+            int verticalRun = upLen + downLen + 1;
+            int horizontalRun = leftLen + rightLen + 1;
+
+            bool hasVerticalStem = upLen > 0 || downLen > 0;
+            bool hasHorizontalStem = leftLen > 0 || rightLen > 0;
+            bool hasHorizontalBranches = leftLen > 0 && rightLen > 0;
+            bool hasVerticalBranches = upLen > 0 && downLen > 0;
+
+            bool verticalT = verticalRun >= 3 && horizontalRun >= 3 && hasVerticalStem && hasHorizontalBranches;
+            bool horizontalT = verticalRun >= 3 && horizontalRun >= 3 && hasHorizontalStem && hasVerticalBranches;
+
+            return verticalT || horizontalT;
         }
 
         public List<SpawnRequest> FindPropellerSpawns(List<List<Vector2Int>> matchedGroups, Vector2Int init1, Vector2Int init2, HashSet<Vector2Int> claimedPositions = null)
@@ -345,15 +360,6 @@ namespace Game
             // Prevent 2x2 square from being treated as bomb (1+1+1 == 3),
             // and require at least one arm to extend beyond a single neighbor.
             return verticalArmLen >= 2 || horizontalArmLen >= 2;
-        }
-
-        private static bool IsValidBombT(int stemArmLen, int branchArmLen1, int branchArmLen2)
-        {
-            if (stemArmLen < 1 || branchArmLen1 < 1 || branchArmLen2 < 1)
-                return false;
-
-            int uniqueCount = stemArmLen + branchArmLen1 + branchArmLen2 + 1;
-            return uniqueCount >= 4;
         }
 
         public List<SpawnRequest> FindVerticalRocketSpawns(List<List<Vector2Int>> matchedGroups, Vector2Int init1, Vector2Int init2, HashSet<Vector2Int> claimedPositions = null)
