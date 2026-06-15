@@ -2070,19 +2070,24 @@ namespace Game
 
         private IEnumerator ActivatePropeller(Vector2Int propellerPos, Vector2Int targetPos)
         {
+            // Validate propeller cell and power-up type
             Grid3D.GridCell propellerCell = grid.GetCellPublic(propellerPos);
             if (propellerCell?.elementInfo == null || propellerCell.elementInfo.powerUpType != ElementPowerUpType.Propeller)
                 yield break;
 
+            // Event and sound
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
             PlayEffect(ConstantManager.SOUNDS.EFFECTS.ROCKET, volumeMultiplier: 0.9f, pitchOffset: 0.08f);
 
+            // Get propeller element and kill any existing tweens
             GridElement propellerElement = grid.GetElementAt(propellerPos);
             if (propellerElement != null)
                 propellerElement.transform.DOKill();
 
+            // Calculate target world position
             Vector3 targetWorldPos = grid.GetWorldPosition(targetPos);
 
+            // Fly the propeller element to the target position with an arc and rotation
             if (propellerElement != null)
             {
                 Transform tempParent = grid.GridParent != null ? grid.GridParent : grid.transform;
@@ -2109,9 +2114,49 @@ namespace Game
                 grid.StartCoroutine(propellerElement.DestroyElement());
             }
 
+            // Trigger cell features
             grid.TriggerCellFeatureMatchedOverAt(propellerPos);
+            // Clear propeller cell info to prevent unintended interactions during the flight
             propellerCell.elementInfo = null;
+            // Clear the propeller's original neighbors to simulate the blast impact
+            yield return grid.StartCoroutine(ApplyPropellerNeighborImpact(propellerPos));
+            // Clear the target cell area after the propeller arrives
             yield return grid.StartCoroutine(grid.ClearAreaAt(targetPos, 0));
+        }
+
+        private IEnumerator ApplyPropellerNeighborImpact(Vector2Int centerPos)
+        {
+            Vector2Int[] offsets =
+            {
+                Vector2Int.up,
+                Vector2Int.down,
+                Vector2Int.left,
+                Vector2Int.right
+            };
+
+            List<Coroutine> impactCoroutines = new List<Coroutine>(offsets.Length);
+
+            for (int i = 0; i < offsets.Length; i++)
+            {
+                Vector2Int neighborPos = centerPos + offsets[i];
+                Grid3D.GridCell neighborCell = grid.GetCellPublic(neighborPos);
+                if (neighborCell == null)
+                    continue;
+
+                if (neighborCell.cellType == Grid3D.CellType.BreakableWall)
+                {
+                    impactCoroutines.Add(grid.StartCoroutine(grid.BreakWallAt(neighborPos)));
+                    continue;
+                }
+
+                if (neighborCell.cellType != Grid3D.CellType.Normal || neighborCell.elementInfo == null)
+                    continue;
+
+                impactCoroutines.Add(grid.StartCoroutine(grid.ClearAreaAt(neighborPos, 0)));
+            }
+
+            for (int i = 0; i < impactCoroutines.Count; i++)
+                yield return impactCoroutines[i];
         }
 
         private IEnumerator ActivatePropellerBurstFromOrigin(Vector2Int originPos, GridElement sourcePropellerElement, List<Vector2Int> targetPositions)
