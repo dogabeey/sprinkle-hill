@@ -39,6 +39,8 @@ public class ElementData : VisualizableScriptableObject
     [FoldoutGroup("Animation")]
     public string defaultIdleAnimation = "idle";
     [FoldoutGroup("Animation")]
+    public string powerUpActivationString;
+    [FoldoutGroup("Animation")]
     public RuntimeAnimatorController animationController;
     [FoldoutGroup("Cauldron"), ShowIf(nameof(IsCauldron))]
     [Min(1)] public int cauldronChargeRequired = 8;

@@ -705,18 +705,18 @@ namespace Game
                 // If the element at position has an animator and a power-up activation trigger name,
                 // play the activation animation first and wait for it to complete before running the power-up.
                 GridElement elem = grid.GetElementAt(pos);
-                if (elem != null && elem.elementAnimator != null && !string.IsNullOrEmpty(elem.powerUpActivationString))
+                if (elem != null && elem.elementAnimator != null && !string.IsNullOrEmpty(elem.elementInfo.elementData.powerUpActivationString))
                 {
                     bool triggered = false;
                     try
                     {
-                        elem.elementAnimator.SetTrigger(elem.powerUpActivationString);
+                        elem.elementAnimator.SetTrigger(elem.elementInfo.elementData.powerUpActivationString);
                         triggered = true;
                     }
                     catch { triggered = false; }
 
                     if (triggered)
-                        yield return grid.StartCoroutine(WaitForActivationAnimation(elem.elementAnimator, elem.powerUpActivationString));
+                        yield return grid.StartCoroutine(WaitForActivationAnimation(elem.elementAnimator, elem.elementInfo.elementData.powerUpActivationString));
                 }
 
                 yield return grid.StartCoroutine(strategy.Activate(pos, swappedElementData));

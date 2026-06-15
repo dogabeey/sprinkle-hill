@@ -28,8 +28,6 @@ namespace Game
         [FoldoutGroup("Grid Element")]
         public Renderer elementRenderer;
         [FoldoutGroup("Grid Element")]
-        public string powerUpActivationString;
-        [FoldoutGroup("Grid Element")]
         public Sprite hiddenSprite;
         [FoldoutGroup("Grid Element")]
         [ReadOnly]
