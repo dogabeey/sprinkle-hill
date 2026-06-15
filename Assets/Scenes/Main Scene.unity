@@ -8933,6 +8933,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].preExecutionAnimator
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1949156293352620132].buyConfig.Array.size
       value: 3
       objectReference: {fileID: 0}

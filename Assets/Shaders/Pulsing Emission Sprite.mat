@@ -41,7 +41,7 @@ Material:
     - _BrightnessInfluence: 1
     - _BrightnessMultiplier: 3
     - _BrightnessPower: 2
-    - _EmissionAmplitude: 4
+    - _EmissionAmplitude: 4.97
     - _EmissionBase: 0.16
     - _EmissionMaskStrength: 1
     - _EnableExternalAlpha: 0

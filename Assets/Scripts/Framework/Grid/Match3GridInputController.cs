@@ -595,6 +595,8 @@ namespace Game
                     return pendingPlacementAction == PendingPlacementAction.Rocket;
                 case "CannonAction":
                     return pendingPlacementAction == PendingPlacementAction.Cannon;
+                case "TorchAction":
+                    return pendingPlacementAction == PendingPlacementAction.Torch;
                 case "HammerAction":
                     return pendingPlacementAction == PendingPlacementAction.Hammer;
                 default:
