@@ -134,6 +134,7 @@ namespace Game
 
         public string DeployValue(string key, object value, string path)
         {
+            #if UNITY_EDITOR
             try
             {
                 RemoteConfigFile config;
@@ -179,6 +180,8 @@ namespace Game
                 Debug.LogError($"Failed to deploy Remote Config value:\n{e}");
                 return null;
             }
+            #endif
+            return null;
         }
 
         public void DeployRemoteConfigFile(string path)
