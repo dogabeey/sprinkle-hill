@@ -20,6 +20,7 @@ MonoBehaviour:
     - {fileID: 11400000, guid: 0aff893b628e16b449d95f9a8befead9, type: 2}
     - {fileID: 11400000, guid: 15add8ec82c964f4fa95e19e667720e0, type: 2}
     - {fileID: 11400000, guid: d35d7301f52f6504a8cc2a157fc9a0b8, type: 2}
+    - {fileID: 11400000, guid: 24c241fb46e7d3447b4a3d140a9cda60, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -783,7 +784,7 @@ MonoBehaviour:
       Data: 24|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 2
+      Data: 4
     - Name: randomElement
       Entry: 5
       Data: false
@@ -795,7 +796,7 @@ MonoBehaviour:
       Data: false
     - Name: powerUpType
       Entry: 3
-      Data: 0
+      Data: 8
     - Name: cauldronProgress
       Entry: 3
       Data: 0
@@ -849,7 +850,7 @@ MonoBehaviour:
       Data: 26|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 1
+      Data: 4
     - Name: randomElement
       Entry: 5
       Data: false
@@ -861,7 +862,7 @@ MonoBehaviour:
       Data: false
     - Name: powerUpType
       Entry: 3
-      Data: 0
+      Data: 8
     - Name: cauldronProgress
       Entry: 3
       Data: 0
