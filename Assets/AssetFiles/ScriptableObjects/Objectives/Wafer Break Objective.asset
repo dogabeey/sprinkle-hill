@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb71fb4368c2fb44b904d415a7229f6e, type: 3}
   m_Name: Wafer Break Objective
   m_EditorClassIdentifier: 
-  objectiveTypeName: Hidden Box
+  objectiveTypeName: Wafer
   description: Reveal %c hidden boxes
   creationCountEvent: 812
   completionEvent: 813

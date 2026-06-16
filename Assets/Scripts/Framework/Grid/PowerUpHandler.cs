@@ -1292,7 +1292,7 @@ namespace Game
             List<Vector2Int> matchingCells = GetAllCellsWithElement(targetElementData);
             if (matchingCells.Count > 0)
             {
-                yield return grid.StartCoroutine(AnimateDiscoBallTrails(discoBallPos, matchingCells, targetElementData));
+                yield return grid.StartCoroutine(AnimateDiscoBallTrails(discoBallPos, matchingCells, targetElementData, false));
                 DestroyDiscoBallConvertedCells(matchingCells);
             }
 
@@ -1354,7 +1354,10 @@ namespace Game
             List<Vector2Int> selectedCells = GetAllCellsInGrid();
             if (selectedCells.Count > 0)
             {
-                grid.StartCoroutine(AnimateDiscoBallTrails(primaryDiscoBallPos, selectedCells, designatedElementData));
+                var cm = ConstantManager.Instance;
+                float totalWait = cm.discoBallTrailDuration + cm.discoBallTrailSpawnDelay + 0.1f; // Extra buffer to ensure all trails have finished animating before we destroy any cells. 
+                grid.StartCoroutine(AnimateDiscoBallTrails(primaryDiscoBallPos, selectedCells, designatedElementData, true));
+                yield return new WaitForSeconds(0.1f);
                 DestroyDiscoBallConvertedCells(selectedCells);
             }
 
@@ -2456,7 +2459,7 @@ namespace Game
             yield return grid.StartCoroutine(grid.TriggerCauldronExplosion(cauldronPos));
         }
 
-        private IEnumerator AnimateDiscoBallTrails(Vector2Int sourcePos, List<Vector2Int> targets, ElementData targetElementData)
+        private IEnumerator AnimateDiscoBallTrails(Vector2Int sourcePos, List<Vector2Int> targets, ElementData targetElementData, bool animateAtOnce)
         {
             ConstantManager cm = ConstantManager.Instance;
             Vector3 sourceWorldPos = grid.GetWorldPosition(sourcePos);
@@ -2466,11 +2469,10 @@ namespace Game
             {
                 grid.StartCoroutine(AnimateSingleDiscoTrail(sourceWorldPos, targets[i], targetElementData, trailIndex));
                 trailIndex++;
-                yield return new WaitForSeconds(cm.discoBallTrailSpawnDelay);
+                if(!animateAtOnce)
+                    yield return new WaitForSeconds(cm.discoBallTrailSpawnDelay);
             }
-
-            float totalWait = cm.discoBallTrailDuration + cm.discoBallTrailSpawnDelay * Mathf.Max(0, targets.Count - 1);
-            yield return new WaitForSeconds(totalWait);
+            yield return new WaitForSeconds(cm.discoBallTrailSpawnDelay + cm.discoBallTrailDuration);
         }
 
         private IEnumerator AnimateDiscoBallPowerUpTrails(Vector2Int sourcePos, List<Vector2Int> targets, ElementPowerUpType targetPowerUpType)
