@@ -722,7 +722,7 @@ namespace Game
             yield return StartCoroutine(PlayPreExecutionAnimation(hammerAction, targetCenter));
             hammerAction.currentCount--;
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: hammerAction.ItemName));
-            yield return StartCoroutine(match3Grid.ClearCrossAt(targetCenter, false));
+            yield return StartCoroutine(match3Grid.ClearCellAt(targetCenter, false));
             yield return StartCoroutine(match3Grid.ResolveBoardAfterSpecialClear());
 
             isProcessing = false;

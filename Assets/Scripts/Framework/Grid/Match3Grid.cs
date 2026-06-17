@@ -1090,6 +1090,49 @@ namespace Game
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
 
+        public IEnumerator ClearCellAt(Vector2Int pos, bool allowConditionedBreakableWalls = true)
+        {
+            GridCell cell = GetCell(pos);
+            if (cell == null)
+                yield break;
+
+            if (cell.cellType == CellType.BreakableWall)
+            {
+                if (allowConditionedBreakableWalls || cell.breakableWallElementCondition == null)
+                    yield return StartCoroutine(BreakWallsSimultaneous(new HashSet<Vector2Int> { pos }));
+                yield break;
+            }
+
+            if (cell.cellType != CellType.Normal || cell.elementInfo == null)
+                yield break;
+
+            GridElement matchedElement = GetElementAt(pos);
+            TriggerCellFeatureMatchedOverAt(pos);
+            TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+
+            if (TryRevealHiddenBoxAt(pos))
+                yield break;
+
+            if (IsGarbageBagData(cell.elementInfo.elementData))
+                yield break;
+
+            if (IsPowerGeneratorData(cell.elementInfo.elementData))
+                yield break;
+
+            if (PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType))
+            {
+                yield return StartCoroutine(powerUpHandler.ActivateAt(pos, null));
+                yield break;
+            }
+
+            if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron)
+                yield break;
+
+            NotifyElementCleared(pos);
+            cell.elementInfo = null;
+            if (matchedElement != null)
+                StartCoroutine(matchedElement.DestroyElement());
+        }
         public IEnumerator ClearCrossAt(Vector2Int center, bool allowConditionedBreakableWalls = true)
         {
             Vector2Int[] offsets =
