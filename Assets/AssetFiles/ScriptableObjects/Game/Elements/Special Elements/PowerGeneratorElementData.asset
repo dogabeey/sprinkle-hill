@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26f986f212db2bb48a880447336e936f, type: 3}
   m_Name: PowerGeneratorElementData
   m_EditorClassIdentifier: Game::PowerGeneratorElementData
-  displayName: 
+  displayName: Generator
   displayColor: {r: 0, g: 0.9638114, b: 1, a: 0}
   displayIcon: {fileID: 1835613153, guid: a46309d38df06264b96c750375a58bd1, type: 3}
   breakableWallOverride: {fileID: 0}

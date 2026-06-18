@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f2ef1e4dc236284b994b08fec0be048, type: 3}
   m_Name: VerticalRocketElementData
   m_EditorClassIdentifier: Game::VerticalRocketElementData
-  displayName: 
+  displayName: Vertical Rocket
   displayColor: {r: 0, g: 0, b: 0, a: 0}
   displayIcon: {fileID: 21300000, guid: 00c7c7ffb4beebc4187a52db2dc732c4, type: 3}
   breakableWallOverride: {fileID: 0}

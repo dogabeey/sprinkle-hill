@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1af95a30ea48b054e80a03853f712710, type: 3}
   m_Name: PowerOutletElementData
   m_EditorClassIdentifier: Game::PowerOutletElementData
-  displayName: 
+  displayName: Outlet
   displayColor: {r: 0.27450982, g: 0.37647063, b: 0.48627454, a: 0}
   displayIcon: {fileID: -1294166768, guid: a46309d38df06264b96c750375a58bd1, type: 3}
   breakableWallOverride: {fileID: 0}

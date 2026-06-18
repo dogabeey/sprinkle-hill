@@ -51,8 +51,7 @@ MonoBehaviour:
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a7e91bda46e017f48a8d2f095433effc
-    m_Address: Assets/AssetFiles/ScriptableObjects/Game/Elements/Special Elements/CauldronElementData
-      - UNUSED.asset
+    m_Address: SpecialElement/Cauldron
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

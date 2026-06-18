@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee7e00cf8230d224d9bf3c94ec7ba201, type: 3}
   m_Name: CauldronElementData - UNUSED
   m_EditorClassIdentifier: Game::CauldronElementData
-  displayName: 
+  displayName: Cauldron
   displayColor: {r: 0, g: 0, b: 0, a: 0}
   displayIcon: {fileID: 0}
   breakableWallOverride: {fileID: 0}
