@@ -9,17 +9,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26f986f212db2bb48a880447336e936f, type: 3}
-  m_Name: PowerGeneratorElementData
-  m_EditorClassIdentifier: Game::PowerGeneratorElementData
-  displayName: 
-  displayColor: {r: 0, g: 0.9638114, b: 1, a: 0}
-  displayIcon: {fileID: 1835613153, guid: a46309d38df06264b96c750375a58bd1, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d391efca178ebc44ba5026329cf289f, type: 3}
+  m_Name: HorizontalRocketElementData
+  m_EditorClassIdentifier: Game::HorizontalRocketElementData
+  displayName: Horizontal Rocket
+  displayColor: {r: 0, g: 0, b: 0, a: 0}
+  displayIcon: {fileID: 21300000, guid: 822150aee8e13134c844eab4b22a9ca1, type: 3}
   breakableWallOverride: {fileID: 0}
   elementMesh: {fileID: 0}
   elementMaterial: {fileID: 0}
   gridCoverage: {x: 1, y: 1}
-  behaviorFlags: 63
+  behaviorFlags: 2
   defaultIdleAnimation: idle
   animationController: {fileID: 0}
-  powerUpActivationString: 
+  powerUpActivationString: activate

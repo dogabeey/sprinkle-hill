@@ -19,7 +19,7 @@ MonoBehaviour:
   elementMesh: {fileID: 0}
   elementMaterial: {fileID: 0}
   gridCoverage: {x: 1, y: 1}
-  behaviorFlags: 0
+  behaviorFlags: 55
   defaultIdleAnimation: idle
   animationController: {fileID: 0}
   powerUpActivationString: 

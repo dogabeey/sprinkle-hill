@@ -36,12 +36,10 @@ public class ElementData : VisualizableScriptableObject
         NotTargetableByPropeller = 1 << 5
     }
 
-    [FoldoutGroup("General")]
     public Sprite breakableWallOverride;
     public Mesh elementMesh;
     public Material elementMaterial;
     public Vector2Int gridCoverage = Vector2Int.one;
-    [FoldoutGroup("General")]
     public ElementBehaviorFlags behaviorFlags;
     [FoldoutGroup("Animation")]
     public string defaultIdleAnimation = "idle";
