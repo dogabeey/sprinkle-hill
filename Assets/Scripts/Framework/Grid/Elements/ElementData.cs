@@ -32,7 +32,8 @@ public class ElementData : VisualizableScriptableObject
         NonMatchable = 1 << 1,
         NonShuffleable = 1 << 2,
         PassThrough = 1 << 3,
-        ImmuneToClear = 1 << 4
+        ImmuneToClear = 1 << 4,
+        NotTargetableByPropeller = 1 << 5
     }
 
     [FoldoutGroup("General")]
@@ -54,46 +55,10 @@ public class ElementData : VisualizableScriptableObject
         public int animationLayer;
     }
 
-    public ElementBehaviorFlags GetEffectiveBehaviorFlags()
-    {
-        ElementBehaviorFlags flags = behaviorFlags;
-
-        Game.GameManager manager = Game.GameManager.Instance;
-        if (manager != null)
-        {
-            if (manager.garbageBagElementData == this)
-            {
-                flags |= ElementBehaviorFlags.NonSwappable |
-                         ElementBehaviorFlags.NonMatchable |
-                         ElementBehaviorFlags.NonShuffleable |
-                         ElementBehaviorFlags.ImmuneToClear;
-            }
-
-            if (manager.powerGeneratorElementData == this)
-            {
-                flags |= ElementBehaviorFlags.NonSwappable |
-                         ElementBehaviorFlags.NonMatchable |
-                         ElementBehaviorFlags.NonShuffleable |
-                         ElementBehaviorFlags.PassThrough |
-                         ElementBehaviorFlags.ImmuneToClear;
-            }
-
-            if (manager.powerOutletElementData == this)
-            {
-                flags |= ElementBehaviorFlags.NonSwappable |
-                         ElementBehaviorFlags.NonMatchable |
-                         ElementBehaviorFlags.NonShuffleable |
-                         ElementBehaviorFlags.PassThrough |
-                         ElementBehaviorFlags.ImmuneToClear;
-            }
-        }
-
-        return flags;
-    }
 
     public bool HasBehavior(ElementBehaviorFlags flag)
     {
-        return (GetEffectiveBehaviorFlags() & flag) != 0;
+        return (behaviorFlags & flag) != 0;
     }
 
     public static ElementData GetElementDataByName(string name, List<ElementData> elementDataList)

@@ -2049,18 +2049,7 @@ namespace Game
                     continue;
 
                 if (GameManager.Instance != null &&
-                    cell.elementInfo.elementData != null && GameManager.Instance.garbageBagElementData == cell.elementInfo.elementData)
-                    continue;
-
-                if (GameManager.Instance != null &&
-                    cell.elementInfo.elementData != null && GameManager.Instance.powerGeneratorElementData == cell.elementInfo.elementData)
-                    continue;
-
-                if (cell.elementInfo.elementData != null &&
-                    cell.elementInfo.elementData.HasBehavior(ElementData.ElementBehaviorFlags.ImmuneToClear))
-                    continue;
-
-                if (IsSpecialPowerUp(cell.elementInfo.powerUpType) || cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron)
+                    cell.elementInfo.elementData != null && cell.elementInfo.elementData.behaviorFlags.HasFlag(ElementData.ElementBehaviorFlags.ImmuneToClear))
                     continue;
 
                 grid.NotifyElementCleared(pos);
@@ -2336,7 +2325,7 @@ namespace Game
                     // Propeller should never target garbage bag cells.
                     if (cell.elementInfo?.elementData != null)
                     {
-                        if (gm != null && gm.garbageBagElementData == cell.elementInfo.elementData)
+                        if (gm != null && cell.elementInfo.elementData.behaviorFlags.HasFlag(ElementData.ElementBehaviorFlags.NotTargetableByPropeller))
                             continue;
                     }
 
@@ -2357,7 +2346,7 @@ namespace Game
                             Grid3D.GridCell aboveCell = grid.GetCellPublic(pos + Vector2Int.up);
                             bool isBelowGarbage = gm != null &&
                                 aboveCell?.elementInfo?.elementData != null &&
-                                aboveCell.elementInfo.elementData == gm.garbageBagElementData;
+                                aboveCell.elementInfo.elementData is GarbageBagElementData;
 
                             if (isBelowGarbage)
                                 belowGarbageCandidates.Add(pos);
@@ -2700,14 +2689,6 @@ namespace Game
             if (grid.TryRevealHiddenBoxAt(pos))
                 return;
 
-            if (GameManager.Instance != null &&
-                cell.elementInfo.elementData != null && GameManager.Instance.garbageBagElementData == cell.elementInfo.elementData)
-                return;
-
-            if (GameManager.Instance != null &&
-                cell.elementInfo.elementData != null && GameManager.Instance.powerGeneratorElementData == cell.elementInfo.elementData)
-                return;
-
             if (cell.elementInfo.elementData != null &&
                 cell.elementInfo.elementData.HasBehavior(ElementData.ElementBehaviorFlags.ImmuneToClear))
                 return;
@@ -3002,15 +2983,7 @@ namespace Game
 
             if (grid.TryRevealHiddenBoxAt(pos))
                 return;
-
-            if (GameManager.Instance != null &&
-                cell.elementInfo.elementData != null && GameManager.Instance.garbageBagElementData == cell.elementInfo.elementData)
-                return;
-
-            if (GameManager.Instance != null &&
-                cell.elementInfo.elementData != null && GameManager.Instance.powerGeneratorElementData == cell.elementInfo.elementData)
-                return;
-
+                
             if (cell.elementInfo.elementData != null &&
                 cell.elementInfo.elementData.HasBehavior(ElementData.ElementBehaviorFlags.ImmuneToClear))
                 return;

@@ -174,14 +174,14 @@ namespace Game
                 {
                     return;
                 }
-                if (GameManager.Instance != null && draggedCell?.elementInfo?.elementData != null &&
-                    GameManager.Instance.garbageBagElementData == draggedCell.elementInfo.elementData)
+                if (draggedCell?.elementInfo?.elementData != null &&
+                    draggedCell.elementInfo.elementData is GarbageBagElementData)
                 {
                     return;
                 }
 
                 if (GameManager.Instance != null && draggedCell?.elementInfo?.elementData != null &&
-                    GameManager.Instance.powerGeneratorElementData == draggedCell.elementInfo.elementData)
+                    draggedCell.elementInfo.elementData)
                 {
                     return;
                 }
@@ -237,31 +237,8 @@ namespace Game
 
             GridCell fromCell = match3Grid.GetCellPublic(fromPos);
             GridCell toCell = match3Grid.GetCellPublic(toPos);
-            if ((fromCell?.elementInfo != null && fromCell.elementInfo.powerUpType == ElementPowerUpType.Cauldron) ||
+            if ((fromCell?.elementInfo != null && fromCell.elementInfo.elementData.behaviorFlags.HasFlag(ElementData.ElementBehaviorFlags.NonSwappable)) ||
                 (toCell?.elementInfo != null && toCell.elementInfo.powerUpType == ElementPowerUpType.Cauldron))
-            {
-                CancelDrag();
-                return;
-            }
-
-            if (GameManager.Instance != null &&
-                ((fromCell?.elementInfo?.elementData != null && GameManager.Instance.garbageBagElementData == fromCell.elementInfo.elementData) ||
-                 (toCell?.elementInfo?.elementData != null && GameManager.Instance.garbageBagElementData == toCell.elementInfo.elementData)))
-            {
-                CancelDrag();
-                return;
-            }
-
-            if (GameManager.Instance != null &&
-                ((fromCell?.elementInfo?.elementData != null && GameManager.Instance.powerGeneratorElementData == fromCell.elementInfo.elementData) ||
-                 (toCell?.elementInfo?.elementData != null && GameManager.Instance.powerGeneratorElementData == toCell.elementInfo.elementData)))
-            {
-                CancelDrag();
-                return;
-            }
-
-            if (HasBehavior(fromCell, ElementData.ElementBehaviorFlags.NonSwappable) ||
-                HasBehavior(toCell, ElementData.ElementBehaviorFlags.NonSwappable))
             {
                 CancelDrag();
                 return;

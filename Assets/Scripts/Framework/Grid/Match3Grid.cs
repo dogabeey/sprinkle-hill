@@ -2504,43 +2504,28 @@ namespace Game
 
         private static bool IsGarbageBagData(ElementData data)
         {
-            GameManager gm = GameManager.Instance;
-            return gm != null && data != null && gm.garbageBagElementData == data;
+            return data is GarbageBagElementData;
         }
 
         private static bool IsPowerGeneratorData(ElementData data)
         {
-            GameManager gm = GameManager.Instance;
-            return gm != null && data != null && gm.powerGeneratorElementData == data;
+            return data is PowerGeneratorElementData;
         }
 
         private static bool IsPowerOutletData(ElementData data)
         {
-            GameManager gm = GameManager.Instance;
-            return gm != null && data != null && gm.powerOutletElementData == data;
+            return data is PowerOutletElementData;
         }
 
         private bool IsCauldronData(ElementData data)
         {
-            GameManager gm = GameManager.Instance;
-            return gm != null && data != null && data is CauldronElementData;
+            return data is CauldronElementData;
         }
 
         private static bool IsGarbageBagCell(GridCell cell)
         {
             return cell != null && cell.cellType == CellType.Normal && cell.elementInfo != null && IsGarbageBagData(cell.elementInfo.elementData);
         }
-
-        private static bool IsPowerGeneratorCell(GridCell cell)
-        {
-            return cell != null && cell.cellType == CellType.Normal && cell.elementInfo != null && IsPowerGeneratorData(cell.elementInfo.elementData);
-        }
-
-        private static bool IsNonSwappableCell(GridCell cell)
-        {
-            return cell != null && cell.cellType == CellType.Normal && cell.elementInfo != null && HasBehavior(cell.elementInfo.elementData, ElementData.ElementBehaviorFlags.NonSwappable);
-        }
-
         private static void NotifyGarbageBagCleaned(Vector2Int pos, ElementData data)
         {
             EventManager.TriggerEvent(GameEvent.GARBAGE_CLEANED, new EventParam(

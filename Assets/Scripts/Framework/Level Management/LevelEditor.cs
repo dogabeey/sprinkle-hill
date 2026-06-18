@@ -589,7 +589,7 @@ namespace Game
                     }
                     else if (Event.current.keyCode == KeyCode.G)
                     {
-                        value.elementInfo = CreateElementInfo(GameManager.Instance.garbageBagElementData);
+                        value.elementInfo = CreateElementInfo(Resources.Load<GarbageBagElementData>(""));
                         MarkDirty();
                         Event.current.Use();
                     }
