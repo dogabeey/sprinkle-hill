@@ -25,18 +25,6 @@ namespace Game
         [FoldoutGroup("Settings")]
         public bool autoShuffleWhenOutOfPossibleMoves;
         [FoldoutGroup("Element Definitions")]
-        public ElementData bombElementData;
-        [FoldoutGroup("Element Definitions")]
-        public ElementData horizontalRocketElementData;
-        [FoldoutGroup("Element Definitions")]
-        public ElementData verticalRocketElementData;
-        [FoldoutGroup("Element Definitions")]
-        public ElementData propellerElementData;
-        [FoldoutGroup("Element Definitions")]
-        public ElementData discoBallElementData;
-        [FoldoutGroup("Element Definitions")]
-        public ElementData cauldronElementData;
-        [FoldoutGroup("Element Definitions")]
         public ElementData garbageBagElementData;
         [FoldoutGroup("Element Definitions")]
         public ElementData powerGeneratorElementData;

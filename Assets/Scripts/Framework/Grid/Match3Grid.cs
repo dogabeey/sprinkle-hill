@@ -616,7 +616,7 @@ namespace Game
             if (!IsCauldronData(cell.elementInfo.elementData))
                 return false;
 
-            int required = Mathf.Max(1, cell.elementInfo.elementData != null ? cell.elementInfo.elementData.cauldronChargeRequired : 1);
+            int required = Mathf.Max(1, cell.elementInfo.elementData != null && cell.elementInfo.elementData is CauldronElementData cauldronElementData ? cauldronElementData.cauldronChargeRequired : 1);
             return cell.elementInfo.cauldronProgress >= required;
         }
 
@@ -637,12 +637,12 @@ namespace Game
 
                     ElementData data = cauldronCell.elementInfo.elementData;
                     Vector2Int coverage = GetGridCoverage(data);
-                    int radius = Mathf.Max(1, data != null ? data.cauldronChargeRadius : 1);
+                    int radius = Mathf.Max(1, data != null && data is CauldronElementData cauldronElementData ? cauldronElementData.cauldronChargeRadius : 1);
                     int distance = GetManhattanDistanceToCoverage(clearedPos, cauldronPos, coverage);
                     if (distance > radius)
                         continue;
 
-                    int required = Mathf.Max(1, data != null ? data.cauldronChargeRequired : 1);
+                    int required = Mathf.Max(1, data != null && data is CauldronElementData cauldronElementData2 ? cauldronElementData2.cauldronChargeRequired : 1);
                     if (cauldronCell.elementInfo.cauldronProgress >= required)
                         continue;
 
@@ -2362,8 +2362,8 @@ namespace Game
             GridElement cauldronElement = GetElementAt(cauldronPos);
             Vector3 center = GetElementCoverageCenterWorld(cauldronPos, cauldronCell.elementInfo.elementData);
 
-            ParticleSystem customExplosion = cauldronCell.elementInfo.elementData != null
-                ? cauldronCell.elementInfo.elementData.cauldronExplosionParticle
+            ParticleSystem customExplosion = cauldronCell.elementInfo.elementData != null && cauldronCell.elementInfo.elementData is CauldronElementData cauldronElementData && cauldronElementData.cauldronExplosionParticle != null
+                ? cauldronElementData.cauldronExplosionParticle
                 : null;
             if (customExplosion != null)
             {
@@ -2523,7 +2523,7 @@ namespace Game
         private bool IsCauldronData(ElementData data)
         {
             GameManager gm = GameManager.Instance;
-            return gm != null && data != null && gm.cauldronElementData == data;
+            return gm != null && data != null && data is CauldronElementData;
         }
 
         private static bool IsGarbageBagCell(GridCell cell)

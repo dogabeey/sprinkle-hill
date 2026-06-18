@@ -653,12 +653,10 @@ namespace Game
         //  Creation
         // ------------------------------------------------------------------
 
-        public void CreatePowerUpAt(Vector2Int pos, ElementData sourceData, ElementPowerUpType type)
+        public void CreatePowerUpAt(Vector2Int pos, ElementData visualData, ElementPowerUpType type)
         {
             Grid3D.GridCell cell = grid.GetCellPublic(pos);
             if (cell == null || cell.cellType != Grid3D.CellType.Normal) return;
-
-            ElementData visualData = ResolveVisualData(sourceData, type);
 
             if (cell.elementInfo == null)
                 cell.elementInfo = new GridElementInfo();
@@ -711,18 +709,18 @@ namespace Game
                 // If the element at position has an animator and a power-up activation trigger name,
                 // play the activation animation first and wait for it to complete before running the power-up.
                 GridElement elem = grid.GetElementAt(pos);
-                if (elem != null && elem.elementAnimator != null && !string.IsNullOrEmpty(elem.elementInfo.elementData.powerUpActivationString))
+                if (elem != null && elem.elementAnimator != null && elem.elementInfo.elementData is PowerUpElementData powerUpElementData && !string.IsNullOrEmpty(powerUpElementData.powerUpActivationString))
                 {
                     bool triggered = false;
                     try
                     {
-                        elem.elementAnimator.SetTrigger(elem.elementInfo.elementData.powerUpActivationString);
+                        elem.elementAnimator.SetTrigger(powerUpElementData.powerUpActivationString);
                         triggered = true;
                     }
                     catch { triggered = false; }
 
                     if (triggered)
-                        yield return grid.StartCoroutine(WaitForActivationAnimation(elem.elementAnimator, elem.elementInfo.elementData.powerUpActivationString));
+                        yield return grid.StartCoroutine(WaitForActivationAnimation(elem.elementAnimator, powerUpElementData.powerUpActivationString));
                 }
 
                 yield return grid.StartCoroutine(strategy.Activate(pos, swappedElementData));
@@ -1892,7 +1890,7 @@ namespace Game
                     continue;
 
                 ElementData sourceData = cell.elementInfo.elementData;
-                cell.elementInfo.elementData = ResolveVisualData(sourceData, targetPowerUpType);
+                cell.elementInfo.elementData = sourceData;
                 cell.elementInfo.powerUpType = targetPowerUpType;
                 cell.elementInfo.isSparkling = false;
                 cell.elementInfo.isHidden = false;
@@ -2543,7 +2541,7 @@ namespace Game
             if (cell?.elementInfo != null)
             {
                 ElementData sourceData = cell.elementInfo.elementData;
-                cell.elementInfo.elementData = ResolveVisualData(sourceData, targetPowerUpType);
+                cell.elementInfo.elementData = sourceData;
                 cell.elementInfo.powerUpType = targetPowerUpType;
                 cell.elementInfo.isSparkling = false;
                 cell.elementInfo.isHidden = false;
@@ -3075,15 +3073,8 @@ namespace Game
             }
         }
 
-        private ElementData ResolveVisualData(ElementData sourceData, ElementPowerUpType type)
+        private ElementData ResolveVisualData(ElementData sourceData)
         {
-            GameManager gm = GameManager.Instance;
-            if (gm == null) return sourceData;
-            if (type == ElementPowerUpType.Bomb && gm.bombElementData != null) return gm.bombElementData;
-            if ((type == ElementPowerUpType.Rocket || type == ElementPowerUpType.HorizontalRocket) && gm.horizontalRocketElementData != null) return gm.horizontalRocketElementData;
-            if (type == ElementPowerUpType.VerticalRocket && gm.verticalRocketElementData != null) return gm.verticalRocketElementData;
-            if (IsPropeller(type) && gm.propellerElementData != null) return gm.propellerElementData;
-            if (IsDiscoBall(type) && gm.discoBallElementData != null) return gm.discoBallElementData;
             return sourceData;
         }
 

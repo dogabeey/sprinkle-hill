@@ -46,29 +46,7 @@ namespace Game
 
         private void RefreshCauldronVisual()
         {
-            GameManager gm = GameManager.Instance;
-            bool isCauldron = elementInfo != null &&
-                              elementInfo.powerUpType == ElementPowerUpType.Cauldron &&
-                              elementInfo.elementData != null &&
-                              gm != null &&
-                              gm.cauldronElementData == elementInfo.elementData;
-
-            if (cauldronProgressBackground != null)
-                cauldronProgressBackground.gameObject.SetActive(isCauldron) ;
-
-            if (cauldronProgressFill != null)
-            {
-                cauldronProgressFill.enabled = isCauldron;
-                cauldronProgressFill.fillAmount = isCauldron && elementInfo.elementData.cauldronChargeRequired > 0
-                    ? Mathf.Clamp01((float)elementInfo.cauldronProgress / elementInfo.elementData.cauldronChargeRequired)
-                    : 0f;
-            }
-
-            if (cauldronReadyIndicator != null)
-            {
-                bool isReady = isCauldron && elementInfo.cauldronProgress >= Mathf.Max(1, elementInfo.elementData.cauldronChargeRequired);
-                cauldronReadyIndicator.enabled = isReady;
-            }
+            // TODO: This is a bit of a hack, we should ideally have a separate element class for cauldron and move this logic there.
         }
 
         protected override IEnumerator HueAnim()

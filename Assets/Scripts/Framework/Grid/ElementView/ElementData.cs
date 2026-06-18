@@ -15,7 +15,13 @@ public class VisualizableScriptableObject : ScriptableObject
     public Sprite displayIcon;
 }
 
-[CreateAssetMenu(fileName = "ElementVisualData", menuName = "Game/Element Data...")]
+public class PowerUpElementData : ElementData
+{
+    [FoldoutGroup("Animation")]
+    public string powerUpActivationString;
+}
+
+[CreateAssetMenu(fileName = "ElementVisualData", menuName = "Game/Elements/Element Data...")]
 public class ElementData : VisualizableScriptableObject
 {
     [System.Flags]
@@ -39,17 +45,7 @@ public class ElementData : VisualizableScriptableObject
     [FoldoutGroup("Animation")]
     public string defaultIdleAnimation = "idle";
     [FoldoutGroup("Animation")]
-    public string powerUpActivationString;
-    [FoldoutGroup("Animation")]
     public RuntimeAnimatorController animationController;
-    [FoldoutGroup("Cauldron"), ShowIf(nameof(IsCauldron))]
-    [Min(1)] public int cauldronChargeRequired = 8;
-    [FoldoutGroup("Cauldron"), ShowIf(nameof(IsCauldron))]
-    [Min(1)] public int cauldronChargeRadius = 1;
-    [FoldoutGroup("Cauldron"), ShowIf(nameof(IsCauldron))]
-    public ParticleSystem cauldronExplosionParticle;
-    [FoldoutGroup("Cauldron"), ShowIf(nameof(IsCauldron))]
-    public ElementAnimationByProgress[] elementAnimationsByProgress;
 
     [Serializable]
     public class ElementAnimationByProgress
@@ -115,21 +111,5 @@ public class ElementData : VisualizableScriptableObject
         }
         return null;
     }
-
-#if UNITY_EDITOR
-    private bool IsCauldron
-    {
-        get
-        {
-            Game.GameManager manager = Game.GameManager.Instance;
-            if (manager == null)
-                manager = UnityEngine.Object.FindAnyObjectByType<Game.GameManager>();
-
-            return manager != null && manager.cauldronElementData == this;
-        }
-    }
-#else
-    private bool IsCauldron => false;
-#endif
 
 }

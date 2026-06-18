@@ -121,7 +121,7 @@ namespace Game
             if (data == null)
                 return false;
 
-            return GameManager.Instance != null && GameManager.Instance.cauldronElementData == data;
+            return GameManager.Instance != null && data is CauldronElementData;
         }
 
         private static ElementPowerUpType ResolveElementPowerUpType(ElementData data)
@@ -130,22 +130,22 @@ namespace Game
             if (data == null || manager == null)
                 return ElementPowerUpType.None;
 
-            if (manager.cauldronElementData == data)
+            if (data is CauldronElementData)
                 return ElementPowerUpType.Cauldron;
 
-            if (manager.bombElementData == data)
+            if (data is BombElementData)
                 return ElementPowerUpType.Bomb;
 
-            if (manager.horizontalRocketElementData == data)
+            if (data is HorizontalRocketElementData)
                 return ElementPowerUpType.HorizontalRocket;
 
-            if (manager.verticalRocketElementData == data)
+            if (data is VerticalRocketElementData)
                 return ElementPowerUpType.VerticalRocket;
 
-            if (manager.propellerElementData == data)
+            if (data is PropellerElementData)
                 return ElementPowerUpType.Propeller;
 
-            if (manager.discoBallElementData == data)
+            if (data is DiscoBallElementData)
                 return ElementPowerUpType.DiscoBall;
 
             return ElementPowerUpType.None;
@@ -771,11 +771,11 @@ namespace Game
                         }
                     }
                     // Power-Up Options (Rocket, Bomb, Propeller, Disco Ball)
-                    ElementData horizontalRocketData = GameManager.Instance.horizontalRocketElementData;
-                    ElementData verticalRocketData = GameManager.Instance.verticalRocketElementData;
-                    ElementData bombData = GameManager.Instance.bombElementData;
-                    ElementData propellerData = GameManager.Instance.propellerElementData;
-                    ElementData discoBallData = GameManager.Instance.discoBallElementData;
+                    ElementData horizontalRocketData = Resources.Load<HorizontalRocketElementData>("");
+                    ElementData verticalRocketData = Resources.Load<VerticalRocketElementData>("");
+                    ElementData bombData = Resources.Load<BombElementData>("");
+                    ElementData propellerData = Resources.Load<PropellerElementData>("");
+                    ElementData discoBallData = Resources.Load<DiscoBallElementData>("");
                     menu.AddItem(new GUIContent($"Element/Power-Ups/{horizontalRocketData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == horizontalRocketData, () =>
                     {
                         value.elementInfo = CreateElementInfo(horizontalRocketData);
@@ -802,10 +802,10 @@ namespace Game
                         MarkDirty();
                     });
                     // Special Elements (Cauldron, Power Generator, Power Outlet, etc.)
-                    ElementData cauldronData = GameManager.Instance.cauldronElementData;
-                    ElementData powerGeneratorData = GameManager.Instance.powerGeneratorElementData;
-                    ElementData powerOutletData = GameManager.Instance.powerOutletElementData;
-                    ElementData garbageBagData = GameManager.Instance.garbageBagElementData;
+                    ElementData cauldronData = Resources.Load<CauldronElementData>("");
+                    ElementData powerGeneratorData = Resources.Load<PowerGeneratorElementData>("");
+                    ElementData powerOutletData = Resources.Load<PowerOutletElementData>("");
+                    ElementData garbageBagData = Resources.Load<GarbageBagElementData>("");
                     menu.AddItem(new GUIContent($"Element/Special/{cauldronData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == cauldronData, () =>
                     {
                         value.elementInfo = CreateElementInfo(cauldronData);
