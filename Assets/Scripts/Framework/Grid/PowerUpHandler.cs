@@ -652,16 +652,39 @@ namespace Game
         // ------------------------------------------------------------------
         //  Creation
         // ------------------------------------------------------------------
-
-        public void CreatePowerUpAt(Vector2Int pos, ElementData visualData, ElementPowerUpType type)
+        private ElementData GetPowerUpElementData(ElementPowerUpType type)
         {
+            switch (type)
+            {
+                case ElementPowerUpType.Bomb:
+                    return EditorAddressables.bombData;
+                case ElementPowerUpType.HorizontalRocket:
+                    return EditorAddressables.horizontalRocketData;
+                case ElementPowerUpType.VerticalRocket:
+                    return EditorAddressables.verticalRocketData;
+                case ElementPowerUpType.Propeller:
+                    return EditorAddressables.propellerData;
+                case ElementPowerUpType.DiscoBall:
+                    return EditorAddressables.discoBallData;
+                default:
+                    return null;
+            }
+        }
+        public void CreatePowerUpAt(Vector2Int pos, ElementPowerUpType type)
+        {
+            ElementData elementData = GetPowerUpElementData(type);
+            if (elementData == null)
+            {
+                Debug.LogError($"PowerUpHandler.CreatePowerUpAt: No ElementData found for power-up type {type}. Cannot create power-up.");
+                return;
+            }
             Grid3D.GridCell cell = grid.GetCellPublic(pos);
             if (cell == null || cell.cellType != Grid3D.CellType.Normal) return;
 
             if (cell.elementInfo == null)
                 cell.elementInfo = new GridElementInfo();
 
-            cell.elementInfo.elementData = visualData;
+            cell.elementInfo.elementData = elementData;
             cell.elementInfo.powerUpType = type;
             cell.elementInfo.isSparkling = false;
             cell.elementInfo.isHidden = false;
@@ -673,7 +696,7 @@ namespace Game
                 ApplySortingBoost(element, type == ElementPowerUpType.Bomb);
             }
 
-            TriggerPowerUpCreatedEvent(type, visualData);
+            TriggerPowerUpCreatedEvent(type, elementData);
         }
 
         private void TriggerPowerUpCreatedEvent(ElementPowerUpType type, ElementData data)

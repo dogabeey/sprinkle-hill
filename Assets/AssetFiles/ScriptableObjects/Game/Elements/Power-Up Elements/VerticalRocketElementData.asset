@@ -22,4 +22,4 @@ MonoBehaviour:
   behaviorFlags: 2
   defaultIdleAnimation: idle
   animationController: {fileID: 0}
-  powerUpActivationString: activate
+  powerUpActivationString: 

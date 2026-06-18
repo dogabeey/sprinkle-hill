@@ -21,7 +21,7 @@ MonoBehaviour:
   gridCoverage: {x: 1, y: 1}
   behaviorFlags: 2
   defaultIdleAnimation: idle
-  animationController: {fileID: 0}
+  animationController: {fileID: 9100000, guid: cb78fcfe153a4514991876745d866bf6, type: 2}
   powerUpActivationString: activate
   bombClearRadius: 1
   bombComboClearRadius: 10

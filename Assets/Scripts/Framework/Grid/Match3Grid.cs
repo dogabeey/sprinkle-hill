@@ -164,7 +164,7 @@ namespace Game
                 yield break;
 
             ElementData selectedElementData = cell.elementInfo.elementData;
-            powerUpHandler.CreatePowerUpAt(center, selectedElementData, ElementPowerUpType.DiscoBall);
+            powerUpHandler.CreatePowerUpAt(center, ElementPowerUpType.DiscoBall);
             yield return StartCoroutine(powerUpHandler.ActivateAt(center, selectedElementData));
             yield return StartCoroutine(ResolveBoardAfterSpecialClear());
         }
@@ -179,7 +179,7 @@ namespace Game
                 yield break;
 
             ElementData selectedElementData = cell.elementInfo.elementData;
-            powerUpHandler.CreatePowerUpAt(center, selectedElementData, ElementPowerUpType.HorizontalRocket);
+            powerUpHandler.CreatePowerUpAt(center,  ElementPowerUpType.HorizontalRocket);
             yield break;
         }
 
@@ -823,13 +823,13 @@ namespace Game
 
                 // Create power-ups (disco ball has highest priority)
                 for (int i = 0; i < discoBallSpawns.Count; i++)
-                    powerUpHandler.CreatePowerUpAt(discoBallSpawns[i].position, discoBallSpawns[i].sourceData, discoBallSpawns[i].powerUpType);
+                    powerUpHandler.CreatePowerUpAt(discoBallSpawns[i].position, discoBallSpawns[i].powerUpType);
                 for (int i = 0; i < propellerSpawns.Count; i++)
-                    powerUpHandler.CreatePowerUpAt(propellerSpawns[i].position, propellerSpawns[i].sourceData, propellerSpawns[i].powerUpType);
+                    powerUpHandler.CreatePowerUpAt(propellerSpawns[i].position, propellerSpawns[i].powerUpType);
                 for (int i = 0; i < bombSpawns.Count; i++)
-                    powerUpHandler.CreatePowerUpAt(bombSpawns[i].position, bombSpawns[i].sourceData, bombSpawns[i].powerUpType);
+                    powerUpHandler.CreatePowerUpAt(bombSpawns[i].position, bombSpawns[i].powerUpType);
                 for (int i = 0; i < rocketSpawns.Count; i++)
-                    powerUpHandler.CreatePowerUpAt(rocketSpawns[i].position, rocketSpawns[i].sourceData, rocketSpawns[i].powerUpType);
+                    powerUpHandler.CreatePowerUpAt(rocketSpawns[i].position, rocketSpawns[i].powerUpType);
 
                 // Gravity
                 yield return StartCoroutine(ApplyGravity());
@@ -899,13 +899,13 @@ namespace Game
                 yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions));
 
                 for (int i = 0; i < discoBallSpawns.Count; i++)
-                    powerUpHandler.CreatePowerUpAt(discoBallSpawns[i].position, discoBallSpawns[i].sourceData, discoBallSpawns[i].powerUpType);
+                    powerUpHandler.CreatePowerUpAt(discoBallSpawns[i].position, discoBallSpawns[i].powerUpType);
                 for (int i = 0; i < propellerSpawns.Count; i++)
-                    powerUpHandler.CreatePowerUpAt(propellerSpawns[i].position, propellerSpawns[i].sourceData, propellerSpawns[i].powerUpType);
+                    powerUpHandler.CreatePowerUpAt(propellerSpawns[i].position, propellerSpawns[i].powerUpType);
                 for (int i = 0; i < bombSpawns.Count; i++)
-                    powerUpHandler.CreatePowerUpAt(bombSpawns[i].position, bombSpawns[i].sourceData, bombSpawns[i].powerUpType);
+                    powerUpHandler.CreatePowerUpAt(bombSpawns[i].position, bombSpawns[i].powerUpType);
                 for (int i = 0; i < rocketSpawns.Count; i++)
-                    powerUpHandler.CreatePowerUpAt(rocketSpawns[i].position, rocketSpawns[i].sourceData, rocketSpawns[i].powerUpType);
+                    powerUpHandler.CreatePowerUpAt(rocketSpawns[i].position, rocketSpawns[i].powerUpType);
 
                 yield return StartCoroutine(ApplyGravity());
             }

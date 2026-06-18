@@ -170,24 +170,10 @@ namespace Game
             if (draggedElement != null && match3Grid != null && match3Grid.TryGetElementPosition(draggedElement, out Vector2Int draggedPos))
             {
                 GridCell draggedCell = match3Grid.GetCellPublic(draggedPos);
-                if (draggedCell?.elementInfo != null && draggedCell.elementInfo.powerUpType == ElementPowerUpType.Cauldron)
-                {
-                    return;
-                }
-                if (draggedCell?.elementInfo?.elementData != null &&
-                    draggedCell.elementInfo.elementData is GarbageBagElementData)
-                {
-                    return;
-                }
-
-                if (GameManager.Instance != null && draggedCell?.elementInfo?.elementData != null &&
-                    draggedCell.elementInfo.elementData)
-                {
-                    return;
-                }
 
                 if (HasBehavior(draggedCell, ElementData.ElementBehaviorFlags.NonSwappable))
                 {
+                    Debug.Log("Dragged element is non-swappable. Cancelling drag.");
                     return;
                 }
             }
