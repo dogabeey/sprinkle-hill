@@ -771,11 +771,11 @@ namespace Game
                         }
                     }
                     // Power-Up Options (Rocket, Bomb, Propeller, Disco Ball)
-                    ElementData horizontalRocketData = Resources.Load<HorizontalRocketElementData>("");
-                    ElementData verticalRocketData = Resources.Load<VerticalRocketElementData>("");
-                    ElementData bombData = Resources.Load<BombElementData>("");
-                    ElementData propellerData = Resources.Load<PropellerElementData>("");
-                    ElementData discoBallData = Resources.Load<DiscoBallElementData>("");
+                    HorizontalRocketElementData horizontalRocketData = Resources.Load<HorizontalRocketElementData>("");
+                    VerticalRocketElementData verticalRocketData = Resources.Load<VerticalRocketElementData>("");
+                    BombElementData bombData = Resources.Load<BombElementData>("");
+                    PropellerElementData propellerData = Resources.Load<PropellerElementData>("");
+                    DiscoBallElementData discoBallData = Resources.Load<DiscoBallElementData>("");
                     menu.AddItem(new GUIContent($"Element/Power-Ups/{horizontalRocketData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == horizontalRocketData, () =>
                     {
                         value.elementInfo = CreateElementInfo(horizontalRocketData);
