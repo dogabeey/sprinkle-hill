@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
-using UnityEngine; using Game.EventManagement;
+using UnityEngine; 
+using Game.EventManagement;
+using UnityEngine.AddressableAssets;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -771,11 +774,11 @@ namespace Game
                         }
                     }
                     // Power-Up Options (Rocket, Bomb, Propeller, Disco Ball)
-                    HorizontalRocketElementData horizontalRocketData = Resources.Load<HorizontalRocketElementData>("");
-                    VerticalRocketElementData verticalRocketData = Resources.Load<VerticalRocketElementData>("");
-                    BombElementData bombData = Resources.Load<BombElementData>("");
-                    PropellerElementData propellerData = Resources.Load<PropellerElementData>("");
-                    DiscoBallElementData discoBallData = Resources.Load<DiscoBallElementData>("");
+                    HorizontalRocketElementData horizontalRocketData = EditorAddressables.horizontalRocketData;
+                    VerticalRocketElementData verticalRocketData = EditorAddressables.verticalRocketData;
+                    BombElementData bombData = EditorAddressables.bombData;
+                    PropellerElementData propellerData = EditorAddressables.propellerData;
+                    DiscoBallElementData discoBallData = EditorAddressables.discoBallData;
                     menu.AddItem(new GUIContent($"Element/Power-Ups/{horizontalRocketData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == horizontalRocketData, () =>
                     {
                         value.elementInfo = CreateElementInfo(horizontalRocketData);
@@ -802,10 +805,10 @@ namespace Game
                         MarkDirty();
                     });
                     // Special Elements (Cauldron, Power Generator, Power Outlet, etc.)
-                    ElementData cauldronData = Resources.Load<CauldronElementData>("");
-                    ElementData powerGeneratorData = Resources.Load<PowerGeneratorElementData>("");
-                    ElementData powerOutletData = Resources.Load<PowerOutletElementData>("");
-                    ElementData garbageBagData = Resources.Load<GarbageBagElementData>("");
+                    ElementData cauldronData = EditorAddressables.cauldronElementData;
+                    ElementData powerGeneratorData = EditorAddressables.powerGeneratorElementData;
+                    ElementData powerOutletData = EditorAddressables.powerOutletElementData;
+                    ElementData garbageBagData = EditorAddressables.garbageBagElementData;
                     menu.AddItem(new GUIContent($"Element/Special/{cauldronData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == cauldronData, () =>
                     {
                         value.elementInfo = CreateElementInfo(cauldronData);
