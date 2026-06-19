@@ -44,7 +44,7 @@ namespace Game
             "Grid Cell Shortcuts\n" +
             "E: Set cell to Empty\n" +
             "N: Set cell to Normal\n" +
-            "B: Set cell to Breakable Wall\n" +
+            "B: Set cell to Breakable Box\n" +
             "H: Toggle Hidden Element\n" +
             "U: Set cell to Unbreakable Wall\n" +
             "Shift+Z: Toggle Wafer Feature\n" +
@@ -566,11 +566,10 @@ namespace Game
                         MarkDirty();
                         Event.current.Use();
                     }
-                    else if (Event.current.keyCode == KeyCode.B)
+                    else if (Event.current.keyCode == KeyCode.B) // Breakable box
                     {
-                        value.cellType = Grid3D.CellType.BreakableWall;
-                        value.elementInfo = null;
-                        value.cellHealth = Mathf.Max(1, value.cellHealth);
+                        value.cellType = Grid3D.CellType.Normal;
+                        value.elementInfo = CreateElementInfo(EditorAddressables.breakableBoxElementData);
                         MarkDirty();
                         Event.current.Use();
                     }
@@ -809,6 +808,7 @@ namespace Game
                     ElementData powerGeneratorData = EditorAddressables.powerGeneratorElementData;
                     ElementData powerOutletData = EditorAddressables.powerOutletElementData;
                     ElementData garbageBagData = EditorAddressables.garbageBagElementData;
+                    ElementData breakableBoxData = EditorAddressables.breakableBoxElementData;
                     menu.AddItem(new GUIContent($"Element/Special/{cauldronData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == cauldronData, () =>
                     {
                         value.elementInfo = CreateElementInfo(cauldronData);
@@ -827,6 +827,11 @@ namespace Game
                     menu.AddItem(new GUIContent($"Element/Special/{garbageBagData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == garbageBagData, () =>
                     {
                         value.elementInfo = CreateElementInfo(garbageBagData);
+                        MarkDirty();
+                    });
+                    menu.AddItem(new GUIContent($"Element/Special/{breakableBoxData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == breakableBoxData, () =>
+                    {
+                        value.elementInfo = CreateElementInfo(breakableBoxData);
                         MarkDirty();
                     });
                 }

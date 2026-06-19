@@ -930,6 +930,7 @@ namespace Game
         public IEnumerator ClearAreaAt(Vector2Int center, int radius, bool allowConditionedBreakableWalls = true)
         {
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
+            HashSet<Vector2Int> boxesProcessed = new HashSet<Vector2Int>();
 
             for (int x = center.x - radius; x <= center.x + radius; x++)
             {
@@ -970,6 +971,7 @@ namespace Game
                     NotifyElementCleared(pos);
                     cell.elementInfo = null;
                     if (matchedElement != null) StartCoroutine(matchedElement.DestroyElement());
+                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
                 }
             }
 
@@ -985,6 +987,7 @@ namespace Game
                 yield break;
 
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
+            HashSet<Vector2Int> boxesProcessed = new HashSet<Vector2Int>();
 
             for (int x = 0; x < gridSize.x; x++)
             {
@@ -1029,6 +1032,7 @@ namespace Game
                 cell.elementInfo = null;
                 if (matchedElement != null)
                     StartCoroutine(matchedElement.DestroyElement());
+                BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
             }
 
             yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
@@ -1040,6 +1044,7 @@ namespace Game
                 yield break;
 
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
+            HashSet<Vector2Int> boxesProcessed = new HashSet<Vector2Int>();
 
             for (int y = 0; y < gridSize.y; y++)
             {
@@ -1084,13 +1089,14 @@ namespace Game
                 cell.elementInfo = null;
                 if (matchedElement != null)
                     StartCoroutine(matchedElement.DestroyElement());
+                BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
             }
 
             yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
 
-        public IEnumerator ClearCellAt(Vector2Int pos, bool allowConditionedBreakableWalls = true)
+        public IEnumerator ClearCellAt(Vector2Int pos, bool allowConditionedBreakableWalls = true, bool allowAdjacentBreakableBoxes = true)
         {
             GridCell cell = GetCell(pos);
             if (cell == null)
@@ -1132,6 +1138,9 @@ namespace Game
             cell.elementInfo = null;
             if (matchedElement != null)
                 StartCoroutine(matchedElement.DestroyElement());
+
+            if (allowAdjacentBreakableBoxes)
+                BreakAdjacentBreakableBoxesImmediate(pos, new HashSet<Vector2Int>());
         }
         public IEnumerator ClearCrossAt(Vector2Int center, bool allowConditionedBreakableWalls = true)
         {
@@ -1145,6 +1154,7 @@ namespace Game
             };
 
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
+            HashSet<Vector2Int> boxesProcessed = new HashSet<Vector2Int>();
 
             for (int i = 0; i < offsets.Length; i++)
             {
@@ -1189,6 +1199,7 @@ namespace Game
                 cell.elementInfo = null;
                 if (matchedElement != null)
                     StartCoroutine(matchedElement.DestroyElement());
+                BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
             }
 
             yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
@@ -1786,6 +1797,7 @@ namespace Game
             ConstantManager cm = ConstantManager.Instance;
             HashSet<Vector2Int> cleared = new HashSet<Vector2Int>();
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
+            HashSet<Vector2Int> boxesProcessed = new HashSet<Vector2Int>();
             HashSet<Vector2Int> hiddenToReveal = new HashSet<Vector2Int>();
             Vector2Int[] adjacentOffsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
             HashSet<Vector2Int> allMatchedPositions = new HashSet<Vector2Int>();
@@ -1824,7 +1836,7 @@ namespace Game
                             ElementData protectedElementData = protectedCell.elementInfo.elementData;
                             GridElement protectedElement = GetElementAt(pos);
                             ProcessAdjacentFeatureMatchEffects(pos, protectedCell, protectedElement, allMatchedPositions, adjacentFeatureProcessed, adjacentOffsets);
-                            ProcessAdjacentWallAndHiddenEffects(pos, protectedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
+                            ProcessAdjacentWallAndHiddenEffects(pos, protectedElementData, adjacentOffsets, wallsToBreak, boxesProcessed, hiddenToReveal);
                         }
                         continue;
                     }
@@ -1851,7 +1863,7 @@ namespace Game
                         else StartCoroutine(element.DestroyElement());
                     }
 
-                    ProcessAdjacentWallAndHiddenEffects(pos, destroyedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
+                    ProcessAdjacentWallAndHiddenEffects(pos, destroyedElementData, adjacentOffsets, wallsToBreak, boxesProcessed, hiddenToReveal);
 
                     cleared.Add(pos);
                 }
@@ -1894,6 +1906,7 @@ namespace Game
             ElementData destroyedElementData,
             Vector2Int[] adjacentOffsets,
             HashSet<Vector2Int> wallsToBreak,
+            HashSet<Vector2Int> boxesProcessed,
             HashSet<Vector2Int> hiddenToReveal)
         {
             for (int i = 0; i < adjacentOffsets.Length; i++)
@@ -1905,6 +1918,12 @@ namespace Game
 
                 if (adjacentCell.cellType == CellType.BreakableWall && CanBreakWallWithElement(adjacentCell, destroyedElementData))
                     wallsToBreak.Add(adjacentPos);
+
+                if (IsBreakableBoxCell(adjacentCell))
+                {
+                    if (boxesProcessed == null || boxesProcessed.Add(adjacentPos))
+                        StartCoroutine(ClearCellAt(adjacentPos, true, false));
+                }
 
                 if (adjacentCell.cellType == CellType.Normal && adjacentCell.elementInfo != null && adjacentCell.elementInfo.isHidden)
                     hiddenToReveal.Add(adjacentPos);
@@ -2507,6 +2526,11 @@ namespace Game
             return data is GarbageBagElementData;
         }
 
+        private static bool IsBreakableBoxData(ElementData data)
+        {
+            return data is BreakableBoxElementData;
+        }
+
         private static bool IsPowerGeneratorData(ElementData data)
         {
             return data is PowerGeneratorElementData;
@@ -2525,6 +2549,27 @@ namespace Game
         private static bool IsGarbageBagCell(GridCell cell)
         {
             return cell != null && cell.cellType == CellType.Normal && cell.elementInfo != null && IsGarbageBagData(cell.elementInfo.elementData);
+        }
+
+        private static bool IsBreakableBoxCell(GridCell cell)
+        {
+            return cell != null && cell.cellType == CellType.Normal && cell.elementInfo != null && IsBreakableBoxData(cell.elementInfo.elementData);
+        }
+
+        private void BreakAdjacentBreakableBoxesImmediate(Vector2Int originPos, HashSet<Vector2Int> processedBoxes)
+        {
+            Vector2Int[] adjacentOffsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            for (int i = 0; i < adjacentOffsets.Length; i++)
+            {
+                Vector2Int adjacentPos = originPos + adjacentOffsets[i];
+                if (!IsBreakableBoxCell(GetCell(adjacentPos)))
+                    continue;
+
+                if (processedBoxes != null && !processedBoxes.Add(adjacentPos))
+                    continue;
+
+                StartCoroutine(ClearCellAt(adjacentPos, true, false));
+            }
         }
         private static void NotifyGarbageBagCleaned(Vector2Int pos, ElementData data)
         {

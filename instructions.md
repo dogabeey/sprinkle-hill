@@ -117,6 +117,7 @@ All cross‑system communication goes through `EventManager`.
 6. **Test the event lifecycle.** Ensure `StartListening` / `StopListening` are paired. Verify events fire at the right time — not too early, not too often.
 7. **Clean up resources.** Kill tweens, disable colliders, destroy temporary GameObjects. Leaked objects cause subtle bugs.
 8. **Newly created files are not loaded by the project without rebuilding the solution, which can lead to confusion and errors.** If you add a new class file, stop the process after creating and notify the developer to rebuild the solution by refreshing Unity.
+9. **Do not build the project after every prompt or minor edit.** Only run a build when the user explicitly asks for it, when a change is large enough to justify verification, or when a compile risk needs to be checked.
 
 ---
 
@@ -134,6 +135,7 @@ All cross‑system communication goes through `EventManager`.
 | Modify `EventParam` for one-off data | Use `paramDictionary` for ad-hoc payloads |
 | Create MonoBehaviours for pure data | Use `[System.Serializable]` classes or ScriptableObjects |
 | Use `public` fields for Inspector exposure | Use `[SerializeField] private` |
+| Run a full build after every small change | Build only when it adds value or the user asks for verification |
 
 ---
 

@@ -2051,6 +2051,7 @@ namespace Game
             if (convertedCells == null)
                 return;
 
+            HashSet<Vector2Int> processedAdjacentBreakables = new HashSet<Vector2Int>();
             for (int i = 0; i < convertedCells.Count; i++)
             {
                 Vector2Int pos = convertedCells[i];
@@ -2079,6 +2080,8 @@ namespace Game
                 cell.elementInfo = null;
                 if (matchedElement != null)
                     grid.StartCoroutine(matchedElement.DestroyElement());
+
+                BreakAdjacentWallsImmediate(pos, processedAdjacentBreakables);
             }
         }
 
@@ -3029,7 +3032,11 @@ namespace Game
         {
             Vector2Int[] offsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
             for (int i = 0; i < offsets.Length; i++)
-                TryBreakRocketWallImmediate(pos + offsets[i], processedWalls);
+            {
+                Vector2Int adjacentPos = pos + offsets[i];
+                TryBreakRocketWallImmediate(adjacentPos, processedWalls);
+                TryBreakBreakableBoxImmediate(adjacentPos, processedWalls);
+            }
         }
 
         private void TryBreakRocketWallImmediate(Vector2Int wallPos, HashSet<Vector2Int> processedWalls)
@@ -3045,6 +3052,21 @@ namespace Game
                 return;
 
             grid.StartCoroutine(grid.BreakWallAt(wallPos));
+        }
+
+        private void TryBreakBreakableBoxImmediate(Vector2Int boxPos, HashSet<Vector2Int> processedPositions)
+        {
+            Grid3D.GridCell boxCell = grid.GetCellPublic(boxPos);
+            if (boxCell == null || boxCell.cellType != Grid3D.CellType.Normal || boxCell.elementInfo == null)
+                return;
+
+            if (!(boxCell.elementInfo.elementData is BreakableBoxElementData))
+                return;
+
+            if (processedPositions != null && !processedPositions.Add(boxPos))
+                return;
+
+            grid.StartCoroutine(grid.ClearCellAt(boxPos, true, false));
         }
 
         private void PlayBombImpactEffects(Vector3 impactPos)

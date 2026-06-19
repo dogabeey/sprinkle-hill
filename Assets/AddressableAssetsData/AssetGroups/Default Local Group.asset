@@ -35,6 +35,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 40f7a3c2d0dfa5f44ac237830e352768
+    m_Address: SpecialElement/BreakableBox
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7994c359cd5d6c341a9a7f00328abbd9
     m_Address: Powerup/VerticalRocket
     m_ReadOnly: 0

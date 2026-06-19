@@ -17,8 +17,14 @@ namespace Game
         public static GarbageBagElementData garbageBagElementData;
         public static PowerGeneratorElementData powerGeneratorElementData;
         public static PowerOutletElementData powerOutletElementData;
+        public static BreakableBoxElementData breakableBoxElementData;
 
         static EditorAddressables()
+        {
+            Initialize();
+        }
+
+        private static void Initialize()
         {
             horizontalRocketData = LoadAsset<HorizontalRocketElementData>("Powerup/HorizontalRocket");
             verticalRocketData = LoadAsset<VerticalRocketElementData>("Powerup/VerticalRocket");
@@ -27,9 +33,11 @@ namespace Game
             discoBallData = LoadAsset<DiscoBallElementData>("Powerup/DiscoBall");
             cauldronElementData = LoadAsset<CauldronElementData>("SpecialElement/Cauldron");
             garbageBagElementData = LoadAsset<GarbageBagElementData>("SpecialElement/GarbageBag");
+            breakableBoxElementData = LoadAsset<BreakableBoxElementData>("SpecialElement/BreakableBox");
             powerGeneratorElementData = LoadAsset<PowerGeneratorElementData>("SpecialElement/PowerGenerator");
             powerOutletElementData = LoadAsset<PowerOutletElementData>("SpecialElement/PowerOutlet");
         }
+
         public static T LoadAsset<T>(string address) where T : UnityEngine.Object
         {
             return Addressables.LoadAssetAsync<T>(address).WaitForCompletion();
