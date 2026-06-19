@@ -1680,7 +1680,7 @@ namespace Game
             if (primaryBombElement != null)
                 grid.StartCoroutine(primaryBombElement.DestroyElement());
 
-            yield return grid.StartCoroutine(ClearBombAreaProgressive(primaryBombPos, ConstantManager.Instance.bombComboImpactRadius, false));
+            yield return grid.StartCoroutine(ClearBombAreaProgressive(primaryBombPos, false, 10));
         }
 
         private IEnumerator ActivateDiscoBallAndPropellerCombo(Vector2Int discoBallPos)
@@ -2273,7 +2273,7 @@ namespace Game
 
             PlayEffect(ConstantManager.SOUNDS.EFFECTS.BOMB);
             PlayBombImpactEffects(targetWorldPos);
-            yield return grid.StartCoroutine(ClearBombAreaProgressive(targetPos, 2, false));
+            yield return grid.StartCoroutine(ClearBombAreaProgressive(targetPos, false));
         }
 
         private IEnumerator ActivateReservedPropellerBurst(List<Vector2Int> propellerPositions, List<Vector2Int> reservedTargets)
@@ -2603,7 +2603,7 @@ namespace Game
 
             grid.TriggerCellFeatureMatchedOverAt(bombPos);
             bombCell.elementInfo = null;
-            yield return grid.StartCoroutine(ClearBombAreaProgressive(bombPos, ConstantManager.Instance.bombImpactRadius, false));
+            yield return grid.StartCoroutine(ClearBombAreaProgressive(bombPos, false));
         }
 
         private IEnumerator ActivateRocket(Vector2Int rocketPos)
@@ -2654,8 +2654,9 @@ namespace Game
             };
         }
 
-        private IEnumerator ClearBombAreaProgressive(Vector2Int center, int radius, bool allowConditionedBreakableWalls)
+        private IEnumerator ClearBombAreaProgressive(Vector2Int center, bool allowConditionedBreakableWalls, int bombRadius = -1)
         {
+            int radius = bombRadius > 0 ? bombRadius : ConstantManager.Instance.bombImpactRadius;
             HashSet<Vector2Int> processedWalls = new HashSet<Vector2Int>();
             float ringDelay = Mathf.Max(0.02f, ConstantManager.Instance.matchClearDelay * 0.35f);
 
