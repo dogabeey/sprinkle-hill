@@ -136,7 +136,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: special_elements_general_0
+      name: special_elements_garbage
       rect:
         serializedVersion: 2
         x: 0
@@ -158,7 +158,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: special_elements_general_1
+      name: special_elements_dispenser
       rect:
         serializedVersion: 2
         x: 256
@@ -180,7 +180,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: special_elements_general_2
+      name: special_elements_hidden
       rect:
         serializedVersion: 2
         x: 512
@@ -202,7 +202,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: special_elements_general_3
+      name: special_elements_iceblock
       rect:
         serializedVersion: 2
         x: 768
@@ -224,7 +224,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: special_elements_general_4
+      name: special_elements_generator
       rect:
         serializedVersion: 2
         x: 1024
@@ -246,7 +246,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: special_elements_general_5
+      name: special_elements_outlet
       rect:
         serializedVersion: 2
         x: 1280
@@ -267,6 +267,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: special_elements_box
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 1792
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 609b9d4a83a26ae48bc7706fbd2bd786
+      internalID: -474482603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: special_elements_jar
+      rect:
+        serializedVersion: 2
+        x: 1792
+        y: 1792
+        width: 256
+        height: 256
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e442f8269fe3dc14a9c821e08a6fc57d
+      internalID: 1537912621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -281,14 +325,17 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":256.0,"y":256.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":1,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":256.0,"y":256.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":2,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      special_elements_general_0: -442064117
-      special_elements_general_1: -1594882395
-      special_elements_general_2: -622759365
-      special_elements_general_3: -205259008
-      special_elements_general_4: 1835613153
-      special_elements_general_5: -1294166768
+      special_elements_box: -474482603
+      special_elements_dispenser: -1594882395
+      special_elements_garbage: -442064117
+      special_elements_general_8: -1685357996
+      special_elements_generator: 1835613153
+      special_elements_hidden: -622759365
+      special_elements_iceblock: -205259008
+      special_elements_jar: 1537912621
+      special_elements_outlet: -1294166768
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
