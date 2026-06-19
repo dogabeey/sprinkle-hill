@@ -2640,7 +2640,22 @@ namespace Game
                     if (IsCellCoveredByMultiCellElement(pos))
                         continue;
 
-                    if (!IsCauldronCell(cell) && !HasBehavior(cell.elementInfo?.elementData, ElementData.ElementBehaviorFlags.PassThrough) && acceptsElements)
+                    ElementData elementData = cell.elementInfo?.elementData;
+                    bool isPassThrough = HasBehavior(elementData, ElementData.ElementBehaviorFlags.PassThrough);
+                    bool isGravityFixedBlocker = HasBehavior(elementData, ElementData.ElementBehaviorFlags.NotAffectedByGravity) && !isPassThrough;
+
+                    if (isGravityFixedBlocker)
+                    {
+                        if (current.Count > 0)
+                        {
+                            sections.Add(new List<int>(current));
+                            current.Clear();
+                        }
+
+                        continue;
+                    }
+
+                    if (!IsCauldronCell(cell) && !isPassThrough && acceptsElements)
                         current.Add(y);
                 }
                 else

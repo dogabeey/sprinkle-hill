@@ -33,7 +33,8 @@ public class ElementData : VisualizableScriptableObject
         NonShuffleable = 1 << 2,
         PassThrough = 1 << 3,
         ImmuneToClear = 1 << 4,
-        NotTargetableByPropeller = 1 << 5
+        NotTargetableByPropeller = 1 << 5,
+        NotAffectedByGravity = 1 << 6
     }
 
     public Sprite breakableWallOverride;

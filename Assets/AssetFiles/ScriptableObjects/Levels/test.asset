@@ -16,6 +16,7 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
+    - {fileID: 11400000, guid: e864407d8ba7b8b4885ee8a95226c5e0, type: 2}
     - {fileID: 11400000, guid: a0c82c7f032651647ac80d13654bca61, type: 2}
     - {fileID: 11400000, guid: 28a4bfc53ef537149b4153f79c7ff47d, type: 2}
     SerializedBytesString: 
@@ -120,11 +121,11 @@ MonoBehaviour:
       Entry: 7
       Data: 4|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: randomElement
       Entry: 5
-      Data: true
+      Data: false
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -781,7 +782,7 @@ MonoBehaviour:
       Data: 24|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 0
+      Data: 1
     - Name: randomElement
       Entry: 5
       Data: false
@@ -847,7 +848,7 @@ MonoBehaviour:
       Data: 26|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 1
+      Data: 2
     - Name: randomElement
       Entry: 5
       Data: false

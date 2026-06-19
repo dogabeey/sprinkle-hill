@@ -1,6 +1,6 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PowerOutletElementData", menuName = "Game/Elements/Special/Power Outlet Element Data...")]
-public class PowerOutletElementData : PowerUpElementData
+public class PowerOutletElementData : ElementData
 {
 }

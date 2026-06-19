@@ -223,8 +223,7 @@ namespace Game
 
             GridCell fromCell = match3Grid.GetCellPublic(fromPos);
             GridCell toCell = match3Grid.GetCellPublic(toPos);
-            if ((fromCell?.elementInfo != null && fromCell.elementInfo.elementData.behaviorFlags.HasFlag(ElementData.ElementBehaviorFlags.NonSwappable)) ||
-                (toCell?.elementInfo != null && toCell.elementInfo.powerUpType == ElementPowerUpType.Cauldron))
+            if (toCell?.elementInfo != null && toCell.elementInfo.elementData.behaviorFlags.HasFlag(ElementData.ElementBehaviorFlags.NonSwappable))
             {
                 CancelDrag();
                 return;
