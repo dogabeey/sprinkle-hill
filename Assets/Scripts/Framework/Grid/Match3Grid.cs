@@ -577,7 +577,7 @@ namespace Game
         public void TriggerCellFeatureMatchedOverAt(Vector2Int pos)
         {
             GridCell cell = GetCell(pos);
-            if (cell?.cellFeature == null)
+            if (cell?.cellFeature == null || IsCellFeatureTriggerBlocked(cell))
                 return;
 
             GridElement element = GetElementAt(pos);
@@ -592,7 +592,7 @@ namespace Game
             {
                 Vector2Int adjacentPos = matchedPos + adjacentOffsets[i];
                 GridCell adjacentCell = GetCell(adjacentPos);
-                if (adjacentCell?.cellFeature == null)
+                if (adjacentCell?.cellFeature == null || IsCellFeatureTriggerBlocked(adjacentCell))
                     continue;
 
                 adjacentCell.cellFeature.OnElementMatchedAdjacentToTheCell(adjacentCell, matchedCell, matchedElement);
@@ -1893,7 +1893,7 @@ namespace Game
                     continue;
 
                 GridCell adjacentCell = GetCell(adjacentPos);
-                if (adjacentCell?.cellFeature == null)
+                if (adjacentCell?.cellFeature == null || IsCellFeatureTriggerBlocked(adjacentCell))
                     continue;
 
                 adjacentCell.cellFeature.OnElementMatchedAdjacentToTheCell(adjacentCell, originCell, originElement);
@@ -2554,6 +2554,12 @@ namespace Game
         private static bool IsBreakableBoxCell(GridCell cell)
         {
             return cell != null && cell.cellType == CellType.Normal && cell.elementInfo != null && IsBreakableBoxData(cell.elementInfo.elementData);
+        }
+
+        private static bool IsCellFeatureTriggerBlocked(GridCell cell)
+        {
+            ElementData elementData = cell?.elementInfo?.elementData;
+            return HasBehavior(elementData, ElementData.ElementBehaviorFlags.BlocksFeatureTriggers);
         }
 
         private void BreakAdjacentBreakableBoxesImmediate(Vector2Int originPos, HashSet<Vector2Int> processedBoxes)
