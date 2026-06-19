@@ -60,6 +60,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dc281824b42e53b4ca22826e042ef523
+    m_Address: SpecialElement/Jar
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e864407d8ba7b8b4885ee8a95226c5e0
     m_Address: SpecialElement/PowerGenerator
     m_ReadOnly: 0

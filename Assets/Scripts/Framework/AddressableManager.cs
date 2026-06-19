@@ -18,6 +18,7 @@ namespace Game
         public static PowerGeneratorElementData powerGeneratorElementData;
         public static PowerOutletElementData powerOutletElementData;
         public static BreakableBoxElementData breakableBoxElementData;
+        public static BreakableBoxElementData jarElementData;
 
         static EditorAddressables()
         {
@@ -34,6 +35,7 @@ namespace Game
             cauldronElementData = LoadAsset<CauldronElementData>("SpecialElement/Cauldron");
             garbageBagElementData = LoadAsset<GarbageBagElementData>("SpecialElement/GarbageBag");
             breakableBoxElementData = LoadAsset<BreakableBoxElementData>("SpecialElement/BreakableBox");
+            jarElementData = LoadAsset<BreakableBoxElementData>("SpecialElement/Jar");
             powerGeneratorElementData = LoadAsset<PowerGeneratorElementData>("SpecialElement/PowerGenerator");
             powerOutletElementData = LoadAsset<PowerOutletElementData>("SpecialElement/PowerOutlet");
         }

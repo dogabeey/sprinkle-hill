@@ -16,6 +16,7 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
+    - {fileID: 11400000, guid: dc281824b42e53b4ca22826e042ef523, type: 2}
     - {fileID: 11400000, guid: 40f7a3c2d0dfa5f44ac237830e352768, type: 2}
     - {fileID: 11400000, guid: a0c82c7f032651647ac80d13654bca61, type: 2}
     - {fileID: 11400000, guid: 28a4bfc53ef537149b4153f79c7ff47d, type: 2}
@@ -321,7 +322,7 @@ MonoBehaviour:
       Data: 10|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 0
+      Data: 1
     - Name: randomElement
       Entry: 5
       Data: false
@@ -783,7 +784,7 @@ MonoBehaviour:
       Data: 24|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 1
+      Data: 2
     - Name: randomElement
       Entry: 5
       Data: false
@@ -849,7 +850,7 @@ MonoBehaviour:
       Data: 26|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 2
+      Data: 3
     - Name: randomElement
       Entry: 5
       Data: false
@@ -1311,7 +1312,7 @@ MonoBehaviour:
       Data: 40|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 0
+      Data: 1
     - Name: randomElement
       Entry: 5
       Data: false
@@ -1377,7 +1378,7 @@ MonoBehaviour:
       Data: 42|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 0
+      Data: 1
     - Name: randomElement
       Entry: 5
       Data: false
@@ -1398,7 +1399,7 @@ MonoBehaviour:
       Data: 
     - Name: cellFeature
       Entry: 10
-      Data: 3
+      Data: 4
     - Name: lockedAreaConfig
       Entry: 6
       Data: 
@@ -1641,7 +1642,7 @@ MonoBehaviour:
       Data: 50|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 0
+      Data: 1
     - Name: randomElement
       Entry: 5
       Data: false

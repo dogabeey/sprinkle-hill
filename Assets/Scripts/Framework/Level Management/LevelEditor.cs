@@ -573,6 +573,13 @@ namespace Game
                         MarkDirty();
                         Event.current.Use();
                     }
+                    else if (Event.current.keyCode == KeyCode.J) // Breakable jar
+                    {
+                        value.cellType = Grid3D.CellType.Normal;
+                        value.elementInfo = CreateElementInfo(EditorAddressables.jarElementData);
+                        MarkDirty();
+                        Event.current.Use();
+                    }
                     else if (Event.current.keyCode == KeyCode.U)
                     {
                         value.cellType = Grid3D.CellType.UnbreakableWall;
@@ -809,6 +816,7 @@ namespace Game
                     ElementData powerOutletData = EditorAddressables.powerOutletElementData;
                     ElementData garbageBagData = EditorAddressables.garbageBagElementData;
                     ElementData breakableBoxData = EditorAddressables.breakableBoxElementData;
+                    ElementData jarElementData = EditorAddressables.jarElementData;
                     menu.AddItem(new GUIContent($"Element/Special/{cauldronData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == cauldronData, () =>
                     {
                         value.elementInfo = CreateElementInfo(cauldronData);
