@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using MobileHapticsProFreeEdition;
-using UnityEngine; using Game.EventManagement;
+using UnityEngine;
 using Game.EventManagement;
 
 namespace Game
@@ -927,7 +927,7 @@ namespace Game
         // ------------------------------------------------------------------
         //  Area clear (used by bomb)
         // ------------------------------------------------------------------
-        public IEnumerator ClearAreaAt(Vector2Int center, int radius, bool allowConditionedBreakableWalls = true)
+        public IEnumerator ClearAreaAt(Vector2Int center, int radius, bool allowConditionedBreakableWalls = true, bool allowAdjacentFeatureTriggers = true)
         {
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
             HashSet<Vector2Int> boxesProcessed = new HashSet<Vector2Int>();
@@ -949,7 +949,8 @@ namespace Game
 
                     GridElement matchedElement = GetElementAt(pos);
                     TriggerCellFeatureMatchedOverAt(pos);
-                    TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+                    if (allowAdjacentFeatureTriggers)
+                        TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
                     if (TryRevealHiddenBoxAt(pos))
                         continue;
@@ -970,7 +971,8 @@ namespace Game
 
                     NotifyElementCleared(pos);
                     cell.elementInfo = null;
-                    if (matchedElement != null) StartCoroutine(matchedElement.DestroyElement());
+                    if (matchedElement != null)
+                        yield return StartCoroutine(matchedElement.DestroyElement());
                     BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
                 }
             }
@@ -981,7 +983,7 @@ namespace Game
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
 
-        public IEnumerator ClearRowAt(int y, bool allowConditionedBreakableWalls = true)
+        public IEnumerator ClearRowAt(int y, bool allowConditionedBreakableWalls = true, bool allowAdjacentFeatureTriggers = true)
         {
             if (y < 0 || y >= gridSize.y)
                 yield break;
@@ -1008,7 +1010,8 @@ namespace Game
 
                 GridElement matchedElement = GetElementAt(pos);
                 TriggerCellFeatureMatchedOverAt(pos);
-                TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+                if (allowAdjacentFeatureTriggers)
+                    TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
                 if (TryRevealHiddenBoxAt(pos))
                     continue;
@@ -1031,14 +1034,20 @@ namespace Game
                 NotifyElementCleared(pos);
                 cell.elementInfo = null;
                 if (matchedElement != null)
-                    StartCoroutine(matchedElement.DestroyElement());
-                BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                {
+                    yield return StartCoroutine(matchedElement.DestroyElement());
+                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                }
+                else
+                {
+                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                }
             }
 
             yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
-        public IEnumerator ClearColumnAt(int columnX, bool allowConditionedBreakableWalls = true)
+        public IEnumerator ClearColumnAt(int columnX, bool allowConditionedBreakableWalls = true, bool allowAdjacentFeatureTriggers = true)
         {
             if (columnX < 0 || columnX >= gridSize.x)
                 yield break;
@@ -1065,7 +1074,8 @@ namespace Game
 
                 GridElement matchedElement = GetElementAt(pos);
                 TriggerCellFeatureMatchedOverAt(pos);
-                TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+                if (allowAdjacentFeatureTriggers)
+                    TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
                 if (TryRevealHiddenBoxAt(pos))
                     continue;
@@ -1088,15 +1098,21 @@ namespace Game
                 NotifyElementCleared(pos);
                 cell.elementInfo = null;
                 if (matchedElement != null)
-                    StartCoroutine(matchedElement.DestroyElement());
-                BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                {
+                    yield return StartCoroutine(matchedElement.DestroyElement());
+                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                }
+                else
+                {
+                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                }
             }
 
             yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
 
-        public IEnumerator ClearCellAt(Vector2Int pos, bool allowConditionedBreakableWalls = true, bool allowAdjacentBreakableBoxes = true)
+        public IEnumerator ClearCellAt(Vector2Int pos, bool allowConditionedBreakableWalls = true, bool allowAdjacentBreakableBoxes = true, bool allowAdjacentFeatureTriggers = true)
         {
             GridCell cell = GetCell(pos);
             if (cell == null)
@@ -1114,7 +1130,8 @@ namespace Game
 
             GridElement matchedElement = GetElementAt(pos);
             TriggerCellFeatureMatchedOverAt(pos);
-            TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+            if (allowAdjacentFeatureTriggers)
+                TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
             if (TryRevealHiddenBoxAt(pos))
                 yield break;
@@ -1137,12 +1154,12 @@ namespace Game
             NotifyElementCleared(pos);
             cell.elementInfo = null;
             if (matchedElement != null)
-                StartCoroutine(matchedElement.DestroyElement());
+                yield return StartCoroutine(matchedElement.DestroyElement());
 
             if (allowAdjacentBreakableBoxes)
                 BreakAdjacentBreakableBoxesImmediate(pos, new HashSet<Vector2Int>());
         }
-        public IEnumerator ClearCrossAt(Vector2Int center, bool allowConditionedBreakableWalls = true)
+        public IEnumerator ClearCrossAt(Vector2Int center, bool allowConditionedBreakableWalls = true, bool allowAdjacentFeatureTriggers = true)
         {
             Vector2Int[] offsets =
             {
@@ -1175,7 +1192,8 @@ namespace Game
 
                 GridElement matchedElement = GetElementAt(pos);
                 TriggerCellFeatureMatchedOverAt(pos);
-                TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+                if (allowAdjacentFeatureTriggers)
+                    TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
                 if (TryRevealHiddenBoxAt(pos))
                     continue;
@@ -1198,8 +1216,14 @@ namespace Game
                 NotifyElementCleared(pos);
                 cell.elementInfo = null;
                 if (matchedElement != null)
-                    StartCoroutine(matchedElement.DestroyElement());
-                BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                {
+                    yield return StartCoroutine(matchedElement.DestroyElement());
+                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                }
+                else
+                {
+                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                }
             }
 
             yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
@@ -1795,7 +1819,6 @@ namespace Game
         private IEnumerator ClearMatches(List<List<Vector2Int>> matchedPositions, HashSet<Vector2Int> protectedPositions = null)
         {
             ConstantManager cm = ConstantManager.Instance;
-            HashSet<Vector2Int> cleared = new HashSet<Vector2Int>();
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
             HashSet<Vector2Int> boxesProcessed = new HashSet<Vector2Int>();
             HashSet<Vector2Int> hiddenToReveal = new HashSet<Vector2Int>();
@@ -1818,13 +1841,7 @@ namespace Game
 
             foreach (var group in matchedPositions)
             {
-                Vector2Int? mergeTarget = FindMergeTarget(group, protectedPositions);
-
-                if (mergeTarget.HasValue)
-                {
-                    GridElement mergeEl = GetElementAt(mergeTarget.Value);
-                    if (mergeEl != null) GridHelper.AnimateEmission(mergeEl, 1.5f, 0.2f);
-                }
+                int pendingDestructions = 0;
 
                 foreach (var pos in group)
                 {
@@ -1836,12 +1853,10 @@ namespace Game
                             ElementData protectedElementData = protectedCell.elementInfo.elementData;
                             GridElement protectedElement = GetElementAt(pos);
                             ProcessAdjacentFeatureMatchEffects(pos, protectedCell, protectedElement, allMatchedPositions, adjacentFeatureProcessed, adjacentOffsets);
-                            ProcessAdjacentWallAndHiddenEffects(pos, protectedElementData, adjacentOffsets, wallsToBreak, boxesProcessed, hiddenToReveal);
+                            ProcessAdjacentWallAndHiddenEffects(pos, protectedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
                         }
                         continue;
                     }
-                    if (cleared.Contains(pos)) continue;
-
                     GridCell cell = GetCell(pos);
                     if (cell?.elementInfo == null) continue;
                     if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron) continue;
@@ -1856,23 +1871,52 @@ namespace Game
 
                     NotifyElementCleared(pos);
                     cell.elementInfo = null;
-                    GridElement element = matchedElement;
-                    if (element != null)
+                    if (matchedElement != null)
                     {
-                        if (mergeTarget.HasValue) StartCoroutine(MergeElementIntoTarget(element, mergeTarget.Value));
-                        else StartCoroutine(element.DestroyElement());
+                        pendingDestructions++;
+                        StartCoroutine(ClearMatchedElementAfterAnimation(
+                            pos,
+                            matchedElement,
+                            destroyedElementData,
+                            boxesProcessed,
+                            wallsToBreak,
+                            hiddenToReveal,
+                            adjacentOffsets,
+                            () => pendingDestructions--));
                     }
-
-                    ProcessAdjacentWallAndHiddenEffects(pos, destroyedElementData, adjacentOffsets, wallsToBreak, boxesProcessed, hiddenToReveal);
-
-                    cleared.Add(pos);
+                    else
+                    {
+                        BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                        ProcessAdjacentWallAndHiddenEffects(pos, destroyedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
+                    }
                 }
+
+                if (pendingDestructions > 0)
+                    yield return new WaitUntil(() => pendingDestructions == 0);
 
                 yield return new WaitForSeconds(cm.matchClearDelay);
             }
 
             foreach (Vector2Int rp in hiddenToReveal) RevealHiddenElement(rp);
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
+        }
+
+        private IEnumerator ClearMatchedElementAfterAnimation(
+            Vector2Int pos,
+            GridElement matchedElement,
+            ElementData destroyedElementData,
+            HashSet<Vector2Int> boxesProcessed,
+            HashSet<Vector2Int> wallsToBreak,
+            HashSet<Vector2Int> hiddenToReveal,
+            Vector2Int[] adjacentOffsets,
+            System.Action onCompleted)
+        {
+            if (matchedElement != null)
+                yield return StartCoroutine(matchedElement.DestroyElement());
+
+            BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+            ProcessAdjacentWallAndHiddenEffects(pos, destroyedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
+            onCompleted?.Invoke();
         }
 
         private void ProcessAdjacentFeatureMatchEffects(
@@ -1906,7 +1950,6 @@ namespace Game
             ElementData destroyedElementData,
             Vector2Int[] adjacentOffsets,
             HashSet<Vector2Int> wallsToBreak,
-            HashSet<Vector2Int> boxesProcessed,
             HashSet<Vector2Int> hiddenToReveal)
         {
             for (int i = 0; i < adjacentOffsets.Length; i++)
@@ -1918,12 +1961,6 @@ namespace Game
 
                 if (adjacentCell.cellType == CellType.BreakableWall && CanBreakWallWithElement(adjacentCell, destroyedElementData))
                     wallsToBreak.Add(adjacentPos);
-
-                if (IsBreakableBoxCell(adjacentCell))
-                {
-                    if (boxesProcessed == null || boxesProcessed.Add(adjacentPos))
-                        StartCoroutine(ClearCellAt(adjacentPos, true, false));
-                }
 
                 if (adjacentCell.cellType == CellType.Normal && adjacentCell.elementInfo != null && adjacentCell.elementInfo.isHidden)
                     hiddenToReveal.Add(adjacentPos);
@@ -1939,38 +1976,6 @@ namespace Game
             HashSet<GlassGroupId> groupsToDamage = new HashSet<GlassGroupId>();
             CollectGlassGroupAt(pos, groupsToDamage);
             return DamageGlassGroupsForMatch(groupsToDamage);
-        }
-
-        private Vector2Int? FindMergeTarget(List<Vector2Int> group, HashSet<Vector2Int> protectedPositions)
-        {
-            if (protectedPositions == null || group == null) return null;
-            for (int i = 0; i < group.Count; i++)
-                if (protectedPositions.Contains(group[i])) return group[i];
-            return null;
-        }
-
-        private IEnumerator MergeElementIntoTarget(GridElement element, Vector2Int targetPos)
-        {
-            if (element == null) yield break;
-            GridCellController targetTile = null;
-            if (!generatedTiles.TryGetValue(targetPos, out targetTile) || targetTile == null)
-            { yield return StartCoroutine(element.DestroyElement()); yield break; }
-
-            Transform t = element.transform;
-            t.DOKill();
-            Collider[] colliders = element.GetComponentsInChildren<Collider>(true);
-            for (int i = 0; i < colliders.Length; i++) colliders[i].enabled = false;
-
-            GridHelper.SetEmission(element, 1.5f);
-
-            float dur = Mathf.Max(0.08f, ConstantManager.Instance.elementSwapMoveDuration * 0.6f);
-            Tween move = t.DOMove(targetTile.transform.position, dur).SetEase(Ease.InBack);
-
-            EventManager.TriggerEvent(GameEvent.ELEMENT_DESTROYED,
-                eventParam: new EventParam(paramScriptable: element.elementInfo?.elementData));
-
-            yield return move.WaitForCompletion();
-            if (element != null) Destroy(element.gameObject);
         }
 
         // ------------------------------------------------------------------
@@ -2574,7 +2579,7 @@ namespace Game
                 if (processedBoxes != null && !processedBoxes.Add(adjacentPos))
                     continue;
 
-                StartCoroutine(ClearCellAt(adjacentPos, true, false));
+                StartCoroutine(ClearCellAt(adjacentPos, true, false, false));
             }
         }
         private static void NotifyGarbageBagCleaned(Vector2Int pos, ElementData data)

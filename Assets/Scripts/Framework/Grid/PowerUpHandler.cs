@@ -1624,30 +1624,30 @@ namespace Game
             PlayEffect(ConstantManager.SOUNDS.EFFECTS.BOMB, volumeMultiplier: 1.05f, pitchOffset: 0.02f);
 
             GridElement bombElement = grid.GetElementAt(bombPos);
+            GridElement rocketElement = grid.GetElementAt(rocketPos);
 
             grid.TriggerCellFeatureMatchedOverAt(bombPos);
             bombCell.elementInfo = null;
 
             Grid3D.GridCell rocketCell = grid.GetCellPublic(rocketPos);
-            ElementPowerUpType rocketType = rocketCell?.elementInfo?.powerUpType ?? ElementPowerUpType.Rocket;
             if (rocketCell != null)
             {
                 grid.TriggerCellFeatureMatchedOverAt(rocketPos);
                 rocketCell.elementInfo = null;
             }
 
-            List<Vector2Int> areaCells = GetEligibleCellsInSquareArea(bombPos, 1, bombPos, rocketPos);
-            if (areaCells.Count > 0)
-            {
-                ConvertCellsToPowerUp(areaCells, rocketType);
-                yield return null;
-
-                for (int i = 0; i < areaCells.Count; i++)
-                    yield return grid.StartCoroutine(ActivateAt(areaCells[i], null));
-            }
-
             if (bombElement != null)
                 grid.StartCoroutine(bombElement.DestroyElement());
+
+            if (rocketElement != null)
+                grid.StartCoroutine(rocketElement.DestroyElement());
+
+            List<Vector2Int> rocketBurstOrigins = GetNormalCellsInSquareArea(bombPos, 1);
+
+            yield return grid.StartCoroutine(ClearBombAreaProgressive(bombPos, false, 1));
+
+            if (rocketBurstOrigins.Count > 0)
+                yield return grid.StartCoroutine(ActivateRocketBurstsAtOnce(rocketBurstOrigins));
         }
 
         private IEnumerator ActivateBombAndBombCombo(Vector2Int primaryBombPos)
@@ -1900,6 +1900,26 @@ namespace Game
             return cells;
         }
 
+        private List<Vector2Int> GetNormalCellsInSquareArea(Vector2Int center, int radius)
+        {
+            List<Vector2Int> cells = new List<Vector2Int>();
+
+            for (int x = center.x - radius; x <= center.x + radius; x++)
+            {
+                for (int y = center.y - radius; y <= center.y + radius; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    Grid3D.GridCell cell = grid.GetCellPublic(pos);
+                    if (cell == null || cell.cellType != Grid3D.CellType.Normal)
+                        continue;
+
+                    cells.Add(pos);
+                }
+            }
+
+            return cells;
+        }
+
         private void ConvertCellsToPowerUp(List<Vector2Int> positions, ElementPowerUpType targetPowerUpType)
         {
             if (positions == null)
@@ -2067,7 +2087,6 @@ namespace Game
 
                 GridElement matchedElement = grid.GetElementAt(pos);
                 grid.TriggerCellFeatureMatchedOverAt(pos);
-                grid.TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
                 if (grid.TryRevealHiddenBoxAt(pos))
                     continue;
@@ -2143,7 +2162,7 @@ namespace Game
             // Clear the propeller's original neighbors to simulate the blast impact
             yield return grid.StartCoroutine(ApplyPropellerNeighborImpact(propellerPos));
             // Clear the target cell area after the propeller arrives
-            yield return grid.StartCoroutine(grid.ClearAreaAt(targetPos, 0));
+            yield return grid.StartCoroutine(grid.ClearAreaAt(targetPos, 0, true, false));
         }
 
         private IEnumerator ApplyPropellerNeighborImpact(Vector2Int centerPos)
@@ -2174,7 +2193,7 @@ namespace Game
                 if (neighborCell.cellType != Grid3D.CellType.Normal || neighborCell.elementInfo == null)
                     continue;
 
-                impactCoroutines.Add(grid.StartCoroutine(grid.ClearAreaAt(neighborPos, 0)));
+                impactCoroutines.Add(grid.StartCoroutine(grid.ClearAreaAt(neighborPos, 0, true, false)));
             }
 
             for (int i = 0; i < impactCoroutines.Count; i++)
@@ -2235,7 +2254,7 @@ namespace Game
                 yield return new WaitForSeconds(0.3f);
             }
 
-            yield return grid.StartCoroutine(grid.ClearAreaAt(targetPos, 0));
+            yield return grid.StartCoroutine(grid.ClearAreaAt(targetPos, 0, true, false));
         }
 
         private IEnumerator FlyBombToTargetAndActivate(Vector2Int bombPos, Vector2Int targetPos, GridElement bombElement)
@@ -2305,6 +2324,27 @@ namespace Game
             List<Coroutine> activationCoroutines = new List<Coroutine>(positions.Count);
             for (int i = 0; i < positions.Count; i++)
                 activationCoroutines.Add(grid.StartCoroutine(ActivateAt(positions[i], null)));
+
+            for (int i = 0; i < activationCoroutines.Count; i++)
+                yield return activationCoroutines[i];
+        }
+
+        private IEnumerator ActivateRocketBurstsAtOnce(List<Vector2Int> rocketPositions)
+        {
+            if (rocketPositions == null || rocketPositions.Count == 0)
+                yield break;
+
+            Vector2Int[] rocketDirections =
+            {
+                Vector2Int.right,
+                Vector2Int.left,
+                Vector2Int.up,
+                Vector2Int.down
+            };
+
+            List<Coroutine> activationCoroutines = new List<Coroutine>(rocketPositions.Count);
+            for (int i = 0; i < rocketPositions.Count; i++)
+                activationCoroutines.Add(grid.StartCoroutine(ActivateRocketBurst(rocketPositions[i], null, rocketDirections, ElementPowerUpType.Rocket, clearSourceCell: false, clearOriginCell: false, preLaunchDelay: 0f, pitchOffset: 0.04f)));
 
             for (int i = 0; i < activationCoroutines.Count; i++)
                 yield return activationCoroutines[i];
@@ -2711,7 +2751,6 @@ namespace Game
 
             GridElement matchedElement = grid.GetElementAt(pos);
             grid.TriggerCellFeatureMatchedOverAt(pos);
-            grid.TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
             if (grid.TryRevealHiddenBoxAt(pos))
                 return;
@@ -3005,7 +3044,6 @@ namespace Game
 
             GridElement matchedElement = grid.GetElementAt(pos);
             grid.TriggerCellFeatureMatchedOverAt(pos);
-            grid.TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
             BreakAdjacentWallsImmediate(pos, processedWalls);
 
             if (grid.TryRevealHiddenBoxAt(pos))
@@ -3035,7 +3073,6 @@ namespace Game
             {
                 Vector2Int adjacentPos = pos + offsets[i];
                 TryBreakRocketWallImmediate(adjacentPos, processedWalls);
-                TryBreakBreakableBoxImmediate(adjacentPos, processedWalls);
             }
         }
 
@@ -3052,21 +3089,6 @@ namespace Game
                 return;
 
             grid.StartCoroutine(grid.BreakWallAt(wallPos));
-        }
-
-        private void TryBreakBreakableBoxImmediate(Vector2Int boxPos, HashSet<Vector2Int> processedPositions)
-        {
-            Grid3D.GridCell boxCell = grid.GetCellPublic(boxPos);
-            if (boxCell == null || boxCell.cellType != Grid3D.CellType.Normal || boxCell.elementInfo == null)
-                return;
-
-            if (!(boxCell.elementInfo.elementData is BreakableBoxElementData))
-                return;
-
-            if (processedPositions != null && !processedPositions.Add(boxPos))
-                return;
-
-            grid.StartCoroutine(grid.ClearCellAt(boxPos, true, false));
         }
 
         private void PlayBombImpactEffects(Vector3 impactPos)
