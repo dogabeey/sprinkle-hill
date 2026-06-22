@@ -261,16 +261,11 @@ namespace Game
 
         private void Awake()
         {
-            UnityEngine.Debug.Log(
-                $"CREATED: {GetType().Name}\n{new StackTrace()}");
         }
         private void OnDestroy()
         {
             if (transform != null)
                 transform.DOKill();
-
-            UnityEngine.Debug.Log(
-                $"DESTROYED: {GetType().Name}\n{new StackTrace()}");
         }
 
         public abstract IEnumerator DestroyElement();
