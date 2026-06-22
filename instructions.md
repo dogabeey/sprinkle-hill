@@ -519,3 +519,8 @@ When choosing between solutions:
 Never sacrifice simplicity for hypothetical future requirements.
 
 The best code is often the code that does not exist.
+
+# Project specific instructions
+
+1. Do not try to build the project after the changes.
+2. If you're not sure if the change you're about to make is the right decision, ask and wait for the user prompt.

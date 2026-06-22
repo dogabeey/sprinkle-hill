@@ -1421,6 +1421,7 @@ namespace Game
             discoBallCell.elementInfo = null;
 
             Grid3D.GridCell bombCell = grid.GetCellPublic(bombPos);
+            ElementData bombElementData = bombCell?.elementInfo?.elementData;
             if (bombCell != null)
             {
                 grid.TriggerCellFeatureMatchedOverAt(bombPos);
@@ -1430,7 +1431,7 @@ namespace Game
             List<Vector2Int> selectedCells = GetDiscoBallComboTargetCells(discoBallPos, bombPos);
             if (selectedCells.Count > 0)
             {
-                yield return grid.StartCoroutine(AnimateDiscoBallPowerUpTrails(discoBallPos, selectedCells, ElementPowerUpType.Bomb));
+                yield return grid.StartCoroutine(AnimateDiscoBallPowerUpTrails(discoBallPos, bombElementData, selectedCells, ElementPowerUpType.Bomb));
 
                 yield return null;
 
@@ -1443,37 +1444,48 @@ namespace Game
 
         private IEnumerator ActivateDiscoBallAndRocketCombo(Vector2Int discoBallPos)
         {
+            // Validate disco ball presence at the position before proceeding with activation.
             Grid3D.GridCell discoBallCell = grid.GetCellPublic(discoBallPos);
             if (discoBallCell?.elementInfo == null || discoBallCell.elementInfo.powerUpType != ElementPowerUpType.DiscoBall)
                 yield break;
 
+            // Find adjacent rocket and validate its presence.
             Vector2Int rocketPos = FindAdjacentRocket(discoBallPos);
             if (rocketPos == discoBallPos)
                 yield break;
 
+            // Trigger event and play sound effect for the disco ball + rocket combo activation.
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
             PlayEffect(ConstantManager.SOUNDS.EFFECTS.DISCO_BALL_ACTIVATE, volumeMultiplier: 1.05f, pitchOffset: 0.02f);
 
+            // Get the disco ball element for visual effects and animations.
             GridElement discoBallElement = grid.GetElementAt(discoBallPos);
             Tween discoBallSpinTween = null;
 
+            // Start spinning the disco ball for visual feedback.
             StartDiscoBallSpin(discoBallElement, ref discoBallSpinTween);
 
+            // Remove logical occupancy, keep visual until trail animation finishes.
             grid.TriggerCellFeatureMatchedOverAt(discoBallPos);
             discoBallCell.elementInfo = null;
 
+            // Get the rocket cell and its type for further processing. If the rocket cell is null, default to ElementPowerUpType.Rocket.
             Grid3D.GridCell rocketCell = grid.GetCellPublic(rocketPos);
-            ElementPowerUpType rocketType = rocketCell?.elementInfo?.powerUpType ?? ElementPowerUpType.Rocket;
+            int randomRocket = UnityEngine.Random.Range(0, 2);
+            ElementPowerUpType rocketType = randomRocket == 0 ? ElementPowerUpType.VerticalRocket : ElementPowerUpType.HorizontalRocket;
+            ElementData rocketElementData = rocketCell?.elementInfo?.elementData;
             if (rocketCell != null)
             {
                 grid.TriggerCellFeatureMatchedOverAt(rocketPos);
                 rocketCell.elementInfo = null;
             }
 
+            // Determine the target cells for the disco ball + rocket combo activation. This will typically involve selecting all cells in 
+            // the same row and column as the rocket, as well as any additional logic based on game design.
             List<Vector2Int> selectedCells = GetDiscoBallComboTargetCells(discoBallPos, rocketPos);
             if (selectedCells.Count > 0)
             {
-                yield return grid.StartCoroutine(AnimateDiscoBallPowerUpTrails(discoBallPos, selectedCells, rocketType));
+                yield return grid.StartCoroutine(AnimateDiscoBallPowerUpTrails(discoBallPos, rocketElementData, selectedCells, rocketType));
 
                 yield return null;
 
@@ -1716,6 +1728,7 @@ namespace Game
             discoBallCell.elementInfo = null; 
 
             Grid3D.GridCell propellerCell = grid.GetCellPublic(propellerPos);
+            ElementData propellerElementData = propellerCell?.elementInfo?.elementData;
             if (propellerCell != null)
             {
                 grid.TriggerCellFeatureMatchedOverAt(propellerPos);
@@ -1725,7 +1738,7 @@ namespace Game
             List<Vector2Int> selectedCells = GetDiscoBallComboTargetCells(discoBallPos, propellerPos);
             if (selectedCells.Count > 0)
             {
-                yield return grid.StartCoroutine(AnimateDiscoBallPowerUpTrails(discoBallPos, selectedCells, ElementPowerUpType.Propeller));
+                yield return grid.StartCoroutine(AnimateDiscoBallPowerUpTrails(discoBallPos, propellerElementData, selectedCells, ElementPowerUpType.Propeller));
 
                 yield return null;
 
@@ -2539,7 +2552,7 @@ namespace Game
             yield return new WaitForSeconds(cm.discoBallTrailSpawnDelay + cm.discoBallTrailDuration);
         }
 
-        private IEnumerator AnimateDiscoBallPowerUpTrails(Vector2Int sourcePos, List<Vector2Int> targets, ElementPowerUpType targetPowerUpType)
+        private IEnumerator AnimateDiscoBallPowerUpTrails(Vector2Int sourcePos, ElementData swappedElementData, List<Vector2Int> targets, ElementPowerUpType targetPowerUpType)
         {
             ConstantManager cm = ConstantManager.Instance;
             Vector3 sourceWorldPos = grid.GetWorldPosition(sourcePos);
@@ -2547,13 +2560,28 @@ namespace Game
             int trailIndex = 0;
             for (int i = 0; i < targets.Count; i++)
             {
-                grid.StartCoroutine(AnimateSingleDiscoPowerUpTrail(sourceWorldPos, targets[i], targetPowerUpType, trailIndex));
+                ElementPowerUpType perTargetPowerUpType = targetPowerUpType;
+                ElementData perTargetElementData = swappedElementData;
+                if (targetPowerUpType == ElementPowerUpType.VerticalRocket || targetPowerUpType == ElementPowerUpType.HorizontalRocket)
+                {
+                    perTargetPowerUpType = GetRandomRocketPowerUpType();
+                    perTargetElementData = GetPowerUpElementData(perTargetPowerUpType);
+                }
+
+                grid.StartCoroutine(AnimateSingleDiscoPowerUpTrail(sourceWorldPos, perTargetElementData, targets[i], perTargetPowerUpType, trailIndex));
                 trailIndex++;
                 yield return new WaitForSeconds(cm.discoBallTrailSpawnDelay);
             }
 
             float totalWait = cm.discoBallTrailDuration + cm.discoBallTrailSpawnDelay * Mathf.Max(0, targets.Count - 1);
             yield return new WaitForSeconds(totalWait);
+        }
+
+        private static ElementPowerUpType GetRandomRocketPowerUpType()
+        {
+            return UnityEngine.Random.Range(0, 2) == 0
+                ? ElementPowerUpType.VerticalRocket
+                : ElementPowerUpType.HorizontalRocket;
         }
 
         private IEnumerator AnimateSingleDiscoTrail(Vector3 sourcePos, Vector2Int targetPos, ElementData targetElementData, int trailIndex)
@@ -2590,7 +2618,7 @@ namespace Game
             if (trailObj != null) Object.Destroy(trailObj);
         }
 
-        private IEnumerator AnimateSingleDiscoPowerUpTrail(Vector3 sourcePos, Vector2Int targetPos, ElementPowerUpType targetPowerUpType, int trailIndex)
+        private IEnumerator AnimateSingleDiscoPowerUpTrail(Vector3 sourcePos, ElementData targetElementData, Vector2Int targetPos, ElementPowerUpType targetPowerUpType, int trailIndex)
         {
             ConstantManager cm = ConstantManager.Instance;
             Vector3 targetWorldPos = grid.GetWorldPosition(targetPos);
@@ -2606,8 +2634,7 @@ namespace Game
             Grid3D.GridCell cell = grid.GetCellPublic(targetPos);
             if (cell?.elementInfo != null)
             {
-                ElementData sourceData = cell.elementInfo.elementData;
-                cell.elementInfo.elementData = sourceData;
+                cell.elementInfo.elementData = targetElementData;
                 cell.elementInfo.powerUpType = targetPowerUpType;
                 cell.elementInfo.isSparkling = false;
                 cell.elementInfo.isHidden = false;
