@@ -1841,22 +1841,18 @@ namespace Game
 
             foreach (var group in matchedPositions)
             {
+                Vector2Int? mergeTarget = FindMergeTarget(group, protectedPositions);
+                if (mergeTarget.HasValue)
+                {
+                    GridElement mergeEl = GetElementAt(mergeTarget.Value);
+                    if (mergeEl != null)
+                        GridHelper.AnimateEmission(mergeEl, 1.5f, 0.2f);
+                }
+
                 int pendingDestructions = 0;
 
                 foreach (var pos in group)
                 {
-                    if (protectedPositions != null && protectedPositions.Contains(pos))
-                    {
-                        GridCell protectedCell = GetCell(pos);
-                        if (protectedCell?.elementInfo != null)
-                        {
-                            ElementData protectedElementData = protectedCell.elementInfo.elementData;
-                            GridElement protectedElement = GetElementAt(pos);
-                            ProcessAdjacentFeatureMatchEffects(pos, protectedCell, protectedElement, allMatchedPositions, adjacentFeatureProcessed, adjacentOffsets);
-                            ProcessAdjacentWallAndHiddenEffects(pos, protectedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
-                        }
-                        continue;
-                    }
                     GridCell cell = GetCell(pos);
                     if (cell?.elementInfo == null) continue;
                     if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron) continue;
@@ -1878,6 +1874,7 @@ namespace Game
                             pos,
                             matchedElement,
                             destroyedElementData,
+                            mergeTarget,
                             boxesProcessed,
                             wallsToBreak,
                             hiddenToReveal,
@@ -1905,6 +1902,7 @@ namespace Game
             Vector2Int pos,
             GridElement matchedElement,
             ElementData destroyedElementData,
+            Vector2Int? mergeTarget,
             HashSet<Vector2Int> boxesProcessed,
             HashSet<Vector2Int> wallsToBreak,
             HashSet<Vector2Int> hiddenToReveal,
@@ -1912,11 +1910,61 @@ namespace Game
             System.Action onCompleted)
         {
             if (matchedElement != null)
-                yield return StartCoroutine(matchedElement.DestroyElement());
+            {
+                if (mergeTarget.HasValue)
+                    yield return StartCoroutine(MergeElementIntoTarget(matchedElement, mergeTarget.Value));
+                else
+                    yield return StartCoroutine(matchedElement.DestroyElement());
+            }
 
             BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
             ProcessAdjacentWallAndHiddenEffects(pos, destroyedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
             onCompleted?.Invoke();
+        }
+
+        private Vector2Int? FindMergeTarget(List<Vector2Int> group, HashSet<Vector2Int> protectedPositions)
+        {
+            if (protectedPositions == null || group == null)
+                return null;
+
+            for (int i = 0; i < group.Count; i++)
+            {
+                if (protectedPositions.Contains(group[i]))
+                    return group[i];
+            }
+
+            return null;
+        }
+
+        private IEnumerator MergeElementIntoTarget(GridElement element, Vector2Int targetPos)
+        {
+            if (element == null)
+                yield break;
+
+            GridCellController targetTile = null;
+            if (!generatedTiles.TryGetValue(targetPos, out targetTile) || targetTile == null)
+            {
+                yield return StartCoroutine(element.DestroyElement());
+                yield break;
+            }
+
+            Transform t = element.transform;
+            t.DOKill();
+            Collider[] colliders = element.GetComponentsInChildren<Collider>(true);
+            for (int i = 0; i < colliders.Length; i++)
+                colliders[i].enabled = false;
+
+            GridHelper.SetEmission(element, 1.5f);
+
+            float dur = Mathf.Max(0.08f, ConstantManager.Instance.elementSwapMoveDuration * 0.6f);
+            Tween move = t.DOMove(targetTile.transform.position, dur).SetEase(Ease.InBack);
+
+            EventManager.TriggerEvent(GameEvent.ELEMENT_DESTROYED,
+                eventParam: new EventParam(paramScriptable: element.elementInfo?.elementData));
+
+            yield return move.WaitForCompletion();
+            if (element != null)
+                Destroy(element.gameObject);
         }
 
         private void ProcessAdjacentFeatureMatchEffects(
