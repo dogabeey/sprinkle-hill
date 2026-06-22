@@ -1485,32 +1485,43 @@ namespace Game
 
         private IEnumerator ActivatePropellerAndPropellerCombo(Vector2Int firstPropellerPos)
         {
+            // Validate first propeller presence at the position before proceeding with activation. 
             Grid3D.GridCell firstPropellerCell = grid.GetCellPublic(firstPropellerPos);
             if (firstPropellerCell?.elementInfo == null || firstPropellerCell.elementInfo.powerUpType != ElementPowerUpType.Propeller)
                 yield break;
 
+            // Find second propeller and validate its presence.
             Vector2Int secondPropellerPos = FindAdjacentPropeller(firstPropellerPos);
             if (secondPropellerPos == firstPropellerPos)
                 yield break;
 
+            // Trigger event and play sound effect for the propeller combo activation.
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
             PlayEffect(ConstantManager.SOUNDS.EFFECTS.ROCKET, volumeMultiplier: 1.05f, pitchOffset: 0.14f);
 
+            // Get the source propeller element for visual effects and animations.
             GridElement sourcePropellerElement = grid.GetElementAt(firstPropellerPos);
 
+            // Remove logical occupancy, keep visuals until the burst animation finishes.
             grid.TriggerCellFeatureMatchedOverAt(firstPropellerPos);
             firstPropellerCell.elementInfo = null;
 
+            // Remove logical occupancy for the second propeller as well.
             Grid3D.GridCell secondPropellerCell = grid.GetCellPublic(secondPropellerPos);
             if (secondPropellerCell != null)
             {
                 grid.TriggerCellFeatureMatchedOverAt(secondPropellerPos);
                 secondPropellerCell.elementInfo = null;
             }
+            
+            // Clear the propeller's original neighbors to simulate the blast impact
+            yield return grid.StartCoroutine(ApplyPropellerNeighborImpact(secondPropellerPos));
 
-            List<Vector2Int> reservedTargets = ReservePropellerTargets(firstPropellerPos, 4, firstPropellerPos, secondPropellerPos);
+            // Reserve target positions for the propeller burst effect, ensuring that the burst doesn't overlap with the source propellers.
+            List<Vector2Int> reservedTargets = ReservePropellerTargets(firstPropellerPos, 3, firstPropellerPos, secondPropellerPos);
             if (reservedTargets.Count > 0)
                 yield return grid.StartCoroutine(ActivatePropellerBurstFromOrigin(firstPropellerPos, sourcePropellerElement, reservedTargets));
+                
 
             if (sourcePropellerElement != null)
                 grid.StartCoroutine(sourcePropellerElement.DestroyElement());
