@@ -1415,6 +1415,8 @@ namespace Game
             GridElement discoBallElement = grid.GetElementAt(discoBallPos);
             Tween discoBallSpinTween = null;
 
+            RestoreDiscoBallDisplaySprite(discoBallElement, discoBallCell.elementInfo);
+
             StartDiscoBallSpin(discoBallElement, ref discoBallSpinTween);
 
             grid.TriggerCellFeatureMatchedOverAt(discoBallPos);
@@ -1461,6 +1463,8 @@ namespace Game
             // Get the disco ball element for visual effects and animations.
             GridElement discoBallElement = grid.GetElementAt(discoBallPos);
             Tween discoBallSpinTween = null;
+
+            RestoreDiscoBallDisplaySprite(discoBallElement, discoBallCell.elementInfo);
 
             // Start spinning the disco ball for visual feedback.
             StartDiscoBallSpin(discoBallElement, ref discoBallSpinTween);
@@ -1721,6 +1725,8 @@ namespace Game
 
             GridElement discoBallElement = grid.GetElementAt(discoBallPos);
             Tween discoBallSpinTween = null;
+
+            RestoreDiscoBallDisplaySprite(discoBallElement, discoBallCell.elementInfo);
 
             StartDiscoBallSpin(discoBallElement, ref discoBallSpinTween);
 
@@ -2078,6 +2084,15 @@ namespace Game
                 .SetEase(Ease.Linear)
                 .SetRelative()
                 .SetLoops(-1, LoopType.Restart);
+        }
+
+        private void RestoreDiscoBallDisplaySprite(GridElement discoBallElement, GridElementInfo discoBallInfo)
+        {
+            if (discoBallElement == null || discoBallInfo?.elementData == null)
+                return;
+
+            if (discoBallElement.elementRenderer is SpriteRenderer spriteRenderer)
+                spriteRenderer.sprite = discoBallInfo.elementData.displayIcon;
         }
 
         private void StopAndDestroyDiscoBallElement(GridElement discoBallElement, Tween spinTween)
