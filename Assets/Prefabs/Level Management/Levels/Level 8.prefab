@@ -116,7 +116,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5120543934254136597, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: m_Name
-      value: Level 8
+      value: Level 6
       objectReference: {fileID: 0}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: timer
@@ -153,7 +153,7 @@ PrefabInstance:
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: 'levelEditors.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: af7ab36948817194891490fbef9ffe05, type: 2}
+      objectReference: {fileID: 11400000, guid: 346cc4d3f72841a468c6b2d0b35b57da, type: 2}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: 'levelEditors.Array.data[1]'
       value: 

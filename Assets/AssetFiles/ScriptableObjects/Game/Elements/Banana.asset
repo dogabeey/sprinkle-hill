@@ -21,9 +21,4 @@ MonoBehaviour:
   gridCoverage: {x: 1, y: 1}
   behaviorFlags: 0
   defaultIdleAnimation: idle
-  powerUpActivationString: 
   animationController: {fileID: 0}
-  cauldronChargeRequired: 8
-  cauldronChargeRadius: 1
-  cauldronExplosionParticle: {fileID: 0}
-  elementAnimationsByProgress: []
