@@ -5051,7 +5051,7 @@ MonoBehaviour:
   levelCreationMode: 0
   gridSize: {x: 9, y: 9}
   objectives:
-  - objectiveType: {fileID: 11400000, guid: bc27c85d73dea714589531fcf14549f0, type: 2}
+  - objectiveType: {fileID: 11400000, guid: ffc265ccfbd2b9e41a1d0dcd96099102, type: 2}
     isProcedurallyGenerated: 0
     autoCountRequiredCount: 1
     tiedToLockedArea: 0
