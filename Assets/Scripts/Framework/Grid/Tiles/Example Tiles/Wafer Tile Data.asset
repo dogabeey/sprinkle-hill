@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34cdb16ba66f3394ca9d5fbeb985b8db, type: 3}
   m_Name: Wafer Tile Data
   m_EditorClassIdentifier: 
+  tileMaterial: {fileID: 0}
   colorRuleset:
     rid: 7533469493743321291
   topLeftCorner: {fileID: 120667313, guid: f941be62a76a51541b0868c1b6a6d8ff, type: 3}
@@ -51,4 +52,4 @@ MonoBehaviour:
       type: {class: SingleColorRuleSet, ns: Game, asm: Game}
       data:
         blendMode: 0
-        color: {r: 0.84313726, g: 0.70980394, b: 0.5294118, a: 1}
+        color: {r: 1, g: 1, b: 1, a: 1}
