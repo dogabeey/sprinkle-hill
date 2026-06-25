@@ -106,3 +106,5 @@
 [2026-06-25 16:23:29] - Corrected PassThrough blocker rule in Match3Grid so only elements with PassThrough disabled and NotAffectedByGravity enabled act as hard gravity walls; movable non-pass-through elements now continue to fall normally.
 [2026-06-25 16:36:46] - Corrected gravity pass-through matrix in Match3Grid so only static elements with both PassThrough and NotAffectedByGravity enabled allow fall-through; movable PassThrough elements now remain in normal gravity compaction.
 [2026-06-25 16:56:44] - Added BOX_CREATED and BOX_DESTROYED event dispatch for BreakableBoxElementData by triggering create events on breakable-box element instantiation paths and destroy events when breakable-box cells are cleared.
+[2026-06-25 18:46:20] - Updated PowerUpHandler propeller target selection so breakable boxes share the same top-priority random targeting bucket as breakable walls.
+[2026-06-25 19:17:04] - Updated propeller target-hit clearing to use single-cell clears only, preventing adjacent breakable boxes and adjacent feature triggers from firing on impact.

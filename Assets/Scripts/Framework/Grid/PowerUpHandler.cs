@@ -2200,8 +2200,8 @@ namespace Game
             propellerCell.elementInfo = null;
             // Clear the propeller's original neighbors to simulate the blast impact
             yield return grid.StartCoroutine(ApplyPropellerNeighborImpact(propellerPos));
-            // Clear the target cell area after the propeller arrives
-            yield return grid.StartCoroutine(grid.ClearAreaAt(targetPos, 0, true, false));
+            // Clear only the target cell after the propeller arrives, without triggering adjacent breakables or features.
+            yield return grid.StartCoroutine(grid.ClearCellAt(targetPos, true, false, false));
         }
 
         private IEnumerator ApplyPropellerNeighborImpact(Vector2Int centerPos)
@@ -2293,7 +2293,7 @@ namespace Game
                 yield return new WaitForSeconds(0.3f);
             }
 
-            yield return grid.StartCoroutine(grid.ClearAreaAt(targetPos, 0, true, false));
+            yield return grid.StartCoroutine(grid.ClearCellAt(targetPos, true, false, false));
         }
 
         private IEnumerator FlyBombToTargetAndActivate(Vector2Int bombPos, Vector2Int targetPos, GridElement bombElement)
@@ -2396,7 +2396,7 @@ namespace Game
 
         private Vector2Int PickPropellerTargetPosition(Vector2Int origin, HashSet<Vector2Int> reservedTargets)
         {
-            List<Vector2Int> breakableWallCells = new List<Vector2Int>();
+            List<Vector2Int> breakableObstacleCells = new List<Vector2Int>();
             List<Vector2Int> hiddenElements = new List<Vector2Int>();
             List<Vector2Int> waferCells = new List<Vector2Int>();
             List<Vector2Int> normalCandidates = new List<Vector2Int>();
@@ -2420,12 +2420,18 @@ namespace Game
 
                     if (cell.cellType == Grid3D.CellType.BreakableWall)
                     {
-                        breakableWallCells.Add(pos);
+                        breakableObstacleCells.Add(pos);
                         continue;
                     }
 
                     if (cell.cellType != Grid3D.CellType.Normal)
                         continue;
+
+                    if (cell.elementInfo?.elementData is BreakableBoxElementData)
+                    {
+                        breakableObstacleCells.Add(pos);
+                        continue;
+                    }
 
                     // Propeller should never target garbage bag cells.
                     if (cell.elementInfo?.elementData != null)
@@ -2462,9 +2468,9 @@ namespace Game
                 }
             }
 
-            // Priority: Breakable Wall Cells -> Hidden Elements -> Wafer Features -> Normal Cells -> Elements below garbage bags
-            if (breakableWallCells.Count > 0)
-                return breakableWallCells[Random.Range(0, breakableWallCells.Count)];
+            // Priority: Breakable obstacles (walls/boxes) -> Hidden Elements -> Wafer Features -> Normal Cells -> Elements below garbage bags
+            if (breakableObstacleCells.Count > 0)
+                return breakableObstacleCells[Random.Range(0, breakableObstacleCells.Count)];
             if (hiddenElements.Count > 0)
                 return hiddenElements[Random.Range(0, hiddenElements.Count)];
             if (waferCells.Count > 0)
