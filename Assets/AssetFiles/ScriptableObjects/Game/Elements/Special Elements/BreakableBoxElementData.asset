@@ -19,6 +19,6 @@ MonoBehaviour:
   elementMesh: {fileID: 0}
   elementMaterial: {fileID: 0}
   gridCoverage: {x: 1, y: 1}
-  behaviorFlags: 207
+  behaviorFlags: 199
   defaultIdleAnimation: idle
   animationController: {fileID: 0}

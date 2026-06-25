@@ -2170,11 +2170,12 @@ namespace Game
 
             for (int x = 0; x < gridSize.x; x++)
             {
-                List<List<int>> sections = BuildColumnSections(x);
+                List<GravityColumnSection> sections = BuildColumnSections(x);
                 int bottomMostNormalY = GetBottomMostNormalCellY(x);
 
-                foreach (List<int> playableRows in sections)
+                foreach (GravityColumnSection section in sections)
                 {
+                    List<int> playableRows = section.rows;
                     if (playableRows.Count == 0) continue;
                     int writeIndex = playableRows.Count - 1;
                     int highestExisting = -1;
@@ -2272,6 +2273,9 @@ namespace Game
                         }
                         writeIndex--;
                     }
+
+                    if (!section.allowsRefillFromAbove)
+                        continue;
 
                     // Spawn new elements
                     int spawnBase = highestExisting != -1 ? (playableRows.Count - highestExisting) : 0;
@@ -2615,6 +2619,26 @@ namespace Game
             return HasBehavior(elementData, ElementData.ElementBehaviorFlags.BlocksFeatureTriggers);
         }
 
+        private bool IsGravityPassThroughCell(GridCell cell)
+        {
+            if (cell?.elementInfo?.elementData == null)
+                return false;
+
+            ElementData elementData = cell.elementInfo.elementData;
+            return HasBehavior(elementData, ElementData.ElementBehaviorFlags.PassThrough) &&
+                   HasBehavior(elementData, ElementData.ElementBehaviorFlags.NotAffectedByGravity);
+        }
+
+        private bool IsGravityBlockingCell(GridCell cell)
+        {
+            if (cell?.elementInfo?.elementData == null)
+                return false;
+
+            ElementData elementData = cell.elementInfo.elementData;
+            return !HasBehavior(elementData, ElementData.ElementBehaviorFlags.PassThrough) &&
+                   HasBehavior(elementData, ElementData.ElementBehaviorFlags.NotAffectedByGravity);
+        }
+
         private void BreakAdjacentBreakableBoxesImmediate(Vector2Int originPos, HashSet<Vector2Int> processedBoxes)
         {
             Vector2Int[] adjacentOffsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
@@ -2703,7 +2727,7 @@ namespace Game
                 if (IsCauldronCell(cell))
                     continue;
 
-                if (HasBehavior(cell.elementInfo?.elementData, ElementData.ElementBehaviorFlags.PassThrough))
+                if (IsGravityPassThroughCell(cell))
                     continue;
 
                 return y;
@@ -2721,10 +2745,33 @@ namespace Game
             return belowCell == null || belowCell.cellType == CellType.Empty;
         }
 
-        private List<List<int>> BuildColumnSections(int x)
+        private sealed class GravityColumnSection
         {
-            List<List<int>> sections = new List<List<int>>();
+            public readonly List<int> rows;
+            public readonly bool allowsRefillFromAbove;
+
+            public GravityColumnSection(List<int> rows, bool allowsRefillFromAbove)
+            {
+                this.rows = rows;
+                this.allowsRefillFromAbove = allowsRefillFromAbove;
+            }
+        }
+
+        private List<GravityColumnSection> BuildColumnSections(int x)
+        {
+            List<GravityColumnSection> sections = new List<GravityColumnSection>();
             List<int> current = new List<int>();
+            bool currentAllowsRefillFromAbove = true;
+
+            void FlushCurrentSection()
+            {
+                if (current.Count <= 0)
+                    return;
+
+                sections.Add(new GravityColumnSection(new List<int>(current), currentAllowsRefillFromAbove));
+                current.Clear();
+            }
+
             for (int y = 0; y < gridSize.y; y++)
             {
                 Vector2Int pos = new Vector2Int(x, y);
@@ -2734,7 +2781,7 @@ namespace Game
                     bool acceptsElements = cell.cellFeature == null || cell.cellFeature.AcceptElements;
                     if (!acceptsElements)
                     {
-                        if (current.Count > 0) { sections.Add(new List<int>(current)); current.Clear(); }
+                        FlushCurrentSection();
                         continue;
                     }
 
@@ -2744,17 +2791,13 @@ namespace Game
                     if (IsCellCoveredByMultiCellElement(pos))
                         continue;
 
-                    ElementData elementData = cell.elementInfo?.elementData;
-                    bool isPassThrough = HasBehavior(elementData, ElementData.ElementBehaviorFlags.PassThrough);
-                    bool isGravityFixedBlocker = HasBehavior(elementData, ElementData.ElementBehaviorFlags.NotAffectedByGravity) && !isPassThrough;
+                    bool isPassThrough = IsGravityPassThroughCell(cell);
+                    bool isGravityFixedBlocker = IsGravityBlockingCell(cell);
 
                     if (isGravityFixedBlocker)
                     {
-                        if (current.Count > 0)
-                        {
-                            sections.Add(new List<int>(current));
-                            current.Clear();
-                        }
+                        FlushCurrentSection();
+                        currentAllowsRefillFromAbove = false;
 
                         continue;
                     }
@@ -2764,10 +2807,10 @@ namespace Game
                 }
                 else
                 {
-                    if (current.Count > 0) { sections.Add(new List<int>(current)); current.Clear(); }
+                    FlushCurrentSection();
                 }
             }
-            if (current.Count > 0) sections.Add(current);
+            FlushCurrentSection();
             return sections;
         }
 

@@ -30,8 +30,8 @@
 - Keep **game logic decoupled from Unity-specific components** where possible.
 - Minimize logic inside `MonoBehaviour`; use it mainly as a bridge to Unity.
 - Separate responsibilities into systems (e.g., input, gameplay, rendering).
-- After all succesful changes, write a log in Assets/copilot-logs.txt with the format: [Date and Time] - [Short description of the change made].
-- Change the codes that doesn't fit these instructions as long as It's related to the change you made. For example, if you added a new method to a class, you can also refactor the existing methods in that class to fit these instructions.
+- After all successful changes, write a log in Assets/copilot-logs.txt with the format: [Date and Time] - [Short description of the change made].
+- Change the codes that don't fit these instructions as long as it's related to the change you made. For example, if you added a new method to a class, you can also refactor the existing methods in that class to fit these instructions.
 
 ---
 
@@ -66,7 +66,7 @@ Avoid overengineering — only apply patterns when they provide clear benefit.
 
 ## Extra Notes
 
-- When you need to create a new class, generate it inside and existing related class file.
+- When you need to create a new class, generate it inside an existing related class file.
 
 ---
 
@@ -154,3 +154,11 @@ Before finishing, verify:
 - Core loop still works (spawn, move, match, clear, refill).
 - Existing feature/type/element behavior has no regression.
 - `Assets/copilot-logs.txt` has a new timestamped summary entry.
+
+### 6) Gameplay Fix Verification
+
+- When a reported gameplay fix is said to still fail, re-verify behavior against the user's exact expected rule and avoid assumptions from prior implementation details.
+
+### 7) PassThrough Gravity Behavior
+
+- For PassThrough gravity, when PassThrough is disabled on an occupied cell, cells below it must remain empty while that blocker is present. PassThrough should only act as a hard gravity wall when PassThrough is disabled and NotAffectedByGravity is enabled; otherwise, the element itself should still fall normally.
