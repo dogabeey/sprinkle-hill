@@ -208,6 +208,7 @@ namespace Game
             newElement.elementInfo = elementInfo;
             generatedElements.Add(newElement);
             newElement.InitElement(this, elementInfo);
+            TriggerBreakableBoxCreatedEvent(pos, elementInfo?.elementData);
             return newElement;
         }
 
@@ -623,6 +624,14 @@ namespace Game
         public void NotifyElementCleared(Vector2Int clearedPos)
         {
             GridCell clearedCell = GetCell(clearedPos);
+            if (clearedCell?.elementInfo?.elementData is BreakableBoxElementData breakableBoxData)
+            {
+                EventManager.TriggerEvent(GameEvent.BOX_DESTROYED, new EventParam(
+                    vectorList: new Vector3[] { new Vector3(clearedPos.x, clearedPos.y, 0f) },
+                    paramScriptable: breakableBoxData
+                ));
+            }
+
             if (clearedCell?.elementInfo != null && clearedCell.elementInfo.powerUpType == ElementPowerUpType.Cauldron)
                 return;
 
@@ -1649,6 +1658,7 @@ namespace Game
                     generatedElements.Add(element);
                     element.InitElement(this, element.elementInfo);
                     powerUpHandler.ApplySortingBoost(element, cell.elementInfo.powerUpType == ElementPowerUpType.Bomb);
+                    TriggerBreakableBoxCreatedEvent(cell.coordinates, element.elementInfo?.elementData);
 
                     if (cell.elementInfo.isHidden)
                     {
@@ -2306,6 +2316,7 @@ namespace Game
                             generatedElements.Add(newEl);
                             newEl.InitElement(this, newInfo);
                             powerUpHandler.ApplySortingBoost(newEl, false);
+                            TriggerBreakableBoxCreatedEvent(targetPos, newInfo.elementData);
 
                             float dist = newEl.transform.localPosition.magnitude;
                             float dur = fallSpeed > 0f ? dist / fallSpeed : 0f;
@@ -2391,6 +2402,7 @@ namespace Game
                         created.elementInfo = cell.elementInfo;
                         created.InitElement(this, cell.elementInfo);
                         generatedElements.Add(created);
+                        TriggerBreakableBoxCreatedEvent(pos, cell.elementInfo?.elementData);
                         validElements.Add(created);
                         continue;
                     }
