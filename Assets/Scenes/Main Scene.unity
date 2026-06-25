@@ -8690,6 +8690,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 492599855}
     m_Modifications:
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: levelScenes.Array.size
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[15]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 92e24d3e1a3f6f4439d6e889bd06b149, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[16]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 92e24d3e1a3f6f4439d6e889bd06b149, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[17]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 92e24d3e1a3f6f4439d6e889bd06b149, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[18]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 92e24d3e1a3f6f4439d6e889bd06b149, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[19]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 92e24d3e1a3f6f4439d6e889bd06b149, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[20]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 92e24d3e1a3f6f4439d6e889bd06b149, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[21]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 92e24d3e1a3f6f4439d6e889bd06b149, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[22]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 92e24d3e1a3f6f4439d6e889bd06b149, type: 3}
+    - target: {fileID: 7722314759128445691, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
+      propertyPath: 'levelScenes.Array.data[23]'
+      value: 
+      objectReference: {fileID: 6648657062745475262, guid: 92e24d3e1a3f6f4439d6e889bd06b149, type: 3}
     - target: {fileID: 7722314759461277705, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: m_Name
       value: Game Manager
