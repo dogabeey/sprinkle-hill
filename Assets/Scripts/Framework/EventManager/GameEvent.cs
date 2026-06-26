@@ -66,6 +66,7 @@ public enum GameEvent
     OUTLET_ACTIVATED = 815,
     GLASS_CREATED = 816,
     GLASS_SHATTERED = 817,
+    BOX_CREATED = 818,
 
     // Ad Events
     AD_SHOWN = 900,

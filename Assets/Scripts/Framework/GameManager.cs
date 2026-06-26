@@ -3,9 +3,11 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine; using Game.EventManagement;
+using UnityEngine;
+using Game.EventManagement;
 using UnityEngine.UI;
 using Game.Singleton;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -24,24 +26,6 @@ namespace Game
         public CurrencyModel premiumCurrency;
         [FoldoutGroup("Settings")]
         public bool autoShuffleWhenOutOfPossibleMoves;
-        [FoldoutGroup("Element Definitions")]
-        public ElementData bombElementData;
-        [FoldoutGroup("Element Definitions")]
-        public ElementData horizontalRocketElementData;
-        [FoldoutGroup("Element Definitions")]
-        public ElementData verticalRocketElementData;
-        [FoldoutGroup("Element Definitions")]
-        public ElementData propellerElementData;
-        [FoldoutGroup("Element Definitions")]
-        public ElementData discoBallElementData;
-        [FoldoutGroup("Element Definitions")]
-        public ElementData cauldronElementData;
-        [FoldoutGroup("Element Definitions")]
-        public ElementData garbageBagElementData;
-        [FoldoutGroup("Element Definitions")]
-        public ElementData powerGeneratorElementData;
-        [FoldoutGroup("Element Definitions")]
-        public ElementData powerOutletElementData;
         [FoldoutGroup("Cell Features")]
         public WaferFeature waferFeature;
         [FoldoutGroup("Cell Features")]

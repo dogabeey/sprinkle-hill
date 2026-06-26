@@ -1,7 +1,10 @@
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
-using UnityEngine; using Game.EventManagement;
+using UnityEngine; 
+using Game.EventManagement;
+using UnityEngine.AddressableAssets;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -41,7 +44,7 @@ namespace Game
             "Grid Cell Shortcuts\n" +
             "E: Set cell to Empty\n" +
             "N: Set cell to Normal\n" +
-            "B: Set cell to Breakable Wall\n" +
+            "B: Set cell to Breakable Box\n" +
             "H: Toggle Hidden Element\n" +
             "U: Set cell to Unbreakable Wall\n" +
             "Shift+Z: Toggle Wafer Feature\n" +
@@ -121,7 +124,7 @@ namespace Game
             if (data == null)
                 return false;
 
-            return GameManager.Instance != null && GameManager.Instance.cauldronElementData == data;
+            return GameManager.Instance != null && data is CauldronElementData;
         }
 
         private static ElementPowerUpType ResolveElementPowerUpType(ElementData data)
@@ -130,22 +133,22 @@ namespace Game
             if (data == null || manager == null)
                 return ElementPowerUpType.None;
 
-            if (manager.cauldronElementData == data)
+            if (data is CauldronElementData)
                 return ElementPowerUpType.Cauldron;
 
-            if (manager.bombElementData == data)
+            if (data is BombElementData)
                 return ElementPowerUpType.Bomb;
 
-            if (manager.horizontalRocketElementData == data)
+            if (data is HorizontalRocketElementData)
                 return ElementPowerUpType.HorizontalRocket;
 
-            if (manager.verticalRocketElementData == data)
+            if (data is VerticalRocketElementData)
                 return ElementPowerUpType.VerticalRocket;
 
-            if (manager.propellerElementData == data)
+            if (data is PropellerElementData)
                 return ElementPowerUpType.Propeller;
 
-            if (manager.discoBallElementData == data)
+            if (data is DiscoBallElementData)
                 return ElementPowerUpType.DiscoBall;
 
             return ElementPowerUpType.None;
@@ -563,11 +566,17 @@ namespace Game
                         MarkDirty();
                         Event.current.Use();
                     }
-                    else if (Event.current.keyCode == KeyCode.B)
+                    else if (Event.current.keyCode == KeyCode.B) // Breakable box
                     {
-                        value.cellType = Grid3D.CellType.BreakableWall;
-                        value.elementInfo = null;
-                        value.cellHealth = Mathf.Max(1, value.cellHealth);
+                        value.cellType = Grid3D.CellType.Normal;
+                        value.elementInfo = CreateElementInfo(EditorAddressables.breakableBoxElementData);
+                        MarkDirty();
+                        Event.current.Use();
+                    }
+                    else if (Event.current.keyCode == KeyCode.J) // Breakable jar
+                    {
+                        value.cellType = Grid3D.CellType.Normal;
+                        value.elementInfo = CreateElementInfo(EditorAddressables.jarElementData);
                         MarkDirty();
                         Event.current.Use();
                     }
@@ -589,7 +598,7 @@ namespace Game
                     }
                     else if (Event.current.keyCode == KeyCode.G)
                     {
-                        value.elementInfo = CreateElementInfo(GameManager.Instance.garbageBagElementData);
+                        value.elementInfo = CreateElementInfo(Resources.Load<GarbageBagElementData>(""));
                         MarkDirty();
                         Event.current.Use();
                     }
@@ -771,11 +780,11 @@ namespace Game
                         }
                     }
                     // Power-Up Options (Rocket, Bomb, Propeller, Disco Ball)
-                    ElementData horizontalRocketData = GameManager.Instance.horizontalRocketElementData;
-                    ElementData verticalRocketData = GameManager.Instance.verticalRocketElementData;
-                    ElementData bombData = GameManager.Instance.bombElementData;
-                    ElementData propellerData = GameManager.Instance.propellerElementData;
-                    ElementData discoBallData = GameManager.Instance.discoBallElementData;
+                    HorizontalRocketElementData horizontalRocketData = EditorAddressables.horizontalRocketData;
+                    VerticalRocketElementData verticalRocketData = EditorAddressables.verticalRocketData;
+                    BombElementData bombData = EditorAddressables.bombData;
+                    PropellerElementData propellerData = EditorAddressables.propellerData;
+                    DiscoBallElementData discoBallData = EditorAddressables.discoBallData;
                     menu.AddItem(new GUIContent($"Element/Power-Ups/{horizontalRocketData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == horizontalRocketData, () =>
                     {
                         value.elementInfo = CreateElementInfo(horizontalRocketData);
@@ -802,10 +811,12 @@ namespace Game
                         MarkDirty();
                     });
                     // Special Elements (Cauldron, Power Generator, Power Outlet, etc.)
-                    ElementData cauldronData = GameManager.Instance.cauldronElementData;
-                    ElementData powerGeneratorData = GameManager.Instance.powerGeneratorElementData;
-                    ElementData powerOutletData = GameManager.Instance.powerOutletElementData;
-                    ElementData garbageBagData = GameManager.Instance.garbageBagElementData;
+                    ElementData cauldronData = EditorAddressables.cauldronElementData;
+                    ElementData powerGeneratorData = EditorAddressables.powerGeneratorElementData;
+                    ElementData powerOutletData = EditorAddressables.powerOutletElementData;
+                    ElementData garbageBagData = EditorAddressables.garbageBagElementData;
+                    ElementData breakableBoxData = EditorAddressables.breakableBoxElementData;
+                    ElementData jarElementData = EditorAddressables.jarElementData;
                     menu.AddItem(new GUIContent($"Element/Special/{cauldronData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == cauldronData, () =>
                     {
                         value.elementInfo = CreateElementInfo(cauldronData);
@@ -824,6 +835,11 @@ namespace Game
                     menu.AddItem(new GUIContent($"Element/Special/{garbageBagData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == garbageBagData, () =>
                     {
                         value.elementInfo = CreateElementInfo(garbageBagData);
+                        MarkDirty();
+                    });
+                    menu.AddItem(new GUIContent($"Element/Special/{breakableBoxData.displayName}"), value.elementInfo != null && value.elementInfo.elementData == breakableBoxData, () =>
+                    {
+                        value.elementInfo = CreateElementInfo(breakableBoxData);
                         MarkDirty();
                     });
                 }

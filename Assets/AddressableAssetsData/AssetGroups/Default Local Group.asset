@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: Default Local Group
+  m_GUID: 1ace35d74346f424c9d81ee3aebe0671
+  m_SerializeEntries:
+  - m_GUID: 27f15af6e4718a54bae992ed88a10b97
+    m_Address: Powerup/HorizontalRocket
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 28a4bfc53ef537149b4153f79c7ff47d
+    m_Address: Powerup/Propeller
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2d872738be37f424ba898af0de8834c6
+    m_Address: SpecialElement/GarbageBag
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3e2de7aa9b9bc7b4c81dc178dd4a110d
+    m_Address: SpecialElement/PowerOutlet
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 40f7a3c2d0dfa5f44ac237830e352768
+    m_Address: SpecialElement/BreakableBox
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 63c758bf0d4b097419b916fdc135fb61
+    m_Address: SpecialElement/BreakableJar
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7994c359cd5d6c341a9a7f00328abbd9
+    m_Address: Powerup/VerticalRocket
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 99be6b694bd201d45938b4bf5b2751f2
+    m_Address: Powerup/DiscoBall
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a0c82c7f032651647ac80d13654bca61
+    m_Address: Powerup/Bomb
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a7e91bda46e017f48a8d2f095433effc
+    m_Address: SpecialElement/Cauldron
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: dc281824b42e53b4ca22826e042ef523
+    m_Address: SpecialElement/Jar
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e864407d8ba7b8b4885ee8a95226c5e0
+    m_Address: SpecialElement/PowerGenerator
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 95bac19f45b702349947b8e96f0bf5e7, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 29beb9ba23c6c5c4e9468166b09fc5dd, type: 2}
+    - {fileID: 11400000, guid: 7b946ad694144c046b5a960a86a756d4, type: 2}

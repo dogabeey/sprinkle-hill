@@ -1,165 +1,526 @@
-﻿# Sprinkle Hill — Development Instructions
+﻿# Unity Project Coding Instructions
 
-## Purpose
+## Core Objective
 
-This document defines the rules and conventions for writing and modifying code in this project. Follow these guidelines to prevent repeated code, avoid codebase bloating, and keep the project organized and maintainable.
+Always prefer the simplest solution that:
 
----
+1. Solves the problem correctly.
+2. Keeps code maintainable.
+3. Minimizes file size and complexity.
+4. Minimizes future technical debt.
+5. Minimizes AI token usage during edits.
 
-## 1. Architecture Overview
-
-| Layer | Location | Responsibility |
-|---|---|---|
-| **Framework** | `Assets/Scripts/Framework/` | Reusable systems (grid, events, managers, UI, sound, save). Must not reference project‑specific logic directly. |
-| **Project** | `Assets/Project/Scripts/` | Game‑specific implementations (level editors, custom objectives). May reference Framework. |
-| **ScriptableObjects** | Created via `CreateAssetMenu` | Data containers (`ElementData`, `ConstantManager`, `ObjectiveType`, etc.). No runtime logic beyond simple lookups. |
-
-New scripts must be placed in the correct layer. Never put project-specific code inside `Framework/`.
+Do not introduce architecture, abstractions, patterns, packages, files, or systems unless they provide immediate and measurable value.
 
 ---
 
-## 2. Single Responsibility & Class Size
+# General Rules
 
-- **One purpose per class.** If a class handles two distinct concerns, split it.  
-  - ✅ `Match3Grid` owns swap/match/gravity. `PowerUpHandler` owns power‑up detection/creation/activation. `GridHelper` owns shared renderer utilities.  
-  - ❌ A single monolithic grid class that also manages UI, sound, and camera effects.
-- **Helper/handler classes over mega‑methods.** When a method exceeds ~60 lines or a class exceeds ~400 lines, extract a helper class or break it into smaller private methods.
-- **Nested classes are acceptable** for tightly coupled types (`SpawnRequest` inside `PowerUpHandler`, `GridCell` inside `Grid3D`), but they should remain small data holders — not behavior‑heavy.
+## KISS First
 
----
+Prefer simple code over clever code.
 
-## 3. No Code Duplication
+Bad:
 
-Before writing new code, search for existing functionality:
+* Reflection
+* Generic frameworks
+* Service locators
+* Event buses for small features
+* Premature optimization
+* Deep inheritance trees
 
-- **Utility methods** — Check `ListExtensions`, `GeometryUtils`, `GridHelper`, and other files in `Framework/Util/`.
-- **Event triggers** — Reuse `EventManager.TriggerEvent(GameEvent.X, ...)`. Do not create parallel notification systems.
-- **Singleton access** — Use the existing `SingletonComponent<T>` pattern. Do not create new singleton implementations.
-- **Constants & tuning values** — Store them in `ConstantManager` (the ScriptableObject), not as magic numbers scattered in code. If a new tuning value is needed, add it to `ConstantManager` with a `[Header]` group.
+Good:
 
-If you find yourself copying more than 3 lines of logic from another location, extract it into a shared method or utility class instead.
-
----
-
-## 4. Event System Usage
-
-All cross‑system communication goes through `EventManager`.
-
-- **Declare events** in the `GameEvent` enum (`GameEvent.cs`). Group related events with comments.
-- **Listen/unlisten symmetrically.** Every `StartListening` in `OnEnable` must have a matching `StopListening` in `OnDisable`.
-- **Use `EventParam` fields.** Do not create new parameter classes. If `EventParam` lacks a needed field, prefer using `paramDictionary` before modifying the class.
-- **Fire events at boundary moments**, not inside tight loops. One event per logical action (e.g., `MATCH_DETECTED` once per match cycle, not per cell).
+* Small focused classes
+* Explicit dependencies
+* Straightforward control flow
+* Clear naming
 
 ---
 
-## 5. Grid & Element Conventions
+## YAGNI
 
-- **Grid data vs. visuals.** `GridCell` / `GridElementInfo` hold authoritative state. `GridElement` MonoBehaviours are visual representations. Always update data first, then sync visuals.
-- **Position helpers.** Use `GetCell`, `GetElementAt`, `GetWorldPosition`, `IsValidPosition`, and `TryGetElementPosition` instead of manually indexing `gridCells` or `generatedTiles` from outside the grid.
-- **Power‑up logic belongs in `PowerUpHandler`.** Detection, spawn‑request creation, visual creation, and activation are all routed through this class. Match3Grid calls into it — never the reverse pattern.
-- **Coroutine ownership.** Coroutines that animate grid elements must be started on the `Match3Grid` MonoBehaviour (via `grid.StartCoroutine(...)` from helper classes) so they share the same lifecycle.
+Do not implement features that are not currently required.
 
----
+Never create:
 
-## 6. MonoBehaviour Patterns
+* Future-proof systems
+* "Just in case" abstractions
+* Extension points without actual use cases
 
-- **Use `SerializeField` over public fields** for Inspector-exposed values that don't need external access.
-- **Prefer composition over deep inheritance.** The hierarchy is intentionally shallow: `Grid3D → Match3Grid`, `GridElement → GridElement_Match3Game`. Avoid adding more inheritance levels.
-- **Coroutine naming.** Name coroutines after the action they perform (`ApplyGravity`, `ClearMatches`, `AnimateBombFlight`). Avoid generic names like `DoStuff` or `Process`.
-- **Cleanup.** Kill DOTween tweens (`DOKill`) and disable colliders before destroying elements to prevent animation-on-destroyed-object errors.
+Implement only what is needed now.
 
 ---
 
-## 7. ScriptableObject Data
+## SOLID Principles
 
-- **`ElementData`** defines visual identity (sprite, mesh, material). It must not contain runtime state.
-- **`ConstantManager`** stores all tuning parameters. Group related fields with `[Header("...")]`. Never hard-code durations, speeds, or magnitudes in C# — reference `ConstantManager` instead.
-- **`ObjectiveType`** defines what event completes an objective. The objective system is generic; new objectives are added by creating new `ObjectiveType` assets, not by writing new listener code.
+### Single Responsibility Principle
 
----
+Each class should have one reason to change.
 
-## 8. Naming Conventions
+Good:
 
-| Element | Convention | Example |
-|---|---|---|
-| Classes | PascalCase | `PowerUpHandler`, `Match3Grid` |
-| Public methods | PascalCase | `ActivateAt`, `SwapElements` |
-| Private methods | PascalCase | `BuildColumnSections`, `ClearLineCellImmediate` |
-| Private fields | camelCase | `currentComboCount`, `powerUpHandler` |
-| Serialized fields | camelCase with `[SerializeField]` | `[SerializeField] private float minDragDistance` |
-| Constants | PascalCase or UPPER_SNAKE in nested structs | `SortingOrderBoost`, `TAGS.PLAYER` |
-| Enums | PascalCase members | `ElementPowerUpType.HorizontalRocket` |
-| Events | UPPER_SNAKE_CASE | `GameEvent.ELEMENT_DESTROYED` |
-| Coroutines | PascalCase, verb-first | `ApplyGravity()`, `BreakWallAt()` |
+PlayerHealth
 
----
+* Stores health
+* Handles damage
 
-## 9. Comments & Documentation
+PlayerMovement
 
-- **XML summaries** (`/// <summary>`) on public classes and non-obvious public methods only.
-- **No obvious comments.** Do not comment `// Destroy the element` above `Destroy(element.gameObject)`.
-- **Section dividers** (`// ------`) are used in large files to group related methods. Follow the existing style in `Match3Grid.cs` when adding new sections.
-- **`// TODO:` tags** are acceptable for known incomplete work, but must include a short description.
+* Handles movement
+
+Bad:
+
+PlayerController
+
+* Health
+* Movement
+* Inventory
+* UI
+* Audio
 
 ---
 
-## 10. Adding New Features — Checklist
+### Open Closed Principle
 
-1. **Check if it already exists.** Search the codebase before writing anything new.
-2. **Identify the correct layer.** Framework vs. Project. Shared utility vs. specific handler.
-3. **Reuse existing infrastructure.**  
-   - Need cross-system communication? → `EventManager`  
-   - Need a tuning value? → `ConstantManager`  
-   - Need a new grid behavior? → Extend or compose with `Match3Grid` / `PowerUpHandler`  
-   - Need a new objective? → Create a `ObjectiveType` asset; no code changes required.
-4. **Keep classes focused.** One class, one job. Extract helpers when complexity grows.
-5. **No magic numbers.** If it's a value someone might want to tweak, put it in `ConstantManager`.
-6. **Test the event lifecycle.** Ensure `StartListening` / `StopListening` are paired. Verify events fire at the right time — not too early, not too often.
-7. **Clean up resources.** Kill tweens, disable colliders, destroy temporary GameObjects. Leaked objects cause subtle bugs.
-8. **Newly created files are not loaded by the project without rebuilding the solution, which can lead to confusion and errors.** If you add a new class file, stop the process after creating and notify the developer to rebuild the solution by refreshing Unity.
+Prefer extension through composition.
+
+Use interfaces only when multiple implementations are expected.
+
+Do not create interfaces with a single implementation unless there is a clear future need.
 
 ---
 
-## 11. Things to Avoid
+### Liskov Substitution Principle
 
-| ❌ Don't | ✅ Do Instead |
-|---|---|
-| Copy-paste logic between classes | Extract a shared method or utility class |
-| Hard-code numbers (durations, speeds, radii) | Add a field to `ConstantManager` |
-| Create a new singleton pattern | Use `SingletonComponent<T>` |
-| Build a parallel event/messaging system | Use `EventManager` and `GameEvent` |
-| Add deep inheritance hierarchies | Compose with handler/helper classes |
-| Put project-specific logic in Framework | Place it in `Assets/Project/Scripts/` |
-| Leave `StartListening` without `StopListening` | Always pair them in `OnEnable` / `OnDisable` |
-| Modify `EventParam` for one-off data | Use `paramDictionary` for ad-hoc payloads |
-| Create MonoBehaviours for pure data | Use `[System.Serializable]` classes or ScriptableObjects |
-| Use `public` fields for Inspector exposure | Use `[SerializeField] private` |
+Derived classes must behave like their base classes.
+
+If inheritance creates special-case behavior, prefer composition.
 
 ---
 
-## 12. File Organization
+### Interface Segregation Principle
 
-```
+Prefer small interfaces.
+
+Good:
+
+IDamageable
+
+IMovable
+
+IInteractable
+
+Bad:
+
+IGameEntityWithEverything
+
+---
+
+### Dependency Inversion Principle
+
+Depend on abstractions only when multiple implementations exist or are expected.
+
+Do not create interfaces solely to satisfy DIP.
+
+---
+
+# Unity Specific Rules
+
+## MonoBehaviours
+
+MonoBehaviours should be thin.
+
+Use MonoBehaviours for:
+
+* Unity lifecycle methods
+* Scene references
+* Input wiring
+* View logic
+
+Move game logic into plain C# classes when complexity grows.
+
+---
+
+## Avoid Update()
+
+Do not use Update() unless necessary.
+
+Prefer:
+
+* Events
+* Coroutines
+* Timers
+* Animation events
+
+If Update() is required:
+
+* Exit early
+* Avoid allocations
+* Keep logic minimal
+
+---
+
+## Serialization
+
+Prefer:
+
+[SerializeField] private
+
+instead of public fields.
+
+Example:
+
+[SerializeField] private float speed;
+
+Avoid public mutable fields.
+
+Expose read-only properties if needed.
+
+---
+
+## Inspector Design
+
+Expose only values designers need.
+
+Hide implementation details.
+
+Group fields logically.
+
+Avoid inspector clutter.
+
+---
+
+## GetComponent Usage
+
+Cache components.
+
+Good:
+
+private Rigidbody _rb;
+
+Awake()
+{
+_rb = GetComponent<Rigidbody>();
+}
+
+Bad:
+
+GetComponent<Rigidbody>()
+inside Update()
+
+---
+
+## Find Usage
+
+Never use:
+
+* GameObject.Find
+* FindObjectOfType
+* Resources.FindObjectsOfTypeAll
+
+during gameplay unless absolutely necessary.
+
+Prefer serialized references or dependency injection.
+
+---
+
+## Coroutines
+
+Use coroutines for:
+
+* Delays
+* Sequencing
+* Timed actions
+
+Avoid nested coroutine chains.
+
+Keep them short and readable.
+
+---
+
+## ScriptableObjects
+
+Use ScriptableObjects for:
+
+* Configuration
+* Static data
+* Shared settings
+
+Do not store runtime state in ScriptableObjects unless explicitly required.
+
+---
+
+## Events
+
+Prefer C# events for simple communication.
+
+Example:
+
+public event Action Died;
+
+Avoid large global event systems.
+
+---
+
+# Performance Rules
+
+## Avoid Garbage Collection
+
+Avoid runtime allocations in hot paths.
+
+Common offenders:
+
+* LINQ in Update
+* String concatenation in loops
+* New lists every frame
+* Boxing
+
+Prefer cached collections.
+
+---
+
+## LINQ
+
+Avoid LINQ in gameplay code.
+
+Acceptable:
+
+* Editor scripts
+* Tools
+* Initialization
+
+Not acceptable:
+
+* Per-frame execution
+
+---
+
+## Collections
+
+Reuse collections when possible.
+
+Prefer:
+
+Clear()
+
+instead of creating new lists repeatedly.
+
+---
+
+## String Usage
+
+Use cached strings when possible.
+
+Avoid generating UI strings every frame.
+
+---
+
+# Architecture
+
+## Composition Over Inheritance
+
+Prefer:
+
+Player
+├ Health
+├ Movement
+└ Inventory
+
+instead of:
+
+Character
+└ Player
+└ Mage
+└ FireMage
+
+Keep inheritance shallow.
+
+---
+
+## Folder Structure
+
 Assets/
-├── Libraries/              Third-party (I2, DOTween, etc.) — do not modify
-├── Plugins/                Editor plugins (Odin, etc.) — do not modify
-├── Project/
-│   └── Scripts/
-│       └── Core/           Game-specific scripts (LevelEditor, custom items)
-├── Scripts/
-│   └── Framework/
-│       ├── Action Bar/     Action bar UI system
-│       ├── Camera/         Camera bounds and effects
-│       ├── Grid/           Grid3D, Match3Grid, elements, cell controllers
-│       │   ├── Elements/   GridElement subclasses
-│       │   └── ElementView/ElementData ScriptableObjects
-│       ├── Level Management/ LevelScene hierarchy
-│       ├── Objective System/ Objective tracking
-│       ├── Save/           Save/load system
-│       ├── ScreenManagement/ Screen flow (menus, win/lose)
-│       ├── Sound/          Audio management
-│       └── Util/           Extensions, singletons, geometry helpers
-└── Shaders/                Custom shaders
-```
+Scripts/
+Gameplay/
+UI/
+Systems/
+Data/
+Editor/
 
-Place new files in the folder that matches their responsibility. Create a new subfolder only when there are 3+ related files that don't fit an existing folder.
+Avoid excessive nesting.
+
+---
+
+## Class Size
+
+Target:
+
+* Under 300 lines preferred.
+* Over 500 lines requires justification.
+
+Large classes should be split.
+
+---
+
+## Method Size
+
+Prefer methods under 30 lines.
+
+Extract only when it improves readability.
+
+Do not create trivial wrappers.
+
+---
+
+# Naming
+
+Use clear names.
+
+Good:
+
+CalculateDamage()
+
+Bad:
+
+Calc()
+
+Good:
+
+remainingHealth
+
+Bad:
+
+rh
+
+Avoid abbreviations unless universally known.
+
+Examples:
+
+UI
+ID
+HP
+XP
+
+---
+
+# Error Handling
+
+Fail loudly during development.
+
+Use:
+
+Debug.LogError
+
+for invalid setup.
+
+Validate references in Awake or OnValidate.
+
+Avoid silent failures.
+
+---
+
+# Code Style
+
+Use early returns.
+
+Good:
+
+if (!target)
+return;
+
+Attack(target);
+
+Bad:
+
+if (target)
+{
+Attack(target);
+}
+
+Prefer reduced nesting.
+
+---
+
+## Comments
+
+Do not comment obvious code.
+
+Bad:
+
+// Set health
+health = 10;
+
+Comment only:
+
+* Why
+* Non-obvious decisions
+* Workarounds
+
+---
+
+# Dependencies
+
+Before introducing:
+
+* New package
+* Framework
+* Plugin
+* Manager
+* System
+
+Ask:
+
+"Can this be solved with existing code?"
+
+Prefer fewer dependencies.
+
+---
+
+# Refactoring Guidelines
+
+When modifying existing code:
+
+1. Preserve behavior.
+2. Make the smallest safe change.
+3. Do not rewrite entire systems.
+4. Avoid unrelated cleanup.
+5. Minimize diff size.
+
+Small diffs are preferred.
+
+---
+
+# AI Cost Optimization
+
+When editing files:
+
+* Change only necessary lines.
+* Preserve existing formatting.
+* Avoid rewriting entire files.
+* Avoid creating files unless required.
+* Reuse existing systems.
+* Keep responses concise.
+
+Always prefer the smallest correct implementation.
+
+---
+
+# Decision Hierarchy
+
+When choosing between solutions:
+
+1. Correctness
+2. Simplicity
+3. Maintainability
+4. Performance
+5. Extensibility
+
+Never sacrifice simplicity for hypothetical future requirements.
+
+The best code is often the code that does not exist.
+
+# Project specific instructions
+
+1. Do not try to build the project after the changes.
+2. If you're not sure if the change you're about to make is the right decision, ask and wait for the user prompt.

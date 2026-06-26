@@ -170,24 +170,10 @@ namespace Game
             if (draggedElement != null && match3Grid != null && match3Grid.TryGetElementPosition(draggedElement, out Vector2Int draggedPos))
             {
                 GridCell draggedCell = match3Grid.GetCellPublic(draggedPos);
-                if (draggedCell?.elementInfo != null && draggedCell.elementInfo.powerUpType == ElementPowerUpType.Cauldron)
-                {
-                    return;
-                }
-                if (GameManager.Instance != null && draggedCell?.elementInfo?.elementData != null &&
-                    GameManager.Instance.garbageBagElementData == draggedCell.elementInfo.elementData)
-                {
-                    return;
-                }
-
-                if (GameManager.Instance != null && draggedCell?.elementInfo?.elementData != null &&
-                    GameManager.Instance.powerGeneratorElementData == draggedCell.elementInfo.elementData)
-                {
-                    return;
-                }
 
                 if (HasBehavior(draggedCell, ElementData.ElementBehaviorFlags.NonSwappable))
                 {
+                    Debug.Log("Dragged element is non-swappable. Cancelling drag.");
                     return;
                 }
             }
@@ -237,31 +223,7 @@ namespace Game
 
             GridCell fromCell = match3Grid.GetCellPublic(fromPos);
             GridCell toCell = match3Grid.GetCellPublic(toPos);
-            if ((fromCell?.elementInfo != null && fromCell.elementInfo.powerUpType == ElementPowerUpType.Cauldron) ||
-                (toCell?.elementInfo != null && toCell.elementInfo.powerUpType == ElementPowerUpType.Cauldron))
-            {
-                CancelDrag();
-                return;
-            }
-
-            if (GameManager.Instance != null &&
-                ((fromCell?.elementInfo?.elementData != null && GameManager.Instance.garbageBagElementData == fromCell.elementInfo.elementData) ||
-                 (toCell?.elementInfo?.elementData != null && GameManager.Instance.garbageBagElementData == toCell.elementInfo.elementData)))
-            {
-                CancelDrag();
-                return;
-            }
-
-            if (GameManager.Instance != null &&
-                ((fromCell?.elementInfo?.elementData != null && GameManager.Instance.powerGeneratorElementData == fromCell.elementInfo.elementData) ||
-                 (toCell?.elementInfo?.elementData != null && GameManager.Instance.powerGeneratorElementData == toCell.elementInfo.elementData)))
-            {
-                CancelDrag();
-                return;
-            }
-
-            if (HasBehavior(fromCell, ElementData.ElementBehaviorFlags.NonSwappable) ||
-                HasBehavior(toCell, ElementData.ElementBehaviorFlags.NonSwappable))
+            if (toCell?.elementInfo != null && toCell.elementInfo.elementData.behaviorFlags.HasFlag(ElementData.ElementBehaviorFlags.NonSwappable))
             {
                 CancelDrag();
                 return;
@@ -722,7 +684,7 @@ namespace Game
             yield return StartCoroutine(PlayPreExecutionAnimation(hammerAction, targetCenter));
             hammerAction.currentCount--;
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: hammerAction.ItemName));
-            yield return StartCoroutine(match3Grid.ClearCrossAt(targetCenter, false));
+            yield return StartCoroutine(match3Grid.ClearCellAt(targetCenter, false));
             yield return StartCoroutine(match3Grid.ResolveBoardAfterSpecialClear());
 
             isProcessing = false;

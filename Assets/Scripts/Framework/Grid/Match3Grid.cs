@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using MobileHapticsProFreeEdition;
-using UnityEngine; using Game.EventManagement;
+using UnityEngine;
 using Game.EventManagement;
 
 namespace Game
@@ -164,7 +164,7 @@ namespace Game
                 yield break;
 
             ElementData selectedElementData = cell.elementInfo.elementData;
-            powerUpHandler.CreatePowerUpAt(center, selectedElementData, ElementPowerUpType.DiscoBall);
+            powerUpHandler.CreatePowerUpAt(center, ElementPowerUpType.DiscoBall);
             yield return StartCoroutine(powerUpHandler.ActivateAt(center, selectedElementData));
             yield return StartCoroutine(ResolveBoardAfterSpecialClear());
         }
@@ -179,7 +179,7 @@ namespace Game
                 yield break;
 
             ElementData selectedElementData = cell.elementInfo.elementData;
-            powerUpHandler.CreatePowerUpAt(center, selectedElementData, ElementPowerUpType.HorizontalRocket);
+            powerUpHandler.CreatePowerUpAt(center,  ElementPowerUpType.HorizontalRocket);
             yield break;
         }
 
@@ -208,6 +208,7 @@ namespace Game
             newElement.elementInfo = elementInfo;
             generatedElements.Add(newElement);
             newElement.InitElement(this, elementInfo);
+            TriggerBreakableBoxCreatedEvent(pos, elementInfo?.elementData);
             return newElement;
         }
 
@@ -359,14 +360,31 @@ namespace Game
             return groups;
         }
 
+        private static int ResolveConfiguredGlassStartHealth(GridCell cell)
+        {
+            if (cell == null)
+                return 1;
+
+            if (cell.cellFeatureGroupHealth > 0)
+                return cell.cellFeatureGroupHealth;
+
+            if (cell.cellHealth > 0)
+                return cell.cellHealth;
+
+            return 1;
+        }
+
         private int ResolveGlassGroupMaxHealth(GlassGroupId groupId, List<Vector2Int> groupCells)
         {
-            int maxHealth = Mathf.Max(1, groupId.feature != null ? groupId.feature.defaultGroupHealth : 1);
+            int maxHealth = 0;
             for (int i = 0; i < groupCells.Count; i++)
             {
                 GridCell cell = GetCell(groupCells[i]);
                 if (cell == null)
                     continue;
+
+                if (cell.cellHealth > maxHealth)
+                    maxHealth = cell.cellHealth;
 
                 if (cell.cellFeatureGroupMaxHealth > maxHealth)
                     maxHealth = cell.cellFeatureGroupMaxHealth;
@@ -577,7 +595,7 @@ namespace Game
         public void TriggerCellFeatureMatchedOverAt(Vector2Int pos)
         {
             GridCell cell = GetCell(pos);
-            if (cell?.cellFeature == null)
+            if (cell?.cellFeature == null || IsCellFeatureTriggerBlocked(cell))
                 return;
 
             GridElement element = GetElementAt(pos);
@@ -592,7 +610,7 @@ namespace Game
             {
                 Vector2Int adjacentPos = matchedPos + adjacentOffsets[i];
                 GridCell adjacentCell = GetCell(adjacentPos);
-                if (adjacentCell?.cellFeature == null)
+                if (adjacentCell?.cellFeature == null || IsCellFeatureTriggerBlocked(adjacentCell))
                     continue;
 
                 adjacentCell.cellFeature.OnElementMatchedAdjacentToTheCell(adjacentCell, matchedCell, matchedElement);
@@ -616,13 +634,21 @@ namespace Game
             if (!IsCauldronData(cell.elementInfo.elementData))
                 return false;
 
-            int required = Mathf.Max(1, cell.elementInfo.elementData != null ? cell.elementInfo.elementData.cauldronChargeRequired : 1);
+            int required = Mathf.Max(1, cell.elementInfo.elementData != null && cell.elementInfo.elementData is CauldronElementData cauldronElementData ? cauldronElementData.cauldronChargeRequired : 1);
             return cell.elementInfo.cauldronProgress >= required;
         }
 
         public void NotifyElementCleared(Vector2Int clearedPos)
         {
             GridCell clearedCell = GetCell(clearedPos);
+            if (clearedCell?.elementInfo?.elementData is BreakableBoxElementData breakableBoxData)
+            {
+                EventManager.TriggerEvent(GameEvent.BOX_DESTROYED, new EventParam(
+                    vectorList: new Vector3[] { new Vector3(clearedPos.x, clearedPos.y, 0f) },
+                    paramScriptable: breakableBoxData
+                ));
+            }
+
             if (clearedCell?.elementInfo != null && clearedCell.elementInfo.powerUpType == ElementPowerUpType.Cauldron)
                 return;
 
@@ -637,12 +663,12 @@ namespace Game
 
                     ElementData data = cauldronCell.elementInfo.elementData;
                     Vector2Int coverage = GetGridCoverage(data);
-                    int radius = Mathf.Max(1, data != null ? data.cauldronChargeRadius : 1);
+                    int radius = Mathf.Max(1, data != null && data is CauldronElementData cauldronElementData ? cauldronElementData.cauldronChargeRadius : 1);
                     int distance = GetManhattanDistanceToCoverage(clearedPos, cauldronPos, coverage);
                     if (distance > radius)
                         continue;
 
-                    int required = Mathf.Max(1, data != null ? data.cauldronChargeRequired : 1);
+                    int required = Mathf.Max(1, data != null && data is CauldronElementData cauldronElementData2 ? cauldronElementData2.cauldronChargeRequired : 1);
                     if (cauldronCell.elementInfo.cauldronProgress >= required)
                         continue;
 
@@ -823,13 +849,13 @@ namespace Game
 
                 // Create power-ups (disco ball has highest priority)
                 for (int i = 0; i < discoBallSpawns.Count; i++)
-                    powerUpHandler.CreatePowerUpAt(discoBallSpawns[i].position, discoBallSpawns[i].sourceData, discoBallSpawns[i].powerUpType);
+                    powerUpHandler.CreatePowerUpAt(discoBallSpawns[i].position, discoBallSpawns[i].powerUpType);
                 for (int i = 0; i < propellerSpawns.Count; i++)
-                    powerUpHandler.CreatePowerUpAt(propellerSpawns[i].position, propellerSpawns[i].sourceData, propellerSpawns[i].powerUpType);
+                    powerUpHandler.CreatePowerUpAt(propellerSpawns[i].position, propellerSpawns[i].powerUpType);
                 for (int i = 0; i < bombSpawns.Count; i++)
-                    powerUpHandler.CreatePowerUpAt(bombSpawns[i].position, bombSpawns[i].sourceData, bombSpawns[i].powerUpType);
+                    powerUpHandler.CreatePowerUpAt(bombSpawns[i].position, bombSpawns[i].powerUpType);
                 for (int i = 0; i < rocketSpawns.Count; i++)
-                    powerUpHandler.CreatePowerUpAt(rocketSpawns[i].position, rocketSpawns[i].sourceData, rocketSpawns[i].powerUpType);
+                    powerUpHandler.CreatePowerUpAt(rocketSpawns[i].position, rocketSpawns[i].powerUpType);
 
                 // Gravity
                 yield return StartCoroutine(ApplyGravity());
@@ -899,13 +925,13 @@ namespace Game
                 yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions));
 
                 for (int i = 0; i < discoBallSpawns.Count; i++)
-                    powerUpHandler.CreatePowerUpAt(discoBallSpawns[i].position, discoBallSpawns[i].sourceData, discoBallSpawns[i].powerUpType);
+                    powerUpHandler.CreatePowerUpAt(discoBallSpawns[i].position, discoBallSpawns[i].powerUpType);
                 for (int i = 0; i < propellerSpawns.Count; i++)
-                    powerUpHandler.CreatePowerUpAt(propellerSpawns[i].position, propellerSpawns[i].sourceData, propellerSpawns[i].powerUpType);
+                    powerUpHandler.CreatePowerUpAt(propellerSpawns[i].position, propellerSpawns[i].powerUpType);
                 for (int i = 0; i < bombSpawns.Count; i++)
-                    powerUpHandler.CreatePowerUpAt(bombSpawns[i].position, bombSpawns[i].sourceData, bombSpawns[i].powerUpType);
+                    powerUpHandler.CreatePowerUpAt(bombSpawns[i].position, bombSpawns[i].powerUpType);
                 for (int i = 0; i < rocketSpawns.Count; i++)
-                    powerUpHandler.CreatePowerUpAt(rocketSpawns[i].position, rocketSpawns[i].sourceData, rocketSpawns[i].powerUpType);
+                    powerUpHandler.CreatePowerUpAt(rocketSpawns[i].position, rocketSpawns[i].powerUpType);
 
                 yield return StartCoroutine(ApplyGravity());
             }
@@ -927,9 +953,10 @@ namespace Game
         // ------------------------------------------------------------------
         //  Area clear (used by bomb)
         // ------------------------------------------------------------------
-        public IEnumerator ClearAreaAt(Vector2Int center, int radius, bool allowConditionedBreakableWalls = true)
+        public IEnumerator ClearAreaAt(Vector2Int center, int radius, bool allowConditionedBreakableWalls = true, bool allowAdjacentFeatureTriggers = true)
         {
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
+            HashSet<Vector2Int> boxesProcessed = new HashSet<Vector2Int>();
 
             for (int x = center.x - radius; x <= center.x + radius; x++)
             {
@@ -948,7 +975,8 @@ namespace Game
 
                     GridElement matchedElement = GetElementAt(pos);
                     TriggerCellFeatureMatchedOverAt(pos);
-                    TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+                    if (allowAdjacentFeatureTriggers)
+                        TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
                     if (TryRevealHiddenBoxAt(pos))
                         continue;
@@ -969,7 +997,9 @@ namespace Game
 
                     NotifyElementCleared(pos);
                     cell.elementInfo = null;
-                    if (matchedElement != null) StartCoroutine(matchedElement.DestroyElement());
+                    if (matchedElement != null)
+                        yield return StartCoroutine(matchedElement.DestroyElement());
+                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
                 }
             }
 
@@ -979,12 +1009,13 @@ namespace Game
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
 
-        public IEnumerator ClearRowAt(int y, bool allowConditionedBreakableWalls = true)
+        public IEnumerator ClearRowAt(int y, bool allowConditionedBreakableWalls = true, bool allowAdjacentFeatureTriggers = true)
         {
             if (y < 0 || y >= gridSize.y)
                 yield break;
 
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
+            HashSet<Vector2Int> boxesProcessed = new HashSet<Vector2Int>();
 
             for (int x = 0; x < gridSize.x; x++)
             {
@@ -1005,7 +1036,8 @@ namespace Game
 
                 GridElement matchedElement = GetElementAt(pos);
                 TriggerCellFeatureMatchedOverAt(pos);
-                TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+                if (allowAdjacentFeatureTriggers)
+                    TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
                 if (TryRevealHiddenBoxAt(pos))
                     continue;
@@ -1028,18 +1060,26 @@ namespace Game
                 NotifyElementCleared(pos);
                 cell.elementInfo = null;
                 if (matchedElement != null)
-                    StartCoroutine(matchedElement.DestroyElement());
+                {
+                    yield return StartCoroutine(matchedElement.DestroyElement());
+                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                }
+                else
+                {
+                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                }
             }
 
             yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
-        public IEnumerator ClearColumnAt(int columnX, bool allowConditionedBreakableWalls = true)
+        public IEnumerator ClearColumnAt(int columnX, bool allowConditionedBreakableWalls = true, bool allowAdjacentFeatureTriggers = true)
         {
             if (columnX < 0 || columnX >= gridSize.x)
                 yield break;
 
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
+            HashSet<Vector2Int> boxesProcessed = new HashSet<Vector2Int>();
 
             for (int y = 0; y < gridSize.y; y++)
             {
@@ -1060,7 +1100,8 @@ namespace Game
 
                 GridElement matchedElement = GetElementAt(pos);
                 TriggerCellFeatureMatchedOverAt(pos);
-                TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+                if (allowAdjacentFeatureTriggers)
+                    TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
                 if (TryRevealHiddenBoxAt(pos))
                     continue;
@@ -1083,14 +1124,68 @@ namespace Game
                 NotifyElementCleared(pos);
                 cell.elementInfo = null;
                 if (matchedElement != null)
-                    StartCoroutine(matchedElement.DestroyElement());
+                {
+                    yield return StartCoroutine(matchedElement.DestroyElement());
+                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                }
+                else
+                {
+                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                }
             }
 
             yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
 
-        public IEnumerator ClearCrossAt(Vector2Int center, bool allowConditionedBreakableWalls = true)
+        public IEnumerator ClearCellAt(Vector2Int pos, bool allowConditionedBreakableWalls = true, bool allowAdjacentBreakableBoxes = true, bool allowAdjacentFeatureTriggers = true)
+        {
+            GridCell cell = GetCell(pos);
+            if (cell == null)
+                yield break;
+
+            if (cell.cellType == CellType.BreakableWall)
+            {
+                if (allowConditionedBreakableWalls || cell.breakableWallElementCondition == null)
+                    yield return StartCoroutine(BreakWallsSimultaneous(new HashSet<Vector2Int> { pos }));
+                yield break;
+            }
+
+            if (cell.cellType != CellType.Normal || cell.elementInfo == null)
+                yield break;
+
+            GridElement matchedElement = GetElementAt(pos);
+            TriggerCellFeatureMatchedOverAt(pos);
+            if (allowAdjacentFeatureTriggers)
+                TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+
+            if (TryRevealHiddenBoxAt(pos))
+                yield break;
+
+            if (IsGarbageBagData(cell.elementInfo.elementData))
+                yield break;
+
+            if (IsPowerGeneratorData(cell.elementInfo.elementData))
+                yield break;
+
+            if (PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType))
+            {
+                yield return StartCoroutine(powerUpHandler.ActivateAt(pos, null));
+                yield break;
+            }
+
+            if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron)
+                yield break;
+
+            NotifyElementCleared(pos);
+            cell.elementInfo = null;
+            if (matchedElement != null)
+                yield return StartCoroutine(matchedElement.DestroyElement());
+
+            if (allowAdjacentBreakableBoxes)
+                BreakAdjacentBreakableBoxesImmediate(pos, new HashSet<Vector2Int>());
+        }
+        public IEnumerator ClearCrossAt(Vector2Int center, bool allowConditionedBreakableWalls = true, bool allowAdjacentFeatureTriggers = true)
         {
             Vector2Int[] offsets =
             {
@@ -1102,6 +1197,7 @@ namespace Game
             };
 
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
+            HashSet<Vector2Int> boxesProcessed = new HashSet<Vector2Int>();
 
             for (int i = 0; i < offsets.Length; i++)
             {
@@ -1122,7 +1218,8 @@ namespace Game
 
                 GridElement matchedElement = GetElementAt(pos);
                 TriggerCellFeatureMatchedOverAt(pos);
-                TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+                if (allowAdjacentFeatureTriggers)
+                    TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
                 if (TryRevealHiddenBoxAt(pos))
                     continue;
@@ -1145,7 +1242,14 @@ namespace Game
                 NotifyElementCleared(pos);
                 cell.elementInfo = null;
                 if (matchedElement != null)
-                    StartCoroutine(matchedElement.DestroyElement());
+                {
+                    yield return StartCoroutine(matchedElement.DestroyElement());
+                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                }
+                else
+                {
+                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                }
             }
 
             yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
@@ -1489,9 +1593,7 @@ namespace Game
                     if (!TryGetGlassGroupId(new Vector2Int(x, y), cell, out GlassGroupId groupId))
                         continue;
 
-                    int configuredHealth = cell.cellHealth;
-                    if (configuredHealth <= 0)
-                        configuredHealth = Mathf.Max(1, groupId.feature != null ? groupId.feature.defaultGroupHealth : 1);
+                    int configuredHealth = ResolveConfiguredGlassStartHealth(cell);
 
                     int configuredMaxHealth = cell.cellFeatureGroupMaxHealth;
                     if (configuredMaxHealth <= 0)
@@ -1520,8 +1622,12 @@ namespace Game
                     if (!TryGetGlassGroupId(new Vector2Int(x, y), cell, out GlassGroupId groupId))
                         continue;
 
-                    if (resolvedGroupHealth.TryGetValue(groupId, out int groupHealth))
+                    int groupHealth = 1;
+                    if (resolvedGroupHealth.TryGetValue(groupId, out groupHealth))
+                    {
                         cell.cellHealth = groupHealth;
+                        cell.cellFeatureGroupHealth = groupHealth;
+                    }
 
                     if (resolvedGroupMaxHealth.TryGetValue(groupId, out int groupMaxHealth))
                         cell.cellFeatureGroupMaxHealth = Mathf.Max(groupHealth, groupMaxHealth);
@@ -1537,7 +1643,7 @@ namespace Game
                 for (int y = 0; y < gridSize.y; y++)
                 {
                     GridCell cell = gridCells[x, y];
-                    bool acceptsElements = cell?.cellFeature == null || cell.cellFeature.AcceptElements;
+                    bool acceptsElements = cell?.cellFeature == null || !cell.cellFeature.FeatureFlags.HasFlag(CellFeature.CellFeatureFlags.PreventsElements);
                     if (cell != null && cell.cellType == CellType.Normal && !acceptsElements)
                     {
                         cell.elementInfo = null;
@@ -1571,6 +1677,7 @@ namespace Game
                     generatedElements.Add(element);
                     element.InitElement(this, element.elementInfo);
                     powerUpHandler.ApplySortingBoost(element, cell.elementInfo.powerUpType == ElementPowerUpType.Bomb);
+                    TriggerBreakableBoxCreatedEvent(cell.coordinates, element.elementInfo?.elementData);
 
                     if (cell.elementInfo.isHidden)
                     {
@@ -1741,8 +1848,8 @@ namespace Game
         private IEnumerator ClearMatches(List<List<Vector2Int>> matchedPositions, HashSet<Vector2Int> protectedPositions = null)
         {
             ConstantManager cm = ConstantManager.Instance;
-            HashSet<Vector2Int> cleared = new HashSet<Vector2Int>();
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
+            HashSet<Vector2Int> boxesProcessed = new HashSet<Vector2Int>();
             HashSet<Vector2Int> hiddenToReveal = new HashSet<Vector2Int>();
             Vector2Int[] adjacentOffsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
             HashSet<Vector2Int> allMatchedPositions = new HashSet<Vector2Int>();
@@ -1764,29 +1871,17 @@ namespace Game
             foreach (var group in matchedPositions)
             {
                 Vector2Int? mergeTarget = FindMergeTarget(group, protectedPositions);
-
                 if (mergeTarget.HasValue)
                 {
                     GridElement mergeEl = GetElementAt(mergeTarget.Value);
-                    if (mergeEl != null) GridHelper.AnimateEmission(mergeEl, 1.5f, 0.2f);
+                    if (mergeEl != null)
+                        GridHelper.AnimateEmission(mergeEl, 1.5f, 0.2f);
                 }
+
+                int pendingDestructions = 0;
 
                 foreach (var pos in group)
                 {
-                    if (protectedPositions != null && protectedPositions.Contains(pos))
-                    {
-                        GridCell protectedCell = GetCell(pos);
-                        if (protectedCell?.elementInfo != null)
-                        {
-                            ElementData protectedElementData = protectedCell.elementInfo.elementData;
-                            GridElement protectedElement = GetElementAt(pos);
-                            ProcessAdjacentFeatureMatchEffects(pos, protectedCell, protectedElement, allMatchedPositions, adjacentFeatureProcessed, adjacentOffsets);
-                            ProcessAdjacentWallAndHiddenEffects(pos, protectedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
-                        }
-                        continue;
-                    }
-                    if (cleared.Contains(pos)) continue;
-
                     GridCell cell = GetCell(pos);
                     if (cell?.elementInfo == null) continue;
                     if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron) continue;
@@ -1801,23 +1896,104 @@ namespace Game
 
                     NotifyElementCleared(pos);
                     cell.elementInfo = null;
-                    GridElement element = matchedElement;
-                    if (element != null)
+                    if (matchedElement != null)
                     {
-                        if (mergeTarget.HasValue) StartCoroutine(MergeElementIntoTarget(element, mergeTarget.Value));
-                        else StartCoroutine(element.DestroyElement());
+                        pendingDestructions++;
+                        StartCoroutine(ClearMatchedElementAfterAnimation(
+                            pos,
+                            matchedElement,
+                            destroyedElementData,
+                            mergeTarget,
+                            boxesProcessed,
+                            wallsToBreak,
+                            hiddenToReveal,
+                            adjacentOffsets,
+                            () => pendingDestructions--));
                     }
-
-                    ProcessAdjacentWallAndHiddenEffects(pos, destroyedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
-
-                    cleared.Add(pos);
+                    else
+                    {
+                        BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                        ProcessAdjacentWallAndHiddenEffects(pos, destroyedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
+                    }
                 }
+
+                if (pendingDestructions > 0)
+                    yield return new WaitUntil(() => pendingDestructions == 0);
 
                 yield return new WaitForSeconds(cm.matchClearDelay);
             }
 
             foreach (Vector2Int rp in hiddenToReveal) RevealHiddenElement(rp);
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
+        }
+
+        private IEnumerator ClearMatchedElementAfterAnimation(
+            Vector2Int pos,
+            GridElement matchedElement,
+            ElementData destroyedElementData,
+            Vector2Int? mergeTarget,
+            HashSet<Vector2Int> boxesProcessed,
+            HashSet<Vector2Int> wallsToBreak,
+            HashSet<Vector2Int> hiddenToReveal,
+            Vector2Int[] adjacentOffsets,
+            System.Action onCompleted)
+        {
+            if (matchedElement != null)
+            {
+                if (mergeTarget.HasValue)
+                    yield return StartCoroutine(MergeElementIntoTarget(matchedElement, mergeTarget.Value));
+                else
+                    yield return StartCoroutine(matchedElement.DestroyElement());
+            }
+
+            BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+            ProcessAdjacentWallAndHiddenEffects(pos, destroyedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
+            onCompleted?.Invoke();
+        }
+
+        private Vector2Int? FindMergeTarget(List<Vector2Int> group, HashSet<Vector2Int> protectedPositions)
+        {
+            if (protectedPositions == null || group == null)
+                return null;
+
+            for (int i = 0; i < group.Count; i++)
+            {
+                if (protectedPositions.Contains(group[i]))
+                    return group[i];
+            }
+
+            return null;
+        }
+
+        private IEnumerator MergeElementIntoTarget(GridElement element, Vector2Int targetPos)
+        {
+            if (element == null)
+                yield break;
+
+            GridCellController targetTile = null;
+            if (!generatedTiles.TryGetValue(targetPos, out targetTile) || targetTile == null)
+            {
+                yield return StartCoroutine(element.DestroyElement());
+                yield break;
+            }
+
+            Transform t = element.transform;
+            t.DOKill();
+            Collider[] colliders = element.GetComponentsInChildren<Collider>(true);
+            for (int i = 0; i < colliders.Length; i++)
+                colliders[i].enabled = false;
+
+            GridHelper.SetEmission(element, 1.5f);
+
+            float dur = Mathf.Max(0.08f, ConstantManager.Instance.elementSwapMoveDuration * 0.6f);
+            Tween move = t.DOMove(targetTile.transform.position, dur).SetEase(Ease.InBack);
+
+            EventManager.TriggerEvent(GameEvent.ELEMENT_DESTROYED,
+                eventParam: new EventParam(paramScriptable: element.elementInfo?.elementData));
+
+            yield return move.WaitForCompletion();
+            if (element != null)
+                Destroy(element.gameObject);
         }
 
         private void ProcessAdjacentFeatureMatchEffects(
@@ -1838,7 +2014,7 @@ namespace Game
                     continue;
 
                 GridCell adjacentCell = GetCell(adjacentPos);
-                if (adjacentCell?.cellFeature == null)
+                if (adjacentCell?.cellFeature == null || IsCellFeatureTriggerBlocked(adjacentCell))
                     continue;
 
                 adjacentCell.cellFeature.OnElementMatchedAdjacentToTheCell(adjacentCell, originCell, originElement);
@@ -1877,38 +2053,6 @@ namespace Game
             HashSet<GlassGroupId> groupsToDamage = new HashSet<GlassGroupId>();
             CollectGlassGroupAt(pos, groupsToDamage);
             return DamageGlassGroupsForMatch(groupsToDamage);
-        }
-
-        private Vector2Int? FindMergeTarget(List<Vector2Int> group, HashSet<Vector2Int> protectedPositions)
-        {
-            if (protectedPositions == null || group == null) return null;
-            for (int i = 0; i < group.Count; i++)
-                if (protectedPositions.Contains(group[i])) return group[i];
-            return null;
-        }
-
-        private IEnumerator MergeElementIntoTarget(GridElement element, Vector2Int targetPos)
-        {
-            if (element == null) yield break;
-            GridCellController targetTile = null;
-            if (!generatedTiles.TryGetValue(targetPos, out targetTile) || targetTile == null)
-            { yield return StartCoroutine(element.DestroyElement()); yield break; }
-
-            Transform t = element.transform;
-            t.DOKill();
-            Collider[] colliders = element.GetComponentsInChildren<Collider>(true);
-            for (int i = 0; i < colliders.Length; i++) colliders[i].enabled = false;
-
-            GridHelper.SetEmission(element, 1.5f);
-
-            float dur = Mathf.Max(0.08f, ConstantManager.Instance.elementSwapMoveDuration * 0.6f);
-            Tween move = t.DOMove(targetTile.transform.position, dur).SetEase(Ease.InBack);
-
-            EventManager.TriggerEvent(GameEvent.ELEMENT_DESTROYED,
-                eventParam: new EventParam(paramScriptable: element.elementInfo?.elementData));
-
-            yield return move.WaitForCompletion();
-            if (element != null) Destroy(element.gameObject);
         }
 
         // ------------------------------------------------------------------
@@ -2055,11 +2199,12 @@ namespace Game
 
             for (int x = 0; x < gridSize.x; x++)
             {
-                List<List<int>> sections = BuildColumnSections(x);
+                List<GravityColumnSection> sections = BuildColumnSections(x);
                 int bottomMostNormalY = GetBottomMostNormalCellY(x);
 
-                foreach (List<int> playableRows in sections)
+                foreach (GravityColumnSection section in sections)
                 {
+                    List<int> playableRows = section.rows;
                     if (playableRows.Count == 0) continue;
                     int writeIndex = playableRows.Count - 1;
                     int highestExisting = -1;
@@ -2158,6 +2303,9 @@ namespace Game
                         writeIndex--;
                     }
 
+                    if (!section.allowsRefillFromAbove)
+                        continue;
+
                     // Spawn new elements
                     int spawnBase = highestExisting != -1 ? (playableRows.Count - highestExisting) : 0;
                     for (int emptyIdx = writeIndex; emptyIdx >= 0; emptyIdx--)
@@ -2187,6 +2335,7 @@ namespace Game
                             generatedElements.Add(newEl);
                             newEl.InitElement(this, newInfo);
                             powerUpHandler.ApplySortingBoost(newEl, false);
+                            TriggerBreakableBoxCreatedEvent(targetPos, newInfo.elementData);
 
                             float dist = newEl.transform.localPosition.magnitude;
                             float dur = fallSpeed > 0f ? dist / fallSpeed : 0f;
@@ -2231,7 +2380,7 @@ namespace Game
                     if (cell == null || !generatedTiles.TryGetValue(pos, out GridCellController tile) || tile == null)
                         continue;
 
-                    bool acceptsElements = cell.cellFeature == null || cell.cellFeature.AcceptElements;
+                    bool acceptsElements = cell.cellFeature == null || !cell.cellFeature.FeatureFlags.HasFlag(CellFeature.CellFeatureFlags.PreventsElements);
                     bool shouldHaveElement = cell.cellType == CellType.Normal && acceptsElements && cell.elementInfo?.elementData != null;
 
                     GridElement[] tileElements = tile.GetComponentsInChildren<GridElement>(true);
@@ -2272,6 +2421,7 @@ namespace Game
                         created.elementInfo = cell.elementInfo;
                         created.InitElement(this, cell.elementInfo);
                         generatedElements.Add(created);
+                        TriggerBreakableBoxCreatedEvent(pos, cell.elementInfo?.elementData);
                         validElements.Add(created);
                         continue;
                     }
@@ -2319,8 +2469,8 @@ namespace Game
             GridElement cauldronElement = GetElementAt(cauldronPos);
             Vector3 center = GetElementCoverageCenterWorld(cauldronPos, cauldronCell.elementInfo.elementData);
 
-            ParticleSystem customExplosion = cauldronCell.elementInfo.elementData != null
-                ? cauldronCell.elementInfo.elementData.cauldronExplosionParticle
+            ParticleSystem customExplosion = cauldronCell.elementInfo.elementData != null && cauldronCell.elementInfo.elementData is CauldronElementData cauldronElementData && cauldronElementData.cauldronExplosionParticle != null
+                ? cauldronElementData.cauldronExplosionParticle
                 : null;
             if (customExplosion != null)
             {
@@ -2461,26 +2611,27 @@ namespace Game
 
         private static bool IsGarbageBagData(ElementData data)
         {
-            GameManager gm = GameManager.Instance;
-            return gm != null && data != null && gm.garbageBagElementData == data;
+            return data is GarbageBagElementData;
+        }
+
+        private static bool IsBreakableBoxData(ElementData data)
+        {
+            return data is BreakableBoxElementData;
         }
 
         private static bool IsPowerGeneratorData(ElementData data)
         {
-            GameManager gm = GameManager.Instance;
-            return gm != null && data != null && gm.powerGeneratorElementData == data;
+            return data is PowerGeneratorElementData;
         }
 
         private static bool IsPowerOutletData(ElementData data)
         {
-            GameManager gm = GameManager.Instance;
-            return gm != null && data != null && gm.powerOutletElementData == data;
+            return data is PowerOutletElementData;
         }
 
         private bool IsCauldronData(ElementData data)
         {
-            GameManager gm = GameManager.Instance;
-            return gm != null && data != null && gm.cauldronElementData == data;
+            return data is CauldronElementData;
         }
 
         private static bool IsGarbageBagCell(GridCell cell)
@@ -2488,16 +2639,52 @@ namespace Game
             return cell != null && cell.cellType == CellType.Normal && cell.elementInfo != null && IsGarbageBagData(cell.elementInfo.elementData);
         }
 
-        private static bool IsPowerGeneratorCell(GridCell cell)
+        private static bool IsBreakableBoxCell(GridCell cell)
         {
-            return cell != null && cell.cellType == CellType.Normal && cell.elementInfo != null && IsPowerGeneratorData(cell.elementInfo.elementData);
+            return cell != null && cell.cellType == CellType.Normal && cell.elementInfo != null && IsBreakableBoxData(cell.elementInfo.elementData);
         }
 
-        private static bool IsNonSwappableCell(GridCell cell)
+        private static bool IsCellFeatureTriggerBlocked(GridCell cell)
         {
-            return cell != null && cell.cellType == CellType.Normal && cell.elementInfo != null && HasBehavior(cell.elementInfo.elementData, ElementData.ElementBehaviorFlags.NonSwappable);
+            ElementData elementData = cell?.elementInfo?.elementData;
+            return HasBehavior(elementData, ElementData.ElementBehaviorFlags.BlocksFeatureTriggers);
         }
 
+        private bool IsGravityPassThroughCell(GridCell cell)
+        {
+            if (cell?.elementInfo?.elementData == null)
+                return false;
+
+            ElementData elementData = cell.elementInfo.elementData;
+            return HasBehavior(elementData, ElementData.ElementBehaviorFlags.PassThrough) &&
+                   HasBehavior(elementData, ElementData.ElementBehaviorFlags.NotAffectedByGravity);
+        }
+
+        private bool IsGravityBlockingCell(GridCell cell)
+        {
+            if (cell?.elementInfo?.elementData == null)
+                return false;
+
+            ElementData elementData = cell.elementInfo.elementData;
+            return !HasBehavior(elementData, ElementData.ElementBehaviorFlags.PassThrough) &&
+                   HasBehavior(elementData, ElementData.ElementBehaviorFlags.NotAffectedByGravity);
+        }
+
+        private void BreakAdjacentBreakableBoxesImmediate(Vector2Int originPos, HashSet<Vector2Int> processedBoxes)
+        {
+            Vector2Int[] adjacentOffsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+            for (int i = 0; i < adjacentOffsets.Length; i++)
+            {
+                Vector2Int adjacentPos = originPos + adjacentOffsets[i];
+                if (!IsBreakableBoxCell(GetCell(adjacentPos)))
+                    continue;
+
+                if (processedBoxes != null && !processedBoxes.Add(adjacentPos))
+                    continue;
+
+                StartCoroutine(ClearCellAt(adjacentPos, true, false, false));
+            }
+        }
         private static void NotifyGarbageBagCleaned(Vector2Int pos, ElementData data)
         {
             EventManager.TriggerEvent(GameEvent.GARBAGE_CLEANED, new EventParam(
@@ -2558,7 +2745,7 @@ namespace Game
                 if (cell == null || cell.cellType != CellType.Normal)
                     continue;
 
-                bool acceptsElements = cell.cellFeature == null || cell.cellFeature.AcceptElements;
+                bool acceptsElements = cell.cellFeature == null || !cell.cellFeature.FeatureFlags.HasFlag(CellFeature.CellFeatureFlags.PreventsElements);
                 if (!acceptsElements)
                     continue;
 
@@ -2571,7 +2758,7 @@ namespace Game
                 if (IsCauldronCell(cell))
                     continue;
 
-                if (HasBehavior(cell.elementInfo?.elementData, ElementData.ElementBehaviorFlags.PassThrough))
+                if (IsGravityPassThroughCell(cell))
                     continue;
 
                 return y;
@@ -2589,20 +2776,43 @@ namespace Game
             return belowCell == null || belowCell.cellType == CellType.Empty;
         }
 
-        private List<List<int>> BuildColumnSections(int x)
+        private sealed class GravityColumnSection
         {
-            List<List<int>> sections = new List<List<int>>();
+            public readonly List<int> rows;
+            public readonly bool allowsRefillFromAbove;
+
+            public GravityColumnSection(List<int> rows, bool allowsRefillFromAbove)
+            {
+                this.rows = rows;
+                this.allowsRefillFromAbove = allowsRefillFromAbove;
+            }
+        }
+
+        private List<GravityColumnSection> BuildColumnSections(int x)
+        {
+            List<GravityColumnSection> sections = new List<GravityColumnSection>();
             List<int> current = new List<int>();
+            bool currentAllowsRefillFromAbove = true;
+
+            void FlushCurrentSection()
+            {
+                if (current.Count <= 0)
+                    return;
+
+                sections.Add(new GravityColumnSection(new List<int>(current), currentAllowsRefillFromAbove));
+                current.Clear();
+            }
+
             for (int y = 0; y < gridSize.y; y++)
             {
                 Vector2Int pos = new Vector2Int(x, y);
                 GridCell cell = GetCell(pos);
                 if (cell != null && cell.cellType == CellType.Normal)
                 {
-                    bool acceptsElements = cell.cellFeature == null || cell.cellFeature.AcceptElements;
+                    bool acceptsElements = cell.cellFeature == null || !cell.cellFeature.FeatureFlags.HasFlag(CellFeature.CellFeatureFlags.PreventsElements);
                     if (!acceptsElements)
                     {
-                        if (current.Count > 0) { sections.Add(new List<int>(current)); current.Clear(); }
+                        FlushCurrentSection();
                         continue;
                     }
 
@@ -2612,15 +2822,26 @@ namespace Game
                     if (IsCellCoveredByMultiCellElement(pos))
                         continue;
 
-                    if (!IsCauldronCell(cell) && !HasBehavior(cell.elementInfo?.elementData, ElementData.ElementBehaviorFlags.PassThrough) && acceptsElements)
+                    bool isPassThrough = IsGravityPassThroughCell(cell);
+                    bool isGravityFixedBlocker = IsGravityBlockingCell(cell);
+
+                    if (isGravityFixedBlocker)
+                    {
+                        FlushCurrentSection();
+                        currentAllowsRefillFromAbove = false;
+
+                        continue;
+                    }
+
+                    if (!IsCauldronCell(cell) && !isPassThrough && acceptsElements)
                         current.Add(y);
                 }
                 else
                 {
-                    if (current.Count > 0) { sections.Add(new List<int>(current)); current.Clear(); }
+                    FlushCurrentSection();
                 }
             }
-            if (current.Count > 0) sections.Add(current);
+            FlushCurrentSection();
             return sections;
         }
 

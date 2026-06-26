@@ -10,7 +10,7 @@ namespace Game
         private const int PoweredOffState = 0;
         private const int PoweredOnState = 1;
 
-        public override bool AcceptElements => true;
+        public override CellFeatureFlags FeatureFlags => CellFeatureFlags.None;
 
         public override TileSpriteSet GetTileSpriteSet(Grid3D.GridCell cell)
         {
@@ -129,7 +129,7 @@ namespace Game
             if (cell?.elementInfo?.elementData == null || GameManager.Instance == null)
                 return false;
 
-            return GameManager.Instance.powerGeneratorElementData == cell.elementInfo.elementData;
+            return cell.elementInfo.elementData is PowerGeneratorElementData;
         }
 
         private static bool IsPowerOutletCell(Grid3D.GridCell cell)
@@ -137,7 +137,7 @@ namespace Game
             if (cell?.elementInfo?.elementData == null || GameManager.Instance == null)
                 return false;
 
-            return GameManager.Instance.powerOutletElementData == cell.elementInfo.elementData;
+            return cell.elementInfo.elementData is PowerOutletElementData;
         }
 
         private static bool IsActivatedPowerOutletCell(Grid3D.GridCell cell)

@@ -39,6 +39,17 @@ namespace Game
 
         public List<BusyReason> BusyReasons { get; } = new();
 
+        protected static void TriggerBreakableBoxCreatedEvent(Vector2Int coordinates, ElementData elementData)
+        {
+            if (elementData is not BreakableBoxElementData)
+                return;
+
+            EventManager.TriggerEvent(GameEvent.BOX_CREATED, new EventParam(
+                vectorList: new Vector3[] { new Vector3(coordinates.x, coordinates.y, 0f) },
+                paramScriptable: elementData
+            ));
+        }
+
         protected Dictionary<Vector2Int, GridCellController> generatedTiles = new();
         protected List<GridElement> generatedElements = new();
         private bool isInitialized;
@@ -309,6 +320,7 @@ namespace Game
                     element.elementInfo = cell.elementInfo;
                     generatedElements.Add(element);
                     element.InitElement(this, element.elementInfo);
+                    TriggerBreakableBoxCreatedEvent(cell.coordinates, element.elementInfo?.elementData);
 
                     if (cell.elementInfo != null && cell.elementInfo.isHidden)
                     {

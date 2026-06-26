@@ -10,19 +10,22 @@ namespace Game
     /// </summary>
     public abstract class CellFeature : ScriptableObject
     {
-        /// <summary>
-        /// Visual representation of the cell feature in the cell.
-        /// </summary>
+        [System.Flags]
+        public enum CellFeatureFlags
+        {
+            None = 0,
+            PreventsElements = 1 << 0,
+            NotTargetableByDiscoBall = 1 << 1,
+            NotTargetableByPropeller = 1 << 2,
+        }
+
         public TileSpriteSet tileSpriteSet;
         public Sprite featureIcon;
         public int spriteLayerIndex;
         public ParticleSystem idleParticleEffect;
         public ParticleSystem destroyParticleEffect;
 
-        /// <summary>
-        /// Indicates whether this cell feature can accept elements to fall into it. If false, the cel this feature is assigned to will act as empty.
-        /// </summary>
-        public abstract bool AcceptElements { get; }
+        public abstract CellFeatureFlags FeatureFlags { get; }
 
         public virtual TileSpriteSet GetTileSpriteSet(Grid3D.GridCell cell)
         {

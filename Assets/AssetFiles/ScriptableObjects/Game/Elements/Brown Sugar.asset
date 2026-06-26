@@ -22,7 +22,3 @@ MonoBehaviour:
   behaviorFlags: 0
   defaultIdleAnimation: idle
   animationController: {fileID: 0}
-  cauldronChargeRequired: 8
-  cauldronChargeRadius: 1
-  cauldronExplosionParticle: {fileID: 0}
-  elementAnimationsByProgress: []
