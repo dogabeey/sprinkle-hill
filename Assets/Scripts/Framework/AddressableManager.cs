@@ -1,11 +1,15 @@
 using System.ComponentModel;
 using Game.Singleton;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine.AddressableAssets;
 
 namespace Game
 {
+#if UNITY_EDITOR
     [InitializeOnLoad]
+#endif
     public static class EditorAddressables
     {
         public static HorizontalRocketElementData horizontalRocketData;
@@ -25,7 +29,7 @@ namespace Game
             Initialize();
         }
 
-        private static void Initialize()
+        public static void Initialize()
         {
             horizontalRocketData = LoadAsset<HorizontalRocketElementData>("Powerup/HorizontalRocket");
             verticalRocketData = LoadAsset<VerticalRocketElementData>("Powerup/VerticalRocket");
