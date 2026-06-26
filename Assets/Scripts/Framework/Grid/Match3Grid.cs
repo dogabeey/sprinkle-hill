@@ -360,14 +360,31 @@ namespace Game
             return groups;
         }
 
+        private static int ResolveConfiguredGlassStartHealth(GridCell cell)
+        {
+            if (cell == null)
+                return 1;
+
+            if (cell.cellFeatureGroupHealth > 0)
+                return cell.cellFeatureGroupHealth;
+
+            if (cell.cellHealth > 0)
+                return cell.cellHealth;
+
+            return 1;
+        }
+
         private int ResolveGlassGroupMaxHealth(GlassGroupId groupId, List<Vector2Int> groupCells)
         {
-            int maxHealth = Mathf.Max(1, groupId.feature != null ? groupId.feature.defaultGroupHealth : 1);
+            int maxHealth = 0;
             for (int i = 0; i < groupCells.Count; i++)
             {
                 GridCell cell = GetCell(groupCells[i]);
                 if (cell == null)
                     continue;
+
+                if (cell.cellHealth > maxHealth)
+                    maxHealth = cell.cellHealth;
 
                 if (cell.cellFeatureGroupMaxHealth > maxHealth)
                     maxHealth = cell.cellFeatureGroupMaxHealth;
@@ -1576,9 +1593,7 @@ namespace Game
                     if (!TryGetGlassGroupId(new Vector2Int(x, y), cell, out GlassGroupId groupId))
                         continue;
 
-                    int configuredHealth = cell.cellHealth;
-                    if (configuredHealth <= 0)
-                        configuredHealth = Mathf.Max(1, groupId.feature != null ? groupId.feature.defaultGroupHealth : 1);
+                    int configuredHealth = ResolveConfiguredGlassStartHealth(cell);
 
                     int configuredMaxHealth = cell.cellFeatureGroupMaxHealth;
                     if (configuredMaxHealth <= 0)
@@ -1607,8 +1622,12 @@ namespace Game
                     if (!TryGetGlassGroupId(new Vector2Int(x, y), cell, out GlassGroupId groupId))
                         continue;
 
-                    if (resolvedGroupHealth.TryGetValue(groupId, out int groupHealth))
+                    int groupHealth = 1;
+                    if (resolvedGroupHealth.TryGetValue(groupId, out groupHealth))
+                    {
                         cell.cellHealth = groupHealth;
+                        cell.cellFeatureGroupHealth = groupHealth;
+                    }
 
                     if (resolvedGroupMaxHealth.TryGetValue(groupId, out int groupMaxHealth))
                         cell.cellFeatureGroupMaxHealth = Mathf.Max(groupHealth, groupMaxHealth);
