@@ -16,7 +16,7 @@ namespace Game
         public ObjectiveUINode objectiveNodePrefab;
         public LayoutGroup lockedAreaCanvasParentPrefab;
 
-        public override bool AcceptElements => false;
+        public override CellFeatureFlags FeatureFlags => CellFeatureFlags.PreventsElements | CellFeatureFlags.NotTargetableByDiscoBall | CellFeatureFlags.NotTargetableByPropeller;
 
         public static void InitializeForGrid(Match3Grid grid)
         {

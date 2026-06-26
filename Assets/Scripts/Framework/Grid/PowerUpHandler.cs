@@ -1863,7 +1863,10 @@ namespace Game
                     Vector2Int pos = new Vector2Int(x, y);
                     Grid3D.GridCell cell = grid.GetCellPublic(pos);
 
-                    if (cell == null || cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null)
+                    if (cell == null 
+                        || cell.cellType != Grid3D.CellType.Normal 
+                        || cell.elementInfo == null
+                        || (cell.cellFeature != null && cell.cellFeature.FeatureFlags.HasFlag(CellFeature.CellFeatureFlags.NotTargetableByDiscoBall)))
                         continue;
 
                     if (cell.elementInfo.elementData == targetElement)
@@ -1990,6 +1993,8 @@ namespace Game
             if (IsSpecialPowerUp(cell.elementInfo.powerUpType))
                 return false;
 
+            if (cell.cellFeature != null && cell.cellFeature.FeatureFlags.HasFlag(CellFeature.CellFeatureFlags.NotTargetableByDiscoBall))
+                return false;
             ElementData elementData = cell.elementInfo.elementData;
             if (elementData == null)
                 return false;
@@ -2433,11 +2438,20 @@ namespace Game
                         continue;
                     }
 
-                    // Propeller should never target garbage bag cells.
+
                     if (cell.elementInfo?.elementData != null)
                     {
-                        if (gm != null && cell.elementInfo.elementData.behaviorFlags.HasFlag(ElementData.ElementBehaviorFlags.NotTargetableByPropeller))
+                        if (cell.elementInfo.elementData.behaviorFlags.HasFlag(ElementData.ElementBehaviorFlags.NotTargetableByPropeller))
+                        {
                             continue;
+                        }
+                    }
+                    if (cell.cellFeature != null)
+                    {
+                        if (cell.cellFeature.FeatureFlags.HasFlag(CellFeature.CellFeatureFlags.NotTargetableByPropeller))
+                        {
+                            continue;
+                        }
                     }
 
                     if (cell.elementInfo != null)

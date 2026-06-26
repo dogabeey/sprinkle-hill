@@ -10,7 +10,7 @@ namespace Game
         private const int PoweredOffState = 0;
         private const int PoweredOnState = 1;
 
-        public override bool AcceptElements => true;
+        public override CellFeatureFlags FeatureFlags => CellFeatureFlags.None;
 
         public override TileSpriteSet GetTileSpriteSet(Grid3D.GridCell cell)
         {

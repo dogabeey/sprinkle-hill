@@ -1624,7 +1624,7 @@ namespace Game
                 for (int y = 0; y < gridSize.y; y++)
                 {
                     GridCell cell = gridCells[x, y];
-                    bool acceptsElements = cell?.cellFeature == null || cell.cellFeature.AcceptElements;
+                    bool acceptsElements = cell?.cellFeature == null || !cell.cellFeature.FeatureFlags.HasFlag(CellFeature.CellFeatureFlags.PreventsElements);
                     if (cell != null && cell.cellType == CellType.Normal && !acceptsElements)
                     {
                         cell.elementInfo = null;
@@ -2361,7 +2361,7 @@ namespace Game
                     if (cell == null || !generatedTiles.TryGetValue(pos, out GridCellController tile) || tile == null)
                         continue;
 
-                    bool acceptsElements = cell.cellFeature == null || cell.cellFeature.AcceptElements;
+                    bool acceptsElements = cell.cellFeature == null || !cell.cellFeature.FeatureFlags.HasFlag(CellFeature.CellFeatureFlags.PreventsElements);
                     bool shouldHaveElement = cell.cellType == CellType.Normal && acceptsElements && cell.elementInfo?.elementData != null;
 
                     GridElement[] tileElements = tile.GetComponentsInChildren<GridElement>(true);
@@ -2726,7 +2726,7 @@ namespace Game
                 if (cell == null || cell.cellType != CellType.Normal)
                     continue;
 
-                bool acceptsElements = cell.cellFeature == null || cell.cellFeature.AcceptElements;
+                bool acceptsElements = cell.cellFeature == null || !cell.cellFeature.FeatureFlags.HasFlag(CellFeature.CellFeatureFlags.PreventsElements);
                 if (!acceptsElements)
                     continue;
 
@@ -2790,7 +2790,7 @@ namespace Game
                 GridCell cell = GetCell(pos);
                 if (cell != null && cell.cellType == CellType.Normal)
                 {
-                    bool acceptsElements = cell.cellFeature == null || cell.cellFeature.AcceptElements;
+                    bool acceptsElements = cell.cellFeature == null || !cell.cellFeature.FeatureFlags.HasFlag(CellFeature.CellFeatureFlags.PreventsElements);
                     if (!acceptsElements)
                     {
                         FlushCurrentSection();

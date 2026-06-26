@@ -8,7 +8,7 @@ namespace Game
     [CreateAssetMenu(menuName = "Game/Cell Feature/Wafer...")]
     public class WaferFeature : CellFeature
     {
-        public override bool AcceptElements => true;
+        public override CellFeatureFlags FeatureFlags => CellFeatureFlags.None;
 
         public override void OnElementMatchedOverTheCell(Grid3D.GridCell cell, GridElement element)
         {

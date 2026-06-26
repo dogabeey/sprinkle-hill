@@ -16,7 +16,7 @@ namespace Game
     {
         [Min(1)] public int defaultGroupHealth = 1;
         public List<GlassDamageSpritePair> damageSprites = new List<GlassDamageSpritePair>();
-        public override bool AcceptElements => true;
+        public override CellFeatureFlags FeatureFlags => CellFeatureFlags.NotTargetableByDiscoBall;
 
         public Sprite GetDamageSprite(int missingHealth)
         {
