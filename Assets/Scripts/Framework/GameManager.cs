@@ -124,6 +124,19 @@ namespace Game
             base.Awake();
 
             Application.targetFrameRate = 60;
+
+            InitAddressables();
+
+            InitLevel();
+        }
+
+        private static void InitAddressables()
+        {
+            EditorAddressables.Initialize();
+        }
+
+        private void InitLevel()
+        {
             CurrentWorld = worlds[0];
             if (isSequentalLevels)
             {
@@ -137,12 +150,12 @@ namespace Game
                 {
                     // During the actual game, we want to load current level through the game manager 
                     // in case of there are any test level remnants forgotten in the scene
-                    #if UNITY_EDITOR
-                        World.Instance.CurrentLevel = foundLevel;
-                    #else
+#if UNITY_EDITOR
+                    World.Instance.CurrentLevel = foundLevel;
+#else
                         Destroy(foundLevel.gameObject);
                         LoadCurrentLevel();
-                    #endif
+#endif
                 }
             }
         }

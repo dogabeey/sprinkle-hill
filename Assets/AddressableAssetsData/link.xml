@@ -1,0 +1,32 @@
+<linker>
+  <assembly fullname="Game, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="BombElementData" preserve="all" />
+    <type fullname="BreakableBoxElementData" preserve="all" />
+    <type fullname="CauldronElementData" preserve="all" />
+    <type fullname="DiscoBallElementData" preserve="all" />
+    <type fullname="GarbageBagElementData" preserve="all" />
+    <type fullname="HorizontalRocketElementData" preserve="all" />
+    <type fullname="PowerGeneratorElementData" preserve="all" />
+    <type fullname="PowerOutletElementData" preserve="all" />
+    <type fullname="PropellerElementData" preserve="all" />
+    <type fullname="VerticalRocketElementData" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.Addressables, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.AddressableAssets.Addressables" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.BundledAssetProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.InstanceProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.SceneProvider" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.AnimationClip" preserve="all" />
+    <type fullname="UnityEngine.RuntimeAnimatorController" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.Object" preserve="all" />
+    <type fullname="UnityEngine.Sprite" preserve="all" />
+    <type fullname="UnityEngine.Texture2D" preserve="all" />
+  </assembly>
+</linker>
