@@ -2237,7 +2237,7 @@ namespace Game
                 if (neighborCell.cellType != Grid3D.CellType.Normal || neighborCell.elementInfo == null)
                     continue;
 
-                impactCoroutines.Add(grid.StartCoroutine(grid.ClearAreaAt(neighborPos, 0, true, false)));
+                impactCoroutines.Add(grid.StartCoroutine(grid.ClearCellAt(neighborPos, true, false, false)));
             }
 
             for (int i = 0; i < impactCoroutines.Count; i++)
