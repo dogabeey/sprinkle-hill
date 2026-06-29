@@ -116,3 +116,4 @@
 [2026-06-29 13:20:00] - Added a Definitions instruction to .github/copilot-instructions.md so new user-introduced terms with parenthetical explanations are recorded under the Definitions section.
 [2026-06-29 13:30:00] - Updated special-versus-regular swap sequencing so the regular element's direct match is cleared and any resulting power-up is created before gravity, allowing the swapped power-up to activate immediately without waiting for board settling.
 [2026-06-29 13:40:00] - Fixed propeller source-neighbor splash to use non-propagating single-cell clears, preventing destroyed neighboring elements from triggering adjacent breakable boxes or other neighbor-based side effects.
+[2026-06-29 14:39:52] - Added configurable chain combo speed scaling so match clear delays, merge animations, and gravity drops accelerate with each extra cascade and reset when the board settles.

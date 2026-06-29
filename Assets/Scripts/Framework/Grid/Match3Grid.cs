@@ -63,6 +63,46 @@ namespace Game
 
         private LevelScene_Match3Game Match3Level => GameManager.Instance != null ? GameManager.Instance.CurrentLevel as LevelScene_Match3Game : null;
 
+        private int AdditionalChainMatchCount => Mathf.Max(0, currentComboCount - 1);
+
+        private float CurrentChainSpeedMultiplier
+        {
+            get
+            {
+                ConstantManager cm = ConstantManager.Instance;
+                float speedIncreasePerCombo = cm != null ? Mathf.Max(0f, cm.chainMatchSpeedIncreasePerCombo) : 0f;
+                return 1f + (AdditionalChainMatchCount * speedIncreasePerCombo);
+            }
+        }
+
+        public float GetChainAdjustedDuration(float baseDuration, float minimumDuration = 0f)
+        {
+            if (baseDuration <= 0f)
+                return minimumDuration > 0f ? minimumDuration : 0f;
+
+            return Mathf.Max(minimumDuration, baseDuration / CurrentChainSpeedMultiplier);
+        }
+
+        public float GetChainAdjustedFallSpeed(float baseFallSpeed)
+        {
+            if (baseFallSpeed <= 0f)
+                return 0f;
+
+            return baseFallSpeed * CurrentChainSpeedMultiplier;
+        }
+
+        private float GetCurrentMatchClearDelay()
+        {
+            ConstantManager cm = ConstantManager.Instance;
+            float baseDelay = cm != null ? cm.matchClearDelay : 0.3f;
+            return GetChainAdjustedDuration(baseDelay);
+        }
+
+        private void ResetChainSpeedState()
+        {
+            currentComboCount = 0;
+        }
+
         private void PlayCellFeatureDestroyEffect(CellFeature feature, Vector2Int pos)
         {
             if (feature?.destroyParticleEffect == null)
@@ -1105,7 +1145,7 @@ namespace Game
             }
 
             //ActionBarManager.Instance.actionBarItemList.Find(item => item is BombPlacementAction).CurrentCount--;
-            yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
+            yield return new WaitForSeconds(GetCurrentMatchClearDelay());
 
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
@@ -1171,7 +1211,7 @@ namespace Game
                 }
             }
 
-            yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
+            yield return new WaitForSeconds(GetCurrentMatchClearDelay());
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
         public IEnumerator ClearColumnAt(int columnX, bool allowConditionedBreakableWalls = true, bool allowAdjacentFeatureTriggers = true)
@@ -1235,7 +1275,7 @@ namespace Game
                 }
             }
 
-            yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
+            yield return new WaitForSeconds(GetCurrentMatchClearDelay());
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
 
@@ -1353,7 +1393,7 @@ namespace Game
                 }
             }
 
-            yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
+            yield return new WaitForSeconds(GetCurrentMatchClearDelay());
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
 
@@ -1435,7 +1475,7 @@ namespace Game
             GridElement toDestroy = GetElementAt(sparklingPos);
             if (toDestroy != null) StartCoroutine(toDestroy.DestroyElement());
 
-            yield return new WaitForSeconds(ConstantManager.Instance.matchClearDelay);
+            yield return new WaitForSeconds(GetCurrentMatchClearDelay());
             yield return StartCoroutine(MatchProcess(targetPos, sparklingPos));
         }
 
@@ -2089,7 +2129,7 @@ namespace Game
                 if (pendingDestructions > 0)
                     yield return new WaitUntil(() => pendingDestructions == 0);
 
-                yield return new WaitForSeconds(cm.matchClearDelay);
+                yield return new WaitForSeconds(GetCurrentMatchClearDelay());
             }
 
             foreach (Vector2Int rp in hiddenToReveal) RevealHiddenElement(rp);
@@ -2154,7 +2194,8 @@ namespace Game
 
             GridHelper.SetEmission(element, 1.5f);
 
-            float dur = Mathf.Max(0.08f, ConstantManager.Instance.elementSwapMoveDuration * 0.6f);
+            float baseDuration = Mathf.Max(0.08f, ConstantManager.Instance.elementSwapMoveDuration * 0.6f);
+            float dur = GetChainAdjustedDuration(baseDuration, 0.08f);
             Tween move = t.DOMove(targetTile.transform.position, dur).SetEase(Ease.InBack);
 
             EventManager.TriggerEvent(GameEvent.ELEMENT_DESTROYED,
@@ -2339,7 +2380,7 @@ namespace Game
             EventManager.TriggerEvent(GameEvent.GRAVITY_STARTED);
 
             ConstantManager cm = GameManager.Instance != null ? ConstantManager.Instance : null;
-            float fallSpeed = cm != null ? cm.elementFallSpeed : 3.3f;
+            float fallSpeed = GetChainAdjustedFallSpeed(cm != null ? cm.elementFallSpeed : 3.3f);
 
             EnsureGridCells();
             List<ElementData> elementPool = BuildElementPool();

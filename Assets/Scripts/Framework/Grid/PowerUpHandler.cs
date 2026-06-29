@@ -933,6 +933,7 @@ namespace Game
 
             yield return comboSequence.WaitForCompletion();
 
+            float mergeDuration = grid.GetChainAdjustedDuration(ComboIntroMergeDuration, ComboIntroMergeDuration * 0.5f);
             Sequence mergeSequence = DOTween.Sequence();
 
             if (comboMergeSprite != null)
@@ -943,13 +944,13 @@ namespace Game
 
             if (firstElement != null)
             {
-                mergeSequence.Join(firstElement.transform.DOMove(comboCenter, ComboIntroMergeDuration).SetEase(Ease.InBack));
+                mergeSequence.Join(firstElement.transform.DOMove(comboCenter, mergeDuration).SetEase(Ease.InBack));
             }
 
             if (secondElement != null)
             {
-                mergeSequence.Join(secondElement.transform.DOMove(comboCenter, ComboIntroMergeDuration).SetEase(Ease.InBack));
-                mergeSequence.Join(secondElement.transform.DOScale(0f, ComboIntroMergeDuration).SetEase(Ease.InBack));
+                mergeSequence.Join(secondElement.transform.DOMove(comboCenter, mergeDuration).SetEase(Ease.InBack));
+                mergeSequence.Join(secondElement.transform.DOScale(0f, mergeDuration).SetEase(Ease.InBack));
             }
 
             if (mergeSequence.active)
