@@ -7883,6 +7883,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 492599855}
     m_Modifications:
     - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: directiveText
       value: 
       objectReference: {fileID: 2048280538}
