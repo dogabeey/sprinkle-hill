@@ -764,7 +764,7 @@ namespace Game
 
                 Vector2Int regularMatchPosition = firstIsSpecialPowerUp ? first : second;
                 if (HasMatchedGroupContaining(regularMatchPosition))
-                    yield return StartCoroutine(MatchProcess(first, second));
+                    yield return StartCoroutine(ResolveDirectMatchWithoutGravity(first, second, regularMatchPosition));
 
                 Vector2Int powerUpPosition = firstIsSpecialPowerUp ? second : first;
                 if (swappedPowerUpElement != null && TryGetElementPosition(swappedPowerUpElement, out Vector2Int resolvedPowerUpPosition))
@@ -908,6 +908,72 @@ namespace Game
             }
 
             return false;
+        }
+
+        private IEnumerator ResolveDirectMatchWithoutGravity(Vector2Int init1, Vector2Int init2, Vector2Int requiredPosition)
+        {
+            List<List<Vector2Int>> matchedGroups = CheckMatchOf(3);
+            bool containsRequiredPosition = false;
+            for (int i = 0; i < matchedGroups.Count; i++)
+            {
+                List<Vector2Int> group = matchedGroups[i];
+                if (group != null && group.Contains(requiredPosition))
+                {
+                    containsRequiredPosition = true;
+                    break;
+                }
+            }
+
+            if (!containsRequiredPosition)
+                yield break;
+
+            currentComboCount = 1;
+            isResolvingIndirectCascade = false;
+
+            GameObject matchOrigin = GetMatchOriginObject(matchedGroups);
+            RewardCurrencyForCombo(currentComboCount, matchOrigin);
+            SoundManager.Instance.Play(ConstantManager.SOUNDS.EFFECTS.MATCH, pitchOffset: currentComboCount * 0.1f);
+            GridHelper.TriggerHaptic(HapticModes.Confirm);
+
+            LevelScene_Match3Game level = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
+            bool allowDiscoBall = level.AllowDiscoBallCreation;
+            bool allowPropeller = level.AllowPropellerCreation;
+            bool allowBomb = level.AllowBombCreation;
+            bool allowRocket = level.AllowRocketCreation;
+
+            PowerUpHandler.SpawnResolution spawnResolution = powerUpHandler.ResolveSpawns(new PowerUpHandler.CreationContext
+            {
+                matchedGroups = matchedGroups,
+                init1 = init1,
+                init2 = init2,
+                isIndirectCreation = false,
+                allowDiscoBall = allowDiscoBall,
+                allowPropeller = allowPropeller,
+                allowBomb = allowBomb,
+                allowRocket = allowRocket
+            });
+
+            List<PowerUpHandler.SpawnRequest> discoBallSpawns = spawnResolution.discoBallSpawns;
+            List<PowerUpHandler.SpawnRequest> propellerSpawns = spawnResolution.propellerSpawns;
+            List<PowerUpHandler.SpawnRequest> bombSpawns = spawnResolution.bombSpawns;
+            List<PowerUpHandler.SpawnRequest> rocketSpawns = spawnResolution.rocketSpawns;
+            HashSet<Vector2Int> protectedPositions = spawnResolution.protectedPositions;
+
+            EventManager.TriggerEvent(GameEvent.MATCH_DETECTED, new EventParam(paramInt: matchedGroups.Count));
+            foreach (var group in matchedGroups)
+                EventManager.TriggerEvent(GameEvent.ELEMENT_MATCHED, new EventParam(
+                    paramScriptable: GetCell(group[0])?.elementInfo?.elementData, paramInt: group.Count));
+
+            yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions));
+
+            for (int i = 0; i < discoBallSpawns.Count; i++)
+                powerUpHandler.CreatePowerUpAt(discoBallSpawns[i].position, discoBallSpawns[i].powerUpType);
+            for (int i = 0; i < propellerSpawns.Count; i++)
+                powerUpHandler.CreatePowerUpAt(propellerSpawns[i].position, propellerSpawns[i].powerUpType);
+            for (int i = 0; i < bombSpawns.Count; i++)
+                powerUpHandler.CreatePowerUpAt(bombSpawns[i].position, bombSpawns[i].powerUpType);
+            for (int i = 0; i < rocketSpawns.Count; i++)
+                powerUpHandler.CreatePowerUpAt(rocketSpawns[i].position, rocketSpawns[i].powerUpType);
         }
 
         // ------------------------------------------------------------------
