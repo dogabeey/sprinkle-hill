@@ -58,6 +58,15 @@ namespace Game
         [FoldoutGroup("Power Up Settings"), Range(0f, 1f)]
         public float sparklingAppearChance = 0.3f;
 
+        [FoldoutGroup("Chain Reaction Control"), MinValue(1)]
+        [SerializeField] private int refillChainReductionStartDepth = 1;
+        [FoldoutGroup("Chain Reaction Control"), Range(0f, 1f)]
+        [SerializeField] private float refillChainReductionInitialChance = 0.35f;
+        [FoldoutGroup("Chain Reaction Control"), Range(0f, 1f)]
+        [SerializeField] private float refillChainReductionChanceStep = 0.2f;
+        [FoldoutGroup("Chain Reaction Control"), Range(0f, 1f)]
+        [SerializeField] private float refillChainReductionMaxChance = 0.85f;
+
         [FoldoutGroup("Stage Transition")]
         public TMP_Text stageCompletePopupTextPrefab;
 
@@ -85,6 +94,16 @@ namespace Game
         public bool AllowRocketCreation => allowRocketCreation;
         public bool AllowBombCreation => allowBombCreation;
         public bool AllowPropellerCreation => allowPropellerCreation;
+
+        public float GetRefillChainReductionChance(int automaticChainDepth)
+        {
+            if (automaticChainDepth < refillChainReductionStartDepth)
+                return 0f;
+
+            int reductionStep = automaticChainDepth - refillChainReductionStartDepth;
+            float chance = refillChainReductionInitialChance + (reductionStep * refillChainReductionChanceStep);
+            return Mathf.Clamp(chance, 0f, refillChainReductionMaxChance);
+        }
 
         protected override void Awake()
         {

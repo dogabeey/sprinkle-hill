@@ -57,6 +57,7 @@ namespace Game
 
         private static readonly CurrencyModel MatchRewardCurrency;
         private int currentComboCount = 0;
+        private bool isResolvingIndirectCascade;
         private PowerUpHandler powerUpHandler;
         private readonly Dictionary<Vector2Int, ParticleSystem> activeCellFeatureIdleParticles = new Dictionary<Vector2Int, ParticleSystem>();
 
@@ -802,6 +803,7 @@ namespace Game
         {
             List<List<Vector2Int>> matchedGroups;
             currentComboCount = 0;
+            isResolvingIndirectCascade = false;
 
             while ((matchedGroups = CheckMatchOf(3)).Count > 0)
             {
@@ -875,6 +877,8 @@ namespace Game
                 RunOccupancySanityPass();
                 TriggerGridSettledEvents();
             }
+
+            isResolvingIndirectCascade = false;
         }
 
         // ------------------------------------------------------------------
@@ -883,6 +887,7 @@ namespace Game
         public IEnumerator ResolveBoardAfterSpecialClear()
         {
             currentComboCount = 0;
+            isResolvingIndirectCascade = true;
             yield return new WaitUntil(() => !powerUpHandler.IsChainReactionInProgress());
             yield return StartCoroutine(ApplyGravity());
 
@@ -938,6 +943,7 @@ namespace Game
 
             RunOccupancySanityPass();
             TriggerGridSettledEvents();
+            isResolvingIndirectCascade = false;
         }
 
         private void TriggerGridSettledEvents()
@@ -1754,6 +1760,74 @@ namespace Game
                    cell.elementInfo.elementData == data;
         }
 
+        private int GetAutomaticChainDepth()
+        {
+            if (currentComboCount <= 0)
+                return 0;
+
+            return isResolvingIndirectCascade ? currentComboCount : Mathf.Max(0, currentComboCount - 1);
+        }
+
+        private float GetRefillChainReductionChance()
+        {
+            if (!(GameManager.Instance.CurrentLevel is LevelScene_Match3Game match3Level))
+                return 0f;
+
+            return match3Level.GetRefillChainReductionChance(GetAutomaticChainDepth());
+        }
+
+        private ElementData SelectRefillElementData(List<ElementData> elementPool, Vector2Int targetPos, float reductionChance)
+        {
+            if (elementPool == null || elementPool.Count == 0)
+                return null;
+
+            if (reductionChance <= 0f || Random.value >= reductionChance)
+                return elementPool[Random.Range(0, elementPool.Count)];
+
+            List<ElementData> safeCandidates = new List<ElementData>();
+            for (int i = 0; i < elementPool.Count; i++)
+            {
+                ElementData candidate = elementPool[i];
+                if (candidate != null && !WouldSpawnCreateMatch(targetPos, candidate))
+                    safeCandidates.Add(candidate);
+            }
+
+            if (safeCandidates.Count == 0)
+                return elementPool[Random.Range(0, elementPool.Count)];
+
+            return safeCandidates[Random.Range(0, safeCandidates.Count)];
+        }
+
+        private bool WouldSpawnCreateMatch(Vector2Int pos, ElementData data)
+        {
+            GridCell cell = GetCell(pos);
+            if (cell == null || data == null)
+                return false;
+
+            GridElementInfo originalInfo = cell.elementInfo;
+            GridElementInfo temporaryInfo = originalInfo ?? new GridElementInfo();
+            ElementData originalData = temporaryInfo.elementData;
+            bool originalIsHidden = temporaryInfo.isHidden;
+            bool originalIsSparkling = temporaryInfo.isSparkling;
+            ElementPowerUpType originalPowerUpType = temporaryInfo.powerUpType;
+
+            temporaryInfo.elementData = data;
+            temporaryInfo.isHidden = false;
+            temporaryInfo.isSparkling = false;
+            temporaryInfo.powerUpType = ElementPowerUpType.None;
+            cell.elementInfo = temporaryInfo;
+
+            bool createsMatch = CreatesMatchAt(pos);
+
+            temporaryInfo.elementData = originalData;
+            temporaryInfo.isHidden = originalIsHidden;
+            temporaryInfo.isSparkling = originalIsSparkling;
+            temporaryInfo.powerUpType = originalPowerUpType;
+            cell.elementInfo = originalInfo;
+
+            return createsMatch;
+        }
+
         private List<List<Vector2Int>> CheckMatchOf(int minCount = 3)
         {
             Dictionary<Vector2Int, ElementData> matched = new Dictionary<Vector2Int, ElementData>();
@@ -2194,6 +2268,8 @@ namespace Game
                 sparklingChance = match3Level.sparklingAppearChance;
             }
 
+            float refillChainReductionChance = GetRefillChainReductionChance();
+
             Sequence gravitySeq = DOTween.Sequence();
             bool hasTween = false;
 
@@ -2315,7 +2391,7 @@ namespace Game
                         GridCell targetCell = GetCell(targetPos);
                         if (targetCell == null) continue;
 
-                        ElementData randomData = elementPool[Random.Range(0, elementPool.Count)];
+                        ElementData randomData = SelectRefillElementData(elementPool, targetPos, refillChainReductionChance);
                         bool isSparkling = shouldApplySparkling && Random.value < sparklingChance;
                         GridElementInfo newInfo = new GridElementInfo
                         {
