@@ -57,6 +57,7 @@ MonoBehaviour:
   discoBallTrailDuration: 0.15
   discoBallTrailSpawnDelay: 0.1
   discoBallEmissionPeak: 1
+  discoBallEmissionOnTrailArrival: 2
   discoBallEmissionResetDelay: 0.15
   discoBallSpinLoopDuration: 0.12
   discoBallSpinDegreesPerLoop: 540
@@ -69,13 +70,15 @@ MonoBehaviour:
   rocketTravelSpeed: 12
   elementToCauldronMaxHeight: 0.75
   elementToCauldronHeightMultiplier: 0.5
+  bombImpactRadius: 1
+  bombComboImpactRadius: 10
   maxBombCount: 99
-  maxBombIndirectCount: 1
+  maxBombIndirectCount: 3
   maxRocketCount: 99
-  maxRocketIndirectCount: 1
+  maxRocketIndirectCount: 3
   maxPropellerCount: 99
-  maxPropellerIndirectCount: 1
+  maxPropellerIndirectCount: 3
   maxDiscoBallCount: 99
-  maxDiscoBallIndirectCount: 1
+  maxDiscoBallIndirectCount: 3
   maxCauldronCount: 99
-  maxCauldronIndirectCount: 1
+  maxCauldronIndirectCount: 3
