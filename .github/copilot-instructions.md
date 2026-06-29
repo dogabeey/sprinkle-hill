@@ -67,8 +67,8 @@ Avoid overengineering — only apply patterns when they provide clear benefit.
 ---
 
 ## Definitions
-- (Add definitions for game-specific terms here as needed.)
 - **Chain Reaction**: A match that is not directly triggered by player input, but instead is caused by newly dropped and aligned elements after prior resolution.
+- (Add definitions for game-specific terms here as needed.)
 
 ## Extra Notes
 
@@ -165,7 +165,3 @@ Before finishing, verify:
 ### 6) Gameplay Fix Verification
 
 - When a reported gameplay fix is said to still fail, re-verify behavior against the user's exact expected rule and avoid assumptions from prior implementation details.
-
-### 7) PassThrough Gravity Behavior
-
-- For PassThrough gravity, when PassThrough is disabled on an occupied cell, cells below it must remain empty while that blocker is present. PassThrough should only act as a hard gravity wall when PassThrough is disabled and NotAffectedByGravity is enabled; otherwise, the element itself should still fall normally.
