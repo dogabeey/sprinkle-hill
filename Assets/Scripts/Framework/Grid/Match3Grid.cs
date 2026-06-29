@@ -725,6 +725,8 @@ namespace Game
             // Swap-based power-up activation: swap first, then activate at new position
             if (PowerUpHandler.IsSpecialPowerUp(firstType) || PowerUpHandler.IsSpecialPowerUp(secondType))
             {
+                bool firstIsSpecialPowerUp = PowerUpHandler.IsSpecialPowerUp(firstType);
+
                 // Capture the non-power-up element's data before the swap for disco ball
                 ElementData firstSwapData = firstCell?.elementInfo?.elementData;
                 ElementData secondSwapData = secondCell?.elementInfo?.elementData;
@@ -735,6 +737,8 @@ namespace Game
                 ));
                 SoundManager.Instance.Play(ConstantManager.SOUNDS.EFFECTS.ELEMENT_SWAP);
                 GridHelper.TriggerHaptic(HapticModes.Select);
+
+                GridElement swappedPowerUpElement = GetElementAt(firstIsSpecialPowerUp ? second : first);
 
                 if ((PowerUpHandler.IsDiscoBall(firstType) && PowerUpHandler.IsDiscoBall(secondType)) ||
                     (PowerUpHandler.IsDiscoBall(firstType) && PowerUpHandler.IsRocket(secondType)) ||
@@ -758,16 +762,28 @@ namespace Game
                     yield break;
                 }
 
+                Vector2Int regularMatchPosition = firstIsSpecialPowerUp ? first : second;
+                if (HasMatchedGroupContaining(regularMatchPosition))
+                    yield return StartCoroutine(MatchProcess(first, second));
+
+                Vector2Int powerUpPosition = firstIsSpecialPowerUp ? second : first;
+                if (swappedPowerUpElement != null && TryGetElementPosition(swappedPowerUpElement, out Vector2Int resolvedPowerUpPosition))
+                    powerUpPosition = resolvedPowerUpPosition;
+
+                GridCell powerUpCell = GetCell(powerUpPosition);
+                if (powerUpCell?.elementInfo == null || !PowerUpHandler.IsSpecialPowerUp(powerUpCell.elementInfo.powerUpType))
+                    yield break;
+
                 // After swap, the power-up that was at 'first' is now at 'second' and vice versa
-                if (PowerUpHandler.IsSpecialPowerUp(firstType))
+                if (firstIsSpecialPowerUp)
                 {
                     // power-up moved to 'second', the swapped element was at 'second' (now at 'first')
-                    yield return StartCoroutine(powerUpHandler.ActivateAt(second, secondSwapData));
+                    yield return StartCoroutine(powerUpHandler.ActivateAt(powerUpPosition, secondSwapData));
                 }
                 else if (PowerUpHandler.IsSpecialPowerUp(secondType))
                 {
                     // power-up moved to 'first', the swapped element was at 'first' (now at 'second')
-                    yield return StartCoroutine(powerUpHandler.ActivateAt(first, firstSwapData));
+                    yield return StartCoroutine(powerUpHandler.ActivateAt(powerUpPosition, firstSwapData));
                 }
 
                 yield return StartCoroutine(ResolveBoardAfterSpecialClear());
@@ -879,6 +895,19 @@ namespace Game
             }
 
             isResolvingIndirectCascade = false;
+        }
+
+        private bool HasMatchedGroupContaining(Vector2Int position)
+        {
+            List<List<Vector2Int>> matchedGroups = CheckMatchOf(3);
+            for (int i = 0; i < matchedGroups.Count; i++)
+            {
+                List<Vector2Int> group = matchedGroups[i];
+                if (group != null && group.Contains(position))
+                    return true;
+            }
+
+            return false;
         }
 
         // ------------------------------------------------------------------

@@ -110,3 +110,5 @@
 [2026-06-25 19:17:04] - Updated propeller target-hit clearing to use single-cell clears only, preventing adjacent breakable boxes and adjacent feature triggers from firing on impact.
 [2026-06-26 00:00:00] - Fixed glass generation fallback so glass cells configured with health 0 now start at 1 health instead of inheriting a higher default group health.
 [2026-06-29 12:38:31] - Reduced long automatic cascades by adding configurable refill chain-reduction tuning and making deeper automatic chain refills increasingly prefer non-matching spawn candidates.
+[2026-06-29 13:00:00] - Updated power-up swap resolution so swapping a power-up with a regular element evaluates the moved regular element's resulting match first, preserving normal match and power-up-creation flow before direct special activation.
+[2026-06-29 13:10:00] - Fixed special-versus-regular swap flow so the regular element's post-swap match resolves first, then the swapped power-up still activates afterward from its current surviving board position when applicable.
