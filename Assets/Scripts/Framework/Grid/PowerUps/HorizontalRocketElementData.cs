@@ -1,9 +1,8 @@
 using UnityEngine;
 using Sirenix.OdinInspector;
-using UnityEngine;
 
 [CreateAssetMenu(fileName = "HorizontalRocketElementData", menuName = "Game/Elements/Power-Ups/Horizontal Rocket Element Data...")]
-public class HorizontalRocketElementData : PowerUpElementData
+public class HorizontalRocketElementData : RocketElementData
 {
     [FoldoutGroup("Animation")]
     public Sprite leftPieceSprite;

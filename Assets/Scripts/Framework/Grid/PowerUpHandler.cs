@@ -2986,6 +2986,14 @@ namespace Game
                 sr.sortingOrder = sourceRenderer.sortingOrder + SortingOrderBoost;
                 sr.color = sourceRenderer.color;
 
+                ParticleSystem rocketTrailParticle = GetParticleByRocketTypeAndDirection(sourceElement, direction);
+                if(rocketTrailParticle)
+                {
+                    ParticleSystem rocketTrailParticleInstance = Object.Instantiate(rocketTrailParticle, copy.transform);
+                    rocketTrailParticleInstance.transform.localPosition = Vector3.zero;
+                    rocketTrailParticleInstance.Play();
+                }
+
                 // Only rotate for omnidirectional rockets; horizontal and vertical rockets don't need rotation
                 if (rocketType == ElementPowerUpType.Rocket)
                 {
@@ -3002,6 +3010,15 @@ namespace Game
             }
 
             return copy.GetComponent<SpriteRenderer>();
+        }
+
+        private ParticleSystem GetParticleByRocketTypeAndDirection(GridElement sourceElement, Vector2Int direction)
+        {
+            if(sourceElement.elementInfo.elementData is RocketElementData rocketElementData)
+            {
+                return rocketElementData.rocketPropelTrailEffect;
+            }
+            return null;
         }
 
         private Sprite GetSpriteByRocketTypeAndDirection(GridElement sourceElement, Vector2Int direction)

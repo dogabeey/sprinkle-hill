@@ -23,5 +23,7 @@ MonoBehaviour:
   defaultIdleAnimation: idle
   animationController: {fileID: 0}
   powerUpActivationString: 
+  rocketPropelTrailEffect: {fileID: 6553830495741696104, guid: 6004a563187092a48932c66eba0f64a8, type: 3}
+  rocketBodyDisintegrationEffect: {fileID: 0}
   leftPieceSprite: {fileID: 1298107131, guid: 257c40514632f31409f61c409a033e51, type: 3}
   rightPieceSprite: {fileID: 16197942, guid: 257c40514632f31409f61c409a033e51, type: 3}

@@ -17,8 +17,9 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 11400000, guid: 66b5b66c4fb707c46810127020dbbb17, type: 2}
+    - {fileID: 11400000, guid: 7994c359cd5d6c341a9a7f00328abbd9, type: 2}
     - {fileID: 11400000, guid: d35d7301f52f6504a8cc2a157fc9a0b8, type: 2}
-    - {fileID: 11400000, guid: a0c82c7f032651647ac80d13654bca61, type: 2}
+    - {fileID: 11400000, guid: 27f15af6e4718a54bae992ed88a10b97, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -1375,11 +1376,11 @@ MonoBehaviour:
       Entry: 7
       Data: 42|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 1
     - Name: randomElement
       Entry: 5
-      Data: true
+      Data: false
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -1388,7 +1389,7 @@ MonoBehaviour:
       Data: false
     - Name: powerUpType
       Entry: 3
-      Data: 0
+      Data: 4
     - Name: cauldronProgress
       Entry: 3
       Data: 0
@@ -3092,7 +3093,7 @@ MonoBehaviour:
       Data: 94|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 1
+      Data: 2
     - Name: randomElement
       Entry: 5
       Data: false
@@ -3158,7 +3159,7 @@ MonoBehaviour:
       Data: 96|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 1
+      Data: 2
     - Name: randomElement
       Entry: 5
       Data: false
@@ -3224,7 +3225,7 @@ MonoBehaviour:
       Data: 98|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 2
+      Data: 3
     - Name: randomElement
       Entry: 5
       Data: false
@@ -3236,7 +3237,7 @@ MonoBehaviour:
       Data: false
     - Name: powerUpType
       Entry: 3
-      Data: 1
+      Data: 5
     - Name: cauldronProgress
       Entry: 3
       Data: 0
@@ -3290,7 +3291,7 @@ MonoBehaviour:
       Data: 100|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 1
+      Data: 2
     - Name: randomElement
       Entry: 5
       Data: false
@@ -3818,7 +3819,7 @@ MonoBehaviour:
       Data: 116|Game.GridElementInfo, Game
     - Name: elementData
       Entry: 10
-      Data: 1
+      Data: 2
     - Name: randomElement
       Entry: 5
       Data: false
