@@ -10,7 +10,6 @@ namespace Game
 {
     public abstract class GridElement : Grid3D, IPoolable<GridElement>
     {
-        private static Material _defaultSpriteMaterial;
         private bool _cachedInitialScale;
         private Vector3 _initialLocalScale;
 
@@ -240,27 +239,6 @@ namespace Game
         protected virtual IEnumerator HueAnim()
         {
             yield break;
-        }
-
-        private static Material GetDefaultSpriteMaterial()
-        {
-            if (_defaultSpriteMaterial != null)
-                return _defaultSpriteMaterial;
-
-            Shader spriteShader = Shader.Find("Sprites/Default");
-            if (spriteShader == null)
-                return null;
-
-            _defaultSpriteMaterial = new Material(spriteShader)
-            {
-                name = "Runtime_DefaultSpriteMaterial"
-            };
-
-            return _defaultSpriteMaterial;
-        }
-
-        private void Awake()
-        {
         }
         private void OnDestroy()
         {

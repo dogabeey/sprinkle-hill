@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine; using Game.EventManagement;
 using UnityEngine.UI;
-using Game.EventManagement;
 
 namespace Game
 {

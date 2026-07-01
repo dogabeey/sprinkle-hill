@@ -13,7 +13,6 @@ namespace Game
     {
         private readonly Match3Grid grid;
         private const int SortingOrderBoost = 200;
-        private const int StandardDiscoBallReplaceCount = 8;
         private const float ComboIntroMinRaiseHeight = 0.55f;
         private const float ComboIntroMaxRaiseHeight = 1.1f;
         private const float ComboIntroMinOrbitRadius = 0.25f;
@@ -1777,43 +1776,6 @@ namespace Game
             return targetCells;
         }
 
-        private ElementData ResolveRandomDiscoBallComboTargetElement(params Vector2Int[] excludedPositions)
-        {
-            List<ElementData> uniqueElementTypes = new List<ElementData>();
-
-            for (int x = 0; x < grid.GridSize.x; x++)
-            {
-                for (int y = 0; y < grid.GridSize.y; y++)
-                {
-                    Vector2Int pos = new Vector2Int(x, y);
-                    if (IsExcludedPosition(pos, excludedPositions))
-                        continue;
-
-                    Grid3D.GridCell cell = grid.GetCellPublic(pos);
-                    if (!IsEligibleDiscoBallTargetCell(cell))
-                        continue;
-
-                    ElementData elementData = cell.elementInfo.elementData;
-                    if (elementData != null && !uniqueElementTypes.Contains(elementData))
-                        uniqueElementTypes.Add(elementData);
-                }
-            }
-
-            if (uniqueElementTypes.Count == 0)
-                return null;
-
-            return uniqueElementTypes[Random.Range(0, uniqueElementTypes.Count)];
-        }
-
-        private List<Vector2Int> GetRandomEligibleDiscoBallTargets(Vector2Int excludedPosition, int maxCount)
-        {
-            return GetRandomEligibleDiscoBallTargets(new[] { excludedPosition }, maxCount);
-        }
-
-        private List<Vector2Int> GetRandomEligibleDiscoBallTargets(Vector2Int excludedPosition1, Vector2Int excludedPosition2, int maxCount)
-        {
-            return GetRandomEligibleDiscoBallTargets(new[] { excludedPosition1, excludedPosition2 }, maxCount);
-        }
 
         private ElementData GetMostCommonElementOnGrid()
         {
@@ -1878,62 +1840,6 @@ namespace Game
             return cells;
         }
 
-        private List<Vector2Int> GetRandomEligibleDiscoBallTargets(Vector2Int[] excludedPositions, int maxCount)
-        {
-            List<Vector2Int> candidates = new List<Vector2Int>();
-            for (int x = 0; x < grid.GridSize.x; x++)
-            {
-                for (int y = 0; y < grid.GridSize.y; y++)
-                {
-                    Vector2Int pos = new Vector2Int(x, y);
-                    if (IsExcludedPosition(pos, excludedPositions))
-                        continue;
-
-                    Grid3D.GridCell cell = grid.GetCellPublic(pos);
-                    if (!IsEligibleDiscoBallTargetCell(cell))
-                        continue;
-
-                    candidates.Add(pos);
-                }
-            }
-
-            int replaceCount = Mathf.Min(maxCount, candidates.Count);
-            List<Vector2Int> selectedCells = new List<Vector2Int>(replaceCount);
-            for (int i = 0; i < replaceCount; i++)
-            {
-                int randIdx = Random.Range(i, candidates.Count);
-                Vector2Int tmp = candidates[randIdx];
-                candidates[randIdx] = candidates[i];
-                candidates[i] = tmp;
-                selectedCells.Add(candidates[i]);
-            }
-
-            return selectedCells;
-        }
-
-        private List<Vector2Int> GetEligibleCellsInSquareArea(Vector2Int center, int radius, params Vector2Int[] excludedPositions)
-        {
-            List<Vector2Int> cells = new List<Vector2Int>();
-
-            for (int x = center.x - radius; x <= center.x + radius; x++)
-            {
-                for (int y = center.y - radius; y <= center.y + radius; y++)
-                {
-                    Vector2Int pos = new Vector2Int(x, y);
-                    if (IsExcludedPosition(pos, excludedPositions))
-                        continue;
-
-                    Grid3D.GridCell cell = grid.GetCellPublic(pos);
-                    if (!IsEligibleDiscoBallTargetCell(cell))
-                        continue;
-
-                    cells.Add(pos);
-                }
-            }
-
-            return cells;
-        }
-
         private List<Vector2Int> GetNormalCellsInSquareArea(Vector2Int center, int radius)
         {
             List<Vector2Int> cells = new List<Vector2Int>();
@@ -1953,36 +1859,6 @@ namespace Game
 
             return cells;
         }
-
-        private void ConvertCellsToPowerUp(List<Vector2Int> positions, ElementPowerUpType targetPowerUpType)
-        {
-            if (positions == null)
-                return;
-
-            for (int i = 0; i < positions.Count; i++)
-            {
-                Vector2Int pos = positions[i];
-                Grid3D.GridCell cell = grid.GetCellPublic(pos);
-                if (cell?.elementInfo == null)
-                    continue;
-
-                ElementData sourceData = cell.elementInfo.elementData;
-                cell.elementInfo.elementData = sourceData;
-                cell.elementInfo.powerUpType = targetPowerUpType;
-                cell.elementInfo.isSparkling = false;
-                cell.elementInfo.isHidden = false;
-
-                GridElement element = grid.GetElementAt(pos);
-                if (element != null)
-                {
-                    element.elementInfo = cell.elementInfo;
-                    element.InitElement(grid, cell.elementInfo);
-                    GridHelper.SetEmission(element, 0f);
-                    ApplySortingBoost(element, targetPowerUpType == ElementPowerUpType.Bomb);
-                }
-            }
-        }
-
         private bool IsEligibleDiscoBallTargetCell(Grid3D.GridCell cell)
         {
             if (cell == null || cell.cellType != Grid3D.CellType.Normal || cell.elementInfo == null)
@@ -2903,30 +2779,6 @@ namespace Game
             }
         }
 
-        private void CollectAffectedWallsForRocketLine(List<Vector2Int> lineCells, HashSet<Vector2Int> walls)
-        {
-            if (lineCells == null)
-                return;
-
-            for (int i = 0; i < lineCells.Count; i++)
-            {
-                Vector2Int pos = lineCells[i];
-                Grid3D.GridCell cell = grid.GetCellPublic(pos);
-                if (cell == null)
-                    continue;
-
-                if (cell.cellType == Grid3D.CellType.BreakableWall)
-                {
-                    if (cell.breakableWallElementCondition != null)
-                        continue;
-
-                    walls.Add(pos);
-                    continue;
-                }
-
-                CollectAdjacentWalls(pos, walls);
-            }
-        }
 
         private Vector3 GetRocketLineEnd(Vector3 originWorld, List<Vector2Int> lineCells, Vector2Int direction)
         {
@@ -2958,19 +2810,6 @@ namespace Game
             }
             return cells;
         }
-
-        private void CollectAdjacentWalls(Vector2Int pos, HashSet<Vector2Int> walls)
-        {
-            Vector2Int[] offsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
-            for (int i = 0; i < offsets.Length; i++)
-            {
-                Vector2Int adj = pos + offsets[i];
-                Grid3D.GridCell cell = grid.GetCellPublic(adj);
-                if (cell != null && cell.cellType == Grid3D.CellType.BreakableWall && cell.breakableWallElementCondition == null)
-                    walls.Add(adj);
-            }
-        }
-
         private SpriteRenderer CreateRocketCopyForDirection(GridElement sourceElement, Vector3 origin, ConstantManager cm, Vector2Int direction, ElementPowerUpType rocketType)
         {
             GameObject copy = new GameObject("RocketCopy");
@@ -3223,11 +3062,6 @@ namespace Game
                 if (boost) renderers[i].sortingOrder += SortingOrderBoost;
                 else if (renderers[i].sortingOrder >= SortingOrderBoost) renderers[i].sortingOrder -= SortingOrderBoost;
             }
-        }
-
-        private ElementData ResolveVisualData(ElementData sourceData)
-        {
-            return sourceData;
         }
 
         private void PlayEffect(string effectId, float volumeMultiplier = 1f, float pitchOffset = 0f)
