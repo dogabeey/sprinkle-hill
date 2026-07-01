@@ -809,7 +809,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: 42d9663addda12b4fb33c217bebf5ed2, type: 2}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.7137255}
+  m_Color: {r: 0, g: 0, b: 0, a: 0.8392157}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1262,7 +1262,7 @@ MonoBehaviour:
   screenContainer: {fileID: 1510078035}
   loadingText: {fileID: 1696311921}
   fillBar: {fileID: 1340314734}
-  waitTime: 1.4
+  waitTime: 2
   altLoadingTexts:
   - BAKING THE SODA
   - PREHEATING THE OVEN
@@ -7884,7 +7884,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: directiveText

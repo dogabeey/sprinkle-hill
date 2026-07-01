@@ -23,3 +23,5 @@ MonoBehaviour:
   defaultIdleAnimation: idle
   animationController: {fileID: 0}
   powerUpActivationString: 
+  leftPieceSprite: {fileID: 1298107131, guid: 257c40514632f31409f61c409a033e51, type: 3}
+  rightPieceSprite: {fileID: 16197942, guid: 257c40514632f31409f61c409a033e51, type: 3}

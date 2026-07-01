@@ -2886,9 +2886,9 @@ namespace Game
                 Vector2Int direction = directions[i];
                 List<Vector2Int> lineCells = CollectLineCells(rocketPos, direction);
                 Vector3 lineEnd = GetRocketLineEnd(originWorld, lineCells, direction);
-                GameObject rocketCopy = CreateRocketCopyForDirection(rocketElement, originWorld, cm, direction, rocketType);
-                rocketCopies.Add(rocketCopy);
-                travelCoroutines.Add(grid.StartCoroutine(TravelRocketCopy(rocketCopy, originWorld, lineEnd, lineCells, cm, processedWalls)));
+                SpriteRenderer rocketCopy = CreateRocketCopyForDirection(rocketElement, originWorld, cm, direction, rocketType);
+                rocketCopies.Add(rocketCopy.gameObject);
+                travelCoroutines.Add(grid.StartCoroutine(TravelRocketCopy(rocketCopy.gameObject, originWorld, lineEnd, lineCells, cm, processedWalls)));
             }
 
             if (rocketElement != null)
@@ -2971,19 +2971,20 @@ namespace Game
             }
         }
 
-        private GameObject CreateRocketCopyForDirection(GridElement sourceElement, Vector3 origin, ConstantManager cm, Vector2Int direction, ElementPowerUpType rocketType)
+        private SpriteRenderer CreateRocketCopyForDirection(GridElement sourceElement, Vector3 origin, ConstantManager cm, Vector2Int direction, ElementPowerUpType rocketType)
         {
             GameObject copy = new GameObject("RocketCopy");
             copy.transform.position = origin;
 
-            if (sourceElement != null && sourceElement.elementRenderer is SpriteRenderer srcSR)
+            if (sourceElement != null && sourceElement.elementRenderer is SpriteRenderer sourceRenderer)
             {
                 SpriteRenderer sr = copy.AddComponent<SpriteRenderer>();
-                sr.sprite = srcSR.sprite;
-                sr.material = srcSR.material;
-                sr.sortingLayerID = srcSR.sortingLayerID;
-                sr.sortingOrder = srcSR.sortingOrder + SortingOrderBoost;
-                sr.color = srcSR.color;
+                Sprite sprite = GetSpriteByRocketTypeAndDirection(sourceElement, direction);
+                sr.sprite = sprite;
+                sr.material = sourceRenderer.material;
+                sr.sortingLayerID = sourceRenderer.sortingLayerID;
+                sr.sortingOrder = sourceRenderer.sortingOrder + SortingOrderBoost;
+                sr.color = sourceRenderer.color;
 
                 // Only rotate for omnidirectional rockets; horizontal and vertical rockets don't need rotation
                 if (rocketType == ElementPowerUpType.Rocket)
@@ -3000,7 +3001,26 @@ namespace Game
                 trail.Play();
             }
 
-            return copy;
+            return copy.GetComponent<SpriteRenderer>();
+        }
+
+        private Sprite GetSpriteByRocketTypeAndDirection(GridElement sourceElement, Vector2Int direction)
+        {
+            if(sourceElement.elementInfo.elementData is HorizontalRocketElementData horizontalRocketData)
+            {
+                if(direction.x < 0f)
+                    return horizontalRocketData.rightPieceSprite;
+                else
+                    return horizontalRocketData.leftPieceSprite;
+            }
+            else if(sourceElement.elementInfo.elementData is VerticalRocketElementData verticalRocketData)
+            {
+                if(direction.y < 0f)
+                    return verticalRocketData.upperPieceSprite;
+                else
+                    return verticalRocketData.lowerPieceSprite;
+            }
+            return null;
         }
 
         private IEnumerator FlyRocketToTargetAndActivate(Vector2Int rocketPos, Vector2Int targetPos, GridElement rocketElement, ElementPowerUpType rocketType)
