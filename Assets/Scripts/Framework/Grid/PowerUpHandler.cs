@@ -3008,7 +3008,7 @@ namespace Game
         {
             if(sourceElement.elementInfo.elementData is HorizontalRocketElementData horizontalRocketData)
             {
-                if(direction.x < 0f)
+                if(direction.x > 0f)
                     return horizontalRocketData.rightPieceSprite;
                 else
                     return horizontalRocketData.leftPieceSprite;
