@@ -2815,18 +2815,31 @@ namespace Game
             GameObject copy = new GameObject("RocketCopy");
             copy.transform.position = origin;
 
-            if (sourceElement != null && sourceElement.elementRenderer is SpriteRenderer sourceRenderer)
+            SpriteRenderer sourceRenderer = sourceElement != null ? sourceElement.GetComponentInChildren<SpriteRenderer>(true) : null;
+            SpriteRenderer sr = copy.AddComponent<SpriteRenderer>();
+
+            ElementData sourceElementData = sourceElement != null ? sourceElement.elementInfo?.elementData : null;
+            ElementData fallbackElementData = GetPowerUpElementData(rocketType);
+            ElementData spriteSourceData = sourceElementData != null ? sourceElementData : fallbackElementData;
+
+            Sprite sprite = GetSpriteByRocketTypeAndDirection(sourceElement, direction);
+            if (sprite == null && spriteSourceData != null)
+                sprite = spriteSourceData.displayIcon;
+
+            sr.sprite = sprite;
+
+            if (sourceRenderer != null)
             {
-                SpriteRenderer sr = copy.AddComponent<SpriteRenderer>();
-                Sprite sprite = GetSpriteByRocketTypeAndDirection(sourceElement, direction);
-                sr.sprite = sprite;
                 sr.material = sourceRenderer.material;
                 sr.sortingLayerID = sourceRenderer.sortingLayerID;
                 sr.sortingOrder = sourceRenderer.sortingOrder + SortingOrderBoost;
                 sr.color = sourceRenderer.color;
+            }
 
+            if (sourceElement != null)
+            {
                 ParticleSystem rocketTrailParticle = GetParticleByRocketTypeAndDirection(sourceElement, direction);
-                if(rocketTrailParticle)
+                if (rocketTrailParticle)
                 {
                     ParticleSystem rocketTrailParticleInstance = Object.Instantiate(rocketTrailParticle, copy.transform);
                     rocketTrailParticleInstance.transform.localPosition = Vector3.zero;
@@ -2848,12 +2861,12 @@ namespace Game
                 trail.Play();
             }
 
-            return copy.GetComponent<SpriteRenderer>();
+            return sr;
         }
 
         private ParticleSystem GetParticleByRocketTypeAndDirection(GridElement sourceElement, Vector2Int direction)
         {
-            if(sourceElement.elementInfo.elementData is RocketElementData rocketElementData)
+            if (sourceElement?.elementInfo?.elementData is RocketElementData rocketElementData)
             {
                 return rocketElementData.rocketPropelTrailEffect;
             }
@@ -2862,14 +2875,14 @@ namespace Game
 
         private Sprite GetSpriteByRocketTypeAndDirection(GridElement sourceElement, Vector2Int direction)
         {
-            if(sourceElement.elementInfo.elementData is HorizontalRocketElementData horizontalRocketData)
+            if (sourceElement?.elementInfo?.elementData is HorizontalRocketElementData horizontalRocketData)
             {
                 if(direction.x > 0f)
                     return horizontalRocketData.rightPieceSprite;
                 else
                     return horizontalRocketData.leftPieceSprite;
             }
-            else if(sourceElement.elementInfo.elementData is VerticalRocketElementData verticalRocketData)
+            else if (sourceElement?.elementInfo?.elementData is VerticalRocketElementData verticalRocketData)
             {
                 if(direction.y < 0f)
                     return verticalRocketData.upperPieceSprite;
