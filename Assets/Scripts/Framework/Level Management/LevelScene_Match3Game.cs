@@ -107,9 +107,9 @@ namespace Game
 
         protected override void Awake()
         {
+            base.Awake();
             currentLevelEditorIndex = 0;
             ApplyLevelSettings(false);
-            base.Awake();
             EventManager.TriggerEvent(GameEvent.STAGE_STARTED, new EventParam(paramInt: currentLevelEditorIndex));
             StartCoroutine(TimerCoroutine());
         }
@@ -483,11 +483,27 @@ namespace Game
 
         private LevelEditor GetCurrentLevelEditor()
         {
-            if (levelEditors == null || levelEditors.Count == 0)
+            if (levelEditors == null)
+            {
+                Debug.LogError("[LevelScene_Match3Game] levelEditors list is null.");
                 return null;
+            }
+            if(levelEditors.Count == 0) 
+            {
+                Debug.LogError("[LevelScene_Match3Game] levelEditors list is empty.");
+                return null;
+            }
 
-            if (currentLevelEditorIndex < 0 || currentLevelEditorIndex >= levelEditors.Count)
+            if (currentLevelEditorIndex < 0)
+            {
+                Debug.LogError("[LevelScene_Match3Game] currentLevelEditorIndex is less than 0.");
                 return null;
+            }
+            if (currentLevelEditorIndex >= levelEditors.Count)
+            {
+                Debug.LogError("[LevelScene_Match3Game] currentLevelEditorIndex is out of bounds.");
+                return null;
+            }
 
             return levelEditors[currentLevelEditorIndex];
         }
