@@ -56,19 +56,24 @@ namespace Game
                 ActionBarView matchingActionBarView = ActionBarManager.Instance.GetActionBarView(actionBarItem);
                 if (matchingActionBarView != null)
                     objectSource = matchingActionBarView.gameObject;
-            }
 
-            if (buyBundle != null && buyBundle.buyableReference != null && buyBundle.buyableReference.TryBuy(buyBundle, objectSource))
-            {
-                AnalyticsManager.SendEvent(new BoosterBoughtEvent
+                if (buyBundle.buyableReference.TryBuy(buyBundle, objectSource))
                 {
-                    LevelIndex = GameManager.Instance.CurrentLevelIndex,
-                    BoosterName = buyBundle.buyableReference.ItemName,
-                    CashAmount = (int) CurrencyManager.Instance.GetCurrencyAmount(buyBundle.buyableReference.CostCurrency),
-                    ItemAmount = buyBundle.buyCount,
-                });
-                ScreenManager.Instance.CloseAllScreens();
+                    SendAnalyticEvent(buyBundle);
+                    ScreenManager.Instance.CloseAllScreens();
+                }
             }
+        }
+
+        private static void SendAnalyticEvent(IBuyable.BuyBundle buyBundle)
+        {
+            AnalyticsManager.SendEvent(new BoosterBoughtEvent
+            {
+                LevelIndex = GameManager.Instance.CurrentLevelIndex,
+                BoosterName = buyBundle.buyableReference.ItemName,
+                CashAmount = (int)CurrencyManager.Instance.GetCurrencyAmount(buyBundle.buyableReference.CostCurrency),
+                ItemAmount = buyBundle.buyCount,
+            });
         }
     }
 }

@@ -5,7 +5,8 @@ using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine; using Game.EventManagement;
+using UnityEngine; 
+using Game.Ads;
 using UnityEngine.UI;
 using Game.EventManagement;
 
@@ -48,6 +49,19 @@ namespace Game
 
         public bool TryBuy(IBuyable.BuyBundle buyBundle, GameObject source = null)
         {
+            if(buyBundle.buyWithAd)
+            {
+                UnityAdsManager adsManager = UnityAdsManager.Instance;
+                if(adsManager)
+                {
+                    adsManager.ShowRewardedAd();
+                }
+                else
+                {
+                    Debug.LogError("UnityAdsManager instance not found. Cannot show rewarded ad.");
+                }
+            }
+
             int endCost = buyBundle.GetTotalCost(GetCost());
             if (CostCurrency != null)
             {
