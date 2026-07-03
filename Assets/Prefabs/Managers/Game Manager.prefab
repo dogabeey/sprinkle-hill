@@ -62,16 +62,6 @@ MonoBehaviour:
   - {fileID: 6648657062745475262, guid: d0030fc7413ac4842ae184975f239f71, type: 3}
   - {fileID: 6648657062745475262, guid: 6c6a3395455bd35408140e556defc916, type: 3}
   - {fileID: 6648657062745475262, guid: d3e6b6ef1897a4742a3c0864df1c5ddd, type: 3}
-  - {fileID: 6648657062745475262, guid: 44b98f7625dbcf4458700346bf8e0245, type: 3}
-  - {fileID: 6648657062745475262, guid: aba00876d391e0943acdc4e8ee281610, type: 3}
-  - {fileID: 6648657062745475262, guid: c6a01284eee1479418bddecf12039aaa, type: 3}
-  - {fileID: 6648657062745475262, guid: de05181d3fae9f148b8defc0180dfcc1, type: 3}
-  - {fileID: 6648657062745475262, guid: 0728eaeefc9d4214184731f15ae6e064, type: 3}
-  - {fileID: 6648657062745475262, guid: 5aba8c6389097cd4fb2fe24c36e730c9, type: 3}
-  - {fileID: 6648657062745475262, guid: f11cebe8dc062ff4abf8d663372519f4, type: 3}
-  - {fileID: 6648657062745475262, guid: d94578f0d2357c949854c1c73901cb54, type: 3}
-  - {fileID: 6648657062745475262, guid: f856e218846691840970b9b778c8fe70, type: 3}
-  - {fileID: 6648657062745475262, guid: 92e24d3e1a3f6f4439d6e889bd06b149, type: 3}
   excludeFirstXLevelFromLoop: 2
   lastPlayedLevelIndex: 0
 --- !u!1 &7722314759461277705
@@ -124,15 +114,6 @@ MonoBehaviour:
   cashCurrency: {fileID: 11400000, guid: 31b1c667ab353af4a80bfe0daaa96451, type: 2}
   premiumCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
   autoShuffleWhenOutOfPossibleMoves: 1
-  bombElementData: {fileID: 11400000, guid: 2f83e159c6b368646a1f9d8e7ec081e9, type: 2}
-  horizontalRocketElementData: {fileID: 11400000, guid: 4260243d8e138d54bb90296194b69f84, type: 2}
-  verticalRocketElementData: {fileID: 11400000, guid: 56c62304f3d4a6c428379f3845a428a7, type: 2}
-  propellerElementData: {fileID: 11400000, guid: 154ee2fd4a3a356489c4482e8b443c06, type: 2}
-  discoBallElementData: {fileID: 11400000, guid: 24c241fb46e7d3447b4a3d140a9cda60, type: 2}
-  cauldronElementData: {fileID: 11400000, guid: f531cb99e5512e14fbf93538678a6278, type: 2}
-  garbageBagElementData: {fileID: 11400000, guid: 518bd858af96e224fb306e32e60f0080, type: 2}
-  powerGeneratorElementData: {fileID: 11400000, guid: a69c61ad6dd0ebf4e907ef76e4ec2042, type: 2}
-  powerOutletElementData: {fileID: 11400000, guid: 83563b891f3150f43b30e90059666825, type: 2}
   waferFeature: {fileID: 11400000, guid: 9a0a4a3b932d9dd48b6c09ede6bf2324, type: 2}
   glassFeature: {fileID: 11400000, guid: 66b5b66c4fb707c46810127020dbbb17, type: 2}
   electricField: {fileID: 11400000, guid: 533e37ef7d2d727448f260ed616b4b05, type: 2}
