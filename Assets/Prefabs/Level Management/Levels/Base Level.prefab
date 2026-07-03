@@ -204,6 +204,8 @@ MonoBehaviour:
   - objectiveType: {fileID: 11400000, guid: 18fe1d191bcffb941b84374a18a8263b, type: 2}
     isProcedurallyGenerated: 0
     autoCountRequiredCount: 0
+    tiedToLockedArea: 0
+    lockedAreaIndex: 0
     scriptableObjectParameter: {fileID: 11400000, guid: f006f435c88374942881e4fd9742c0ca, type: 2}
     requiredCount: 30
     generatedCount: {x: 0, y: 0}
@@ -223,7 +225,11 @@ MonoBehaviour:
   allowPropellerCreation: 1
   sparklingPowerAfterXCombo: 1
   sparklingAppearChance: 0
-  stageCompletePopupTextPrefab: {fileID: 0}
+  refillChainReductionStartDepth: 1
+  refillChainReductionInitialChance: 0.35
+  refillChainReductionChanceStep: 0.2
+  refillChainReductionMaxChance: 0.85
+  stageCompletePopupTextPrefab: {fileID: 8529206322825317147, guid: 9cc54edcdd758424d8b3fc87f1b565b0, type: 3}
   stageTransitionAnimation:
     elementWinAnimDuration: 1
     elementWinAnimStagger: 0.01

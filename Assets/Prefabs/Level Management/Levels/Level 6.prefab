@@ -116,7 +116,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5120543934254136597, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: m_Name
-      value: Level 7
+      value: Level 6
       objectReference: {fileID: 0}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: timer
@@ -153,7 +153,7 @@ PrefabInstance:
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: 'levelEditors.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: 9d69239274875d54eb3f7e24ef76470c, type: 2}
+      objectReference: {fileID: 0}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: 'levelEditors.Array.data[1]'
       value: 
@@ -166,10 +166,6 @@ PrefabInstance:
       propertyPath: rewards.Array.data[0].amount
       value: 90
       objectReference: {fileID: 0}
-    - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
-      propertyPath: stageCompletePopupTextPrefab
-      value: 
-      objectReference: {fileID: 8529206322825317147, guid: 9cc54edcdd758424d8b3fc87f1b565b0, type: 3}
     - target: {fileID: 5642481185505650832, guid: 0b29582f7fe0a6247b4d70c1199efebd, type: 3}
       propertyPath: proceduralGeneration.triangleWidth
       value: 0
