@@ -732,6 +732,71 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1925703224431792360, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
   m_PrefabInstance: {fileID: 7940329057348222953}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &766665505
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1999000980689706461, guid: ee7080004ea30b945828efb7aa1a575c, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 1999000980689706461, guid: ee7080004ea30b945828efb7aa1a575c, type: 3}
+    - target: {fileID: 5105714310592881757, guid: ee7080004ea30b945828efb7aa1a575c, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 5105714310592881757, guid: ee7080004ea30b945828efb7aa1a575c, type: 3}
+    - target: {fileID: 6126315467163966779, guid: ee7080004ea30b945828efb7aa1a575c, type: 3}
+      propertyPath: m_Name
+      value: Test Level
+      objectReference: {fileID: 0}
+    - target: {fileID: 6126315467163966780, guid: ee7080004ea30b945828efb7aa1a575c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.56479
+      objectReference: {fileID: 0}
+    - target: {fileID: 6126315467163966780, guid: ee7080004ea30b945828efb7aa1a575c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -7.27623
+      objectReference: {fileID: 0}
+    - target: {fileID: 6126315467163966780, guid: ee7080004ea30b945828efb7aa1a575c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -11.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 6126315467163966780, guid: ee7080004ea30b945828efb7aa1a575c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6126315467163966780, guid: ee7080004ea30b945828efb7aa1a575c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6126315467163966780, guid: ee7080004ea30b945828efb7aa1a575c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6126315467163966780, guid: ee7080004ea30b945828efb7aa1a575c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6126315467163966780, guid: ee7080004ea30b945828efb7aa1a575c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6126315467163966780, guid: ee7080004ea30b945828efb7aa1a575c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6126315467163966780, guid: ee7080004ea30b945828efb7aa1a575c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ee7080004ea30b945828efb7aa1a575c, type: 3}
 --- !u!224 &768146331 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2644979211408110882, guid: 7a5c4060ec73d144bbd658c529e7f638, type: 3}
@@ -8996,6 +9061,18 @@ PrefabInstance:
       value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432512].buyConfig.Array.data[0].buyWithAd
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432513].buyConfig.Array.data[0].buyWithAd
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1021877643594432514].buyConfig.Array.data[0].buyWithAd
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1949156293352620132].buyConfig.Array.data[0].buySprite
       value: 
       objectReference: {fileID: 1090477734, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
@@ -9012,13 +9089,37 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1815501369, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1949156293352620133].buyConfig.Array.data[0].buyWithAd
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1949156293352620133].buyConfig.Array.data[1].buySprite
       value: 
       objectReference: {fileID: 1815501369, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1949156293352620133].buyConfig.Array.data[1].buyWithAd
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1949156293352620133].buyConfig.Array.data[2].buySprite
       value: 
       objectReference: {fileID: 1815501369, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1949156293352620133].buyConfig.Array.data[2].buyWithAd
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1949156293352620133].buyConfig.Array.data[0].boughtWithAd
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1949156293352620133].buyConfig.Array.data[1].boughtWithAd
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
+      propertyPath: managedReferences[1949156293352620133].buyConfig.Array.data[2].boughtWithAd
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1949156293352620132].buyConfig.Array.data[0].discountPercentage
       value: 0
@@ -9682,3 +9783,4 @@ SceneRoots:
   - {fileID: 4133448082132307929}
   - {fileID: 492599855}
   - {fileID: 383076335}
+  - {fileID: 766665505}

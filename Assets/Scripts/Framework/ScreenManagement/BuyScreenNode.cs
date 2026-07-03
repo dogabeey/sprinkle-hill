@@ -11,6 +11,7 @@ namespace Game
         public Image itemImage;
         public TMP_Text itemCountText;
         public TMP_Text costText;
+        public TMP_Text adText;
         public Button buyButton;
         [Header("Settings")]
         public string costTextFormat = "<sprite index={0}>{1}";
@@ -27,8 +28,19 @@ namespace Game
             buyAmount = buyBundle.buyCount;
             if (itemImage) itemImage.sprite = buyBundle?.buySprite;
             if (itemCountText) itemCountText.text = string.Format(itemCountTextFormat, buyAmount);
-            if (costText) costText.text = string.Format(costTextFormat, buyBundle.buyableReference.CostCurrency.spriteIndexForUI, buyBundle?.GetTotalCost(buyBundle.buyableReference.GetCost()) ?? 0);
-            buyButton.interactable = buyBundle != null && buyBundle.buyableReference != null && buyBundle.GetTotalCost(buyBundle.buyableReference.GetCost()) <= CurrencyManager.Instance.GetCurrencyAmount(buyBundle.buyableReference.CostCurrency);
+            if (costText)
+            {
+                if(buyBundle.buyWithAd)
+                {
+                    costText.text = "";
+                }
+                else
+                    costText.text = string.Format(costTextFormat, buyBundle.buyableReference.CostCurrency.spriteIndexForUI, buyBundle?.GetTotalCost(buyBundle.buyableReference.GetCost()) ?? 0);
+            }
+            if (adText) adText.gameObject.SetActive(buyBundle?.buyWithAd ?? false);
+            buyButton.interactable =  buyBundle != null 
+                && (buyBundle.buyableReference != null  && buyBundle.GetTotalCost(buyBundle.buyableReference.GetCost()) <= CurrencyManager.Instance.GetCurrencyAmount(buyBundle.buyableReference.CostCurrency)) 
+                || buyBundle.buyWithAd;
             buyButton.onClick.RemoveAllListeners();
             buyButton.onClick.AddListener(() =>
             {
