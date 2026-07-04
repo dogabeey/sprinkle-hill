@@ -2457,7 +2457,8 @@ namespace Game
 
                         if (highestExisting == -1) highestExisting = readIndex;
 
-                        Vector2Int landingPos = GetGravityLandingPosition(readPos);
+                        List<Vector2Int> travelPath = GetGravityTravelPath(readPos);
+                        Vector2Int landingPos = travelPath.Count > 0 ? travelPath[travelPath.Count - 1] : readPos;
                         GridCell landingCell = GetCell(landingPos);
                         if (landingCell == null) continue;
 
@@ -2474,11 +2475,50 @@ namespace Game
                                 GridElement movingEl = fromTile.GetComponentInChildren<GridElement>();
                                 if (movingEl != null)
                                 {
-                                    movingEl.transform.SetParent(toTile.transform, true);
-                                    float dist = movingEl.transform.localPosition.magnitude;
-                                    float dur = fallSpeed > 0f ? dist / fallSpeed : 0f;
-                                    gravitySeq.Join(movingEl.transform.DOLocalMove(Vector3.zero, dur).SetEase(Ease.OutQuad));
-                                    hasTween = true;
+                                    bool hasPathTween = false;
+                                    if (travelPath.Count > 1)
+                                    {
+                                        Sequence moveSequence = DOTween.Sequence();
+                                        Vector3 currentWorldPos = movingEl.transform.position;
+                                        movingEl.transform.SetParent(null, true);
+
+                                        for (int pathIndex = 1; pathIndex < travelPath.Count; pathIndex++)
+                                        {
+                                            if (!generatedTiles.TryGetValue(travelPath[pathIndex], out GridCellController pathTile) || pathTile == null)
+                                                continue;
+
+                                            Vector3 targetWorldPos = pathTile.transform.position;
+                                            float segmentDistance = Vector3.Distance(currentWorldPos, targetWorldPos);
+                                            float segmentDuration = fallSpeed > 0f ? segmentDistance / fallSpeed : 0f;
+                                            moveSequence.Append(movingEl.transform.DOMove(targetWorldPos, segmentDuration).SetEase(Ease.OutQuad));
+                                            currentWorldPos = targetWorldPos;
+                                            hasPathTween = true;
+                                        }
+
+                                        if (hasPathTween)
+                                        {
+                                            moveSequence.OnComplete(() =>
+                                            {
+                                                if (movingEl == null || toTile == null)
+                                                    return;
+
+                                                movingEl.transform.SetParent(toTile.transform, true);
+                                                movingEl.transform.localPosition = Vector3.zero;
+                                            });
+
+                                            gravitySeq.Join(moveSequence);
+                                            hasTween = true;
+                                        }
+                                    }
+
+                                    if (!hasPathTween)
+                                    {
+                                        movingEl.transform.SetParent(toTile.transform, true);
+                                        float dist = movingEl.transform.localPosition.magnitude;
+                                        float dur = fallSpeed > 0f ? dist / fallSpeed : 0f;
+                                        gravitySeq.Join(movingEl.transform.DOLocalMove(Vector3.zero, dur).SetEase(Ease.OutQuad));
+                                        hasTween = true;
+                                    }
                                 }
                             }
                         }
@@ -3036,6 +3076,53 @@ namespace Game
             }
 
             return currentPos;
+        }
+
+        private List<Vector2Int> GetGravityTravelPath(Vector2Int startPos)
+        {
+            List<Vector2Int> path = new List<Vector2Int> { startPos };
+            Vector2Int currentPos = startPos;
+            int safetyCounter = Mathf.Max(1, gridSize.x * gridSize.y * 2);
+
+            while (safetyCounter-- > 0)
+            {
+                Vector2Int verticalLanding = GetVerticalLandingPosition(currentPos);
+                if (verticalLanding != path[path.Count - 1])
+                    path.Add(verticalLanding);
+
+                Vector2Int downLeftPos = new Vector2Int(verticalLanding.x - 1, verticalLanding.y + 1);
+                Vector2Int downRightPos = new Vector2Int(verticalLanding.x + 1, verticalLanding.y + 1);
+                bool canSlideLeft = CanSlideInto(downLeftPos, verticalLanding);
+                bool canSlideRight = CanSlideInto(downRightPos, verticalLanding);
+
+                if (!canSlideLeft && !canSlideRight)
+                    break;
+
+                Vector2Int nextPos;
+                if (canSlideLeft && canSlideRight)
+                {
+                    Vector2Int leftLanding = GetGravityLandingPosition(downLeftPos);
+                    Vector2Int rightLanding = GetGravityLandingPosition(downRightPos);
+
+                    if (leftLanding.y > rightLanding.y)
+                        nextPos = downLeftPos;
+                    else if (rightLanding.y > leftLanding.y)
+                        nextPos = downRightPos;
+                    else
+                        nextPos = downLeftPos.x <= downRightPos.x ? downLeftPos : downRightPos;
+                }
+                else
+                {
+                    nextPos = canSlideLeft ? downLeftPos : downRightPos;
+                }
+
+                if (nextPos != path[path.Count - 1])
+                    path.Add(nextPos);
+
+                currentPos = nextPos;
+            }
+
+            return path;
         }
 
         private Vector2Int GetGravityLandingPosition(Vector2Int startPos)

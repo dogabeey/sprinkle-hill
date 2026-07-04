@@ -68,6 +68,7 @@ Avoid overengineering — only apply patterns when they provide clear benefit.
 
 ## Definitions
 - **Chain Reaction**: A match that is not directly triggered by player input, but instead is caused by newly dropped and aligned elements after prior resolution.
+- **Sliding**: Elements must first drop vertically until blocked, then slide into a neighboring empty column, following a consistent step-by-step path instead of jumping directly to the final landing cell.
 - (Add definitions for game-specific terms here as needed.)
 
 ## Extra Notes
