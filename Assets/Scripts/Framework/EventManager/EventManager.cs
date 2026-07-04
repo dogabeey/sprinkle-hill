@@ -28,7 +28,7 @@ namespace Game.EventManagement
         private Dictionary<string, Action<EventParam>> eventDictionary = new Dictionary<string, Action<EventParam>>();
 
         [Header("Settings")]
-        public float eventQueueProcessingInterval = 0.01f; // Time in seconds between processing the event queue
+        public float eventQueueProcessingInterval = 0.0f; // Time in seconds between processing the event queue
         [Header("Inspector Debug Info")]
         [SerializeField, Tooltip("Shows all currently active event listeners (Runtime Only)")]
         private List<EventListenerInfo> activeListeners = new List<EventListenerInfo>();
@@ -37,7 +37,7 @@ namespace Game.EventManagement
         [SerializeField]
         private Queue<KeyValuePair<string, EventParam>> eventDictionaryQueue = new Queue<KeyValuePair<string, EventParam>>();
 
-        public void Start()
+        public void Awake()
         {
 #if UNITY_EDITOR
             UpdateInspectorInfo();
