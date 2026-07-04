@@ -6,6 +6,7 @@ using UnityEngine.Events;
 using Game.Singleton;
 using Game.EventManagement;
 using System.Threading.Tasks;
+using DG.Tweening;
 
 namespace Game.Ads
 {
@@ -44,14 +45,22 @@ namespace Game.Ads
         {
 
             EventManagement.EventManager.StartListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
+            EventManagement.EventManager.StartListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
+            EventManagement.EventManager.StartListening(GameEvent.LEVEL_EXTRA_MOVE_REJECTED, OnLevelCompleted);
         }
         private void OnDisable()
         {
             EventManagement.EventManager.StopListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
+            EventManagement.EventManager.StopListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
+            EventManagement.EventManager.StopListening(GameEvent.LEVEL_EXTRA_MOVE_REJECTED, OnLevelCompleted);
         }
         private void OnLevelStarted(EventParam e)
         {
             levelsSinceLastAd++;
+        }
+        private void OnLevelCompleted(EventParam e)
+        {
+            TryShowAd();
         }
 
         async void Start()
@@ -85,6 +94,8 @@ namespace Game.Ads
             {
                 Debug.LogError($"Unity Services initialization failed: {e}");
             }
+
+            InvokeRepeating(nameof(TryShowAd), 0, 1);
         }
 
         private void OnLevelPlayInitSuccess(LevelPlayConfiguration configuration)
@@ -160,7 +171,6 @@ namespace Game.Ads
         void Update()
         {
             timeSinceLastAd += Time.deltaTime;
-
         }
 
         public void TryShowAd()
