@@ -3040,32 +3040,36 @@ namespace Game
 
         private Vector2Int GetGravityLandingPosition(Vector2Int startPos)
         {
-            Vector2Int verticalLanding = GetVerticalLandingPosition(startPos);
+            Vector2Int currentPos = startPos;
 
-            Vector2Int downLeftPos = new Vector2Int(verticalLanding.x - 1, verticalLanding.y + 1);
-            Vector2Int downRightPos = new Vector2Int(verticalLanding.x + 1, verticalLanding.y + 1);
-            bool canSlideLeft = CanSlideInto(downLeftPos, verticalLanding);
-            bool canSlideRight = CanSlideInto(downRightPos, verticalLanding);
-
-            if (!canSlideLeft && !canSlideRight)
-                return verticalLanding;
-
-            if (canSlideLeft && canSlideRight)
+            while (true)
             {
-                Vector2Int leftLanding = GetVerticalLandingPosition(downLeftPos);
-                Vector2Int rightLanding = GetVerticalLandingPosition(downRightPos);
+                Vector2Int verticalLanding = GetVerticalLandingPosition(currentPos);
 
-                if (leftLanding.y > rightLanding.y)
-                    return leftLanding;
+                Vector2Int downLeftPos = new Vector2Int(verticalLanding.x - 1, verticalLanding.y + 1);
+                Vector2Int downRightPos = new Vector2Int(verticalLanding.x + 1, verticalLanding.y + 1);
+                bool canSlideLeft = CanSlideInto(downLeftPos, verticalLanding);
+                bool canSlideRight = CanSlideInto(downRightPos, verticalLanding);
 
-                if (rightLanding.y > leftLanding.y)
-                    return rightLanding;
+                if (!canSlideLeft && !canSlideRight)
+                    return verticalLanding;
 
-                return leftLanding.x <= rightLanding.x ? leftLanding : rightLanding;
+                if (canSlideLeft && canSlideRight)
+                {
+                    Vector2Int leftLanding = GetGravityLandingPosition(downLeftPos);
+                    Vector2Int rightLanding = GetGravityLandingPosition(downRightPos);
+
+                    if (leftLanding.y > rightLanding.y)
+                        return leftLanding;
+
+                    if (rightLanding.y > leftLanding.y)
+                        return rightLanding;
+
+                    return leftLanding.x <= rightLanding.x ? leftLanding : rightLanding;
+                }
+
+                currentPos = canSlideLeft ? downLeftPos : downRightPos;
             }
-
-            Vector2Int diagonalStart = canSlideLeft ? downLeftPos : downRightPos;
-            return GetVerticalLandingPosition(diagonalStart);
         }
 
         private sealed class GravityColumnSection
