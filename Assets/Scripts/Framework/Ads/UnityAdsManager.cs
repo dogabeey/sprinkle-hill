@@ -95,10 +95,12 @@ namespace Game.Ads
             isLevelPlayInitialized = true;
             CreateAndLoadAds();
         }
-
         private void OnLevelPlayInitFailed(LevelPlayInitError error)
         {
-            Debug.LogError($"LevelPlay initialization failed: {error}");
+            Debug.LogError($"Init failed");
+            Debug.LogError($"Code: {error.ErrorCode}");
+            Debug.LogError($"Message: {error.ErrorMessage}");
+            Debug.LogError(error.ToString());
         }
 
         private void CreateAndLoadAds()
