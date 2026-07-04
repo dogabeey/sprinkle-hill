@@ -65,6 +65,7 @@ namespace Game
                         Moves = levelScene.CurrentStage.moves - levelScene.moves
                     });
                 }
+                param.paramInt = GameManager.Instance.CurrentLevelIndex;
                 EventManager.TriggerEvent(GameEvent.LEVEL_COMPLETED, param); // You can trigger this event anywhere and It will trigger On Win actions in the inspector, along with regular Level Completion events. This one also passes the time it took to win the level.
             }
             if (isLose) // PUT YOUR LOSE CONDITIONS HERE

@@ -13,6 +13,7 @@ namespace Game.Ads
     public class UnityAdsManager : SingletonComponent<UnityAdsManager>
     {
         public float adInterval = 300.0f; // Time interval between ads in seconds
+        public int firstLevelInterval = 10; // Number of levels before the first ad is shown
         public int levelInterval = 2; // Time interval between ads in seconds
         public int bannerHeight;
 
@@ -60,7 +61,8 @@ namespace Game.Ads
         }
         private void OnLevelCompleted(EventParam e)
         {
-            TryShowAd();
+            if (e.paramInt >= firstLevelInterval)
+                TryShowAd();
         }
 
         async void Start()
