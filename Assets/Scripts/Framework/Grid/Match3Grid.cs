@@ -2408,6 +2408,7 @@ namespace Game
 
             Sequence gravitySeq = DOTween.Sequence();
             bool hasTween = false;
+            HashSet<GridElementInfo> processedInfos = new HashSet<GridElementInfo>();
 
             for (int x = 0; x < gridSize.x; x++)
             {
@@ -2418,7 +2419,6 @@ namespace Game
                 {
                     List<int> playableRows = section.rows;
                     if (playableRows.Count == 0) continue;
-                    int writeIndex = playableRows.Count - 1;
                     int highestExisting = -1;
 
                     // Compact existing elements downward
@@ -2428,60 +2428,23 @@ namespace Game
                         Vector2Int readPos = new Vector2Int(x, readY);
                         GridCell readCell = GetCell(readPos);
                         GridElementInfo movingInfo = readCell?.elementInfo;
-                        if (movingInfo?.elementData == null) continue;
+                        if (movingInfo?.elementData == null || processedInfos.Contains(movingInfo)) continue;
 
-                    if (IsGarbageBagData(movingInfo.elementData) && ShouldGarbageBagClearAt(x, readY, bottomMostNormalY))
-                    {
-                        TriggerCellFeatureMatchedOverAt(readPos);
-                        NotifyGarbageBagCleaned(readPos, movingInfo.elementData);
-                        readCell.elementInfo = null;
-
-                        if (generatedTiles.TryGetValue(readPos, out GridCellController bagTile) && bagTile != null)
-                        {
-                            GridElement bagElement = bagTile.GetComponentInChildren<GridElement>();
-                            if (bagElement != null)
-                            {
-                                bagElement.transform.SetParent(null, true);
-                                float dropDist = Mathf.Max(0.5f, bagTile.transform.localScale.y);
-                                float dropDur = 0f;
-                                gravitySeq.Join(bagElement.transform.DOMove(bagElement.transform.position + Vector3.down * dropDist, dropDur).SetEase(Ease.InQuad));
-                                gravitySeq.Join(bagElement.transform.DOScale(0.92f, dropDur).SetEase(Ease.InQuad));
-                                generatedElements.Remove(bagElement);
-                                Destroy(bagElement.gameObject, dropDur + 0.05f);
-                                hasTween = true;
-                            }
-                        }
-
-                        continue;
-                    }
-
-                        if (highestExisting == -1) highestExisting = readIndex;
-
-                        int targetY = playableRows[writeIndex];
-                        Vector2Int targetPos = new Vector2Int(x, targetY);
-                        GridCell targetCell = GetCell(targetPos);
-                        if (targetCell == null) continue;
-
-                        if (IsGarbageBagData(movingInfo.elementData) && ShouldGarbageBagClearAt(x, targetY, bottomMostNormalY))
+                        if (IsGarbageBagData(movingInfo.elementData) && ShouldGarbageBagClearAt(x, readY, bottomMostNormalY))
                         {
                             TriggerCellFeatureMatchedOverAt(readPos);
-                            NotifyGarbageBagCleaned(targetPos, movingInfo.elementData);
+                            NotifyGarbageBagCleaned(readPos, movingInfo.elementData);
                             readCell.elementInfo = null;
-                            targetCell.elementInfo = null;
 
-                            if (generatedTiles.TryGetValue(readPos, out GridCellController fromTile) &&
-                                generatedTiles.TryGetValue(targetPos, out GridCellController toTile) &&
-                                fromTile != null && toTile != null)
+                            if (generatedTiles.TryGetValue(readPos, out GridCellController bagTile) && bagTile != null)
                             {
-                                GridElement bagElement = fromTile.GetComponentInChildren<GridElement>();
+                                GridElement bagElement = bagTile.GetComponentInChildren<GridElement>();
                                 if (bagElement != null)
                                 {
                                     bagElement.transform.SetParent(null, true);
-                                    float dropDist = Mathf.Max(0.5f, toTile.transform.localScale.y);
-                                    Vector3 endWorld = toTile.transform.position + Vector3.down * dropDist;
-                                    float regularFallDist = Vector3.Distance(bagElement.transform.position, toTile.transform.position);
-                                    float dropDur = fallSpeed > 0f ? regularFallDist / fallSpeed : 0.2f;
-                                    gravitySeq.Join(bagElement.transform.DOMove(endWorld, dropDur).SetEase(Ease.InQuad));
+                                    float dropDist = Mathf.Max(0.5f, bagTile.transform.localScale.y);
+                                    float dropDur = 0f;
+                                    gravitySeq.Join(bagElement.transform.DOMove(bagElement.transform.position + Vector3.down * dropDist, dropDur).SetEase(Ease.InQuad));
                                     gravitySeq.Join(bagElement.transform.DOScale(0.92f, dropDur).SetEase(Ease.InQuad));
                                     generatedElements.Remove(bagElement);
                                     Destroy(bagElement.gameObject, dropDur + 0.05f);
@@ -2492,13 +2455,20 @@ namespace Game
                             continue;
                         }
 
-                        if (targetPos != readPos)
+                        if (highestExisting == -1) highestExisting = readIndex;
+
+                        Vector2Int landingPos = GetGravityLandingPosition(readPos);
+                        GridCell landingCell = GetCell(landingPos);
+                        if (landingCell == null) continue;
+
+                        if (landingPos != readPos)
                         {
                             readCell.elementInfo = null;
-                            targetCell.elementInfo = movingInfo;
+                            landingCell.elementInfo = movingInfo;
+                            processedInfos.Add(movingInfo);
 
                             if (generatedTiles.TryGetValue(readPos, out GridCellController fromTile) &&
-                                generatedTiles.TryGetValue(targetPos, out GridCellController toTile) &&
+                                generatedTiles.TryGetValue(landingPos, out GridCellController toTile) &&
                                 fromTile != null && toTile != null)
                             {
                                 GridElement movingEl = fromTile.GetComponentInChildren<GridElement>();
@@ -2512,17 +2482,27 @@ namespace Game
                                 }
                             }
                         }
-                        writeIndex--;
                     }
 
                     if (!section.allowsRefillFromAbove)
                         continue;
 
                     // Spawn new elements
-                    int spawnBase = highestExisting != -1 ? (playableRows.Count - highestExisting) : 0;
-                    for (int emptyIdx = writeIndex; emptyIdx >= 0; emptyIdx--)
+                    List<int> emptyRows = new List<int>();
+                    for (int rowIndex = playableRows.Count - 1; rowIndex >= 0; rowIndex--)
                     {
-                        int targetY = playableRows[emptyIdx];
+                        int targetY = playableRows[rowIndex];
+                        Vector2Int targetPos = new Vector2Int(x, targetY);
+                        GridCell targetCell = GetCell(targetPos);
+                        if (targetCell == null || targetCell.elementInfo != null) continue;
+
+                        emptyRows.Add(targetY);
+                    }
+
+                    int spawnBase = highestExisting != -1 ? (playableRows.Count - highestExisting) : 0;
+                    for (int emptyIdx = 0; emptyIdx < emptyRows.Count; emptyIdx++)
+                    {
+                        int targetY = emptyRows[emptyIdx];
                         Vector2Int targetPos = new Vector2Int(x, targetY);
                         GridCell targetCell = GetCell(targetPos);
                         if (targetCell == null) continue;
@@ -2539,7 +2519,7 @@ namespace Game
 
                         if (generatedTiles.TryGetValue(targetPos, out GridCellController targetTile) && targetTile != null)
                         {
-                            int stackOffset = spawnBase + (writeIndex - emptyIdx + 1);
+                            int stackOffset = spawnBase + (emptyIdx + 1);
                             Vector3 spawnWorldPos = targetTile.transform.position + Vector3.up * stackOffset;
                             GridElement newEl = Instantiate(gridElementPrefab, spawnWorldPos, Quaternion.identity); // TODO: Use pooling
                             newEl.transform.SetParent(targetTile.transform, true);
@@ -2954,26 +2934,8 @@ namespace Game
             {
                 Vector2Int pos = new Vector2Int(x, y);
                 GridCell cell = GetCell(pos);
-                if (cell == null || cell.cellType != CellType.Normal)
-                    continue;
-
-                bool acceptsElements = cell.cellFeature == null || !cell.cellFeature.FeatureFlags.HasFlag(CellFeature.CellFeatureFlags.PreventsElements);
-                if (!acceptsElements)
-                    continue;
-
-                if (cell.cellFeature is GlassFeature)
-                    continue;
-
-                if (IsCellCoveredByMultiCellElement(pos))
-                    continue;
-
-                if (IsCauldronCell(cell))
-                    continue;
-
-                if (IsGravityPassThroughCell(cell))
-                    continue;
-
-                return y;
+                if (CanAcceptGravityElementAt(pos, cell))
+                    return y;
             }
 
             return -1;
@@ -2986,6 +2948,124 @@ namespace Game
 
             GridCell belowCell = GetCell(new Vector2Int(x, y + 1));
             return belowCell == null || belowCell.cellType == CellType.Empty;
+        }
+
+        private bool CanAcceptGravityElementAt(Vector2Int pos, GridCell cell = null)
+        {
+            if (!IsInsideGrid(pos))
+                return false;
+
+            cell = cell ?? GetCell(pos);
+            if (cell == null || cell.cellType != CellType.Normal)
+                return false;
+
+            bool acceptsElements = cell.cellFeature == null || !cell.cellFeature.FeatureFlags.HasFlag(CellFeature.CellFeatureFlags.PreventsElements);
+            if (!acceptsElements)
+                return false;
+
+            if (cell.cellFeature is GlassFeature)
+                return false;
+
+            if (IsCellCoveredByMultiCellElement(pos))
+                return false;
+
+            if (IsCauldronCell(cell))
+                return false;
+
+            if (IsGravityPassThroughCell(cell))
+                return false;
+
+            if (IsGravityBlockingCell(cell))
+                return false;
+
+            return true;
+        }
+
+        private bool CanGravityElementOccupy(Vector2Int pos)
+        {
+            if (!CanAcceptGravityElementAt(pos))
+                return false;
+
+            GridCell cell = GetCell(pos);
+            return cell != null && cell.elementInfo == null;
+        }
+
+        private bool HasDirectDropCandidateAbove(Vector2Int targetPos, Vector2Int movingElementPos)
+        {
+            if (!IsInsideGrid(targetPos))
+                return false;
+
+            for (int y = targetPos.y - 1; y >= 0; y--)
+            {
+                Vector2Int checkPos = new Vector2Int(targetPos.x, y);
+                GridCell checkCell = GetCell(checkPos);
+                if (!CanAcceptGravityElementAt(checkPos, checkCell))
+                    break;
+
+                GridElementInfo info = checkCell?.elementInfo;
+                if (info?.elementData == null)
+                    continue;
+
+                if (checkPos == movingElementPos)
+                    continue;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool CanSlideInto(Vector2Int targetPos, Vector2Int movingElementPos)
+        {
+            if (!CanGravityElementOccupy(targetPos))
+                return false;
+
+            return !HasDirectDropCandidateAbove(targetPos, movingElementPos);
+        }
+
+        private Vector2Int GetVerticalLandingPosition(Vector2Int startPos)
+        {
+            Vector2Int currentPos = startPos;
+            while (true)
+            {
+                Vector2Int belowPos = new Vector2Int(currentPos.x, currentPos.y + 1);
+                if (!CanGravityElementOccupy(belowPos))
+                    break;
+
+                currentPos = belowPos;
+            }
+
+            return currentPos;
+        }
+
+        private Vector2Int GetGravityLandingPosition(Vector2Int startPos)
+        {
+            Vector2Int verticalLanding = GetVerticalLandingPosition(startPos);
+
+            Vector2Int downLeftPos = new Vector2Int(verticalLanding.x - 1, verticalLanding.y + 1);
+            Vector2Int downRightPos = new Vector2Int(verticalLanding.x + 1, verticalLanding.y + 1);
+            bool canSlideLeft = CanSlideInto(downLeftPos, verticalLanding);
+            bool canSlideRight = CanSlideInto(downRightPos, verticalLanding);
+
+            if (!canSlideLeft && !canSlideRight)
+                return verticalLanding;
+
+            if (canSlideLeft && canSlideRight)
+            {
+                Vector2Int leftLanding = GetVerticalLandingPosition(downLeftPos);
+                Vector2Int rightLanding = GetVerticalLandingPosition(downRightPos);
+
+                if (leftLanding.y > rightLanding.y)
+                    return leftLanding;
+
+                if (rightLanding.y > leftLanding.y)
+                    return rightLanding;
+
+                return leftLanding.x <= rightLanding.x ? leftLanding : rightLanding;
+            }
+
+            Vector2Int diagonalStart = canSlideLeft ? downLeftPos : downRightPos;
+            return GetVerticalLandingPosition(diagonalStart);
         }
 
         private sealed class GravityColumnSection

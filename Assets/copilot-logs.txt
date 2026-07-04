@@ -48,6 +48,9 @@
 [2026-05-12 18:03:27] - Added CannonAction premium action with click-to-place flow that clears the selected column using new Match3Grid.ClearColumnAt and then resolves gravity.
 [2026-05-12 18:16:43] - Added HammerAction premium action with click-to-place flow that clears the selected cell plus orthogonal neighbors (up/down/left/right) via new Match3Grid.ClearCrossAt, then resolves gravity.
 [2026-05-13 16:31:50] - Fixed propeller target prioritization to prefer breakable wall cells first, then hidden elements, then WaferFeature cells in PowerUpHandler.
+[2026-07-04 16:51:00] - Refactored Match3Grid gravity to support diagonal slide landing into nearby lower empty cells and refill from actual empty playable rows.
+[2026-07-04 17:03:42] - Updated gravity slide priority so direct-above drops fill empty cells first; neighbor-column slides only occur when no vertical drop candidate exists above the target cell.
+[2026-07-04 17:11:53] - Adjusted gravity landing path so elements fully drop in their own column first, then perform at most one diagonal slide and continue dropping vertically in the new column.
 [2026-05-13 17:02:14] - Refactored Disco Ball activation logic: now picks the most common element on grid when clicked without swapping, or uses the swapped element when activated via swap, then destroys all matching elements using the same trail animation as before.
 [2026-05-13 17:15:21] - Fixed element material assignment in GridElement.SetElement() to apply elementMaterial from ElementData to SpriteRenderer whenever it's not null, regardless of power-up type, enabling material effects like hue shifts for all sprite-based elements.
 [2026-05-13 17:15:32] - Added configurable disco ball trail arrival emission: new ConstantManager field `discoBallEmissionOnTrailArrival` with remote config support; updated AnimateSingleDiscoTrail and AnimateSingleDiscoPowerUpTrail to apply emission on trail arrival instead of hardcoded peak value.
