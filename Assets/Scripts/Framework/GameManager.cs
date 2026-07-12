@@ -226,6 +226,16 @@ namespace Game
             return sceneIndex >= 0 ? World.Instance.levelScenes[sceneIndex] : null;
         }
 
+        public void ChangeGameState(GameState gameState)
+        {
+            CurrentGameState = gameState;
+        }
+        public void ReturnToMainMenu()
+        {
+            EndCurrentLevel();
+            ScreenManager.Instance.Show(Screens.MainMenu);
+            ChangeGameState(GameState.Overworld);
+        }
     }
 }
 

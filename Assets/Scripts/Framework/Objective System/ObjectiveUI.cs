@@ -99,7 +99,7 @@ public class UpperPanelUI : UIElement
             objectiveNodes.Add(node);
         });
 
-        UpdateObjectivesContainerVisibility();
+            UpdateObjectivesContainerVisibility();
     }
     private void UpdateObjectiveNodes()
     {
@@ -129,7 +129,7 @@ public class UpperPanelUI : UIElement
             }
         }
 
-        if (!hasVisibleObjectives)
+        if (!hasVisibleObjectives || GameManager.Instance.CurrentLevel.isEnded)
         {
             objectivesContainer.alpha = 0f;
         }
