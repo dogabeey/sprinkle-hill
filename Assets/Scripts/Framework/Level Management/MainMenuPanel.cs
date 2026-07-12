@@ -8,6 +8,11 @@ namespace Game
         public override Screens ScreenID => Screens.MainMenu;
 
         [SerializeField] private Button currentLevelButton;
+        [SerializeField] private Button marketButton;
+        [SerializeField] private Button leaderboardButton;
+        [SerializeField] private Button homeButton;
+        [SerializeField] private Button missionsButton;
+        [SerializeField] private Button settingsButton;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
