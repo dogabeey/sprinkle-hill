@@ -2,13 +2,16 @@ using DG.Tweening;
 using System.Collections;
 using System.Globalization;
 using TMPro;
-using UnityEngine; using Game.EventManagement;
+using UnityEngine; 
+using UnityEngine.UI;
+using Game.EventManagement;
 
 namespace Game
 {
     public class CurrencyElement : MonoBehaviour
     {
         public Transform currencyTransform;
+        public Image currencyImage;
         public TMP_Text currencyText;
 
         internal CurrencyModel refCurrency;
@@ -42,16 +45,21 @@ namespace Game
                 currencyTextTween.Kill();
             }
             if(amount < 0)
-                currencyText.text = $"<sprite index={currency.spriteIndexForUI}> {(finalAmount - amount).ToLargeNumberString()} (<color=red>-{(-amount).ToLargeNumberString()})";
+                currencyText.text = $"{(finalAmount - amount).ToLargeNumberString()} (<color=red>\n-{(-amount).ToLargeNumberString()})";
             else
-                currencyText.text = $"<sprite index={currency.spriteIndexForUI}> {(finalAmount - amount).ToLargeNumberString()} (<color=green>+{amount.ToLargeNumberString()})";
+                currencyText.text = $"{(finalAmount - amount).ToLargeNumberString()} (<color=green>\n+{amount.ToLargeNumberString()})";
             
             yield return new WaitForSeconds(0.5f);
             currencyTextTween = DOVirtual.Float(finalAmount - amount, finalAmount, 0.5f, (value) =>
             {
                 string formattedAmount = value.ToLargeNumberString();
-                currencyText.text = $"<sprite index={currency.spriteIndexForUI}>" + formattedAmount;
+                currencyText.text = formattedAmount;
             });
+
+            if(currencyImage != null)
+            {
+                currencyImage.sprite = currency.currencyIcon;
+            }
         }
 
         

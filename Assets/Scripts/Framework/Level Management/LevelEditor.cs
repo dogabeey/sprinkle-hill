@@ -40,7 +40,7 @@ namespace Game
         [SerializeField] private List<ElementData> elementPool = new List<ElementData>();
 
         [ShowInInspector, ReadOnly, MultiLineProperty(8), PropertyOrder(-1), LabelText("Editor Shortcuts")]
-        private string ShortcutLegend =>
+        public string ShortcutLegend =>
             "Grid Cell Shortcuts\n" +
             "E: Set cell to Empty\n" +
             "N: Set cell to Normal\n" +
@@ -118,14 +118,6 @@ namespace Game
         private bool UseProcedural => levelCreationMode == Grid3D.LevelCreationMode.Procedural;
         private bool IsTimerLimit => levelLimitType == LevelLimitType.Timer;
         private bool IsMovesLimit => levelLimitType == LevelLimitType.Moves;
-
-        private static bool IsCauldronElementData(ElementData data)
-        {
-            if (data == null)
-                return false;
-
-            return GameManager.Instance != null && data is CauldronElementData;
-        }
 
         private static ElementPowerUpType ResolveElementPowerUpType(ElementData data)
         {
