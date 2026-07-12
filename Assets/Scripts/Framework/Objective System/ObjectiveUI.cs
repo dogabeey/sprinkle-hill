@@ -36,6 +36,8 @@ public class UpperPanelUI : UIElement
     {
         base.OnEnable();
         EventManager.StartListening(GameEvent.OBJECTIVES_INITIALIZED, OnObjectivesInitialized);
+        EventManager.StartListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
+        EventManager.StartListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
         InstantiateObjectiveNodes();
     }
 
@@ -43,6 +45,8 @@ public class UpperPanelUI : UIElement
     {
         base.OnDisable();
         EventManager.StopListening(GameEvent.OBJECTIVES_INITIALIZED, OnObjectivesInitialized);
+        EventManager.StopListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
+        EventManager.StopListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
     }
 
     public override void InitUI()
@@ -226,6 +230,14 @@ public class UpperPanelUI : UIElement
     private void OnObjectivesInitialized(EventParam param)
     {
         InstantiateObjectiveNodes();
+    }
+    private void OnLevelStarted(EventParam param)
+    {
+        objectivesContainer.alpha = 1f;
+    }
+    private void OnLevelCompleted(EventParam param)
+    {
+        objectivesContainer.alpha = 0f;
     }
 
 }

@@ -15,6 +15,11 @@ using UnityEditor;
 
 namespace Game
 {
+    public enum GameState
+    {
+        Overworld,
+        Level,
+    }
 
     public class GameManager : SingletonComponent<GameManager>
     {
@@ -48,8 +53,8 @@ namespace Game
         public bool isSequentalLevels = true;
 
         private bool isAutoShuffleRunning;
-
         private World currentWorld;
+        private GameState currentGameState;
 
         public World CurrentWorld
         {
@@ -63,6 +68,19 @@ namespace Game
                 currentWorld = value;
 
                 EventManager.TriggerEvent(GameEvent.CURRENT_WORLD_CHANGED, new EventParam());
+            }
+        }
+        public GameState CurrentGameState
+        {
+            get
+            {
+                return currentGameState;
+            }
+            set
+            {
+                currentGameState = value;
+
+                EventManager.TriggerEvent(GameEvent.GAME_STATE_CHANGED, new EventParam { paramInt = (int)currentGameState });
             }
         }
         public LevelScene CurrentLevel => World.Instance.CurrentLevel;

@@ -28,7 +28,6 @@ public class EventParam
     public Vector3[] vectorList;
     public bool paramBool;
     public Dictionary<string, object> paramDictionary;
-
     private readonly Dictionary<string, object> payload = new Dictionary<string, object>(StringComparer.Ordinal);
 
     public Dictionary<string, object> Payload => payload;
