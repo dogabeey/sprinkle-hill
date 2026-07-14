@@ -49,6 +49,8 @@ namespace Game
         [FoldoutGroup("UI References")]
         public Canvas mainCanvas;
         [FoldoutGroup("UI References")]
+        public MainMenuPanel mainMenuPanel;
+        [FoldoutGroup("UI References")]
         public UpperPanelUI upperPanelUI;
         [FoldoutGroup("Settings")]
         public bool isSequentalLevels = true;
@@ -81,7 +83,21 @@ namespace Game
             set
             {
                 currentGameState = value;
-
+                switch (currentGameState)
+                {
+                    case GameState.None:
+                        break;
+                    case GameState.Overworld:
+                        mainMenuPanel.gameObject.SetActive(true);
+                        CurrencyManager.Instance.currencyCanvasGroup.alpha = 1f;
+                        break;
+                    case GameState.Level:
+                        mainMenuPanel.gameObject.SetActive(false);
+                        LoadCurrentLevel();
+                        break;
+                    default:
+                        break;
+                }
                 EventManager.TriggerEvent(GameEvent.GAME_STATE_CHANGED, new EventParam { paramInt = (int)currentGameState });
             }
         }
@@ -162,14 +178,7 @@ namespace Game
             {
                 LevelScene foundLevel;
                 foundLevel = FindAnyObjectByType<LevelScene>();
-                if (!foundLevel || CurrentGameState == GameState.Level)
-                {
-                    LoadCurrentLevel();
-                }
-                if(CurrentGameState == GameState.Overworld)
-                {
-                    ScreenManager.Instance.Show(Screens.MainMenu);
-                }
+                CurrentGameState = currentGameState; // Force the setter to trigger the event and load the level if found
             }
         }
 
@@ -229,7 +238,6 @@ namespace Game
         public void ReturnToMainMenu()
         {
             EndCurrentLevel();
-            ScreenManager.Instance.Show(Screens.MainMenu);
             ChangeGameState(GameState.Overworld);
         }
     }

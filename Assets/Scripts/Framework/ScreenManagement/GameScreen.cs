@@ -11,8 +11,8 @@ namespace Game
         public Animator animator;
         public string playAnimationName;
         public string closeAnimationName;
-        public bool isPersistent;
-        public bool preventOtherScreensFromOpening;
+        public bool notClosedByClickingOutside;
+        public bool notClosedByOpeningAnotherScreen;
 
         private void OnValidate()
         {
@@ -43,24 +43,6 @@ namespace Game
         {
             yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
             gameObject.SetActive(false);
-        }
-    }
-    public class MainMenuScreen : GameScreen
-    {
-        public MainMenuScreen()
-        {
-        }
-
-        public override Screens ScreenID => Screens.MainMenu;
-
-        public override void InitUI(EventParam eventParam)
-        {
-
-        }
-
-        public override void ResolveParams(EventParam eventParam)
-        {
-
         }
     }
     

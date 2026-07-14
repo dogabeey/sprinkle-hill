@@ -50,7 +50,7 @@ namespace Game
 
         public void Show(Screens screenID)
         {
-            CloseAllNonPersistentScreens();
+            CloseAllScreens();
             ShowBackground();
             GameScreen gameScreen = screens.Find(screen => screen.ScreenID == screenID);
             ShowScreen(gameScreen);
@@ -58,7 +58,7 @@ namespace Game
 
         public void Show(Screens screenID, EventParam eventParam)
         {
-            CloseAllNonPersistentScreens();
+            CloseAllScreens();
             ShowBackground();
             GameScreen gameScreen = screens.Find(screen => screen.ScreenID == screenID);
             ShowScreen(gameScreen, eventParam);
@@ -76,7 +76,20 @@ namespace Game
             backgroundImage.enabled = false;
             screens.ForEach(screen =>
             {
-                if (!screen.isPersistent)
+                if (!screen.notClosedByClickingOutside)
+                {
+                    backgroundImage.DOFade(0, 0.5f);
+                    backgroundImage.enabled = false;
+                    screen.CloseUI();
+                }
+            });
+        }
+        public void CloseAllScreens() {
+            backgroundImage.DOFade(0, 0.5f);
+            backgroundImage.enabled = false;
+            screens.ForEach(screen =>
+            {
+                if (!screen.notClosedByOpeningAnotherScreen)
                 {
                     backgroundImage.DOFade(0, 0.5f);
                     backgroundImage.enabled = false;

@@ -200,11 +200,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initEvents: be020000
-  fireEvents: 92010000930100004e0400002a0300004f040000
+  fireEvents: 92010000930100004e0400002a0300004f0400002d010000
   triggerLatency: 0.1
   objectiveManager: {fileID: 0}
   objectiveNodePrefab: {fileID: 6249795917659776395, guid: b98a0bd0978144f409eccd31c6d39e06, type: 3}
-  objectivesContainer: {fileID: 7700883353145792698}
+  panelCanvasGroup: {fileID: 7700883353145792698}
+  objectivesContainer: {fileID: 2063477225400075419}
   targetIcon: {fileID: 5522425111778820872}
   targetIconPlaceholder: {fileID: 81696256194690674}
   timerHeaderText: {fileID: 1670456106122746841}
@@ -843,7 +844,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.0000076293945, y: -6.78}
+  m_AnchoredPosition: {x: -0.002494812, y: -14.610001}
   m_SizeDelta: {x: 0, y: -13.56}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8615067653988808824
@@ -1089,7 +1090,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 93.9, y: 0.00001261}
+  m_AnchoredPosition: {x: 93.899994, y: 0.00001261}
   m_SizeDelta: {x: 205.52, y: 226.78}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7716451917457432669
@@ -1212,7 +1213,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 38.553986, y: 0}
+  m_AnchoredPosition: {x: 38.554016, y: 0}
   m_SizeDelta: {x: -445.04736, y: 149.73}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3429832589655922773

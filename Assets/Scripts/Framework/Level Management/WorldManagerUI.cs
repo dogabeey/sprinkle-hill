@@ -19,7 +19,7 @@ namespace Game
         {
             backButton.onClick.AddListener(() =>
             {
-                ScreenManager.Instance.Show(Screens.MainMenu);
+                //ScreenManager.Instance.Show(Screens.MainMenu);
             });
             DrawUI();
         }

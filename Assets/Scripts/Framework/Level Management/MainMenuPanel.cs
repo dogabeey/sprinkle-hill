@@ -4,9 +4,8 @@ using TMPro;
 
 namespace Game
 {
-    public class MainMenuPanel : GameScreen
+    public class MainMenuPanel : MonoBehaviour
     {
-        public override Screens ScreenID => Screens.MainMenu;
 
         [SerializeField] private Button currentLevelButton;
         [SerializeField] private TMP_Text currentLevelText;
@@ -17,15 +16,17 @@ namespace Game
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-            CurrencyManager.Instance.currencyCanvasGroup.alpha = 1f;
-
-            currentLevelText.text = $"DAY {GameManager.Instance.CurrentLevelIndex + 1}";
-
             currentLevelButton.onClick.AddListener(OnCurrentLevelButtonClicked);
             marketButton.onClick.AddListener(OnMarketButtonClicked);
             leaderboardButton.onClick.AddListener(OnLeaderboardButtonClicked);
             homeButton.onClick.AddListener(OnHomeButtonClicked);
             missionsButton.onClick.AddListener(OnMissionsButtonClicked);
+        }
+        void OnEnable()
+        {
+            CurrencyManager.Instance.currencyCanvasGroup.alpha = 1f;
+            if (currentLevelText)
+                currentLevelText.text = $"DAY {GameManager.Instance.CurrentLevelIndex + 1}";
         }
         
         private void OnCurrentLevelButtonClicked()
@@ -51,11 +52,6 @@ namespace Game
         }
         // Update is called once per frame
         void Update()
-        {
-            
-        }
-
-        public override void ResolveParams(EventParam eventParam)
         {
             
         }

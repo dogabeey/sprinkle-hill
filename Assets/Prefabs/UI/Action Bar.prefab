@@ -330,6 +330,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 703662972010097208}
     m_Modifications:
+    - target: {fileID: 1054867579727122699, guid: 8e40dc73227ff8c48b24d41061c290a0, type: 3}
+      propertyPath: screenID
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 6121771969696675578, guid: 8e40dc73227ff8c48b24d41061c290a0, type: 3}
       propertyPath: m_Name
       value: Settings
