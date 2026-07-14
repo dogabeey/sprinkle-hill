@@ -34,29 +34,14 @@ namespace Game.EventManagement
         private List<EventListenerInfo> activeListeners = new List<EventListenerInfo>();
         [SerializeField, Tooltip("Total number of active listeners")]
         private int totalListenerCount = 0;
-        [SerializeField]
-        private Queue<KeyValuePair<string, EventParam>> eventDictionaryQueue = new Queue<KeyValuePair<string, EventParam>>();
 
         public void Awake()
         {
 #if UNITY_EDITOR
             UpdateInspectorInfo();
 #endif
-            StartCoroutine(TriggerEventQueueCoroutine());
         }
 
-        private IEnumerator TriggerEventQueueCoroutine()
-        {
-            while (enabled)
-            {
-                if (eventDictionaryQueue.Count > 0)
-                {
-                    KeyValuePair<string, EventParam> kvp = eventDictionaryQueue.Dequeue();
-                    TriggerEvent(kvp.Key, kvp.Value);
-                }
-                yield return new WaitForSeconds(eventQueueProcessingInterval);
-            }
-        }
 
         public void Update()
         {
@@ -194,7 +179,7 @@ namespace Game.EventManagement
 
         public static void TriggerEvent(GameEvent eventName)
         {
-            Instance.eventDictionaryQueue.Enqueue(new KeyValuePair<string, EventParam>(eventName.ToString(), new EventParam()));
+            TriggerEvent(eventName.ToString());
         }
 
         private static void TriggerEvent(string eventName, EventParam eventParam)
@@ -220,7 +205,7 @@ namespace Game.EventManagement
 
         public static void TriggerEvent(GameEvent eventName, EventParam eventParam)
         {
-            Instance.eventDictionaryQueue.Enqueue(new KeyValuePair<string, EventParam>(eventName.ToString(), eventParam));
+            TriggerEvent(eventName.ToString(), eventParam);
         }
 
     }
