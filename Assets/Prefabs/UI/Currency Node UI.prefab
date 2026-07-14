@@ -399,7 +399,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 9.99K
+  m_text: 9.99K\n+100
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c6d8f825370347744845aa7b10cf3420, type: 2}
   m_sharedMaterial: {fileID: 320891412821721280, guid: c6d8f825370347744845aa7b10cf3420, type: 2}
@@ -434,12 +434,12 @@ MonoBehaviour:
   m_fontSizeMax: 65
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
   m_wordSpacing: 0
-  m_lineSpacing: 0
+  m_lineSpacing: 25
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
