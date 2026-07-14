@@ -146,6 +146,7 @@ namespace Game
                 Vector3 sourceScreenPos = source.transform.position;
                 yield return StartCoroutine(AddCurrencyAnimationCoroutine(currencyInfo, sourceScreenPos, element.currencyTransform.position, amount));
             }
+            yield return new WaitForSeconds(0.5f);
 
             currencyInfo.amount += amount;
             NotifyCurrencyChanged(currencyInfo.currencyModel, amount);
