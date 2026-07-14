@@ -12,6 +12,7 @@ namespace Game
         public string playAnimationName;
         public string closeAnimationName;
         public bool isPersistent;
+        public bool preventOtherScreensFromOpening;
 
         private void OnValidate()
         {

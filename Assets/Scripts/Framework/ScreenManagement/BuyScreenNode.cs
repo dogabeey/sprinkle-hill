@@ -60,7 +60,7 @@ namespace Game
                 if (buyBundle.buyableReference.TryBuy(buyBundle, objectSource))
                 {
                     SendAnalyticEvent(buyBundle);
-                    ScreenManager.Instance.CloseAllScreens();
+                    ScreenManager.Instance.CloseAllNonPersistentScreens();
                 }
             }
         }

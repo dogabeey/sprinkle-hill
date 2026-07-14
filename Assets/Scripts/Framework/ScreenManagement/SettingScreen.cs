@@ -7,9 +7,10 @@ namespace Game
 {
     public class SettingScreen : GameScreen
     {
-        public override Screens ScreenID => Screens.SettingScreen;
+        public override Screens ScreenID => screenID;
 
         public Button toggleSettingsButton;
+        public Screens screenID;
         public GridLayoutGroup layoutGroup;
         public Button restartButton, nextLevelButton, homeButton;
         public Toggle musicToggle, sfxToggle, vibrationToggle, consentToggle;
@@ -61,12 +62,12 @@ namespace Game
             nextLevelButton.onClick.AddListener(() =>
             {
                 GameManager.Instance.LoadNextLevel();
-                ScreenManager.Instance.CloseAllScreens();
+                ScreenManager.Instance.CloseAllNonPersistentScreens();
             });
             homeButton.onClick.AddListener(() =>
             {
                 GameManager.Instance.ReturnToMainMenu();
-                ScreenManager.Instance.CloseAllScreens();
+                ScreenManager.Instance.CloseAllNonPersistentScreens();
             });
         }
 
@@ -83,13 +84,13 @@ namespace Game
             toggleSettingsButton.onClick.RemoveAllListeners();
             toggleSettingsButton.onClick.AddListener(() =>
             {
-                ScreenManager.Instance.CloseAllScreens();
+                ScreenManager.Instance.CloseAllNonPersistentScreens();
             });
         }
         public override void CloseUI()
         {
             if(gameObject.activeSelf)
-                StartCoroutine(MenuCloseCoroutine());
+                GameManager.Instance.StartCoroutine(MenuCloseCoroutine());
 
             // Toggle the settings button to open the menu again
             toggleSettingsButton.onClick.RemoveAllListeners();

@@ -25,7 +25,7 @@ namespace Game
                 AdsIntent = ConsentStatus.Granted
             });
             AnalyticsManager.Instance.currentConsentState = EndUserConsent.GetConsentState();
-            ScreenManager.Instance.CloseAllScreens();
+            ScreenManager.Instance.CloseAllNonPersistentScreens();
         }
         private void OnDecline()
         {
@@ -35,7 +35,7 @@ namespace Game
                 AdsIntent = ConsentStatus.Denied
             });
             AnalyticsManager.Instance.currentConsentState = EndUserConsent.GetConsentState();
-            ScreenManager.Instance.CloseAllScreens();
+            ScreenManager.Instance.CloseAllNonPersistentScreens();
         }
 
         public override void ResolveParams(EventParam eventParam)

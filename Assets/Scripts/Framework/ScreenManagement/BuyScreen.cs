@@ -38,7 +38,7 @@ namespace Game
 
             if (itemHeaderText) itemHeaderText.text = referenceBuyable.ItemName;
             if (itemDescriptionText) itemDescriptionText.text = referenceBuyable.ItemDescription;
-            if (returnToGameButton) returnToGameButton.onClick.AddListener(() => ScreenManager.Instance.CloseAllScreens());
+            if (returnToGameButton) returnToGameButton.onClick.AddListener(() => ScreenManager.Instance.CloseAllNonPersistentScreens());
 
             // Use IBuyable.BuyConfig to populate the buy screen with BuyScreenNodes.
             foreach (var buyBundle in referenceBuyable.BuyConfig)

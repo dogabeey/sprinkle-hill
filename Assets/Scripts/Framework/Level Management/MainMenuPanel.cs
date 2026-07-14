@@ -43,7 +43,7 @@ namespace Game
         }
         private void OnHomeButtonClicked()
         {
-            ScreenManager.Instance.CloseAllScreens();
+            ScreenManager.Instance.CloseAllNonPersistentScreens();
         }
         private void OnMissionsButtonClicked()
         {

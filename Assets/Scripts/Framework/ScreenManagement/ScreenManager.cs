@@ -18,7 +18,7 @@ namespace Game
 
         private IEnumerator Start()
         {
-            screens.AddRange(FindObjectsOfType<GameScreen>(true));
+            screens.AddRange(Object.FindObjectsByType<GameScreen>(FindObjectsSortMode.None));
 
             defaultBGAlpha = backgroundImage.color.a;
             yield break;
@@ -50,49 +50,26 @@ namespace Game
 
         public void Show(Screens screenID)
         {
-            backgroundImage.color = new Color(backgroundImage.color.r, backgroundImage.color.g, backgroundImage.color.b, 0);
-            backgroundImage.enabled = true;
-            backgroundImage.DOFade(defaultBGAlpha, 0.5f);
-            screens.ForEach(screen =>
-            {
-                if (screen.gameObject.activeSelf)
-                {
-                    EventManager.TriggerEvent(GameEvent.SCREEN_CLOSED, new EventParam(
-                        paramObj: screen.gameObject,
-                        paramInt: (int)screen.ScreenID
-                    ));
-                }
-                screen.gameObject.SetActive(false);
-            });
+            CloseAllNonPersistentScreens();
+            ShowBackground();
             GameScreen gameScreen = screens.Find(screen => screen.ScreenID == screenID);
             ShowScreen(gameScreen);
         }
 
         public void Show(Screens screenID, EventParam eventParam)
         {
-            backgroundImage.color = new Color(backgroundImage.color.r, backgroundImage.color.g, backgroundImage.color.b, 0);
-            backgroundImage.enabled = true;
-            backgroundImage.DOFade(defaultBGAlpha, 0.5f);
-            screens.ForEach(screen =>
-            {
-                if (screen.gameObject.activeSelf)
-                {
-                    EventManager.TriggerEvent(GameEvent.SCREEN_CLOSED, new EventParam(
-                        paramObj: screen.gameObject,
-                        paramInt: (int)screen.ScreenID
-                    ));
-                }
-                screen.gameObject.SetActive(false);
-            });
+            CloseAllNonPersistentScreens();
+            ShowBackground();
             GameScreen gameScreen = screens.Find(screen => screen.ScreenID == screenID);
             ShowScreen(gameScreen, eventParam);
         }
-        public void CloseAllScreens()
+        private void ShowBackground()
         {
-            backgroundImage.DOFade(0, 0.5f);
-            backgroundImage.enabled = false;
-            screens.ForEach(screen => screen.CloseUI());
+            backgroundImage.color = new Color(backgroundImage.color.r, backgroundImage.color.g, backgroundImage.color.b, 0);
+            backgroundImage.enabled = true;
+            backgroundImage.DOFade(defaultBGAlpha, 0.5f);
         }
+
         public void CloseAllNonPersistentScreens()
         {
             backgroundImage.DOFade(0, 0.5f);

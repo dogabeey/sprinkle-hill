@@ -7700,6 +7700,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4133448082132307929}
     m_Modifications:
+    - target: {fileID: 1628558826768690918, guid: 16e73610690391f48848a8e2191dc0f7, type: 3}
+      propertyPath: screenID
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5280741622239145315, guid: 16e73610690391f48848a8e2191dc0f7, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -8594,6 +8598,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1995425553}
     - target: {fileID: 2120086930441402043, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
+      propertyPath: isPersistent
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2120086930441402043, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
       propertyPath: marketButton
       value: 
       objectReference: {fileID: 856896401}
@@ -8645,6 +8653,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Menu Panel
       objectReference: {fileID: 0}
+    - target: {fileID: 5736114415810112453, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6439280127595678472, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -8668,6 +8680,10 @@ PrefabInstance:
     - target: {fileID: 6439280127595678472, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6510241985628227967, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7883050270102303300, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
       propertyPath: m_Pivot.x
@@ -8750,6 +8766,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8209839377787785261, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
+      propertyPath: screenID
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8209839377787785261, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
       propertyPath: homeButton
       value: 
       objectReference: {fileID: 1743049896}
@@ -8779,6 +8799,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8389203826076692394, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8852946967753654949, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -10069,9 +10093,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1759594110}
     - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: panelCanvasGroup
+      value: 
+      objectReference: {fileID: 9132301250057630283}
+    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
       propertyPath: objectivesContainer
       value: 
       objectReference: {fileID: 2081450940}
+    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: fireEvents.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4933098003547906628, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: 'fireEvents.Array.data[5]'
+      value: 301
+      objectReference: {fileID: 0}
     - target: {fileID: 5878624774752496449, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 93.899994
@@ -10105,6 +10141,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 785ca85761767c740ad90f6e14d52671, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!225 &9132301250057630283 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 7700883353145792698, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+  m_PrefabInstance: {fileID: 9132301250057630277}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

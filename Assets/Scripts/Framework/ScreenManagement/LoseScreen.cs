@@ -34,7 +34,7 @@ namespace Game
             addMovesButton.onClick.RemoveAllListeners();
             addMovesButton.onClick.AddListener(() =>
             { 
-                ScreenManager.Instance.CloseAllScreens();
+                ScreenManager.Instance.CloseAllNonPersistentScreens();
                 (GameManager.Instance.CurrentLevel as LevelScene_Match3Game).BuyExtraMovesOrTime();
                 // Restore the game state to what it was before the lose condition was triggered, so that the player can continue playing after buying extra moves or time
                 GameManager.Instance.CurrentLevel.RestoreStateBeforeLoseCondition();
@@ -43,7 +43,7 @@ namespace Game
             repeatLevelButton.onClick.RemoveAllListeners();
             repeatLevelButton.onClick.AddListener(() =>
             {
-                ScreenManager.Instance.CloseAllScreens();
+                ScreenManager.Instance.CloseAllNonPersistentScreens();
                 EventManager.TriggerEvent(GameEvent.LEVEL_EXTRA_MOVE_REJECTED);
                 GameManager.Instance.ResetCurrentLevel();
             });

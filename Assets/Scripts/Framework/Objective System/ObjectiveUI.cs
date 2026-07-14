@@ -61,7 +61,9 @@ public class UpperPanelUI : UIElement
     {
         EnsureObjectiveNodesSynced();
         UpdateObjectiveNodes();
-        UpdateTimerDisplay();
+        LevelScene_Match3Game levelScene = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
+        if(levelScene != null)
+            UpdateTimerDisplay(levelScene);
     }
 
     private void EnsureObjectiveNodesSynced()
@@ -130,7 +132,7 @@ public class UpperPanelUI : UIElement
             }
         }
 
-        if (!hasVisibleObjectives || GameManager.Instance.CurrentLevel.isEnded || GameManager.Instance.CurrentGameState != GameState.Level)
+        if (!hasVisibleObjectives || GameManager.Instance.CurrentLevel == null || GameManager.Instance.CurrentLevel.isEnded || GameManager.Instance.CurrentGameState != GameState.Level)
         {
             panelCanvasGroup.alpha = 0f;
         }
@@ -154,9 +156,9 @@ public class UpperPanelUI : UIElement
 
         Debug.Log($"UpperPanelUI: Level scene found. Limit type: {levelScene.levelLimitType}, Initial moves: {levelScene.moves}, Initial timer: {levelScene.timer}");
 
-        while (true)
+        while (levelScene != null && !levelScene.isEnded)
         {
-            UpdateTimerDisplay();
+            UpdateTimerDisplay(levelScene);
 
             if (levelScene.isEnded)
                 yield break;
@@ -165,9 +167,8 @@ public class UpperPanelUI : UIElement
         }
     }
 
-    private void UpdateTimerDisplay()
+    private void UpdateTimerDisplay(LevelScene_Match3Game levelScene)
     {
-        LevelScene_Match3Game levelScene = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
         int timer = levelScene.timer;
         if (timer == -1)
         {
