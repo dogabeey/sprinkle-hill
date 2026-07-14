@@ -1114,7 +1114,8 @@ MonoBehaviour:
   toggleSettingsButton: {fileID: 8808001313771610485}
   layoutGroup: {fileID: 9021003699507247145}
   restartButton: {fileID: 5140174807976948333}
-  nextLevelToggle: {fileID: 5489312190943977986}
+  nextLevelButton: {fileID: 5489312190943977986}
+  homeButton: {fileID: 1204341613380027488}
   musicToggle: {fileID: 7664497286446352326}
   sfxToggle: {fileID: 1033803490677429683}
   vibrationToggle: {fileID: 4991071103657752140}

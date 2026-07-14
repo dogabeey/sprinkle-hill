@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine; using Game.EventManagement;
+using UnityEngine;
 using DG.Tweening;
 using TMPro;
 using Sirenix.OdinInspector;
@@ -58,6 +58,7 @@ namespace Game
             EventManager.StartListening(GameEvent.LEVEL_FAILED, OnLevelCompleted);
             EventManager.StartListening(GameEvent.SCREEN_OPENED, OnScreenOpened);
             EventManager.StartListening(GameEvent.SCREEN_CLOSED, OnScreenClosed);
+            EventManager.StartListening(GameEvent.GAME_STATE_CHANGED, OnGameStateChanged);
         }
         private void OnDisable()
         {
@@ -66,6 +67,7 @@ namespace Game
             EventManager.StopListening(GameEvent.LEVEL_FAILED, OnLevelCompleted);
             EventManager.StopListening(GameEvent.SCREEN_OPENED, OnScreenOpened);
             EventManager.StopListening(GameEvent.SCREEN_CLOSED, OnScreenClosed);
+            EventManager.StopListening(GameEvent.GAME_STATE_CHANGED, OnGameStateChanged);
         }
         private void OnLevelStarted(EventParam e)
         {
@@ -84,6 +86,19 @@ namespace Game
         private void OnScreenClosed(EventParam e)
         {
             currencyCanvasGroup.alpha = 0;
+        }
+
+        private void OnGameStateChanged(EventParam e)
+        {
+            GameState newState = (GameState)e.paramInt;
+            if (newState == GameState.Overworld)
+            {
+                currencyCanvasGroup.alpha = 1;
+            }
+            else
+            {
+                currencyCanvasGroup.alpha = 0;
+            }
         }
 
         private void Start()

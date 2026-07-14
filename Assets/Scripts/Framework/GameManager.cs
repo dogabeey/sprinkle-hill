@@ -17,6 +17,7 @@ namespace Game
 {
     public enum GameState
     {
+        None,
         Overworld,
         Level,
     }
@@ -54,7 +55,8 @@ namespace Game
 
         private bool isAutoShuffleRunning;
         private World currentWorld;
-        private GameState currentGameState;
+        [SerializeField]
+        private GameState currentGameState = GameState.None;
 
         public World CurrentWorld
         {
@@ -160,20 +162,13 @@ namespace Game
             {
                 LevelScene foundLevel;
                 foundLevel = FindAnyObjectByType<LevelScene>();
-                if (!foundLevel)
+                if (!foundLevel || CurrentGameState == GameState.Level)
                 {
                     LoadCurrentLevel();
                 }
-                else
+                if(CurrentGameState == GameState.Overworld)
                 {
-                    // During the actual game, we want to load current level through the game manager 
-                    // in case of there are any test level remnants forgotten in the scene
-#if UNITY_EDITOR
-                    World.Instance.CurrentLevel = foundLevel;
-#else
-                        Destroy(foundLevel.gameObject);
-                        LoadCurrentLevel();
-#endif
+                    ScreenManager.Instance.Show(Screens.MainMenu);
                 }
             }
         }
@@ -185,6 +180,7 @@ namespace Game
         public void LoadLevel(LevelScene levelScene)
         {
             EndCurrentLevel();
+            ScreenManager.Instance.CloseAllScreens();
             World.Instance.CurrentLevel = Instantiate(levelScene, levelContainer);
         }
         public void LoadCurrentLevel()

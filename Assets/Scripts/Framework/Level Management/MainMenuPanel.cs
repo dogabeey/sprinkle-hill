@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 namespace Game
 {
@@ -8,14 +9,18 @@ namespace Game
         public override Screens ScreenID => Screens.MainMenu;
 
         [SerializeField] private Button currentLevelButton;
+        [SerializeField] private TMP_Text currentLevelText;
         [SerializeField] private Button marketButton;
         [SerializeField] private Button leaderboardButton;
         [SerializeField] private Button homeButton;
         [SerializeField] private Button missionsButton;
-        [SerializeField] private Button settingsButton;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
+            CurrencyManager.Instance.currencyCanvasGroup.alpha = 1f;
+
+            currentLevelText.text = $"DAY {GameManager.Instance.CurrentLevelIndex + 1}";
+
             currentLevelButton.onClick.AddListener(OnCurrentLevelButtonClicked);
             marketButton.onClick.AddListener(OnMarketButtonClicked);
             leaderboardButton.onClick.AddListener(OnLeaderboardButtonClicked);
@@ -25,6 +30,7 @@ namespace Game
         
         private void OnCurrentLevelButtonClicked()
         {
+            GameManager.Instance.ChangeGameState(GameState.Level);
             GameManager.Instance.LoadCurrentLevel();
         }
         private void OnMarketButtonClicked()
