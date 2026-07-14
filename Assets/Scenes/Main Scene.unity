@@ -868,6 +868,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &406237012 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5643171467652455745, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
+  m_PrefabInstance: {fileID: 4796880475106837073}
+  m_PrefabAsset: {fileID: 0}
+--- !u!210 &406237016
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 406237012}
+  m_Enabled: 1
+  m_SortingLayerID: -503466991
+  m_SortingLayer: -1
+  m_SortingOrder: 0
+  m_SortAtRoot: 0
+  m_Sort3DAs2D: 0
 --- !u!1 &407152367
 GameObject:
   m_ObjectHideFlags: 0
@@ -8332,11 +8350,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1061930360}
-  - {fileID: 1068210311}
   - {fileID: 900864207}
   - {fileID: 1602025052}
   - {fileID: 1510078031}
   - {fileID: 407152368}
+  - {fileID: 1068210311}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -8619,6 +8637,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5643171467652455745, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
+      propertyPath: m_Name
+      value: bg-overworld
+      objectReference: {fileID: 0}
     - target: {fileID: 5736114415810112453, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
       propertyPath: m_Name
       value: Main Menu Panel
@@ -8765,7 +8787,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7883050270102303300, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
       insertIndex: -1
       addedObject: {fileID: 329493133}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5643171467652455745, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 406237016}
   m_SourcePrefab: {fileID: 100100000, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
 --- !u!224 &4796880475106837074 stripped
 RectTransform:
@@ -10050,6 +10075,14 @@ PrefabInstance:
     - target: {fileID: 5878624774752496449, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 93.899994
+      objectReference: {fileID: 0}
+    - target: {fileID: 7695969392470913753, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 38.554016
+      objectReference: {fileID: 0}
+    - target: {fileID: 7700883353145792698, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_Alpha
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

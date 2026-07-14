@@ -21,7 +21,8 @@ public class UpperPanelUI : UIElement
     public ObjectiveManager objectiveManager;
     [AssetsOnly]
     public ObjectiveUINode objectiveNodePrefab;
-    public CanvasGroup objectivesContainer;
+    public CanvasGroup panelCanvasGroup;
+    public Transform objectivesContainer;
     public Image targetIcon;
     public Image targetIconPlaceholder;
     public TMP_Text timerHeaderText;
@@ -129,13 +130,13 @@ public class UpperPanelUI : UIElement
             }
         }
 
-        if (!hasVisibleObjectives || GameManager.Instance.CurrentLevel.isEnded)
+        if (!hasVisibleObjectives || GameManager.Instance.CurrentLevel.isEnded || GameManager.Instance.CurrentGameState != GameState.Level)
         {
-            objectivesContainer.alpha = 0f;
+            panelCanvasGroup.alpha = 0f;
         }
         else
         {
-            objectivesContainer.alpha = 1f;
+            panelCanvasGroup.alpha = 1f;
         }
     }
 
@@ -212,32 +213,17 @@ public class UpperPanelUI : UIElement
                 yield return null;
         }
     }
-
-    private string FormatTime(float elapsedTime)
-    {
-        TimeSpan timeSpan = TimeSpan.FromSeconds(elapsedTime);
-        switch (timerType)
-        {
-            case TimerType.Countdown:
-                return string.Format(timerFormat, elapsedTime);
-            case TimerType.Stopwatch:
-                return string.Format(timerFormat, timeSpan.Minutes, timeSpan.Seconds);
-            default:
-                return string.Format(timerFormat, timeSpan.Minutes, timeSpan.Seconds);
-        }
-    }
-
     private void OnObjectivesInitialized(EventParam param)
     {
         InstantiateObjectiveNodes();
     }
     private void OnLevelStarted(EventParam param)
     {
-        objectivesContainer.alpha = 1f;
+        panelCanvasGroup.alpha = 1f;
     }
     private void OnLevelCompleted(EventParam param)
     {
-        objectivesContainer.alpha = 0f;
+        panelCanvasGroup.alpha = 0f;
     }
 
 }
