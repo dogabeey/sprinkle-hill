@@ -17,6 +17,10 @@ namespace Game
         FeatureProgress,
         BuyMenu,
         ConsentPopup,
+        Market,
+        Leaderboard,
+        Home,
+        Missions,
     }
 
     public class ConstantManager : SingletonComponent<ConstantManager>
