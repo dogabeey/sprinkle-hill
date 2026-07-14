@@ -45,9 +45,9 @@ namespace Game
                 currencyTextTween.Kill();
             }
             if(amount < 0)
-                currencyText.text = $"{(finalAmount - amount).ToLargeNumberString()} (<color=red>\n-{(-amount).ToLargeNumberString()})";
+                currencyText.text = $"{(finalAmount - amount).ToLargeNumberString()} <color=red>\n-{(-amount).ToLargeNumberString()}";
             else
-                currencyText.text = $"{(finalAmount - amount).ToLargeNumberString()} (<color=green>\n+{amount.ToLargeNumberString()})";
+                currencyText.text = $"{(finalAmount - amount).ToLargeNumberString()} <color=green>\n+{amount.ToLargeNumberString()}";
             
             yield return new WaitForSeconds(0.5f);
             currencyTextTween = DOVirtual.Float(finalAmount - amount, finalAmount, 0.5f, (value) =>
