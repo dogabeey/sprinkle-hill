@@ -23,12 +23,16 @@ namespace Game
 
         private void Awake()
         {
-            //screenContainer.alpha = 1;
+            ToggleLoadingScreen(false);
+        }
+        private void ToggleLoadingScreen(bool isActive)
+        {
+            screenContainer.alpha = isActive ? 1f : 0f;
+            screenContainer.blocksRaycasts = isActive;
         }
         public override void InitUI()
         {
-            screenContainer.alpha = 1f;
-            screenContainer.blocksRaycasts = false;
+            ToggleLoadingScreen(true);
 
             StartCoroutine(ChangeLoadingTextPeriodically());
 
@@ -40,7 +44,7 @@ namespace Game
                 screenContainer.alpha = value;
             }).OnComplete(() =>
             {
-                screenContainer.blocksRaycasts = false;
+                ToggleLoadingScreen(false);
                 EventManager.TriggerEvent(GameEvent.LOADING_SCREEN_COMPLETE);
             }));
         }
