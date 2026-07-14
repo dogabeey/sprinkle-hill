@@ -32,7 +32,6 @@ namespace Game
         private void OnCurrentLevelButtonClicked()
         {
             GameManager.Instance.ChangeGameState(GameState.Level);
-            GameManager.Instance.LoadCurrentLevel();
         }
         private void OnMarketButtonClicked()
         {

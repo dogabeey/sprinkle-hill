@@ -122,3 +122,4 @@
 [2026-06-29 13:40:00] - Fixed propeller source-neighbor splash to use non-propagating single-cell clears, preventing destroyed neighboring elements from triggering adjacent breakable boxes or other neighbor-based side effects.
 [2026-06-29 14:39:52] - Added configurable chain combo speed scaling so match clear delays, merge animations, and gravity drops accelerate with each extra cascade and reset when the board settles.
 [2026-07-04 00:00:00] - Fixed Match3Grid sliding visuals to follow real gravity travel paths (vertical drop + step-by-step side slides) instead of directly tweening to final landing cells, and registered Sliding definition in copilot instructions.
+[2026-07-15 02:14:22] - Fixed duplicate level instantiation from the main menu, preventing duplicate BOX_CREATED events and inflated auto-counted box objectives.
