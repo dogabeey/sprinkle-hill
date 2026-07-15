@@ -25,19 +25,19 @@ namespace Game
             });
 
             // Set up toggle listeners
-            musicToggle.onValueChanged.AddListener((isOn) =>
+            musicToggle?.onValueChanged.AddListener((isOn) =>
             {
                 SoundManager.Instance.IsMusicOn = isOn;
             });
-            sfxToggle.onValueChanged.AddListener((isOn) =>
+            sfxToggle?.onValueChanged.AddListener((isOn) =>
             {
                 SoundManager.Instance.IsSoundEffectsOn = isOn;
             });
-            vibrationToggle.onValueChanged.AddListener((isOn) =>
+            vibrationToggle?.onValueChanged.AddListener((isOn) =>
             {
                 SoundManager.Instance.IsVibrationOn = isOn;
             });
-            consentToggle.onValueChanged.AddListener((isOn) =>
+            consentToggle?.onValueChanged.AddListener((isOn) =>
             {
                 if (isOn)
                 {
@@ -59,12 +59,12 @@ namespace Game
                     AnalyticsManager.Instance.currentConsentState = EndUserConsent.GetConsentState();
                 }
             });
-            nextLevelButton.onClick.AddListener(() =>
+            nextLevelButton?.onClick.AddListener(() =>
             {
                 GameManager.Instance.LoadNextLevel();
                 ScreenManager.Instance.CloseAllNonPersistentScreens();
             });
-            homeButton.onClick.AddListener(() =>
+            homeButton?.onClick.AddListener(() =>
             {
                 GameManager.Instance.ReturnToMainMenu();
                 ScreenManager.Instance.CloseAllNonPersistentScreens();
@@ -93,8 +93,8 @@ namespace Game
                 GameManager.Instance.StartCoroutine(MenuCloseCoroutine());
 
             // Toggle the settings button to open the menu again
-            toggleSettingsButton.onClick.RemoveAllListeners();
-            toggleSettingsButton.onClick.AddListener(() =>
+            toggleSettingsButton?.onClick.RemoveAllListeners();
+            toggleSettingsButton?.onClick.AddListener(() =>
             {
                 ScreenManager.Instance.Show(ScreenID);
             });
@@ -108,14 +108,14 @@ namespace Game
 
         private IEnumerator MenuOpenCoroutine()
         {
-            musicToggle.gameObject.SetActive(true);
-            sfxToggle.gameObject.SetActive(true);
-            vibrationToggle.gameObject.SetActive(true);
-            restartButton.gameObject.SetActive(true);
-            consentToggle.gameObject.SetActive(true);
-            homeButton.gameObject.SetActive(true);
+            musicToggle?.gameObject.SetActive(true);
+            sfxToggle?.gameObject.SetActive(true);
+            vibrationToggle?.gameObject.SetActive(true);
+            restartButton?.gameObject.SetActive(true);
+            consentToggle?.gameObject.SetActive(true);
+            homeButton?.gameObject.SetActive(true);
             // If the build is in developer mode, show the next level button
-            nextLevelButton.gameObject.SetActive(Debug.isDebugBuild);
+            nextLevelButton?.gameObject.SetActive(Debug.isDebugBuild);
 
             yield return DOVirtual.Float(0, 50, 0.3f, (value) =>
             {
@@ -129,11 +129,12 @@ namespace Game
                 layoutGroup.spacing = Vector2.one * value;
             }).SetEase(Ease.InBack).WaitForCompletion();
 
-            restartButton.gameObject.SetActive(false);
-            vibrationToggle.gameObject.SetActive(false);
-            sfxToggle.gameObject.SetActive(false);
-            musicToggle.gameObject.SetActive(false);
-            homeButton.gameObject.SetActive(false);
+            restartButton?.gameObject.SetActive(false);
+            vibrationToggle?.gameObject.SetActive(false);
+            sfxToggle?.gameObject.SetActive(false);
+            musicToggle?.gameObject.SetActive(false);
+            homeButton?.gameObject.SetActive(false);
+            nextLevelButton?.gameObject.SetActive(false);
         }
     }
 }
