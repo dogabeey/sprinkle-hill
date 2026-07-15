@@ -32,7 +32,8 @@
     "max_disco_ball_indirect_count": 3.0,
     "max_cauldron_count": 99.0,
     "max_cauldron_indirect_count": 3.0,
-    "disco_ball_emission_on_trail_arrival": 2.0
+    "disco_ball_emission_on_trail_arrival": 2.0,
+    "ad_reward_multiplier": 2.0
   },
   "types": {
     "loading_screen_duration": "FLOAT",
@@ -66,6 +67,7 @@
     "max_disco_ball_indirect_count": "FLOAT",
     "max_cauldron_count": "FLOAT",
     "max_cauldron_indirect_count": "FLOAT",
-    "disco_ball_emission_on_trail_arrival": "FLOAT"
+    "disco_ball_emission_on_trail_arrival": "FLOAT",
+    "ad_reward_multiplier": "FLOAT"
   }
 }

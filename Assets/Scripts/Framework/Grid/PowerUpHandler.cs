@@ -2338,8 +2338,9 @@ namespace Game
                         {
                             hiddenElements.Add(pos);
                         }
-                        // Check for wafer features (third priority)
-                        else if (cell.cellFeature is WaferFeature)
+                        // Prioritize features that are cleared together with their element.
+                        else if (cell.cellFeature != null &&
+                                 cell.cellFeature.FeatureFlags.HasFlag(CellFeature.CellFeatureFlags.DestroyedBehalfOfTheElement))
                         {
                             waferCells.Add(pos);
                         }

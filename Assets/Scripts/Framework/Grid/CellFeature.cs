@@ -17,6 +17,7 @@ namespace Game
             PreventsElements = 1 << 0,
             NotTargetableByDiscoBall = 1 << 1,
             NotTargetableByPropeller = 1 << 2,
+            DestroyedBehalfOfTheElement = 1 << 3
         }
 
         public TileSpriteSet tileSpriteSet;

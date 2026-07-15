@@ -1,5 +1,4 @@
-using UnityEngine; using Game.EventManagement;
-using UnityEngine; using Game.EventManagement;
+using UnityEngine;
 using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using System.Linq;
@@ -16,7 +15,9 @@ namespace Game
     {
         [Min(1)] public int defaultGroupHealth = 1;
         public List<GlassDamageSpritePair> damageSprites = new List<GlassDamageSpritePair>();
-        public override CellFeatureFlags FeatureFlags => CellFeatureFlags.NotTargetableByDiscoBall;
+        public override CellFeatureFlags FeatureFlags => 
+        CellFeatureFlags.NotTargetableByDiscoBall | 
+        CellFeatureFlags.NotTargetableByPropeller;
 
         public Sprite GetDamageSprite(int missingHealth)
         {
