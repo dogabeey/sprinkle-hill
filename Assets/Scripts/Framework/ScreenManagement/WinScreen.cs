@@ -4,6 +4,7 @@ using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine; using Game.EventManagement;
 using UnityEngine.UI;
+using Game.Ads;
 
 
 namespace Game
@@ -17,6 +18,7 @@ namespace Game
         public Transform levelRewardContainer;
         [AssetsOnly] public TMP_Text rewardTextPrefab;
         public Button nextLevelButton;
+        public Button extraRewardButton;
         [Header("Settings")]
         public string levelHeaderFormat = "DAY {0} RESULTS";
         public string rewardTextFormat = "<sprite index={0}>\n{1}";
@@ -32,6 +34,7 @@ namespace Game
 
 
             nextLevelButton.interactable = true;
+            extraRewardButton.interactable = true;
 
             // Remove old rewards
             foreach (var reward in rewardTexts)
@@ -52,11 +55,35 @@ namespace Game
                 nextLevelButton.interactable = false;
                 OnNextLevelButtonClicked();
             });
+            extraRewardButton.onClick.RemoveAllListeners();
+            extraRewardButton.onClick.AddListener(() =>
+            {
+                extraRewardButton.interactable = false;
+                OnExtraRewardButtonClicked();
+            });
         }
 
         private void OnNextLevelButtonClicked()
         {
             StartCoroutine(OnNextLevelButtonClickedCoroutine());
+        }
+        private void OnExtraRewardButtonClicked()
+        {
+            ConstantManager constManager = ConstantManager.Instance;
+            if(UnityAdsManager.Instance.ShowRewardedAd())
+            {
+                float extraRewardMultiplier = constManager.adRewardMultiplier;
+                foreach (var reward in GameManager.Instance.CurrentLevel.rewards)
+                {
+                    reward.amount = Mathf.RoundToInt(reward.amount * extraRewardMultiplier);
+                }
+                StartCoroutine(OnNextLevelButtonClickedCoroutine());
+            }
+            else
+            {
+                Debug.Log("Rewarded ad not ready");
+                extraRewardButton.interactable = true;
+            }
         }
         private IEnumerator OnNextLevelButtonClickedCoroutine()
         {

@@ -197,17 +197,19 @@ namespace Game.Ads
                 Debug.Log("Advertisement not ready");
             }
         }
-        public void ShowRewardedAd()
+        public bool ShowRewardedAd()
         {
             if (rewardedAd != null && rewardedAd.IsAdReady())
             {
                 rewardedGrantedInCurrentShow = false;
                 rewardedAd.ShowAd();
                 EventManagement.EventManager.TriggerEvent(GameEvent.REWARDED_AD_SHOWN);
+                return true;
             }
             else
             {
                 Debug.Log("Rewarded Ad not ready");
+                return false;
             }
         }
 

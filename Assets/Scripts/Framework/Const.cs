@@ -110,6 +110,8 @@ namespace Game
         [Min(0)] public int maxCauldronCount = 1;
         [RemoteConfig("max_cauldron_indirect_count", 1)]
         [Min(0)] public int maxCauldronIndirectCount = 1;
+        [RemoteConfig("ad_reward_multiplier", 2)]
+        [Min(0)] public float adRewardMultiplier = 2;
 
         public struct SOUNDS
         {
@@ -198,6 +200,7 @@ namespace Game
             maxDiscoBallIndirectCount = RemoteConfigManager.Instance.GetInt("max_disco_ball_indirect_count", ref maxDiscoBallIndirectCount, pathToConfigFile);
             maxCauldronCount = RemoteConfigManager.Instance.GetInt("max_cauldron_count", ref maxCauldronCount, pathToConfigFile);
             maxCauldronIndirectCount = RemoteConfigManager.Instance.GetInt("max_cauldron_indirect_count", ref maxCauldronIndirectCount, pathToConfigFile);
+            adRewardMultiplier = RemoteConfigManager.Instance.GetFloat("ad_reward_multiplier", ref adRewardMultiplier, pathToConfigFile);
         }
     }
 }
