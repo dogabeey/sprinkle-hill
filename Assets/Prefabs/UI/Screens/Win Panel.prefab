@@ -537,6 +537,7 @@ MonoBehaviour:
   levelRewardContainer: {fileID: 4212387458682828322}
   rewardTextPrefab: {fileID: 4345514053845798320, guid: ecca485ac6590004085b477cc26a0d20, type: 3}
   nextLevelButton: {fileID: 6865398758857651300}
+  extraRewardButton: {fileID: 7585221235440530295}
   levelHeaderFormat: DAY {0} RESULTS
   rewardTextFormat: '<sprite index={0}>
 
