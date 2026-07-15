@@ -9094,10 +9094,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 254586920}
     - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
-      propertyPath: currentGameState
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7722314759461277706, guid: e4052a4b50fee524d98d042dbbd13183, type: 3}
       propertyPath: 'winParticle.Array.data[0]'
       value: 
       objectReference: {fileID: 128536242}

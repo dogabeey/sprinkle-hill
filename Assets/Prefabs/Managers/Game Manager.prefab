@@ -53,7 +53,7 @@ MonoBehaviour:
   - {fileID: 6648657062745475262, guid: cac998f988b69c9439453293c956cda8, type: 3}
   - {fileID: 6648657062745475262, guid: 4bd797af29402654ba1c870264e5a7e9, type: 3}
   - {fileID: 6648657062745475262, guid: 52f5aba18e8117b4da1230b33185e4d4, type: 3}
-  - {fileID: 6648657062745475262, guid: fa178b8d3e8d98f48a2c57f8ff370a6b, type: 3}
+  - {fileID: 7141466575732642497, guid: 047f950d5f0b6e1428409b432dbef6d8, type: 3}
   - {fileID: 6648657062745475262, guid: 831fecad3afec634d8c70111334c833d, type: 3}
   - {fileID: 6648657062745475262, guid: 0a3f06714a110e442bdb4da392307610, type: 3}
   - {fileID: 6648657062745475262, guid: b3aa46faeb913a642b6bca23a1dc229d, type: 3}
@@ -125,5 +125,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   mainCanvas: {fileID: 0}
+  mainMenuPanel: {fileID: 0}
   upperPanelUI: {fileID: 0}
   isSequentalLevels: 1
+  currentGameState: 1
