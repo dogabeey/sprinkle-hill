@@ -470,8 +470,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: lockedAreaConfig
       Entry: 6
       Data: 
@@ -1064,8 +1064,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: lockedAreaConfig
       Entry: 6
       Data: 
@@ -1658,8 +1658,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: lockedAreaConfig
       Entry: 6
       Data: 
@@ -2252,8 +2252,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: lockedAreaConfig
       Entry: 6
       Data: 
@@ -2846,8 +2846,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: lockedAreaConfig
       Entry: 6
       Data: 
@@ -3440,8 +3440,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: lockedAreaConfig
       Entry: 6
       Data: 
@@ -4034,8 +4034,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: lockedAreaConfig
       Entry: 6
       Data: 
@@ -4628,8 +4628,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: lockedAreaConfig
       Entry: 6
       Data: 
@@ -5222,8 +5222,8 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: cellFeature
-      Entry: 10
-      Data: 0
+      Entry: 6
+      Data: 
     - Name: lockedAreaConfig
       Entry: 6
       Data: 

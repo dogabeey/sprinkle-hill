@@ -3659,7 +3659,9 @@ namespace Game
         private void EnsureAtLeastOneMoveAvailable(List<ElementData> elementPool)
         {
             if (HasAnyPossibleMove()) return;
-            if (elementPool == null || elementPool.Count < 2) return;
+
+            List<ElementData> matchableElementPool = elementPool?.FindAll(IsEligibleOpeningMatchElement);
+            if (matchableElementPool == null || matchableElementPool.Count < 2) return;
 
             Vector2Int[][] patterns =
             {
@@ -3695,30 +3697,31 @@ namespace Game
                         ElementData old2 = c2.elementInfo.elementData;
                         ElementData old3 = c3.elementInfo.elementData;
 
-                        ElementData matchData = elementPool[Random.Range(0, elementPool.Count)];
-                        ElementData blockerData = matchData;
-                        for (int i = 0; i < elementPool.Count; i++)
+                        matchableElementPool.Shuffle();
+                        for (int matchIndex = 0; matchIndex < matchableElementPool.Count; matchIndex++)
                         {
-                            if (elementPool[i] != matchData)
+                            ElementData matchData = matchableElementPool[matchIndex];
+                            for (int blockerIndex = 0; blockerIndex < matchableElementPool.Count; blockerIndex++)
                             {
-                                blockerData = elementPool[i];
-                                break;
+                                ElementData blockerData = matchableElementPool[blockerIndex];
+                                if (blockerData == matchData)
+                                    continue;
+
+                                c0.elementInfo.elementData = matchData;
+                                c1.elementInfo.elementData = matchData;
+                                c3.elementInfo.elementData = matchData;
+                                c2.elementInfo.elementData = blockerData;
+
+                                bool valid = CheckMatchOf(3).Count == 0 && HasAnyPossibleMove();
+                                if (valid)
+                                {
+                                    RefreshElementVisual(p0);
+                                    RefreshElementVisual(p1);
+                                    RefreshElementVisual(p2);
+                                    RefreshElementVisual(p3);
+                                    return;
+                                }
                             }
-                        }
-
-                        c0.elementInfo.elementData = matchData;
-                        c1.elementInfo.elementData = matchData;
-                        c3.elementInfo.elementData = matchData;
-                        c2.elementInfo.elementData = blockerData;
-
-                        bool valid = CheckMatchOf(3).Count == 0 && HasAnyPossibleMove();
-                        if (valid)
-                        {
-                            RefreshElementVisual(p0);
-                            RefreshElementVisual(p1);
-                            RefreshElementVisual(p2);
-                            RefreshElementVisual(p3);
-                            return;
                         }
 
                         c0.elementInfo.elementData = old0;
@@ -3728,6 +3731,16 @@ namespace Game
                     }
                 }
             }
+        }
+
+        private bool IsEligibleOpeningMatchElement(ElementData elementData)
+        {
+            return elementData != null &&
+                   !IsPowerGeneratorData(elementData) &&
+                   !IsPowerOutletData(elementData) &&
+                   !IsMultiCellData(elementData) &&
+                   !HasBehavior(elementData, ElementData.ElementBehaviorFlags.NonMatchable) &&
+                   !HasBehavior(elementData, ElementData.ElementBehaviorFlags.NonSwappable);
         }
 
         private void RefreshElementVisual(Vector2Int pos)
