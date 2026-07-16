@@ -35,8 +35,9 @@ namespace Game.EventManagement
         [SerializeField, Tooltip("Total number of active listeners")]
         private int totalListenerCount = 0;
 
-        public void Awake()
+        protected override void Awake()
         {
+            base.Awake();
 #if UNITY_EDITOR
             UpdateInspectorInfo();
 #endif

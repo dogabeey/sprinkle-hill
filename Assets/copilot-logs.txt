@@ -1,3 +1,4 @@
+[2026-07-16 16:50:54] - Fixed win-screen currency rewards being granted twice after normal or rewarded-ad completion.
 [2026-05-06 02:20:14] - Added project-local Copilot instructions file at .github/copilot-instructions.md.
 [2026-05-05 01:29] - Added PowerSource cell type with Level Editor P shortcut and dedicated tile visuals, matching UnbreakableWall behavior.
 [2026-05-05 01:37] - Added Power Generator special element support: non-swappable, non-matchable, non-shuffleable, and transparent to gravity flow; integrated GameManager/LevelEditor references and clear-skip logic.
@@ -125,3 +126,4 @@
 [2026-06-29 14:39:52] - Added configurable chain combo speed scaling so match clear delays, merge animations, and gravity drops accelerate with each extra cascade and reset when the board settles.
 [2026-07-04 00:00:00] - Fixed Match3Grid sliding visuals to follow real gravity travel paths (vertical drop + step-by-step side slides) instead of directly tweening to final landing cells, and registered Sliding definition in copilot instructions.
 [2026-07-15 02:14:22] - Fixed duplicate level instantiation from the main menu, preventing duplicate BOX_CREATED events and inflated auto-counted box objectives.
+[2026-07-16] - Added typed rewarded-ad lifecycle callbacks and deferred Win Screen extra-reward payout until the matching LevelPlay reward is granted; early ad closure now pays normal rewards.

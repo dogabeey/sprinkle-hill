@@ -141,11 +141,16 @@ namespace Game
 
             CurrencyElement element = currencyElements.Find(x => x.refCurrency != null && x.refCurrency == currencyModel);
 
-            if (source != null && element != null)  
+            bool animatedReward = source != null && element != null;
+            if (animatedReward)
             {
                 Vector3 sourceScreenPos = source.transform.position;
                 yield return StartCoroutine(AddCurrencyAnimationCoroutine(currencyInfo, sourceScreenPos, element.currencyTransform.position, amount));
             }
+
+            if (animatedReward)
+                yield break;
+
             yield return new WaitForSeconds(0.5f);
 
             currencyInfo.amount += amount;

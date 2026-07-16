@@ -67,32 +67,60 @@ namespace Game
         {
             StartCoroutine(OnNextLevelButtonClickedCoroutine());
         }
+
         private void OnExtraRewardButtonClicked()
         {
-            ConstantManager constManager = ConstantManager.Instance;
-            if(UnityAdsManager.Instance.ShowRewardedAd())
+            UnityAdsManager adsManager = UnityAdsManager.Instance;
+            adsManager.RewardedAdClosed += OnRewardedAdClosed;
+            adsManager.RewardedAdFailedToShow += OnRewardedAdFailedToShow;
+
+            if (adsManager.ShowRewardedAd(RewardType.ExtraLevelEndReward))
             {
-                float extraRewardMultiplier = constManager.adRewardMultiplier;
-                foreach (var reward in GameManager.Instance.CurrentLevel.rewards)
-                {
-                    reward.amount = Mathf.RoundToInt(reward.amount * extraRewardMultiplier);
-                }
-                StartCoroutine(OnNextLevelButtonClickedCoroutine());
+                nextLevelButton.interactable = false;
             }
             else
             {
+                UnsubscribeFromRewardedAdEvents(adsManager);
                 Debug.Log("Rewarded ad not ready");
                 extraRewardButton.interactable = true;
             }
         }
-        private IEnumerator OnNextLevelButtonClickedCoroutine()
+
+        private void OnRewardedAdClosed(RewardedAdResult result)
+        {
+            if (result.RewardType != RewardType.ExtraLevelEndReward)
+                return;
+
+            UnsubscribeFromRewardedAdEvents(UnityAdsManager.Instance);
+            float rewardMultiplier = result.IsGranted ? ConstantManager.Instance.adRewardMultiplier : 1f;
+            StartCoroutine(OnNextLevelButtonClickedCoroutine(rewardMultiplier));
+        }
+
+        private void OnRewardedAdFailedToShow(RewardedAdResult result)
+        {
+            if (result.RewardType != RewardType.ExtraLevelEndReward)
+                return;
+
+            UnsubscribeFromRewardedAdEvents(UnityAdsManager.Instance);
+            nextLevelButton.interactable = true;
+            extraRewardButton.interactable = true;
+        }
+
+        private void UnsubscribeFromRewardedAdEvents(UnityAdsManager adsManager)
+        {
+            adsManager.RewardedAdClosed -= OnRewardedAdClosed;
+            adsManager.RewardedAdFailedToShow -= OnRewardedAdFailedToShow;
+        }
+
+        private IEnumerator OnNextLevelButtonClickedCoroutine(float rewardMultiplier = 1f)
         {
             LevelScene levelScene = GameManager.Instance.CurrentLevel;
             foreach (var reward in levelScene.rewards)
             {
                 // Get reward text for the current reward to use as the source for the flying currency animation
                 GameObject sourceObject = rewardTexts[levelScene.rewards.IndexOf(reward)].gameObject;
-                yield return StartCoroutine(CurrencyManager.Instance.AddCurrencyCoroutine(reward.type, reward.amount, sourceObject));
+                int rewardAmount = Mathf.RoundToInt(reward.amount * rewardMultiplier);
+                yield return StartCoroutine(CurrencyManager.Instance.AddCurrencyCoroutine(reward.type, rewardAmount, sourceObject));
             }
 
             ScreenManager.Instance.CloseAllNonPersistentScreens();

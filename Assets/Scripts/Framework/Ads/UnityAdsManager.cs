@@ -10,6 +10,25 @@ using DG.Tweening;
 
 namespace Game.Ads
 {
+    public enum RewardType
+    {
+        ExtraLevelEndReward,
+        BoosterReward,
+
+    }
+
+    public sealed class RewardedAdResult
+    {
+        public RewardType RewardType { get; }
+        public bool IsGranted { get; }
+
+        public RewardedAdResult(RewardType rewardType, bool isGranted)
+        {
+            RewardType = rewardType;
+            IsGranted = isGranted;
+        }
+    }
+
     public class UnityAdsManager : SingletonComponent<UnityAdsManager>
     {
         public float adInterval = 300.0f; // Time interval between ads in seconds
@@ -17,17 +36,22 @@ namespace Game.Ads
         public int levelInterval = 2; // Time interval between ads in seconds
         public int bannerHeight;
 
-        internal UnityEvent<object, EventArgs> onAdClosedEvent = new();
-        internal UnityEvent<object, LevelPlayAdError> onAdFailedShowEvent = new();
-        internal UnityEvent<object, EventArgs> onAdLoadedEvent = new();
-        internal UnityEvent<object, LevelPlayAdError> onAdFailedLoadEvent = new();
-        internal UnityEvent<object, EventArgs> onAdClickedEvent = new();
-        internal UnityEvent<object, EventArgs> onRewardedClosedEvent = new();
-        internal UnityEvent<object, LevelPlayAdError> onRewardedFailedShowEvent = new();
-        internal UnityEvent<object, EventArgs> onRewardedLoadedEvent = new();
-        internal UnityEvent<object, LevelPlayAdError> onRewardedFailedLoadEvent = new();
-        internal UnityEvent<object, EventArgs> onRewardedClickedEvent = new();
-        internal UnityEvent<object, EventArgs> onBannerClickedEvent = new();
+        public UnityEvent<object, EventArgs> onAdClosedEvent = new();
+        public UnityEvent<object, LevelPlayAdError> onAdFailedShowEvent = new();
+        public UnityEvent<object, EventArgs> onAdLoadedEvent = new();
+        public UnityEvent<object, LevelPlayAdError> onAdFailedLoadEvent = new();
+        public UnityEvent<object, EventArgs> onAdClickedEvent = new();
+        public UnityEvent<object, EventArgs> onRewardedClosedEvent = new();
+        public UnityEvent<object, LevelPlayAdError> onRewardedFailedShowEvent = new();
+        public UnityEvent<object, EventArgs> onRewardedLoadedEvent = new();
+        public UnityEvent<object, LevelPlayAdError> onRewardedFailedLoadEvent = new();
+        public UnityEvent<object, EventArgs> onRewardedClickedEvent = new();
+        public UnityEvent<object, EventArgs> onBannerClickedEvent = new();
+
+        public event Action<RewardedAdResult> RewardedAdShown;
+        public event Action<RewardedAdResult> RewardedAdGranted;
+        public event Action<RewardedAdResult> RewardedAdClosed;
+        public event Action<RewardedAdResult> RewardedAdFailedToShow;
 
 
         private string gameId;
@@ -41,6 +65,7 @@ namespace Game.Ads
         private int levelsSinceLastAd = 0;
         private bool isLevelPlayInitialized;
         private bool rewardedGrantedInCurrentShow;
+        private RewardType currentRewardType;
 
         private void OnEnable()
         {
@@ -197,12 +222,14 @@ namespace Game.Ads
                 Debug.Log("Advertisement not ready");
             }
         }
-        public bool ShowRewardedAd()
+        public bool ShowRewardedAd(RewardType rewardType = RewardType.BoosterReward)
         {
             if (rewardedAd != null && rewardedAd.IsAdReady())
             {
                 rewardedGrantedInCurrentShow = false;
+            currentRewardType = rewardType;
                 rewardedAd.ShowAd();
+            RewardedAdShown?.Invoke(new RewardedAdResult(currentRewardType, false));
                 EventManagement.EventManager.TriggerEvent(GameEvent.REWARDED_AD_SHOWN);
                 return true;
             }
@@ -247,6 +274,9 @@ namespace Game.Ads
             rewardedAd.LoadAd();
             onRewardedClosedEvent.Invoke(this, EventArgs.Empty);
 
+            RewardedAdResult result = new RewardedAdResult(currentRewardType, rewardedGrantedInCurrentShow);
+            RewardedAdClosed?.Invoke(result);
+
             if (rewardedGrantedInCurrentShow)
             {
                 EventManagement.EventManager.TriggerEvent(GameEvent.REWARDED_AD_COMPLETED);
@@ -258,6 +288,7 @@ namespace Game.Ads
             Debug.LogError($"Rewarded Ad failed to show: {error.ErrorMessage}");
             rewardedAd.LoadAd();
             onRewardedFailedShowEvent.Invoke(this, error);
+            RewardedAdFailedToShow?.Invoke(new RewardedAdResult(currentRewardType, false));
             EventManagement.EventManager.TriggerEvent(GameEvent.REWARDED_AD_FAILED, new EventParam(paramStr: error.ErrorMessage));
         }
 
@@ -288,6 +319,7 @@ namespace Game.Ads
         private void OnRewardedAdRewarded(LevelPlayAdInfo adInfo, LevelPlayReward reward)
         {
             rewardedGrantedInCurrentShow = true;
+            RewardedAdGranted?.Invoke(new RewardedAdResult(currentRewardType, true));
         }
 
 
