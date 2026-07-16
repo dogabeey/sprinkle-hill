@@ -178,7 +178,14 @@ namespace Game
             {
                 LevelScene foundLevel;
                 foundLevel = FindAnyObjectByType<LevelScene>();
-                CurrentGameState = currentGameState; // Force the setter to trigger the event and load the level if found
+                if(!foundLevel)
+                {
+                    CurrentGameState = currentGameState; // Force the setter to trigger the event and load the level if found
+                }
+                else
+                {
+                    World.Instance.CurrentLevel = Instantiate(foundLevel, levelContainer);
+                }
             }
         }
 
