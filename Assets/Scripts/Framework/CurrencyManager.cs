@@ -151,7 +151,6 @@ namespace Game
             if (animatedReward)
                 yield break;
 
-            yield return new WaitForSeconds(0.5f);
 
             currencyInfo.amount += amount;
             NotifyCurrencyChanged(currencyInfo.currencyModel, amount);

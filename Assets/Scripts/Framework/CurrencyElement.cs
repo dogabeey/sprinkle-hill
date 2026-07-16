@@ -49,8 +49,8 @@ namespace Game
             else
                 currencyText.text = $"{(finalAmount - amount).ToLargeNumberString()} <color=green>\n+{amount.ToLargeNumberString()}";
             
-            yield return new WaitForSeconds(0.5f);
-            currencyTextTween = DOVirtual.Float(finalAmount - amount, finalAmount, 0.5f, (value) =>
+            yield return new WaitForSeconds(0.1f);
+            currencyTextTween = DOVirtual.Float(finalAmount - amount, finalAmount, 0.1f, (value) =>
             {
                 string formattedAmount = value.ToLargeNumberString();
                 currencyText.text = formattedAmount;
@@ -60,6 +60,7 @@ namespace Game
             {
                 currencyImage.sprite = currency.currencyIcon;
             }
+            yield return new WaitForSeconds(0.5f);
         }
 
         
