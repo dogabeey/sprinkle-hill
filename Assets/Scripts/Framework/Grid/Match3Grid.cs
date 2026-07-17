@@ -3064,37 +3064,50 @@ namespace Game
             return cell != null && cell.elementInfo == null;
         }
 
-        private bool HasDirectDropCandidateAbove(Vector2Int targetPos, Vector2Int movingElementPos)
-        {
-            if (!IsInsideGrid(targetPos))
-                return false;
-
-            for (int y = targetPos.y - 1; y >= 0; y--)
-            {
-                Vector2Int checkPos = new Vector2Int(targetPos.x, y);
-                GridCell checkCell = GetCell(checkPos);
-                if (!CanAcceptGravityElementAt(checkPos, checkCell))
-                    break;
-
-                GridElementInfo info = checkCell?.elementInfo;
-                if (info?.elementData == null)
-                    continue;
-
-                if (checkPos == movingElementPos)
-                    continue;
-
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool CanSlideInto(Vector2Int targetPos, Vector2Int movingElementPos)
+        private bool CanSlideInto(Vector2Int targetPos)
         {
             if (!CanGravityElementOccupy(targetPos))
                 return false;
 
-            return !HasDirectDropCandidateAbove(targetPos, movingElementPos);
+            // Vertical movement in the target column has first claim on this
+            // cell. A side-slide must not arrive before that element falls in.
+            if (WillBeFilledByVerticalFall(targetPos))
+                return false;
+
+            return true;
+        }
+
+        private bool WillBeFilledByVerticalFall(Vector2Int targetPos)
+        {
+            List<GravityColumnSection> sections = BuildColumnSections(targetPos.x);
+            for (int sectionIndex = 0; sectionIndex < sections.Count; sectionIndex++)
+            {
+                List<int> rows = sections[sectionIndex].rows;
+                int targetRowIndex = rows.IndexOf(targetPos.y);
+                if (targetRowIndex < 0)
+                    continue;
+
+                // Empty cells in refillable column sections are reserved for
+                // vertical refill. Side-slides should only use gaps that won't
+                // be filled by the target column itself.
+                if (sections[sectionIndex].allowsRefillFromAbove)
+                    return true;
+
+                int existingElementCount = 0;
+                for (int rowIndex = 0; rowIndex < rows.Count; rowIndex++)
+                {
+                    Vector2Int pos = new Vector2Int(targetPos.x, rows[rowIndex]);
+                    if (GetCell(pos)?.elementInfo?.elementData != null)
+                        existingElementCount++;
+                }
+
+                // Existing elements settle into the bottom-most cells of their
+                // column section. If target is one of those cells, it belongs
+                // to vertical gravity and cannot be claimed by a side-slide.
+                return targetRowIndex >= rows.Count - existingElementCount;
+            }
+
+            return false;
         }
 
         private Vector2Int GetVerticalLandingPosition(Vector2Int startPos)
@@ -3126,8 +3139,8 @@ namespace Game
 
                 Vector2Int downLeftPos = new Vector2Int(verticalLanding.x - 1, verticalLanding.y + 1);
                 Vector2Int downRightPos = new Vector2Int(verticalLanding.x + 1, verticalLanding.y + 1);
-                bool canSlideLeft = CanSlideInto(downLeftPos, verticalLanding);
-                bool canSlideRight = CanSlideInto(downRightPos, verticalLanding);
+                bool canSlideLeft = CanSlideInto(downLeftPos);
+                bool canSlideRight = CanSlideInto(downRightPos);
 
                 if (!canSlideLeft && !canSlideRight)
                     break;
@@ -3169,8 +3182,8 @@ namespace Game
 
                 Vector2Int downLeftPos = new Vector2Int(verticalLanding.x - 1, verticalLanding.y + 1);
                 Vector2Int downRightPos = new Vector2Int(verticalLanding.x + 1, verticalLanding.y + 1);
-                bool canSlideLeft = CanSlideInto(downLeftPos, verticalLanding);
-                bool canSlideRight = CanSlideInto(downRightPos, verticalLanding);
+                bool canSlideLeft = CanSlideInto(downLeftPos);
+                bool canSlideRight = CanSlideInto(downRightPos);
 
                 if (!canSlideLeft && !canSlideRight)
                     return verticalLanding;
