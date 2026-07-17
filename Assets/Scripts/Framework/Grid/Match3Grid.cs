@@ -2441,6 +2441,7 @@ namespace Game
             bool hasTween = false;
             Dictionary<GridElementInfo, GridElement> elementsByInfo = new Dictionary<GridElementInfo, GridElement>();
             Dictionary<GridElementInfo, List<Vector2Int>> movementPaths = new Dictionary<GridElementInfo, List<Vector2Int>>();
+            HashSet<GridElementInfo> spawnedInfos = new HashSet<GridElementInfo>();
             Queue<Vector2Int> gravityQueue = new Queue<Vector2Int>();
             HashSet<Vector2Int> queuedPositions = new HashSet<Vector2Int>();
 
@@ -2488,103 +2489,112 @@ namespace Game
             }
 
             int gravitySafetyCounter = Mathf.Max(1, gridSize.x * gridSize.y * gridSize.y * 2);
-            while (gravityQueue.Count > 0 && gravitySafetyCounter-- > 0)
+            void ProcessGravityQueue()
             {
-                Vector2Int fromPos = gravityQueue.Dequeue();
-                queuedPositions.Remove(fromPos);
-
-                GridCell fromCell = GetCell(fromPos);
-                GridElementInfo movingInfo = fromCell?.elementInfo;
-                if (!CanElementMoveByGravity(movingInfo))
-                    continue;
-
-                int bottomMostNormalY = GetBottomMostNormalCellY(fromPos.x);
-                if (IsGarbageBagData(movingInfo.elementData) && ShouldGarbageBagClearAt(fromPos.x, fromPos.y, bottomMostNormalY))
+                while (gravityQueue.Count > 0 && gravitySafetyCounter-- > 0)
                 {
-                    TriggerCellFeatureMatchedOverAt(fromPos);
-                    NotifyGarbageBagCleaned(fromPos, movingInfo.elementData);
-                    fromCell.elementInfo = null;
+                    Vector2Int fromPos = gravityQueue.Dequeue();
+                    queuedPositions.Remove(fromPos);
 
-                    if (elementsByInfo.TryGetValue(movingInfo, out GridElement bagElement) && bagElement != null)
-                    {
-                        bagElement.transform.SetParent(null, true);
-                        float dropDist = Mathf.Max(0.5f, bagElement.transform.localScale.y);
-                        gravitySeq.Join(bagElement.transform.DOMove(bagElement.transform.position + Vector3.down * dropDist, 0f).SetEase(Ease.InQuad));
-                        gravitySeq.Join(bagElement.transform.DOScale(0.92f, 0f).SetEase(Ease.InQuad));
-                        generatedElements.Remove(bagElement);
-                        Destroy(bagElement.gameObject, 0.05f);
-                        hasTween = true;
-                    }
-
-                    EnqueueAffectedGravityChecks(fromPos, fromPos);
-                    continue;
-                }
-
-                Vector2Int nextPos = GetGravityNextStep(fromPos);
-                if (nextPos == fromPos)
-                    continue;
-
-                GridCell nextCell = GetCell(nextPos);
-                if (nextCell == null || nextCell.elementInfo != null)
-                    continue;
-
-                fromCell.elementInfo = null;
-                nextCell.elementInfo = movingInfo;
-
-                if (!movementPaths.TryGetValue(movingInfo, out List<Vector2Int> path))
-                {
-                    path = new List<Vector2Int> { fromPos };
-                    movementPaths.Add(movingInfo, path);
-                }
-                path.Add(nextPos);
-
-                EnqueueAffectedGravityChecks(fromPos, nextPos);
-            }
-
-            foreach (KeyValuePair<GridElementInfo, List<Vector2Int>> movement in movementPaths)
-            {
-                if (!elementsByInfo.TryGetValue(movement.Key, out GridElement movingElement) || movingElement == null)
-                    continue;
-
-                List<Vector2Int> path = movement.Value;
-                Vector2Int finalPos = path[path.Count - 1];
-                if (!generatedTiles.TryGetValue(finalPos, out GridCellController finalTile) || finalTile == null)
-                    continue;
-
-                Sequence moveSequence = DOTween.Sequence();
-                Vector3 currentWorldPos = movingElement.transform.position;
-                movingElement.transform.SetParent(null, true);
-                bool hasPathTween = false;
-
-                for (int pathIndex = 1; pathIndex < path.Count; pathIndex++)
-                {
-                    if (!generatedTiles.TryGetValue(path[pathIndex], out GridCellController pathTile) || pathTile == null)
+                    GridCell fromCell = GetCell(fromPos);
+                    GridElementInfo movingInfo = fromCell?.elementInfo;
+                    if (!CanElementMoveByGravity(movingInfo))
                         continue;
 
-                    Vector3 targetWorldPos = pathTile.transform.position;
-                    float segmentDistance = Vector3.Distance(currentWorldPos, targetWorldPos);
-                    float segmentDuration = fallSpeed > 0f ? segmentDistance / fallSpeed : 0f;
-                    moveSequence.Append(movingElement.transform.DOMove(targetWorldPos, segmentDuration).SetEase(Ease.OutQuad));
-                    currentWorldPos = targetWorldPos;
-                    hasPathTween = true;
+                    int bottomMostNormalY = GetBottomMostNormalCellY(fromPos.x);
+                    if (IsGarbageBagData(movingInfo.elementData) && ShouldGarbageBagClearAt(fromPos.x, fromPos.y, bottomMostNormalY))
+                    {
+                        TriggerCellFeatureMatchedOverAt(fromPos);
+                        NotifyGarbageBagCleaned(fromPos, movingInfo.elementData);
+                        fromCell.elementInfo = null;
+
+                        if (elementsByInfo.TryGetValue(movingInfo, out GridElement bagElement) && bagElement != null)
+                        {
+                            bagElement.transform.SetParent(null, true);
+                            float dropDist = Mathf.Max(0.5f, bagElement.transform.localScale.y);
+                            gravitySeq.Join(bagElement.transform.DOMove(bagElement.transform.position + Vector3.down * dropDist, 0f).SetEase(Ease.InQuad));
+                            gravitySeq.Join(bagElement.transform.DOScale(0.92f, 0f).SetEase(Ease.InQuad));
+                            generatedElements.Remove(bagElement);
+                            Destroy(bagElement.gameObject, 0.05f);
+                            hasTween = true;
+                        }
+
+                        EnqueueAffectedGravityChecks(fromPos, fromPos);
+                        continue;
+                    }
+
+                    Vector2Int nextPos = GetGravityNextStep(fromPos);
+                    if (nextPos == fromPos)
+                        continue;
+
+                    GridCell nextCell = GetCell(nextPos);
+                    if (nextCell == null || nextCell.elementInfo != null)
+                        continue;
+
+                    fromCell.elementInfo = null;
+                    nextCell.elementInfo = movingInfo;
+
+                    if (!movementPaths.TryGetValue(movingInfo, out List<Vector2Int> path))
+                    {
+                        path = new List<Vector2Int> { fromPos };
+                        movementPaths.Add(movingInfo, path);
+                    }
+                    path.Add(nextPos);
+
+                    EnqueueAffectedGravityChecks(fromPos, nextPos);
                 }
+            }
 
-                if (!hasPathTween)
-                    continue;
+            ProcessGravityQueue();
 
-                GridElement elementForCompletion = movingElement;
-                GridCellController tileForCompletion = finalTile;
-                moveSequence.OnComplete(() =>
+            void AppendMovementTweens()
+            {
+                foreach (KeyValuePair<GridElementInfo, List<Vector2Int>> movement in movementPaths)
                 {
-                    if (elementForCompletion == null || tileForCompletion == null)
-                        return;
+                    if (!elementsByInfo.TryGetValue(movement.Key, out GridElement movingElement) || movingElement == null)
+                        continue;
 
-                    elementForCompletion.transform.SetParent(tileForCompletion.transform, true);
-                    elementForCompletion.transform.localPosition = Vector3.zero;
-                });
+                    List<Vector2Int> path = movement.Value;
+                    Vector2Int finalPos = path[path.Count - 1];
+                    if (!generatedTiles.TryGetValue(finalPos, out GridCellController finalTile) || finalTile == null)
+                        continue;
 
-                gravitySeq.Join(moveSequence);
-                hasTween = true;
+                    Sequence moveSequence = DOTween.Sequence();
+                    Vector3 currentWorldPos = movingElement.transform.position;
+                    movingElement.transform.SetParent(null, true);
+                    bool hasPathTween = false;
+                    int pathStartIndex = spawnedInfos.Contains(movement.Key) ? 0 : 1;
+
+                    for (int pathIndex = pathStartIndex; pathIndex < path.Count; pathIndex++)
+                    {
+                        if (!generatedTiles.TryGetValue(path[pathIndex], out GridCellController pathTile) || pathTile == null)
+                            continue;
+
+                        Vector3 targetWorldPos = pathTile.transform.position;
+                        float segmentDistance = Vector3.Distance(currentWorldPos, targetWorldPos);
+                        float segmentDuration = fallSpeed > 0f ? segmentDistance / fallSpeed : 0f;
+                        moveSequence.Append(movingElement.transform.DOMove(targetWorldPos, segmentDuration).SetEase(Ease.OutQuad));
+                        currentWorldPos = targetWorldPos;
+                        hasPathTween = true;
+                    }
+
+                    if (!hasPathTween)
+                        continue;
+
+                    GridElement elementForCompletion = movingElement;
+                    GridCellController tileForCompletion = finalTile;
+                    moveSequence.OnComplete(() =>
+                    {
+                        if (elementForCompletion == null || tileForCompletion == null)
+                            return;
+
+                        elementForCompletion.transform.SetParent(tileForCompletion.transform, true);
+                        elementForCompletion.transform.localPosition = Vector3.zero;
+                    });
+
+                    gravitySeq.Join(moveSequence);
+                    hasTween = true;
+                }
             }
 
             // Refill only after all existing elements have claimed their final
@@ -2597,18 +2607,25 @@ namespace Game
                     if (!section.allowsRefillFromAbove || section.rows.Count == 0)
                         continue;
 
-                    List<int> emptyRows = new List<int>();
-                    for (int rowIndex = section.rows.Count - 1; rowIndex >= 0; rowIndex--)
+                    int spawnIndex = 0;
+                    int refillSafetyCounter = Mathf.Max(1, gridSize.x * gridSize.y);
+                    while (refillSafetyCounter-- > 0)
                     {
-                        int targetY = section.rows[rowIndex];
-                        GridCell targetCell = GetCell(new Vector2Int(x, targetY));
-                        if (targetCell != null && targetCell.elementInfo == null)
-                            emptyRows.Add(targetY);
-                    }
+                        int targetY = -1;
+                        for (int rowIndex = section.rows.Count - 1; rowIndex >= 0; rowIndex--)
+                        {
+                            int candidateY = section.rows[rowIndex];
+                            if (GetCell(new Vector2Int(x, candidateY))?.elementInfo == null)
+                            {
+                                targetY = candidateY;
+                                break;
+                            }
+                        }
 
-                    for (int emptyIndex = 0; emptyIndex < emptyRows.Count; emptyIndex++)
-                    {
-                        Vector2Int targetPos = new Vector2Int(x, emptyRows[emptyIndex]);
+                        if (targetY < 0)
+                            break;
+
+                        Vector2Int targetPos = new Vector2Int(x, targetY);
                         GridCell targetCell = GetCell(targetPos);
                         if (targetCell == null)
                             continue;
@@ -2626,7 +2643,7 @@ namespace Game
                         if (!generatedTiles.TryGetValue(targetPos, out GridCellController targetTile) || targetTile == null)
                             continue;
 
-                        int stackOffset = emptyIndex + 1;
+                        int stackOffset = ++spawnIndex;
                         Vector3 spawnWorldPos = targetTile.transform.position + Vector3.up * stackOffset;
                         GridElement newElement = Instantiate(gridElementPrefab, spawnWorldPos, Quaternion.identity); // TODO: Use pooling
                         newElement.transform.SetParent(targetTile.transform, true);
@@ -2634,14 +2651,20 @@ namespace Game
                         generatedElements.Add(newElement);
                         newElement.InitElement(this, newInfo);
                         powerUpHandler.ApplySortingBoost(newElement, false);
+                        elementsByInfo[newInfo] = newElement;
+                        movementPaths[newInfo] = new List<Vector2Int> { targetPos };
+                        spawnedInfos.Add(newInfo);
 
-                        float distance = newElement.transform.localPosition.magnitude;
-                        float duration = fallSpeed > 0f ? distance / fallSpeed : 0f;
-                        gravitySeq.Join(newElement.transform.DOLocalMove(Vector3.zero, duration).SetEase(Ease.OutBack, 0.9f));
-                        hasTween = true;
+                        // Let this refill element settle before creating the
+                        // next one. If it slides into a side pocket, the newly
+                        // opened source cell is then refilled by the next spawn.
+                        EnqueueGravityCheck(targetPos);
+                        ProcessGravityQueue();
                     }
                 }
             }
+
+            AppendMovementTweens();
 
             generatedElements.RemoveAll(el => el == null);
             if (hasTween) yield return gravitySeq.WaitForCompletion();
