@@ -806,6 +806,9 @@ namespace Game
                 if (HasMatchedGroupContaining(regularMatchPosition))
                     yield return StartCoroutine(ResolveDirectMatchWithoutGravity(first, second, regularMatchPosition));
 
+                if (IsMatchResolutionBlocked())
+                    yield break;
+
                 Vector2Int powerUpPosition = firstIsSpecialPowerUp ? second : first;
                 if (swappedPowerUpElement != null && TryGetElementPosition(swappedPowerUpElement, out Vector2Int resolvedPowerUpPosition))
                     powerUpPosition = resolvedPowerUpPosition;
@@ -861,7 +864,7 @@ namespace Game
             currentComboCount = 0;
             isResolvingIndirectCascade = false;
 
-            while ((matchedGroups = CheckMatchOf(3)).Count > 0)
+            while (!IsMatchResolutionBlocked() && (matchedGroups = CheckMatchOf(3)).Count > 0)
             {
                 currentComboCount++;
                 GameObject matchOrigin = GetMatchOriginObject(matchedGroups);
@@ -904,6 +907,9 @@ namespace Game
 
                 // Clear
                 yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions));
+
+                if (IsMatchResolutionBlocked())
+                    yield break;
 
                 // Create power-ups (disco ball has highest priority)
                 for (int i = 0; i < discoBallSpawns.Count; i++)
@@ -1006,6 +1012,9 @@ namespace Game
 
             yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions));
 
+            if (IsMatchResolutionBlocked())
+                yield break;
+
             for (int i = 0; i < discoBallSpawns.Count; i++)
                 powerUpHandler.CreatePowerUpAt(discoBallSpawns[i].position, discoBallSpawns[i].powerUpType);
             for (int i = 0; i < propellerSpawns.Count; i++)
@@ -1024,10 +1033,17 @@ namespace Game
             currentComboCount = 0;
             isResolvingIndirectCascade = true;
             yield return new WaitUntil(() => !powerUpHandler.IsChainReactionInProgress());
+
+            if (IsMatchResolutionBlocked())
+            {
+                isResolvingIndirectCascade = false;
+                yield break;
+            }
+
             yield return StartCoroutine(ApplyGravity());
 
             List<List<Vector2Int>> matchedGroups;
-            while ((matchedGroups = CheckMatchOf(3)).Count > 0)
+            while (!IsMatchResolutionBlocked() && (matchedGroups = CheckMatchOf(3)).Count > 0)
             {
                 currentComboCount++;
 
@@ -1063,6 +1079,12 @@ namespace Game
                         paramScriptable: GetCell(group[0])?.elementInfo?.elementData, paramInt: group.Count));
 
                 yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions));
+
+                if (IsMatchResolutionBlocked())
+                {
+                    isResolvingIndirectCascade = false;
+                    yield break;
+                }
 
                 for (int i = 0; i < discoBallSpawns.Count; i++)
                     powerUpHandler.CreatePowerUpAt(discoBallSpawns[i].position, discoBallSpawns[i].powerUpType);
@@ -2079,6 +2101,9 @@ namespace Game
 
             foreach (var group in matchedPositions)
             {
+                if (IsMatchResolutionBlocked())
+                    yield break;
+
                 Vector2Int? mergeTarget = FindMergeTarget(group, protectedPositions);
                 if (mergeTarget.HasValue)
                 {
@@ -2091,6 +2116,9 @@ namespace Game
 
                 foreach (var pos in group)
                 {
+                    if (IsMatchResolutionBlocked())
+                        yield break;
+
                     GridCell cell = GetCell(pos);
                     if (cell?.elementInfo == null) continue;
                     if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron) continue;
@@ -2134,6 +2162,12 @@ namespace Game
 
             foreach (Vector2Int rp in hiddenToReveal) RevealHiddenElement(rp);
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
+        }
+
+        private bool IsMatchResolutionBlocked()
+        {
+            LevelScene currentLevel = GameManager.Instance != null ? GameManager.Instance.CurrentLevel : null;
+            return currentLevel != null && (currentLevel.isPaused || currentLevel.isEnded || currentLevel.isWin || currentLevel.isLose);
         }
 
         private IEnumerator ClearMatchedElementAfterAnimation(

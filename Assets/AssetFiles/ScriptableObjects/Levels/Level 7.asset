@@ -17,6 +17,7 @@ MonoBehaviour:
     SerializedBytes: 
     ReferencedUnityObjects:
     - {fileID: 11400000, guid: 66b5b66c4fb707c46810127020dbbb17, type: 2}
+    - {fileID: 11400000, guid: 28a4bfc53ef537149b4153f79c7ff47d, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -2891,11 +2892,11 @@ MonoBehaviour:
       Entry: 7
       Data: 88|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 1
     - Name: randomElement
       Entry: 5
-      Data: true
+      Data: false
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -2904,7 +2905,7 @@ MonoBehaviour:
       Data: false
     - Name: powerUpType
       Entry: 3
-      Data: 0
+      Data: 3
     - Name: cauldronProgress
       Entry: 3
       Data: 0

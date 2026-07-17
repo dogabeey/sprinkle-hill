@@ -75,7 +75,6 @@ namespace Game
         private int currentLevelEditorIndex;
         private bool isSwitchingStage;
         private bool stageCompletionPending;
-        private bool stageCompletionGridStable;
         private bool stageCompletionRoutineRunning;
 
         private static readonly string[] StageCompleteMessages =
@@ -116,14 +115,12 @@ namespace Game
         private void OnEnable()
         {
             EventManager.StartListening(GameEvent.OBJECTIVE_COMPLETED, OnObjectiveCompleted);
-            EventManager.StartListening(GameEvent.GRID_STABLE, OnGridStable);
             EventManager.StartListening(GameEvent.ELEMENTS_SWAPPED, OnElementsSwapped);
             SetLevelWinEventListener();
         }
         private void OnDisable()
         {
             EventManager.StopListening(GameEvent.OBJECTIVE_COMPLETED, OnObjectiveCompleted);
-            EventManager.StopListening(GameEvent.GRID_STABLE, OnGridStable);
             EventManager.StopListening(GameEvent.ELEMENTS_SWAPPED, OnElementsSwapped);
         }
         private void OnObjectiveCompleted(EventParam param)
@@ -140,37 +137,32 @@ namespace Game
 
         private void RequestStageCompletion()
         {
-            stageCompletionPending = true;
-            stageCompletionGridStable = false;
-            isPaused = true;
-
-            if (!stageCompletionRoutineRunning)
-                StartCoroutine(BeginStageCompletionWhenReady());
-        }
-
-        private void OnGridStable(EventParam param)
-        {
-            if (!stageCompletionPending)
+            if (stageCompletionPending || isSwitchingStage || isEnded || isWin)
                 return;
 
-            stageCompletionGridStable = true;
+            stageCompletionPending = true;
+            isPaused = true;
+
+            // The final stage is the level win. Set it immediately so active
+            // cascades cannot create or clear any additional matches.
+            if (currentLevelEditorIndex + 1 >= levelEditors.Count)
+            {
+                CompleteLevel();
+                return;
+            }
+
+            if (!stageCompletionRoutineRunning)
+                StartCoroutine(BeginStageCompletion());
         }
 
-        private IEnumerator BeginStageCompletionWhenReady()
+        private IEnumerator BeginStageCompletion()
         {
             stageCompletionRoutineRunning = true;
-
-            float waitTimeout = 5f;
-            while (!isEnded && !stageCompletionGridStable && waitTimeout > 0f)
-            {
-                waitTimeout -= Time.deltaTime;
-                yield return null;
-            }
 
             if (stageCompletionPending && !isSwitchingStage && !isEnded)
             {
                 stageCompletionPending = false;
-                StartCoroutine(HandleStageCompleted());
+                yield return StartCoroutine(HandleStageCompleted());
             }
 
             stageCompletionRoutineRunning = false;
@@ -257,7 +249,6 @@ namespace Game
 
             isPaused = false;
             isSwitchingStage = false;
-            CompleteLevel();
         }
 
         private IEnumerator PlayStageCompletePopupText()
