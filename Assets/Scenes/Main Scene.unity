@@ -8956,10 +8956,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 687793615}
     - target: {fileID: 2547576709511450939, guid: 70bd33374545fe1428a509f86d0456fd, type: 3}
-      propertyPath: screens.Array.size
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 2547576709511450939, guid: 70bd33374545fe1428a509f86d0456fd, type: 3}
       propertyPath: 'screens.Array.data[0]'
       value: 
       objectReference: {fileID: 299557239}
