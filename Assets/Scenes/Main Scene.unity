@@ -8611,6 +8611,18 @@ PrefabInstance:
       propertyPath: firstLevelInterval
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 5092102555726562428, guid: a834de95be05b4446860498d9de41de9, type: 3}
+      propertyPath: androidBannerAdUnitId
+      value: ca-app-pub-3940256099942544/6300978111
+      objectReference: {fileID: 0}
+    - target: {fileID: 5092102555726562428, guid: a834de95be05b4446860498d9de41de9, type: 3}
+      propertyPath: androidRewardedAdUnitId
+      value: ca-app-pub-3940256099942544/5224354917
+      objectReference: {fileID: 0}
+    - target: {fileID: 5092102555726562428, guid: a834de95be05b4446860498d9de41de9, type: 3}
+      propertyPath: androidInterstitialAdUnitId
+      value: ca-app-pub-3940256099942544/1033173712
+      objectReference: {fileID: 0}
     - target: {fileID: 5092102555726562430, guid: a834de95be05b4446860498d9de41de9, type: 3}
       propertyPath: m_Name
       value: AdsManager
