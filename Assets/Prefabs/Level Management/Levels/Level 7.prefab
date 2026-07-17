@@ -102,7 +102,7 @@ MonoBehaviour:
   moves: 0
   grid: {fileID: 6111944330127197299}
   levelEditors:
-  - {fileID: 11400000, guid: af7ab36948817194891490fbef9ffe05, type: 2}
+  - {fileID: 11400000, guid: aa4b95f73b358bb4882fa887a381a1fd, type: 2}
   allowDiscoBallCreation: 1
   allowRocketCreation: 1
   allowBombCreation: 1
