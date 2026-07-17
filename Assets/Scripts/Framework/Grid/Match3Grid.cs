@@ -2423,13 +2423,10 @@ namespace Game
                 // Fallback: scan instantiated elements
                 foreach (GridElement el in generatedElements)
                     if (el != null && el.elementInfo != null && el.elementInfo.elementData != null &&
-                        !IsCauldronData(el.elementInfo.elementData) &&
-                        !HasBehavior(el.elementInfo.elementData, ElementData.ElementBehaviorFlags.NonShuffleable) &&
+                        CanRefillWithElementData(el.elementInfo.elementData) &&
                         el.elementInfo.powerUpType == ElementPowerUpType.None && !elementPool.Contains(el.elementInfo.elementData))
                         elementPool.Add(el.elementInfo.elementData);
             }
-            if (elementPool.Count == 0) yield break;
-
             bool shouldApplySparkling = false;
             float sparklingChance = 0f;
             if (GameManager.Instance.CurrentLevel is LevelScene_Match3Game match3Level)
@@ -2442,144 +2439,179 @@ namespace Game
 
             Sequence gravitySeq = DOTween.Sequence();
             bool hasTween = false;
-            HashSet<GridElementInfo> processedInfos = new HashSet<GridElementInfo>();
+            Dictionary<GridElementInfo, GridElement> elementsByInfo = new Dictionary<GridElementInfo, GridElement>();
+            Dictionary<GridElementInfo, List<Vector2Int>> movementPaths = new Dictionary<GridElementInfo, List<Vector2Int>>();
+            Queue<Vector2Int> gravityQueue = new Queue<Vector2Int>();
+            HashSet<Vector2Int> queuedPositions = new HashSet<Vector2Int>();
 
+            void EnqueueGravityCheck(Vector2Int pos)
+            {
+                if (!IsInsideGrid(pos) || !queuedPositions.Add(pos))
+                    return;
+
+                gravityQueue.Enqueue(pos);
+            }
+
+            void EnqueueAffectedGravityChecks(Vector2Int fromPos, Vector2Int toPos)
+            {
+                // An emptied cell can release the element above it or either
+                // diagonal element that may now slide into it. Re-check the
+                // moved element too: a slide can expose another valid move.
+                Vector2Int above = Vector2Int.down; // Grid Y grows downward.
+                EnqueueGravityCheck(fromPos + above);
+                EnqueueGravityCheck(fromPos + above + Vector2Int.left);
+                EnqueueGravityCheck(fromPos + above + Vector2Int.right);
+                EnqueueGravityCheck(toPos);
+                EnqueueGravityCheck(toPos + above);
+                EnqueueGravityCheck(toPos + above + Vector2Int.left);
+                EnqueueGravityCheck(toPos + above + Vector2Int.right);
+            }
+
+            // Seed once. Subsequent checks are limited to cells affected by a
+            // real movement, instead of repeatedly re-scanning the whole board.
             for (int x = 0; x < gridSize.x; x++)
             {
-                List<GravityColumnSection> sections = BuildColumnSections(x);
-                int bottomMostNormalY = GetBottomMostNormalCellY(x);
-
-                foreach (GravityColumnSection section in sections)
+                for (int y = 0; y < gridSize.y; y++)
                 {
-                    List<int> playableRows = section.rows;
-                    if (playableRows.Count == 0) continue;
-                    int highestExisting = -1;
-
-                    // Compact existing elements downward
-                    for (int readIndex = playableRows.Count - 1; readIndex >= 0; readIndex--)
-                    {
-                        int readY = playableRows[readIndex];
-                        Vector2Int readPos = new Vector2Int(x, readY);
-                        GridCell readCell = GetCell(readPos);
-                        GridElementInfo movingInfo = readCell?.elementInfo;
-                        if (movingInfo?.elementData == null || processedInfos.Contains(movingInfo)) continue;
-
-                        if (IsGarbageBagData(movingInfo.elementData) && ShouldGarbageBagClearAt(x, readY, bottomMostNormalY))
-                        {
-                            TriggerCellFeatureMatchedOverAt(readPos);
-                            NotifyGarbageBagCleaned(readPos, movingInfo.elementData);
-                            readCell.elementInfo = null;
-
-                            if (generatedTiles.TryGetValue(readPos, out GridCellController bagTile) && bagTile != null)
-                            {
-                                GridElement bagElement = bagTile.GetComponentInChildren<GridElement>();
-                                if (bagElement != null)
-                                {
-                                    bagElement.transform.SetParent(null, true);
-                                    float dropDist = Mathf.Max(0.5f, bagTile.transform.localScale.y);
-                                    float dropDur = 0f;
-                                    gravitySeq.Join(bagElement.transform.DOMove(bagElement.transform.position + Vector3.down * dropDist, dropDur).SetEase(Ease.InQuad));
-                                    gravitySeq.Join(bagElement.transform.DOScale(0.92f, dropDur).SetEase(Ease.InQuad));
-                                    generatedElements.Remove(bagElement);
-                                    Destroy(bagElement.gameObject, dropDur + 0.05f);
-                                    hasTween = true;
-                                }
-                            }
-
-                            continue;
-                        }
-
-                        if (highestExisting == -1) highestExisting = readIndex;
-
-                        List<Vector2Int> travelPath = GetGravityTravelPath(readPos);
-                        Vector2Int landingPos = travelPath.Count > 0 ? travelPath[travelPath.Count - 1] : readPos;
-                        GridCell landingCell = GetCell(landingPos);
-                        if (landingCell == null) continue;
-
-                        if (landingPos != readPos)
-                        {
-                            readCell.elementInfo = null;
-                            landingCell.elementInfo = movingInfo;
-                            processedInfos.Add(movingInfo);
-
-                            if (generatedTiles.TryGetValue(readPos, out GridCellController fromTile) &&
-                                generatedTiles.TryGetValue(landingPos, out GridCellController toTile) &&
-                                fromTile != null && toTile != null)
-                            {
-                                GridElement movingEl = fromTile.GetComponentInChildren<GridElement>();
-                                if (movingEl != null)
-                                {
-                                    bool hasPathTween = false;
-                                    if (travelPath.Count > 1)
-                                    {
-                                        Sequence moveSequence = DOTween.Sequence();
-                                        Vector3 currentWorldPos = movingEl.transform.position;
-                                        movingEl.transform.SetParent(null, true);
-
-                                        for (int pathIndex = 1; pathIndex < travelPath.Count; pathIndex++)
-                                        {
-                                            if (!generatedTiles.TryGetValue(travelPath[pathIndex], out GridCellController pathTile) || pathTile == null)
-                                                continue;
-
-                                            Vector3 targetWorldPos = pathTile.transform.position;
-                                            float segmentDistance = Vector3.Distance(currentWorldPos, targetWorldPos);
-                                            float segmentDuration = fallSpeed > 0f ? segmentDistance / fallSpeed : 0f;
-                                            moveSequence.Append(movingEl.transform.DOMove(targetWorldPos, segmentDuration).SetEase(Ease.OutQuad));
-                                            currentWorldPos = targetWorldPos;
-                                            hasPathTween = true;
-                                        }
-
-                                        if (hasPathTween)
-                                        {
-                                            moveSequence.OnComplete(() =>
-                                            {
-                                                if (movingEl == null || toTile == null)
-                                                    return;
-
-                                                movingEl.transform.SetParent(toTile.transform, true);
-                                                movingEl.transform.localPosition = Vector3.zero;
-                                            });
-
-                                            gravitySeq.Join(moveSequence);
-                                            hasTween = true;
-                                        }
-                                    }
-
-                                    if (!hasPathTween)
-                                    {
-                                        movingEl.transform.SetParent(toTile.transform, true);
-                                        float dist = movingEl.transform.localPosition.magnitude;
-                                        float dur = fallSpeed > 0f ? dist / fallSpeed : 0f;
-                                        gravitySeq.Join(movingEl.transform.DOLocalMove(Vector3.zero, dur).SetEase(Ease.OutQuad));
-                                        hasTween = true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if (!section.allowsRefillFromAbove)
+                    Vector2Int pos = new Vector2Int(x, y);
+                    GridCell cell = GetCell(pos);
+                    GridElementInfo info = cell?.elementInfo;
+                    if (!CanElementMoveByGravity(info))
                         continue;
 
-                    // Spawn new elements
-                    List<int> emptyRows = new List<int>();
-                    for (int rowIndex = playableRows.Count - 1; rowIndex >= 0; rowIndex--)
-                    {
-                        int targetY = playableRows[rowIndex];
-                        Vector2Int targetPos = new Vector2Int(x, targetY);
-                        GridCell targetCell = GetCell(targetPos);
-                        if (targetCell == null || targetCell.elementInfo != null) continue;
+                    GridElement element = GetElementAt(pos);
+                    if (element != null)
+                        elementsByInfo[info] = element;
 
-                        emptyRows.Add(targetY);
+                    EnqueueGravityCheck(pos);
+                }
+            }
+
+            int gravitySafetyCounter = Mathf.Max(1, gridSize.x * gridSize.y * gridSize.y * 2);
+            while (gravityQueue.Count > 0 && gravitySafetyCounter-- > 0)
+            {
+                Vector2Int fromPos = gravityQueue.Dequeue();
+                queuedPositions.Remove(fromPos);
+
+                GridCell fromCell = GetCell(fromPos);
+                GridElementInfo movingInfo = fromCell?.elementInfo;
+                if (!CanElementMoveByGravity(movingInfo))
+                    continue;
+
+                int bottomMostNormalY = GetBottomMostNormalCellY(fromPos.x);
+                if (IsGarbageBagData(movingInfo.elementData) && ShouldGarbageBagClearAt(fromPos.x, fromPos.y, bottomMostNormalY))
+                {
+                    TriggerCellFeatureMatchedOverAt(fromPos);
+                    NotifyGarbageBagCleaned(fromPos, movingInfo.elementData);
+                    fromCell.elementInfo = null;
+
+                    if (elementsByInfo.TryGetValue(movingInfo, out GridElement bagElement) && bagElement != null)
+                    {
+                        bagElement.transform.SetParent(null, true);
+                        float dropDist = Mathf.Max(0.5f, bagElement.transform.localScale.y);
+                        gravitySeq.Join(bagElement.transform.DOMove(bagElement.transform.position + Vector3.down * dropDist, 0f).SetEase(Ease.InQuad));
+                        gravitySeq.Join(bagElement.transform.DOScale(0.92f, 0f).SetEase(Ease.InQuad));
+                        generatedElements.Remove(bagElement);
+                        Destroy(bagElement.gameObject, 0.05f);
+                        hasTween = true;
                     }
 
-                    int spawnBase = highestExisting != -1 ? (playableRows.Count - highestExisting) : 0;
-                    for (int emptyIdx = 0; emptyIdx < emptyRows.Count; emptyIdx++)
+                    EnqueueAffectedGravityChecks(fromPos, fromPos);
+                    continue;
+                }
+
+                Vector2Int nextPos = GetGravityNextStep(fromPos);
+                if (nextPos == fromPos)
+                    continue;
+
+                GridCell nextCell = GetCell(nextPos);
+                if (nextCell == null || nextCell.elementInfo != null)
+                    continue;
+
+                fromCell.elementInfo = null;
+                nextCell.elementInfo = movingInfo;
+
+                if (!movementPaths.TryGetValue(movingInfo, out List<Vector2Int> path))
+                {
+                    path = new List<Vector2Int> { fromPos };
+                    movementPaths.Add(movingInfo, path);
+                }
+                path.Add(nextPos);
+
+                EnqueueAffectedGravityChecks(fromPos, nextPos);
+            }
+
+            foreach (KeyValuePair<GridElementInfo, List<Vector2Int>> movement in movementPaths)
+            {
+                if (!elementsByInfo.TryGetValue(movement.Key, out GridElement movingElement) || movingElement == null)
+                    continue;
+
+                List<Vector2Int> path = movement.Value;
+                Vector2Int finalPos = path[path.Count - 1];
+                if (!generatedTiles.TryGetValue(finalPos, out GridCellController finalTile) || finalTile == null)
+                    continue;
+
+                Sequence moveSequence = DOTween.Sequence();
+                Vector3 currentWorldPos = movingElement.transform.position;
+                movingElement.transform.SetParent(null, true);
+                bool hasPathTween = false;
+
+                for (int pathIndex = 1; pathIndex < path.Count; pathIndex++)
+                {
+                    if (!generatedTiles.TryGetValue(path[pathIndex], out GridCellController pathTile) || pathTile == null)
+                        continue;
+
+                    Vector3 targetWorldPos = pathTile.transform.position;
+                    float segmentDistance = Vector3.Distance(currentWorldPos, targetWorldPos);
+                    float segmentDuration = fallSpeed > 0f ? segmentDistance / fallSpeed : 0f;
+                    moveSequence.Append(movingElement.transform.DOMove(targetWorldPos, segmentDuration).SetEase(Ease.OutQuad));
+                    currentWorldPos = targetWorldPos;
+                    hasPathTween = true;
+                }
+
+                if (!hasPathTween)
+                    continue;
+
+                GridElement elementForCompletion = movingElement;
+                GridCellController tileForCompletion = finalTile;
+                moveSequence.OnComplete(() =>
+                {
+                    if (elementForCompletion == null || tileForCompletion == null)
+                        return;
+
+                    elementForCompletion.transform.SetParent(tileForCompletion.transform, true);
+                    elementForCompletion.transform.localPosition = Vector3.zero;
+                });
+
+                gravitySeq.Join(moveSequence);
+                hasTween = true;
+            }
+
+            // Refill only after all existing elements have claimed their final
+            // positions. Refill elements are never used as slide candidates.
+            for (int x = 0; x < gridSize.x && elementPool.Count > 0; x++)
+            {
+                List<GravityColumnSection> sections = BuildColumnSections(x);
+                foreach (GravityColumnSection section in sections)
+                {
+                    if (!section.allowsRefillFromAbove || section.rows.Count == 0)
+                        continue;
+
+                    List<int> emptyRows = new List<int>();
+                    for (int rowIndex = section.rows.Count - 1; rowIndex >= 0; rowIndex--)
                     {
-                        int targetY = emptyRows[emptyIdx];
-                        Vector2Int targetPos = new Vector2Int(x, targetY);
+                        int targetY = section.rows[rowIndex];
+                        GridCell targetCell = GetCell(new Vector2Int(x, targetY));
+                        if (targetCell != null && targetCell.elementInfo == null)
+                            emptyRows.Add(targetY);
+                    }
+
+                    for (int emptyIndex = 0; emptyIndex < emptyRows.Count; emptyIndex++)
+                    {
+                        Vector2Int targetPos = new Vector2Int(x, emptyRows[emptyIndex]);
                         GridCell targetCell = GetCell(targetPos);
-                        if (targetCell == null) continue;
+                        if (targetCell == null)
+                            continue;
 
                         ElementData randomData = SelectRefillElementData(elementPool, targetPos, refillChainReductionChance);
                         bool isSparkling = shouldApplySparkling && Random.value < sparklingChance;
@@ -2591,23 +2623,22 @@ namespace Game
                         };
                         targetCell.elementInfo = newInfo;
 
-                        if (generatedTiles.TryGetValue(targetPos, out GridCellController targetTile) && targetTile != null)
-                        {
-                            int stackOffset = spawnBase + (emptyIdx + 1);
-                            Vector3 spawnWorldPos = targetTile.transform.position + Vector3.up * stackOffset;
-                            GridElement newEl = Instantiate(gridElementPrefab, spawnWorldPos, Quaternion.identity); // TODO: Use pooling
-                            newEl.transform.SetParent(targetTile.transform, true);
-                            newEl.elementInfo = newInfo;
-                            generatedElements.Add(newEl);
-                            newEl.InitElement(this, newInfo);
-                            powerUpHandler.ApplySortingBoost(newEl, false);
-                            TriggerBreakableBoxCreatedEvent(targetPos, newInfo.elementData);
+                        if (!generatedTiles.TryGetValue(targetPos, out GridCellController targetTile) || targetTile == null)
+                            continue;
 
-                            float dist = newEl.transform.localPosition.magnitude;
-                            float dur = fallSpeed > 0f ? dist / fallSpeed : 0f;
-                            gravitySeq.Join(newEl.transform.DOLocalMove(Vector3.zero, dur).SetEase(Ease.OutBack, 0.9f));
-                            hasTween = true;
-                        }
+                        int stackOffset = emptyIndex + 1;
+                        Vector3 spawnWorldPos = targetTile.transform.position + Vector3.up * stackOffset;
+                        GridElement newElement = Instantiate(gridElementPrefab, spawnWorldPos, Quaternion.identity); // TODO: Use pooling
+                        newElement.transform.SetParent(targetTile.transform, true);
+                        newElement.elementInfo = newInfo;
+                        generatedElements.Add(newElement);
+                        newElement.InitElement(this, newInfo);
+                        powerUpHandler.ApplySortingBoost(newElement, false);
+
+                        float distance = newElement.transform.localPosition.magnitude;
+                        float duration = fallSpeed > 0f ? distance / fallSpeed : 0f;
+                        gravitySeq.Join(newElement.transform.DOLocalMove(Vector3.zero, duration).SetEase(Ease.OutBack, 0.9f));
+                        hasTween = true;
                     }
                 }
             }
@@ -2984,7 +3015,7 @@ namespace Game
         private List<ElementData> BuildElementPool()
         {
             List<ElementData> configuredPool = GetConfiguredElementPool();
-            configuredPool.RemoveAll(d => d == null || IsCauldronData(d) || HasBehavior(d, ElementData.ElementBehaviorFlags.NonShuffleable) || IsMultiCellData(d));
+            configuredPool.RemoveAll(d => !CanRefillWithElementData(d));
             if (configuredPool.Count > 0)
             {
                 return configuredPool;
@@ -2996,10 +3027,28 @@ namespace Game
                 {
                     GridCell cell = GetCell(new Vector2Int(x, y));
                     ElementData data = cell?.elementInfo?.elementData;
-                    if (data != null && !IsCauldronData(data) && !HasBehavior(data, ElementData.ElementBehaviorFlags.NonShuffleable) && !IsMultiCellData(data) && cell.elementInfo.powerUpType == ElementPowerUpType.None && !pool.Contains(data))
+                    if (CanRefillWithElementData(data) && cell.elementInfo.powerUpType == ElementPowerUpType.None && !pool.Contains(data))
                         pool.Add(data);
                 }
             return pool;
+        }
+
+        private static bool CanElementMoveByGravity(GridElementInfo info)
+        {
+            return info?.elementData != null &&
+                   !HasBehavior(info.elementData, ElementData.ElementBehaviorFlags.NotAffectedByGravity);
+        }
+
+        private bool CanRefillWithElementData(ElementData data)
+        {
+            // Obstacles are authored onto the board; they must never enter the
+            // normal refill pool, even if the level's pool contains them.
+            return data != null &&
+                   !IsCauldronData(data) &&
+                   !IsBreakableBoxData(data) &&
+                   !HasBehavior(data, ElementData.ElementBehaviorFlags.NonShuffleable) &&
+                   !HasBehavior(data, ElementData.ElementBehaviorFlags.NotAffectedByGravity) &&
+                   !IsMultiCellData(data);
         }
 
         private int GetBottomMostNormalCellY(int x)
@@ -3123,6 +3172,38 @@ namespace Game
             }
 
             return currentPos;
+        }
+
+        private Vector2Int GetGravityNextStep(Vector2Int startPos)
+        {
+            Vector2Int verticalLanding = GetVerticalLandingPosition(startPos);
+            if (verticalLanding != startPos)
+                return verticalLanding;
+
+            Vector2Int downLeftPos = new Vector2Int(startPos.x - 1, startPos.y + 1);
+            Vector2Int downRightPos = new Vector2Int(startPos.x + 1, startPos.y + 1);
+            bool canSlideLeft = CanSlideInto(downLeftPos);
+            bool canSlideRight = CanSlideInto(downRightPos);
+
+            if (!canSlideLeft && !canSlideRight)
+                return startPos;
+
+            if (canSlideLeft && canSlideRight)
+            {
+                // Prefer the side with the deeper immediate vertical landing.
+                // The queue will re-evaluate this element after that slide.
+                Vector2Int leftLanding = GetVerticalLandingPosition(downLeftPos);
+                Vector2Int rightLanding = GetVerticalLandingPosition(downRightPos);
+
+                if (leftLanding.y > rightLanding.y)
+                    return downLeftPos;
+                if (rightLanding.y > leftLanding.y)
+                    return downRightPos;
+
+                return downLeftPos;
+            }
+
+            return canSlideLeft ? downLeftPos : downRightPos;
         }
 
         private List<Vector2Int> GetGravityTravelPath(Vector2Int startPos)
