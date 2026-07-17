@@ -8607,6 +8607,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 492599855}
     m_Modifications:
+    - target: {fileID: 5092102555726562428, guid: a834de95be05b4446860498d9de41de9, type: 3}
+      propertyPath: firstLevelInterval
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5092102555726562430, guid: a834de95be05b4446860498d9de41de9, type: 3}
       propertyPath: m_Name
       value: AdsManager

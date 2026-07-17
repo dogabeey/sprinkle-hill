@@ -222,7 +222,9 @@ namespace Game.Ads
                 return;
 
             DestroyBannerAd();
-            bannerView = new BannerView(bannerAdUnitId, AdSize.Banner, bannerPosition);
+            int safeDeviceWidth = MobileAds.Utils.GetDeviceSafeWidth();
+            AdSize adaptiveBannerSize = AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(safeDeviceWidth);
+            bannerView = new BannerView(bannerAdUnitId, adaptiveBannerSize, bannerPosition);
             bannerView.OnBannerAdLoaded += OnBannerAdLoaded;
             bannerView.OnBannerAdLoadFailed += OnBannerAdLoadFailed;
             bannerView.OnAdClicked += OnBannerAdClicked;
