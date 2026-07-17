@@ -46,5 +46,46 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 1
   adInterval: 60
+  firstLevelInterval: 10
   levelInterval: 2
-  bannerHeight: 70
+  androidInterstitialAdUnitId: ca-app-pub-5053129562534405/6063909105
+  androidRewardedAdUnitId: ca-app-pub-5053129562534405/9605101235
+  androidBannerAdUnitId: ca-app-pub-5053129562534405/8439479361
+  iosInterstitialAdUnitId: ca-app-pub-3940256099942544/4411468910
+  iosRewardedAdUnitId: ca-app-pub-3940256099942544/1712485313
+  iosBannerAdUnitId: ca-app-pub-3940256099942544/2934735716
+  loadBannerOnInitialize: 1
+  bannerPosition: 1
+  onAdClosedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onAdFailedShowEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onAdLoadedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onAdFailedLoadEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onAdClickedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onRewardedClosedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onRewardedFailedShowEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onRewardedLoadedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onRewardedFailedLoadEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onRewardedClickedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  onBannerClickedEvent:
+    m_PersistentCalls:
+      m_Calls: []

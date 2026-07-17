@@ -96,6 +96,7 @@
   <Project Path="Unity.Addressables.csproj" />
   <Project Path="Unity.Services.Core.Components.csproj" />
   <Project Path="Unity.Mathematics.Editor.csproj" />
+  <Project Path="GoogleMobileAds.Editor.csproj" />
   <Project Path="Unity.VisualScripting.SettingsProvider.Editor.csproj" />
   <Project Path="Game.Util.csproj" />
   <Project Path="UnityEditor.UI.Analytics.csproj" />

@@ -1,12 +1,9 @@
 using System;
-using UnityEngine;
-using Unity.Services.Core;
-using Unity.Services.LevelPlay;
-using UnityEngine.Events;
-using Game.Singleton;
 using Game.EventManagement;
-using System.Threading.Tasks;
-using DG.Tweening;
+using Game.Singleton;
+using GoogleMobileAds.Api;
+using UnityEngine;
+using UnityEngine.Events;
 
 namespace Game.Ads
 {
@@ -14,7 +11,6 @@ namespace Game.Ads
     {
         ExtraLevelEndReward,
         BoosterReward,
-
     }
 
     public sealed class RewardedAdResult
@@ -29,22 +25,39 @@ namespace Game.Ads
         }
     }
 
+    /// <summary>
+    /// Owns the Google Mobile Ads (AdMob) ad lifecycle for the game.
+    /// Assign production unit IDs in the Inspector before publishing.
+    /// </summary>
     public class UnityAdsManager : SingletonComponent<UnityAdsManager>
     {
-        public float adInterval = 300.0f; // Time interval between ads in seconds
-        public int firstLevelInterval = 10; // Number of levels before the first ad is shown
-        public int levelInterval = 2; // Time interval between ads in seconds
-        public int bannerHeight;
+        [Header("Interstitial timing")]
+        [Min(0f)] public float adInterval = 300f;
+        [Min(0)] public int firstLevelInterval = 10;
+        [Min(0)] public int levelInterval = 2;
 
+        [Header("AdMob unit IDs")]
+        [SerializeField] private string androidInterstitialAdUnitId = "ca-app-pub-5053129562534405/6063909105" ;
+        [SerializeField] private string androidRewardedAdUnitId = "ca-app-pub-5053129562534405/9605101235";
+        [SerializeField] private string androidBannerAdUnitId = "ca-app-pub-5053129562534405/8439479361";
+        [SerializeField] private string iosInterstitialAdUnitId = "ca-app-pub-3940256099942544/4411468910"; // Not implement yet. Fake test id.
+        [SerializeField] private string iosRewardedAdUnitId = "ca-app-pub-3940256099942544/1712485313"; // Not implement yet. Fake test id.
+        [SerializeField] private string iosBannerAdUnitId = "ca-app-pub-3940256099942544/2934735716"; // Not implement yet. Fake test id.
+
+        [Header("Banner")]
+        [SerializeField] private bool loadBannerOnInitialize = true;
+        [SerializeField] private AdPosition bannerPosition = AdPosition.Bottom;
+
+        // Error events expose an error message rather than a provider-specific error type.
         public UnityEvent<object, EventArgs> onAdClosedEvent = new();
-        public UnityEvent<object, LevelPlayAdError> onAdFailedShowEvent = new();
+        public UnityEvent<object, string> onAdFailedShowEvent = new();
         public UnityEvent<object, EventArgs> onAdLoadedEvent = new();
-        public UnityEvent<object, LevelPlayAdError> onAdFailedLoadEvent = new();
+        public UnityEvent<object, string> onAdFailedLoadEvent = new();
         public UnityEvent<object, EventArgs> onAdClickedEvent = new();
         public UnityEvent<object, EventArgs> onRewardedClosedEvent = new();
-        public UnityEvent<object, LevelPlayAdError> onRewardedFailedShowEvent = new();
+        public UnityEvent<object, string> onRewardedFailedShowEvent = new();
         public UnityEvent<object, EventArgs> onRewardedLoadedEvent = new();
-        public UnityEvent<object, LevelPlayAdError> onRewardedFailedLoadEvent = new();
+        public UnityEvent<object, string> onRewardedFailedLoadEvent = new();
         public UnityEvent<object, EventArgs> onRewardedClickedEvent = new();
         public UnityEvent<object, EventArgs> onBannerClickedEvent = new();
 
@@ -53,307 +66,295 @@ namespace Game.Ads
         public event Action<RewardedAdResult> RewardedAdClosed;
         public event Action<RewardedAdResult> RewardedAdFailedToShow;
 
-
-        private string gameId;
-        private string IS_adUnitId;
-        private string RW_adUnitId;
-        private string Banner_adUnitId;
+        private InterstitialAd interstitialAd;
+        private RewardedAd rewardedAd;
+        private BannerView bannerView;
+        private string interstitialAdUnitId;
+        private string rewardedAdUnitId;
+        private string bannerAdUnitId;
         private float timeSinceLastAd;
-        private ILevelPlayInterstitialAd interstitialAd;
-        private ILevelPlayRewardedAd rewardedAd;
-        private ILevelPlayBannerAd bannerAd;
-        private int levelsSinceLastAd = 0;
-        private bool isLevelPlayInitialized;
+        private int levelsSinceLastAd;
+        private bool isInitialized;
         private bool rewardedGrantedInCurrentShow;
         private RewardType currentRewardType;
 
         private void OnEnable()
         {
-
-            EventManagement.EventManager.StartListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
-            EventManagement.EventManager.StartListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
-            EventManagement.EventManager.StartListening(GameEvent.LEVEL_EXTRA_MOVE_REJECTED, OnLevelCompleted);
+            EventManager.StartListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
+            EventManager.StartListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
+            EventManager.StartListening(GameEvent.LEVEL_EXTRA_MOVE_REJECTED, OnLevelCompleted);
         }
+
         private void OnDisable()
         {
-            EventManagement.EventManager.StopListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
-            EventManagement.EventManager.StopListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
-            EventManagement.EventManager.StopListening(GameEvent.LEVEL_EXTRA_MOVE_REJECTED, OnLevelCompleted);
+            EventManager.StopListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
+            EventManager.StopListening(GameEvent.LEVEL_COMPLETED, OnLevelCompleted);
+            EventManager.StopListening(GameEvent.LEVEL_EXTRA_MOVE_REJECTED, OnLevelCompleted);
         }
-        private void OnLevelStarted(EventParam e)
+
+        private void Start()
+        {
+            timeSinceLastAd = 0f;
+            ConfigureAdUnitIds();
+            MobileAds.Initialize(OnMobileAdsInitialized);
+        }
+
+        private void Update()
+        {
+            timeSinceLastAd += Time.deltaTime;
+        }
+
+        private void OnLevelStarted(EventParam _)
         {
             levelsSinceLastAd++;
         }
+
         private void OnLevelCompleted(EventParam e)
         {
             if (e.paramInt >= firstLevelInterval)
                 TryShowAd();
         }
 
-        async void Start()
+        private void ConfigureAdUnitIds()
         {
-            timeSinceLastAd = 0.0f;
-
-#if UNITY_ANDROID
-            gameId = "6118896"; // Replace with your actual Android Game ID
-            IS_adUnitId = "Interstitial_Android"; // Replace with your actual Android Ad Unit ID
-            RW_adUnitId = "Rewarded_Android"; // Replace with your actual Android Ad Unit ID
-            Banner_adUnitId = "Banner_Android"; // Replace with your actual Android Ad Unit ID
-#elif UNITY_IOS
-        gameId = "6118897"; // Replace with your actual iOS Game ID
-        IS_adUnitId = "Interstitial_iOS"; // Replace with your actual iOS Ad Unit ID
-        RW_adUnitId = "Rewarded_iOS"; // Replace with your actual iOS Ad Unit ID
-        Banner_adUnitId = "Banner_iOS"; // Replace with your actual iOS Ad Unit ID
+#if UNITY_IOS
+            interstitialAdUnitId = iosInterstitialAdUnitId;
+            rewardedAdUnitId = iosRewardedAdUnitId;
+            bannerAdUnitId = iosBannerAdUnitId;
 #else
-        Debug.LogError("Unsupported platform");
-        return;
+            interstitialAdUnitId = androidInterstitialAdUnitId;
+            rewardedAdUnitId = androidRewardedAdUnitId;
+            bannerAdUnitId = androidBannerAdUnitId;
 #endif
-
-            try
-            {
-                await UnityServices.InitializeAsync();
-
-                LevelPlay.OnInitSuccess += OnLevelPlayInitSuccess;
-                LevelPlay.OnInitFailed += OnLevelPlayInitFailed;
-                LevelPlay.Init(gameId);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"Unity Services initialization failed: {e}");
-            }
-
-            InvokeRepeating(nameof(TryShowAd), 0, 1);
         }
 
-        private void OnLevelPlayInitSuccess(LevelPlayConfiguration configuration)
+        private void OnMobileAdsInitialized(InitializationStatus _)
         {
-            if (isLevelPlayInitialized)
-                return;
+            isInitialized = true;
+            LoadInterstitialAd();
+            LoadRewardedAd();
 
-            isLevelPlayInitialized = true;
-            CreateAndLoadAds();
-        }
-        private void OnLevelPlayInitFailed(LevelPlayInitError error)
-        {
-            Debug.LogError($"Init failed");
-            Debug.LogError($"Code: {error.ErrorCode}");
-            Debug.LogError($"Message: {error.ErrorMessage}");
-            Debug.LogError(error.ToString());
-        }
-
-        private void CreateAndLoadAds()
-        {
-            interstitialAd = new LevelPlayInterstitialAd(IS_adUnitId);
-            rewardedAd = new LevelPlayRewardedAd(RW_adUnitId);
-            LevelPlayBannerAd.Config bannerConfig = ConfigBanner();
-
-            bannerAd = new LevelPlayBannerAd(Banner_adUnitId, bannerConfig);
-
-            interstitialAd.OnAdClosed += OnAdClosed;
-            interstitialAd.OnAdDisplayFailed += OnAdFailedShow;
-            interstitialAd.OnAdLoaded += OnAdLoaded;
-            interstitialAd.OnAdLoadFailed += OnAdFailedLoad;
-            interstitialAd.OnAdClicked += OnAdClicked;
-
-            rewardedAd.OnAdClosed += OnRewardedClosed;
-            rewardedAd.OnAdDisplayFailed += OnRewardedFailedShow;
-            rewardedAd.OnAdLoaded += OnRewardedLoaded;
-            rewardedAd.OnAdLoadFailed += OnRewardedFailedLoad;
-            rewardedAd.OnAdClicked += OnRewardedClicked;
-            rewardedAd.OnAdRewarded += OnRewardedAdRewarded;
-
-            bannerAd.OnAdClicked += OnBannerClicked;
-            bannerAd.OnAdLoaded += OnBannerAdLoaded;
-            bannerAd.OnAdLoadFailed += OnBannerAdFailedLoad;
-
-            interstitialAd.LoadAd();
-            rewardedAd.LoadAd();
-            bannerAd.LoadAd();
-        }
-
-        private LevelPlayBannerAd.Config ConfigBanner()
-        {
-            return new LevelPlayBannerAd.Config.Builder()
-                .SetSize(LevelPlayAdSize.CreateCustomBannerSize(Screen.width, bannerHeight))
-                .SetPosition(LevelPlayBannerPosition.BottomCenter)
-                .SetDisplayOnLoad(true)
-                .Build();
-        }
-
-        private void OnBannerClicked(LevelPlayAdInfo adInfo)
-        {
-            Debug.Log("Banner clicked");
-            onBannerClickedEvent.Invoke(this, EventArgs.Empty);
-        }
-        private void OnBannerAdLoaded(LevelPlayAdInfo adInfo)
-        {
-            Debug.Log("Banner Ad loaded");
-            EventManagement.EventManager.TriggerEvent(GameEvent.BANNER_AD_LOADED, new EventParam(paramFloat: bannerHeight));
-        }
-        private void OnBannerAdFailedLoad(LevelPlayAdError error)
-        {
-            Debug.LogError($"Banner Ad failed to load: {error.ErrorMessage}");
-        }
-
-        void Update()
-        {
-            timeSinceLastAd += Time.deltaTime;
+            if (loadBannerOnInitialize)
+                LoadBannerAd();
         }
 
         public void TryShowAd()
         {
-            if (timeSinceLastAd >= adInterval && levelsSinceLastAd > levelInterval && interstitialAd != null && interstitialAd.IsAdReady())
-            {
-                ShowAd();
-                timeSinceLastAd = 0.0f;
-                levelsSinceLastAd = 0;
-            }
+            if (timeSinceLastAd < adInterval || levelsSinceLastAd <= levelInterval || interstitialAd == null || !interstitialAd.CanShowAd())
+                return;
+
+            ShowAd();
         }
 
         public void ShowAd()
         {
-            if (interstitialAd != null && interstitialAd.IsAdReady())
+            if (interstitialAd == null || !interstitialAd.CanShowAd())
             {
-                interstitialAd.ShowAd();
-                EventManagement.EventManager.TriggerEvent(GameEvent.AD_SHOWN);
+                Debug.Log("Interstitial ad is not ready.");
+                return;
             }
-            else
-            {
-                Debug.Log("Advertisement not ready");
-            }
+
+            timeSinceLastAd = 0f;
+            levelsSinceLastAd = 0;
+            interstitialAd.Show();
+            EventManager.TriggerEvent(GameEvent.AD_SHOWN);
         }
+
         public bool ShowRewardedAd(RewardType rewardType = RewardType.BoosterReward)
         {
-            if (rewardedAd != null && rewardedAd.IsAdReady())
+            if (rewardedAd == null || !rewardedAd.CanShowAd())
             {
-                rewardedGrantedInCurrentShow = false;
-            currentRewardType = rewardType;
-                rewardedAd.ShowAd();
-            RewardedAdShown?.Invoke(new RewardedAdResult(currentRewardType, false));
-                EventManagement.EventManager.TriggerEvent(GameEvent.REWARDED_AD_SHOWN);
-                return true;
-            }
-            else
-            {
-                Debug.Log("Rewarded Ad not ready");
+                Debug.Log("Rewarded ad is not ready.");
                 return false;
             }
+
+            currentRewardType = rewardType;
+            rewardedGrantedInCurrentShow = false;
+            rewardedAd.Show(OnUserEarnedReward);
+            RewardedAdShown?.Invoke(new RewardedAdResult(currentRewardType, false));
+            EventManager.TriggerEvent(GameEvent.REWARDED_AD_SHOWN);
+            return true;
         }
 
-        private void OnAdClosed(LevelPlayAdInfo adInfo)
+        public void LoadInterstitialAd()
         {
-            Debug.Log("Ad closed");
-            interstitialAd.LoadAd();
-            onAdClosedEvent.Invoke(this, EventArgs.Empty);
-            EventManagement.EventManager.TriggerEvent(GameEvent.AD_CLOSED);
-        }
+            if (!isInitialized || string.IsNullOrWhiteSpace(interstitialAdUnitId))
+                return;
 
-        private void OnAdFailedShow(LevelPlayAdInfo adInfo, LevelPlayAdError error)
-        {
-            Debug.LogError($"Ad failed to show: {error.ErrorMessage}");
-            interstitialAd.LoadAd();
-            onAdFailedShowEvent.Invoke(this, error);
-            EventManagement.EventManager.TriggerEvent(GameEvent.AD_FAILED, new EventParam(paramStr: error.ErrorMessage));
-        }
-
-        private void OnAdLoaded(LevelPlayAdInfo adInfo)
-        {
-            Debug.Log("Ad loaded");
-            onAdLoadedEvent.Invoke(this, EventArgs.Empty);
-        }
-
-        private void OnAdFailedLoad(LevelPlayAdError error)
-        {
-            Debug.LogError($"Ad failed to load: {error.ErrorMessage}");
-            onAdFailedLoadEvent.Invoke(this, error);
-        }
-
-        private void OnRewardedClosed(LevelPlayAdInfo adInfo)
-        {
-            Debug.Log("Rewarded Ad closed");
-            rewardedAd.LoadAd();
-            onRewardedClosedEvent.Invoke(this, EventArgs.Empty);
-
-            RewardedAdResult result = new RewardedAdResult(currentRewardType, rewardedGrantedInCurrentShow);
-            RewardedAdClosed?.Invoke(result);
-
-            if (rewardedGrantedInCurrentShow)
+            DestroyInterstitialAd();
+            InterstitialAd.Load(interstitialAdUnitId, new AdRequest(), (ad, error) =>
             {
-                EventManagement.EventManager.TriggerEvent(GameEvent.REWARDED_AD_COMPLETED);
-            }
+                if (error != null)
+                {
+                    ReportInterstitialLoadFailure(error);
+                    return;
+                }
+
+                interstitialAd = ad;
+                RegisterInterstitialCallbacks(ad);
+                onAdLoadedEvent.Invoke(this, EventArgs.Empty);
+            });
         }
 
-        private void OnRewardedFailedShow(LevelPlayAdInfo adInfo, LevelPlayAdError error)
+        public void LoadRewardedAd()
         {
-            Debug.LogError($"Rewarded Ad failed to show: {error.ErrorMessage}");
-            rewardedAd.LoadAd();
-            onRewardedFailedShowEvent.Invoke(this, error);
-            RewardedAdFailedToShow?.Invoke(new RewardedAdResult(currentRewardType, false));
-            EventManagement.EventManager.TriggerEvent(GameEvent.REWARDED_AD_FAILED, new EventParam(paramStr: error.ErrorMessage));
+            if (!isInitialized || string.IsNullOrWhiteSpace(rewardedAdUnitId))
+                return;
+
+            DestroyRewardedAd();
+            RewardedAd.Load(rewardedAdUnitId, new AdRequest(), (ad, error) =>
+            {
+                if (error != null)
+                {
+                    ReportRewardedLoadFailure(error);
+                    return;
+                }
+
+                rewardedAd = ad;
+                RegisterRewardedCallbacks(ad);
+                onRewardedLoadedEvent.Invoke(this, EventArgs.Empty);
+            });
         }
 
-        private void OnRewardedLoaded(LevelPlayAdInfo adInfo)
+        public void LoadBannerAd()
         {
-            Debug.Log("Rewarded Ad loaded");
-            onRewardedLoadedEvent.Invoke(this, EventArgs.Empty);
+            if (!isInitialized || string.IsNullOrWhiteSpace(bannerAdUnitId))
+                return;
+
+            DestroyBannerAd();
+            bannerView = new BannerView(bannerAdUnitId, AdSize.Banner, bannerPosition);
+            bannerView.OnBannerAdLoaded += OnBannerAdLoaded;
+            bannerView.OnBannerAdLoadFailed += OnBannerAdLoadFailed;
+            bannerView.OnAdClicked += OnBannerAdClicked;
+            bannerView.LoadAd(new AdRequest());
         }
 
-        private void OnRewardedFailedLoad(LevelPlayAdError error)
+        private void RegisterInterstitialCallbacks(InterstitialAd ad)
         {
-            Debug.LogError($"Rewarded Ad failed to load: {error.ErrorMessage}");
-            onRewardedFailedLoadEvent.Invoke(this, error);
+            ad.OnAdFullScreenContentClosed += OnInterstitialClosed;
+            ad.OnAdFullScreenContentFailed += OnInterstitialFailedToShow;
+            ad.OnAdClicked += OnInterstitialClicked;
         }
 
-        private void OnAdClicked(LevelPlayAdInfo adInfo)
+        private void RegisterRewardedCallbacks(RewardedAd ad)
         {
-            Debug.Log("Ad clicked");
+            ad.OnAdFullScreenContentClosed += OnRewardedClosed;
+            ad.OnAdFullScreenContentFailed += OnRewardedFailedToShow;
+            ad.OnAdClicked += OnRewardedClicked;
+        }
+
+        private void OnInterstitialClosed()
+        {
+            onAdClosedEvent.Invoke(this, EventArgs.Empty);
+            EventManager.TriggerEvent(GameEvent.AD_CLOSED);
+            LoadInterstitialAd();
+        }
+
+        private void OnInterstitialFailedToShow(AdError error)
+        {
+            string message = error?.GetMessage() ?? "Unknown interstitial show error.";
+            Debug.LogError($"Interstitial ad failed to show: {message}");
+            onAdFailedShowEvent.Invoke(this, message);
+            EventManager.TriggerEvent(GameEvent.AD_FAILED, new EventParam(paramStr: message));
+            LoadInterstitialAd();
+        }
+
+        private void OnInterstitialClicked()
+        {
             onAdClickedEvent.Invoke(this, EventArgs.Empty);
         }
 
-        private void OnRewardedClicked(LevelPlayAdInfo adInfo)
+        private void OnRewardedClosed()
         {
-            Debug.Log("Rewarded Ad clicked");
+            onRewardedClosedEvent.Invoke(this, EventArgs.Empty);
+            RewardedAdResult result = new(currentRewardType, rewardedGrantedInCurrentShow);
+            RewardedAdClosed?.Invoke(result);
+
+            if (rewardedGrantedInCurrentShow)
+                EventManager.TriggerEvent(GameEvent.REWARDED_AD_COMPLETED);
+
+            LoadRewardedAd();
+        }
+
+        private void OnRewardedFailedToShow(AdError error)
+        {
+            string message = error?.GetMessage() ?? "Unknown rewarded show error.";
+            Debug.LogError($"Rewarded ad failed to show: {message}");
+            onRewardedFailedShowEvent.Invoke(this, message);
+            RewardedAdFailedToShow?.Invoke(new RewardedAdResult(currentRewardType, false));
+            EventManager.TriggerEvent(GameEvent.REWARDED_AD_FAILED, new EventParam(paramStr: message));
+            LoadRewardedAd();
+        }
+
+        private void OnRewardedClicked()
+        {
             onRewardedClickedEvent.Invoke(this, EventArgs.Empty);
         }
 
-        private void OnRewardedAdRewarded(LevelPlayAdInfo adInfo, LevelPlayReward reward)
+        private void OnUserEarnedReward(Reward _)
         {
             rewardedGrantedInCurrentShow = true;
             RewardedAdGranted?.Invoke(new RewardedAdResult(currentRewardType, true));
         }
 
+        private void OnBannerAdLoaded()
+        {
+            EventManager.TriggerEvent(GameEvent.BANNER_AD_LOADED, new EventParam(paramFloat: bannerView.GetHeightInPixels()));
+        }
+
+        private void OnBannerAdLoadFailed(LoadAdError error)
+        {
+            Debug.LogError($"Banner ad failed to load: {error?.GetMessage() ?? "Unknown error."}");
+        }
+
+        private void OnBannerAdClicked()
+        {
+            onBannerClickedEvent.Invoke(this, EventArgs.Empty);
+        }
+
+        private void ReportInterstitialLoadFailure(LoadAdError error)
+        {
+            string message = error?.GetMessage() ?? "Unknown interstitial load error.";
+            Debug.LogError($"Interstitial ad failed to load: {message}");
+            onAdFailedLoadEvent.Invoke(this, message);
+        }
+
+        private void ReportRewardedLoadFailure(LoadAdError error)
+        {
+            string message = error?.GetMessage() ?? "Unknown rewarded load error.";
+            Debug.LogError($"Rewarded ad failed to load: {message}");
+            onRewardedFailedLoadEvent.Invoke(this, message);
+        }
 
         private void OnDestroy()
         {
-            LevelPlay.OnInitSuccess -= OnLevelPlayInitSuccess;
-            LevelPlay.OnInitFailed -= OnLevelPlayInitFailed;
+            DestroyInterstitialAd();
+            DestroyRewardedAd();
+            DestroyBannerAd();
+        }
 
-            if (interstitialAd != null)
-            {
-                interstitialAd.OnAdClosed -= OnAdClosed;
-                interstitialAd.OnAdDisplayFailed -= OnAdFailedShow;
-                interstitialAd.OnAdLoaded -= OnAdLoaded;
-                interstitialAd.OnAdLoadFailed -= OnAdFailedLoad;
-                interstitialAd.OnAdClicked -= OnAdClicked;
-                interstitialAd.DestroyAd();
-            }
+        private void DestroyInterstitialAd()
+        {
+            interstitialAd?.Destroy();
+            interstitialAd = null;
+        }
 
-            if (rewardedAd != null)
-            {
-                rewardedAd.OnAdClosed -= OnRewardedClosed;
-                rewardedAd.OnAdDisplayFailed -= OnRewardedFailedShow;
-                rewardedAd.OnAdLoaded -= OnRewardedLoaded;
-                rewardedAd.OnAdLoadFailed -= OnRewardedFailedLoad;
-                rewardedAd.OnAdClicked -= OnRewardedClicked;
-                rewardedAd.OnAdRewarded -= OnRewardedAdRewarded;
-                rewardedAd.DestroyAd();
-            }
+        private void DestroyRewardedAd()
+        {
+            rewardedAd?.Destroy();
+            rewardedAd = null;
+        }
 
-            if (bannerAd != null)
-            {
-                bannerAd.OnAdClicked -= OnBannerClicked;
-                bannerAd.DestroyAd();
-            }
+        private void DestroyBannerAd()
+        {
+            if (bannerView == null)
+                return;
+
+            bannerView.OnBannerAdLoaded -= OnBannerAdLoaded;
+            bannerView.OnBannerAdLoadFailed -= OnBannerAdLoadFailed;
+            bannerView.OnAdClicked -= OnBannerAdClicked;
+            bannerView.Destroy();
+            bannerView = null;
         }
     }
 }

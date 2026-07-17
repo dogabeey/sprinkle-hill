@@ -9740,6 +9740,14 @@ PrefabInstance:
       propertyPath: objectiveManager
       value: 
       objectReference: {fileID: 1759594110}
+    - target: {fileID: 5878624774752496449, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 93.8999
+      objectReference: {fileID: 0}
+    - target: {fileID: 7695969392470913753, guid: 4fc357eafb72d244dbf9ed050d723528, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 38.553955
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
