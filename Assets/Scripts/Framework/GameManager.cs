@@ -247,6 +247,19 @@ namespace Game
             EndCurrentLevel();
             ChangeGameState(GameState.Overworld);
         }
+
+        public void LoadPreviousLevel()
+        {
+            if (World.Instance.CurrentLevel != null)
+            {
+                World.Instance.lastPlayedLevelIndex--;
+                int sceneIndex = World.Instance.GetSceneIndexForProgressIndex(World.Instance.lastPlayedLevelIndex);
+                if (sceneIndex >= 0)
+                {
+                    LoadLevel(World.Instance.levelScenes[sceneIndex]);
+                }
+            }
+        }
     }
 }
 

@@ -12,7 +12,7 @@ namespace Game
         public Button toggleSettingsButton;
         public Screens screenID;
         public GridLayoutGroup layoutGroup;
-        public Button restartButton, nextLevelButton, homeButton;
+        public Button restartButton, previousLevelButton, nextLevelButton, homeButton;
         public Toggle musicToggle, sfxToggle, vibrationToggle, consentToggle;
 
         private void Awake()
@@ -69,6 +69,11 @@ namespace Game
                 GameManager.Instance.ReturnToMainMenu();
                 ScreenManager.Instance.CloseAllNonPersistentScreens();
             });
+            previousLevelButton?.onClick.AddListener(() =>
+            {
+                GameManager.Instance.LoadPreviousLevel();
+                ScreenManager.Instance.CloseAllNonPersistentScreens();
+            });
         }
 
         public override void InitUI(EventParam eventParam)
@@ -114,8 +119,8 @@ namespace Game
             restartButton?.gameObject.SetActive(true);
             consentToggle?.gameObject.SetActive(true);
             homeButton?.gameObject.SetActive(true);
-            // If the build is in developer mode, show the next level button
-            nextLevelButton?.gameObject.SetActive(Debug.isDebugBuild);
+            previousLevelButton?.gameObject.SetActive(true);
+            nextLevelButton?.gameObject.SetActive(true);
 
             yield return DOVirtual.Float(0, 50, 0.3f, (value) =>
             {
@@ -134,6 +139,7 @@ namespace Game
             sfxToggle?.gameObject.SetActive(false);
             musicToggle?.gameObject.SetActive(false);
             homeButton?.gameObject.SetActive(false);
+            previousLevelButton?.gameObject.SetActive(false);
             nextLevelButton?.gameObject.SetActive(false);
         }
     }
