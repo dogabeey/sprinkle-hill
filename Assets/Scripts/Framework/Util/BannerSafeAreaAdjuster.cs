@@ -7,8 +7,11 @@ namespace Game
     {
         public RectTransform rectTarget;
 
+        private Vector2 originalAnchoredPosition;
+
         private void OnEnable()
         {
+            originalAnchoredPosition = rectTarget.anchoredPosition;
             EventManager.StartListening(GameEvent.BANNER_AD_LOADED, OnBannerAdOpened);
         }
         private void OnDisable()
@@ -19,7 +22,9 @@ namespace Game
         {
             float bannerHeight = e.paramFloat;
 			// Heighten the safe area by the banner height, so that UI elements will be placed above the banner
-			rectTarget.anchoredPosition += new Vector2(0, bannerHeight);
+            if (originalAnchoredPosition == Vector2.zero)
+                originalAnchoredPosition = rectTarget.anchoredPosition;
+			rectTarget.anchoredPosition = originalAnchoredPosition + new Vector2(0, bannerHeight);
         }
     }
 }
