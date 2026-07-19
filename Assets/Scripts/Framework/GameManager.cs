@@ -7,6 +7,7 @@ using UnityEngine;
 using Game.EventManagement;
 using UnityEngine.UI;
 using Game.Singleton;
+using Game.SimpleJSON;
 
 
 #if UNITY_EDITOR
@@ -22,7 +23,7 @@ namespace Game
         Level,
     }
 
-    public class GameManager : SingletonComponent<GameManager>
+    public class GameManager : SingletonComponent<GameManager>, ISaveable
     {
         [FoldoutGroup("Settings")]
         public bool showFeatureProgressScreen;
@@ -56,9 +57,10 @@ namespace Game
         public bool isSequentalLevels = true;
 
         private bool isAutoShuffleRunning;
+        private bool firstLaunch = true;
         private World currentWorld;
         [SerializeField]
-        private GameState currentGameState = GameState.None;
+        private GameState currentGameState = GameState.Level;
 
         public World CurrentWorld
         {
@@ -103,6 +105,9 @@ namespace Game
         }
         public LevelScene CurrentLevel => World.Instance.CurrentLevel;
         public int CurrentLevelIndex => World.Instance.lastPlayedLevelIndex;
+        public string SaveId => "game_manager";
+
+        public SaveDataType SaveDataType => SaveDataType.WorldProgression;
 
         private void OnEnable()
         {
@@ -158,7 +163,7 @@ namespace Game
         protected override void Awake()
         {
             base.Awake();
-
+            SaveManager.Instance.Register(this);
             Application.targetFrameRate = 60;
 
             InitAddressables();
@@ -174,18 +179,32 @@ namespace Game
         private void InitLevel()
         {
             CurrentWorld = worlds[0];
+            SetFirstLaunch();
+
             if (isSequentalLevels)
             {
                 LevelScene foundLevel;
                 foundLevel = FindAnyObjectByType<LevelScene>();
-                if(!foundLevel)
+                if (!foundLevel)
                 {
-                    CurrentGameState = currentGameState; // Force the setter to trigger the event and load the level if found
+                    CurrentGameState = firstLaunch ? GameState.Level : currentGameState;
                 }
                 else
                 {
                     World.Instance.CurrentLevel = Instantiate(foundLevel, levelContainer);
                 }
+            }
+        }
+
+        private void SetFirstLaunch()
+        {
+            if (!Load())
+            {
+                firstLaunch = true;
+            }
+            else
+            {
+                firstLaunch = false;
             }
         }
 
@@ -260,6 +279,28 @@ namespace Game
                 }
             }
         }
+
+
+        public Dictionary<string, object> Save()
+        {
+            Dictionary<string, object> saveData = new Dictionary<string, object>();
+            return saveData;
+        }
+
+        public bool Load(Action onLoadSuccess = null, Action onLoadFail = null)
+        {
+            JSONNode saveData = SaveManager.Instance.LoadSave(this);
+
+            if (saveData == null)
+            {
+                onLoadFail?.Invoke();
+                return false;
+            }
+
+            onLoadSuccess?.Invoke();
+            return true;
+        }
+
     }
 }
 
