@@ -52,14 +52,50 @@ namespace Game
             if(buyBundle.buyWithAd)
             {
                 UnityAdsManager adsManager = UnityAdsManager.Instance;
-                if(adsManager)
-                {
-                    adsManager.ShowRewardedAd();
-                }
-                else
+                if(adsManager == null)
                 {
                     Debug.LogError("UnityAdsManager instance not found. Cannot show rewarded ad.");
+                    return false;
                 }
+
+                Action<RewardedAdResult> rewardedAdClosed = null;
+                Action<RewardedAdResult> rewardedAdFailedToShow = null;
+
+                void UnsubscribeFromRewardedAdEvents()
+                {
+                    adsManager.RewardedAdClosed -= rewardedAdClosed;
+                    adsManager.RewardedAdFailedToShow -= rewardedAdFailedToShow;
+                }
+
+                rewardedAdClosed = result =>
+                {
+                    if (result.RewardType != RewardType.BoosterReward)
+                        return;
+
+                    UnsubscribeFromRewardedAdEvents();
+                    if (result.IsGranted)
+                        GrantPurchase(buyBundle, source);
+                };
+
+                rewardedAdFailedToShow = result =>
+                {
+                    if (result.RewardType != RewardType.BoosterReward)
+                        return;
+
+                    UnsubscribeFromRewardedAdEvents();
+                };
+
+                adsManager.RewardedAdClosed += rewardedAdClosed;
+                adsManager.RewardedAdFailedToShow += rewardedAdFailedToShow;
+
+                if (!adsManager.ShowRewardedAd(RewardType.BoosterReward))
+                {
+                    UnsubscribeFromRewardedAdEvents();
+                    Debug.Log("Rewarded ad not ready");
+                    return false;
+                }
+
+                return true;
             }
 
             int endCost = buyBundle.GetTotalCost(GetCost());
@@ -68,12 +104,7 @@ namespace Game
                 if (CurrencyManager.Instance.GetCurrencyAmount(CostCurrency) >= endCost)
                 {
                     CurrencyManager.Instance.AddCurrency(CostCurrency, -endCost);
-                    currentCount += buyBundle.buyCount;
-                    PlayBuyFlyToSourceFeedback(buyBundle, source);
-
-                    if (source != null && source.TryGetComponent(out ActionBarView actionBarView))
-                        actionBarView.DrawUI();
-
+                    GrantPurchase(buyBundle, source);
                     return true;
                 }
                 else
@@ -87,6 +118,15 @@ namespace Game
                 Debug.LogWarning("CostCurrency is not defined for " + ItemName);
                 return false;
             }
+        }
+
+        private void GrantPurchase(IBuyable.BuyBundle buyBundle, GameObject source)
+        {
+            currentCount += buyBundle.buyCount;
+            PlayBuyFlyToSourceFeedback(buyBundle, source);
+
+            if (source != null && source.TryGetComponent(out ActionBarView actionBarView))
+                actionBarView.DrawUI();
         }
 
         public void Init()
