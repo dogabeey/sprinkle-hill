@@ -193,6 +193,58 @@ namespace Game
 
         public GridCell GetCellPublic(Vector2Int pos) => GetCell(pos);
 
+        /// <summary>
+        /// Replaces up to <paramref name="count"/> ordinary, visible elements with the supplied power-up.
+        /// </summary>
+        public int ReplaceRandomRegularElementsWithPowerUp(ElementPowerUpType powerUpType, int count)
+        {
+            if (count <= 0 || !CanCreateBonusPowerUp(powerUpType))
+                return 0;
+
+            List<Vector2Int> candidates = new List<Vector2Int>();
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    Vector2Int position = new Vector2Int(x, y);
+                    GridCell cell = GetCell(position);
+                    if (cell == null ||
+                        cell.cellType != CellType.Normal ||
+                        cell.cellFeature != null ||
+                        cell.elementInfo == null ||
+                        cell.elementInfo.isHidden ||
+                        cell.elementInfo.elementData == null ||
+                        cell.elementInfo.powerUpType != ElementPowerUpType.None)
+                        continue;
+
+                    candidates.Add(position);
+                }
+            }
+
+            int replacementCount = Mathf.Min(count, candidates.Count);
+            for (int i = 0; i < replacementCount; i++)
+            {
+                int randomIndex = UnityEngine.Random.Range(i, candidates.Count);
+                (candidates[i], candidates[randomIndex]) = (candidates[randomIndex], candidates[i]);
+                ElementPowerUpType resolvedPowerUpType = powerUpType == ElementPowerUpType.Rocket
+                    ? (UnityEngine.Random.value < 0.5f ? ElementPowerUpType.HorizontalRocket : ElementPowerUpType.VerticalRocket)
+                    : powerUpType;
+                powerUpHandler.CreatePowerUpAt(candidates[i], resolvedPowerUpType);
+            }
+
+            return replacementCount;
+        }
+
+        private static bool CanCreateBonusPowerUp(ElementPowerUpType powerUpType)
+        {
+            return powerUpType == ElementPowerUpType.Bomb ||
+                   powerUpType == ElementPowerUpType.Rocket ||
+                   powerUpType == ElementPowerUpType.HorizontalRocket ||
+                   powerUpType == ElementPowerUpType.VerticalRocket ||
+                   powerUpType == ElementPowerUpType.Propeller ||
+                   powerUpType == ElementPowerUpType.DiscoBall;
+        }
+
         public IEnumerator ApplyGravityPublic() => ApplyGravity();
 
         public IEnumerator PlaceDiscoBallActionAt(Vector2Int center)
