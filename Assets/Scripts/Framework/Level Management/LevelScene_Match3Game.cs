@@ -112,6 +112,26 @@ namespace Game
             EventManager.TriggerEvent(GameEvent.STAGE_STARTED, new EventParam(paramInt: currentLevelEditorIndex));
             StartCoroutine(TimerCoroutine());
         }
+
+        private IEnumerator Start()
+        {
+            // Wait until every scene object's Start has run. This ensures the grid, objectives,
+            // and ScreenManager's screen list are ready before the selection panel is shown.
+            yield return null;
+
+            if (isEnded || GameManager.Instance == null || GameManager.Instance.CurrentLevel != this || ScreenManager.Instance == null)
+                yield break;
+
+            GameScreen boosterSelectionScreen = ScreenManager.Instance.screens.Find(screen => screen != null && screen.ScreenID == Screens.BoosterSelection);
+            if (boosterSelectionScreen == null)
+            {
+                Debug.LogWarning("BoosterSelectionScreen was not found by ScreenManager. Add the Booster Selection Panel to the scene.");
+                yield break;
+            }
+
+            ScreenManager.Instance.Show(boosterSelectionScreen);
+        }
+
         private void OnEnable()
         {
             EventManager.StartListening(GameEvent.OBJECTIVE_COMPLETED, OnObjectiveCompleted);
