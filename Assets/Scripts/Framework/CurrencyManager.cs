@@ -71,38 +71,40 @@ namespace Game
         }
         private void OnLevelStarted(EventParam e)
         {
-            currencyCanvasGroup.alpha = 0;
+            UpdateCurrencyCanvasVisibility();
         }
         private void OnLevelCompleted(EventParam e)
         {
-            currencyCanvasGroup.alpha = 1;
+            UpdateCurrencyCanvasVisibility();
         }
 
         private void OnScreenOpened(EventParam e)
         {
-            currencyCanvasGroup.alpha = 1;
+            UpdateCurrencyCanvasVisibility();
         }
 
         private void OnScreenClosed(EventParam e)
         {
-            currencyCanvasGroup.alpha = 0;
+            UpdateCurrencyCanvasVisibility();
         }
 
         private void OnGameStateChanged(EventParam e)
         {
-            GameState newState = (GameState)e.paramInt;
-            if (newState == GameState.Overworld)
-            {
-                currencyCanvasGroup.alpha = 1;
-            }
-            else
-            {
-                currencyCanvasGroup.alpha = 0;
-            }
+            UpdateCurrencyCanvasVisibility();
+        }
+
+        private void UpdateCurrencyCanvasVisibility()
+        {
+            if (currencyCanvasGroup == null)
+                return;
+
+            bool isOnMainMenu = GameManager.Instance != null && GameManager.Instance.CurrentGameState == GameState.Overworld;
+            currencyCanvasGroup.alpha = isOnMainMenu ? 1f : 0f;
         }
 
         private void Start()
         {
+            UpdateCurrencyCanvasVisibility();
             currencyElements.Clear();
 
             foreach (var currencyInfo in currencyInfos)
