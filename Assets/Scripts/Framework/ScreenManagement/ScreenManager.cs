@@ -72,8 +72,6 @@ namespace Game
 
         public void CloseAllNonPersistentScreens()
         {
-            backgroundImage.DOFade(0, 0.5f);
-            backgroundImage.enabled = false;
             screens.ForEach(screen =>
             {
                 if (!screen.notClosedByClickingOutside)
@@ -91,8 +89,6 @@ namespace Game
             {
                 if (!screen.notClosedByOpeningAnotherScreen)
                 {
-                    backgroundImage.DOFade(0, 0.5f);
-                    backgroundImage.enabled = false;
                     screen.CloseUI();
                 }
             });

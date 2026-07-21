@@ -142,7 +142,7 @@ namespace Game
 
             int replacedElementCount = grid.ReplaceRandomRegularElementsWithPowerUp(selectedPowerUp, replacementCount);
             if (replacedElementCount > 0)
-                ScreenManager.Instance.CloseAllNonPersistentScreens();
+                ScreenManager.Instance.CloseAllScreens();
         }
     }
 }
