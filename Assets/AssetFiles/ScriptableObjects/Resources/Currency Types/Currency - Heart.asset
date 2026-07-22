@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Currency - Heart
   m_EditorClassIdentifier: Assembly-CSharp:Dogabeey:CurrencyModel
   currencyID: Heart
-  startingAmount: 0
+  startingAmount: 3
   currencyIcon: {fileID: 664843773, guid: 0b65362f13aef9845a6f36ae73845469, type: 3}
   showFormat: 0
   isNewCurrencyTimerEnabled: 1

@@ -11,6 +11,7 @@ namespace Game.Ads
     {
         ExtraLevelEndReward,
         BoosterReward,
+        HeartRefill,
     }
 
     public sealed class RewardedAdResult
