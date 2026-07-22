@@ -194,7 +194,7 @@ namespace Game
         public GridCell GetCellPublic(Vector2Int pos) => GetCell(pos);
 
         /// <summary>
-        /// Replaces up to <paramref name="count"/> ordinary, visible elements with the supplied power-up.
+        /// Replaces up to <paramref name="count"/> ordinary, visible base ElementData elements with the supplied power-up.
         /// </summary>
         public int ReplaceRandomRegularElementsWithPowerUp(ElementPowerUpType powerUpType, int count)
         {
@@ -214,6 +214,7 @@ namespace Game
                         cell.elementInfo == null ||
                         cell.elementInfo.isHidden ||
                         cell.elementInfo.elementData == null ||
+                        cell.elementInfo.elementData.GetType() != typeof(ElementData) ||
                         cell.elementInfo.powerUpType != ElementPowerUpType.None)
                         continue;
 
