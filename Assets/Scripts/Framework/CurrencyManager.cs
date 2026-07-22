@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using DG.Tweening;
 using TMPro;
@@ -35,6 +36,7 @@ namespace Game
         public float currencySpriteMultiplier = 10f;
 
         private readonly List<CurrencyElement> currencyElements = new List<CurrencyElement>();
+        private readonly Dictionary<CurrencyModel, DateTime> currencyTimerStartUtc = new Dictionary<CurrencyModel, DateTime>();
 
         public string SaveId => "currency_management";
 
@@ -49,6 +51,9 @@ namespace Game
             {
                 ApplyDefaultCurrencyAmounts();
             }
+
+            InitializeCurrencyTimers();
+            ProcessCurrencyTimers();
         }
 
         private void OnEnable()
@@ -98,8 +103,10 @@ namespace Game
             if (currencyCanvasGroup == null)
                 return;
 
-            bool isOnMainMenu = GameManager.Instance != null && GameManager.Instance.CurrentGameState == GameState.Overworld;
-            currencyCanvasGroup.alpha = isOnMainMenu ? 1f : 0f;
+            GameManager gameManager = GameManager.Instance;
+            bool isOnMainMenu = gameManager != null && gameManager.CurrentGameState == GameState.Overworld;
+            bool isOnLevelEndPanel = gameManager != null && gameManager.CurrentWorld != null && gameManager.CurrentLevel != null && gameManager.CurrentLevel.isEnded;
+            currencyCanvasGroup.alpha = isOnMainMenu || isOnLevelEndPanel ? 1f : 0f;
         }
 
         private void Start()
@@ -111,10 +118,22 @@ namespace Game
             {
                 CurrencyElement instantiatedElement = Instantiate(currencyElementPrefab, currencyContainer);
                 instantiatedElement.currencyTransform = instantiatedElement.transform;
-                instantiatedElement.currencyText = instantiatedElement.GetComponentInChildren<TMP_Text>();
+                if (instantiatedElement.currencyText == null)
+                    instantiatedElement.currencyText = instantiatedElement.GetComponentInChildren<TMP_Text>();
                 StartCoroutine(instantiatedElement.UpdateCurrencyUI(currencyInfo.currencyModel, currencyInfo.amount));
                 currencyElements.Add(instantiatedElement);
             }
+        }
+
+        private void Update()
+        {
+            ProcessCurrencyTimers();
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (hasFocus)
+                ProcessCurrencyTimers();
         }
 
         private void ApplyDefaultCurrencyAmounts()
@@ -154,7 +173,9 @@ namespace Game
                 yield break;
 
 
+            float previousAmount = currencyInfo.amount;
             currencyInfo.amount += amount;
+            UpdateCurrencyTimerAfterAmountChanged(currencyInfo, previousAmount);
             NotifyCurrencyChanged(currencyInfo.currencyModel, amount);
         }
 
@@ -201,7 +222,9 @@ namespace Game
                 yield return new WaitForSeconds(totalAnimDuration);
             }
 
+            float previousAmount = currencyInfo.amount;
             currencyInfo.amount = startAmount + amount;
+            UpdateCurrencyTimerAfterAmountChanged(currencyInfo, previousAmount);
             NotifyCurrencyChanged(currencyInfo.currencyModel, amount);
 
             yield break;
@@ -227,6 +250,20 @@ namespace Game
             return costCurrency.currencyIcon;
         }
 
+        internal bool TryGetRemainingCurrencyCooldown(CurrencyModel currencyModel, out TimeSpan remainingCooldown)
+        {
+            remainingCooldown = TimeSpan.Zero;
+            CurrencyInfo currencyInfo = currencyInfos.Find(info => info.currencyModel == currencyModel);
+            if (currencyInfo == null || !IsCurrencyTimerActive(currencyInfo))
+                return false;
+
+            DateTime timerStart = GetOrCreateCurrencyTimerStart(currencyModel, DateTime.UtcNow);
+            double cooldownSeconds = GetCurrencyCooldownSeconds(currencyModel);
+            double elapsedSeconds = Math.Max(0d, (DateTime.UtcNow - timerStart).TotalSeconds);
+            remainingCooldown = TimeSpan.FromSeconds(Math.Max(0d, cooldownSeconds - elapsedSeconds));
+            return true;
+        }
+
         public Dictionary<string, object> Save()
         {
             var saveData = new Dictionary<string, object>();
@@ -235,6 +272,8 @@ namespace Game
                 if (currencyInfo.currencyModel != null)
                 {
                     saveData[currencyInfo.currencyModel.currencyID] = currencyInfo.amount;
+                    if (currencyTimerStartUtc.TryGetValue(currencyInfo.currencyModel, out DateTime timerStart))
+                        saveData[GetCurrencyTimerSaveKey(currencyInfo.currencyModel)] = timerStart.Ticks.ToString(CultureInfo.InvariantCulture);
                 }
             }
 
@@ -260,11 +299,121 @@ namespace Game
                     {
                         currencyInfo.amount = saveData[currencyID].AsFloat;
                     }
+
+                    string timerSaveKey = GetCurrencyTimerSaveKey(currencyInfo.currencyModel);
+                    if (saveData[timerSaveKey] != null && long.TryParse(saveData[timerSaveKey].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out long timerTicks))
+                    {
+                        try
+                        {
+                            currencyTimerStartUtc[currencyInfo.currencyModel] = new DateTime(timerTicks, DateTimeKind.Utc);
+                        }
+                        catch (ArgumentOutOfRangeException)
+                        {
+                            // Invalid local timestamp; a fresh timer is created during initialization.
+                        }
+                    }
                 }
             }
 
             onLoadSuccess?.Invoke();
             return true;
+        }
+
+        private void InitializeCurrencyTimers()
+        {
+            if (currencyInfos == null)
+                return;
+
+            DateTime now = DateTime.UtcNow;
+            foreach (CurrencyInfo currencyInfo in currencyInfos)
+            {
+                if (currencyInfo?.currencyModel != null && currencyInfo.currencyModel.isNewCurrencyTimerEnabled)
+                    GetOrCreateCurrencyTimerStart(currencyInfo.currencyModel, now);
+            }
+        }
+
+        private void ProcessCurrencyTimers()
+        {
+            if (currencyInfos == null)
+                return;
+
+            DateTime now = DateTime.UtcNow;
+            foreach (CurrencyInfo currencyInfo in currencyInfos)
+            {
+                if (!IsCurrencyTimerActive(currencyInfo))
+                    continue;
+
+                CurrencyModel currencyModel = currencyInfo.currencyModel;
+                DateTime timerStart = GetOrCreateCurrencyTimerStart(currencyModel, now);
+                double cooldownSeconds = GetCurrencyCooldownSeconds(currencyModel);
+                double elapsedSeconds = Math.Max(0d, (now - timerStart).TotalSeconds);
+                int earnedAmount = Mathf.FloorToInt((float)(elapsedSeconds / cooldownSeconds));
+                if (earnedAmount <= 0)
+                    continue;
+
+                int availableAmount = Mathf.FloorToInt(currencyModel.maxAmount - currencyInfo.amount);
+                int grantedAmount = Mathf.Min(earnedAmount, availableAmount);
+                if (grantedAmount <= 0)
+                {
+                    currencyTimerStartUtc[currencyModel] = now;
+                    continue;
+                }
+
+                currencyInfo.amount += grantedAmount;
+                currencyTimerStartUtc[currencyModel] = currencyInfo.amount >= currencyModel.maxAmount
+                    ? now
+                    : timerStart.AddSeconds(grantedAmount * cooldownSeconds);
+                NotifyCurrencyChanged(currencyModel, grantedAmount);
+            }
+        }
+
+        private void UpdateCurrencyTimerAfterAmountChanged(CurrencyInfo currencyInfo, float previousAmount)
+        {
+            if (currencyInfo?.currencyModel == null || !currencyInfo.currencyModel.isNewCurrencyTimerEnabled)
+                return;
+
+            DateTime now = DateTime.UtcNow;
+            CurrencyModel currencyModel = currencyInfo.currencyModel;
+            if (currencyInfo.amount >= currencyModel.maxAmount || previousAmount >= currencyModel.maxAmount)
+                currencyTimerStartUtc[currencyModel] = now;
+            else
+                GetOrCreateCurrencyTimerStart(currencyModel, now);
+        }
+
+        private static bool IsCurrencyTimerActive(CurrencyInfo currencyInfo)
+        {
+            return currencyInfo?.currencyModel != null &&
+                   currencyInfo.currencyModel.isNewCurrencyTimerEnabled &&
+                   currencyInfo.currencyModel.newCurrencyTimer > 0f &&
+                   currencyInfo.currencyModel.maxAmount > currencyInfo.amount;
+        }
+
+        private static double GetCurrencyCooldownSeconds(CurrencyModel currencyModel)
+        {
+            return Math.Max(0.01d, currencyModel.newCurrencyTimer * 60d);
+        }
+
+        private DateTime GetOrCreateCurrencyTimerStart(CurrencyModel currencyModel, DateTime now)
+        {
+            if (!currencyTimerStartUtc.TryGetValue(currencyModel, out DateTime timerStart))
+            {
+                timerStart = now;
+                currencyTimerStartUtc[currencyModel] = timerStart;
+            }
+
+            if (timerStart > now)
+            {
+                // The device clock moved backwards; restart the local cooldown from the current time.
+                timerStart = now;
+                currencyTimerStartUtc[currencyModel] = timerStart;
+            }
+
+            return timerStart;
+        }
+
+        private static string GetCurrencyTimerSaveKey(CurrencyModel currencyModel)
+        {
+            return $"{currencyModel.currencyID}_currencyTimerStartUtcTicks";
         }
     }
 }
