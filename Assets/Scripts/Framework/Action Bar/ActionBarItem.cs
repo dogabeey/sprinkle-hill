@@ -21,6 +21,7 @@ namespace Game
     public abstract class ActionBarItem : IBuyable, ISaveable
     {
         public abstract string ItemName { get; }
+        public virtual MarketCategory ItemCategory => MarketCategory.Boosters;
         public abstract string ItemDescription { get; }
         public abstract CurrencyModel CostCurrency { get; }
         public abstract ParticleSystem ActionSuccessParticle { get; }

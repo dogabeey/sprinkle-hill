@@ -4,12 +4,20 @@ using UnityEngine; using Game.EventManagement;
 
 namespace Game
 {
+    public enum MarketCategory
+    {
+        Currency,
+        Boosters,
+        PowerUps,
+        Other
+    }
     public interface IBuyable
     {
         public int GetCost();
         bool TryBuy(BuyBundle buyBundle, GameObject source = null);
 
         public string ItemName { get; }
+        public MarketCategory ItemCategory { get; }
         public string ItemDescription { get; }
         public CurrencyModel CostCurrency { get; }
         public List<BuyBundle> BuyConfig { get; }
