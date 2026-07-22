@@ -15,10 +15,16 @@ public class VisualizableScriptableObject : ScriptableObject
     public Sprite displayIcon;
 }
 
-public class PowerUpElementData : ElementData
+public abstract class PowerUpElementData : ElementData
 {
     [FoldoutGroup("Animation")]
     public string powerUpActivationString;
+
+    /// <summary>
+    /// Whether this power-up's destruction should apply the normal adjacent destruction effects,
+    /// such as damaging adjacent cell features and breakable boxes.
+    /// </summary>
+    public abstract bool TriggerAdjacentDestructionEffect { get; }
 }
 
 [CreateAssetMenu(fileName = "ElementVisualData", menuName = "Game/Elements/Element Data...")]

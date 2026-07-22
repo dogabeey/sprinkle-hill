@@ -4,6 +4,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CauldronElementData", menuName = "Game/Elements/Special/Cauldron Element Data...")]
 public class CauldronElementData : PowerUpElementData
 {
+    public override bool TriggerAdjacentDestructionEffect => false;
+
     [FoldoutGroup("Cauldron"), ShowIf(nameof(IsCauldron))]
     [Min(1)] public int cauldronChargeRequired = 8;
     [FoldoutGroup("Cauldron"), ShowIf(nameof(IsCauldron))]

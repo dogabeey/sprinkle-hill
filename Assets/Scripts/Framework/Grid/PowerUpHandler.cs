@@ -1289,6 +1289,8 @@ namespace Game
             if (discoBallCell?.elementInfo == null || discoBallCell.elementInfo.powerUpType != ElementPowerUpType.DiscoBall)
                 yield break;
 
+            PowerUpElementData discoBallData = discoBallCell.elementInfo.elementData as PowerUpElementData;
+
             // If target element data is null (which can happen if the disco ball was activated via a match that doesn't contain any regular elements, like a 4-match), resolve to a default target element type (e.g. the most common element type on the board) to ensure the disco ball still does something impactful.
             targetElementData = ResolveDefaultDiscoBallTargetElement(targetElementData);
 
@@ -1314,7 +1316,7 @@ namespace Game
             if (matchingCells.Count > 0)
             {
                 yield return grid.StartCoroutine(AnimateDiscoBallTrails(discoBallPos, matchingCells, targetElementData, false));
-                DestroyDiscoBallConvertedCells(matchingCells);
+                DestroyDiscoBallConvertedCells(matchingCells, discoBallData);
             }
 
 
@@ -1329,6 +1331,8 @@ namespace Game
             Grid3D.GridCell primaryCell = grid.GetCellPublic(primaryDiscoBallPos);
             if (primaryCell?.elementInfo == null || primaryCell.elementInfo.powerUpType != ElementPowerUpType.DiscoBall)
                 yield break;
+
+            PowerUpElementData primaryDiscoBallData = primaryCell.elementInfo.elementData as PowerUpElementData;
 
             // Find secondary disco ball and validate its presence.
             Vector2Int secondaryDiscoBallPos = FindAdjacentDiscoBall(primaryDiscoBallPos);
@@ -1379,7 +1383,7 @@ namespace Game
                 float totalWait = cm.discoBallTrailDuration + cm.discoBallTrailSpawnDelay + 0.1f; // Extra buffer to ensure all trails have finished animating before we destroy any cells. 
                 grid.StartCoroutine(AnimateDiscoBallTrails(primaryDiscoBallPos, selectedCells, designatedElementData, true));
                 yield return new WaitForSeconds(0.1f);
-                DestroyDiscoBallConvertedCells(selectedCells);
+                DestroyDiscoBallConvertedCells(selectedCells, primaryDiscoBallData);
             }
 
             StopAndDestroyDiscoBallElement(primaryElement, primarySpinTween);
@@ -1987,12 +1991,14 @@ namespace Game
 
         }
 
-        private void DestroyDiscoBallConvertedCells(List<Vector2Int> convertedCells)
+        private void DestroyDiscoBallConvertedCells(List<Vector2Int> convertedCells, PowerUpElementData sourcePowerUpData)
         {
             if (convertedCells == null)
                 return;
 
+            bool triggersAdjacentDestructionEffects = sourcePowerUpData != null && sourcePowerUpData.TriggerAdjacentDestructionEffect;
             HashSet<Vector2Int> processedAdjacentBreakables = new HashSet<Vector2Int>();
+            HashSet<Vector2Int> processedAdjacentBoxes = new HashSet<Vector2Int>();
             for (int i = 0; i < convertedCells.Count; i++)
             {
                 Vector2Int pos = convertedCells[i];
@@ -2015,6 +2021,9 @@ namespace Game
                 if (GameManager.Instance != null &&
                     cell.elementInfo.elementData != null && cell.elementInfo.elementData.behaviorFlags.HasFlag(ElementData.ElementBehaviorFlags.ImmuneToClear))
                     continue;
+
+                if (triggersAdjacentDestructionEffects)
+                    grid.TriggerAdjacentDestructionEffects(pos, cell, matchedElement, processedAdjacentBoxes);
 
                 grid.NotifyElementCleared(pos);
                 cell.elementInfo = null;

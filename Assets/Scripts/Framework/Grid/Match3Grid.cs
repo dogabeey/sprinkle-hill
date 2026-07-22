@@ -712,6 +712,16 @@ namespace Game
             }
         }
 
+        /// <summary>
+        /// Applies the same adjacent destruction effects used by an ordinary element clear.
+        /// Power-up data controls whether a particular special-clear path invokes this.
+        /// </summary>
+        public void TriggerAdjacentDestructionEffects(Vector2Int destroyedPos, GridCell destroyedCell, GridElement destroyedElement, HashSet<Vector2Int> processedBreakableBoxes = null)
+        {
+            TriggerCellFeatureMatchedAdjacentToAt(destroyedPos, destroyedCell, destroyedElement);
+            BreakAdjacentBreakableBoxesImmediate(destroyedPos, processedBreakableBoxes ?? new HashSet<Vector2Int>());
+        }
+
         public static bool AreAdjacent(Vector2Int a, Vector2Int b)
         {
             return Mathf.Abs(a.x - b.x) + Mathf.Abs(a.y - b.y) == 1;
