@@ -1120,6 +1120,8 @@ MonoBehaviour:
   sfxToggle: {fileID: 1033803490677429683}
   vibrationToggle: {fileID: 4991071103657752140}
   consentToggle: {fileID: 8096165827455836480}
+  heartCurrency: {fileID: 11400000, guid: 207bff0ab05b9b541ba52eb637b40673, type: 2}
+  homeHeartCost: 1
 --- !u!1 &7063525661818149762
 GameObject:
   m_ObjectHideFlags: 0

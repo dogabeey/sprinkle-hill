@@ -209,6 +209,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Game::Game.MainMenuPanel
   currentLevelButton: {fileID: 4006798514304714914}
   currentLevelText: {fileID: 2777904716597019183}
+  heartCurrency: {fileID: 11400000, guid: 207bff0ab05b9b541ba52eb637b40673, type: 2}
+  levelStartHeartCost: 1
+  rewardedHeartAmount: 3
+  currentLevelTextFormat: DAY {0}
+  outOfHeartsTextFormat: Buy {0} Hearts to continue playing
   marketButton: {fileID: 2682728799723866052}
   leaderboardButton: {fileID: 579395243199488870}
   homeButton: {fileID: 1184721520736175036}
@@ -504,12 +509,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 53.82
+  m_fontSize: 55
   m_fontSizeBase: 53.82
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 40
+  m_fontSizeMax: 55
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512

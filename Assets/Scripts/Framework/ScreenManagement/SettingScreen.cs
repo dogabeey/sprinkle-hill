@@ -14,6 +14,9 @@ namespace Game
         public GridLayoutGroup layoutGroup;
         public Button restartButton, previousLevelButton, nextLevelButton, homeButton;
         public Toggle musicToggle, sfxToggle, vibrationToggle, consentToggle;
+        [Header("Home Button")]
+        public CurrencyModel heartCurrency;
+        [Min(1)] public int homeHeartCost = 1;
 
         private void Awake()
         {
@@ -66,6 +69,9 @@ namespace Game
             });
             homeButton?.onClick.AddListener(() =>
             {
+                if (CurrencyManager.Instance != null && heartCurrency != null)
+                    CurrencyManager.Instance.AddCurrency(heartCurrency, -homeHeartCost);
+
                 GameManager.Instance.ReturnToMainMenu();
                 ScreenManager.Instance.CloseAllNonPersistentScreens();
             });
