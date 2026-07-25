@@ -13,6 +13,8 @@ namespace Game
         [SerializeField] private string itemName;
         [Tooltip("Player-facing explanation displayed beneath the product name.")]
         [TextArea, SerializeField] private string itemDescription;
+        [Tooltip("Sprite displayed for this product in market listings and offers.")]
+        [SerializeField] private Sprite itemIcon;
         [Tooltip("Determines which MarketCategoryContainer displays this product.")]
         [SerializeField] private MarketCategory itemCategory = MarketCategory.Currency;
         [Header("Price")]
@@ -28,6 +30,7 @@ namespace Game
 
         public string ItemName => itemName;
         public string ItemDescription => itemDescription;
+        public Sprite ItemIcon => itemIcon;
         public MarketCategory ItemCategory => itemCategory;
         public CurrencyModel CostCurrency => costCurrency;
         public List<IBuyable.BuyBundle> BuyConfig => buyConfig;

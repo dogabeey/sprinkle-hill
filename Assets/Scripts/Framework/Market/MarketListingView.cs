@@ -9,7 +9,7 @@ namespace Game
     public sealed class MarketListingView : MonoBehaviour
     {
         [Header("Prefab References")]
-        [Tooltip("Optional product icon. The first configured bundle sprite is used by default.")]
+        [Tooltip("Optional product icon.")]
         [SerializeField] private Image icon;
         [Tooltip("Displays IBuyable.ItemName.")]
         [SerializeField] private TMP_Text titleText;
@@ -28,7 +28,8 @@ namespace Game
             listing = buyable;
             if (titleText != null) titleText.text = buyable.ItemName;
             if (descriptionText != null) descriptionText.text = buyable.ItemDescription;
-            if (icon != null && buyable.BuyConfig != null && buyable.BuyConfig.Count > 0) icon.sprite = buyable.BuyConfig[0].buySprite;
+            Sprite productIcon = (buyable as MarketProduct)?.ItemIcon;
+            if (icon != null) icon.sprite = productIcon;
 
             ClearOffers();
             if (offerButtonPrefab == null || offerContainer == null || buyable.BuyConfig == null) return;
@@ -36,7 +37,7 @@ namespace Game
             {
                 MarketOfferButton offer = Instantiate(offerButtonPrefab, offerContainer);
                 offer.gameObject.SetActive(true);
-                offer.Bind(buyable, bundle, gameObject);
+                offer.Bind(buyable, bundle, gameObject, productIcon);
                 offerButtons.Add(offer);
             }
         }

@@ -8,6 +8,7 @@ namespace Game
     {
         [Tooltip("Invokes the configured IBuyable purchase when the player can afford this offer.")]
         [SerializeField] private Button button;
+        [SerializeField] private Image offerIcon;
         [Tooltip("Displays the BuyBundle quantity.")]
         [SerializeField] private TMP_Text amountText;
         [Tooltip("Displays the discounted total price. It is hidden for ad-based offers.")]
@@ -19,12 +20,13 @@ namespace Game
         private IBuyable.BuyBundle bundle;
         private GameObject source;
 
-        public void Bind(IBuyable buyable, IBuyable.BuyBundle buyBundle, GameObject purchaseSource)
+        public void Bind(IBuyable buyable, IBuyable.BuyBundle buyBundle, GameObject purchaseSource, Sprite productIcon)
         {
             listing = buyable;
             bundle = buyBundle;
             source = purchaseSource;
             if (amountText != null) amountText.text = $"x{bundle.buyCount}";
+            if (offerIcon != null) offerIcon.sprite = productIcon;
             if (priceText != null) priceText.text = bundle.buyWithAd ? string.Empty : bundle.GetTotalCost(listing.GetCost()).ToString();
             if (adIndicator != null) adIndicator.SetActive(bundle.buyWithAd);
             if (button != null)

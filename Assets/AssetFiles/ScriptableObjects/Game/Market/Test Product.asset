@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Game::Game.MarketProduct
   itemName: Test 1
   itemDescription: 
+  itemIcon: {fileID: 0}
   itemCategory: 2
   costCurrency: {fileID: 11400000, guid: 31b1c667ab353af4a80bfe0daaa96451, type: 2}
   cost: 50
@@ -22,7 +23,7 @@ MonoBehaviour:
     discountPercentage: 0
     buyWithAd: 0
     buySprite: {fileID: 662968826, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
-  - buyCount: 1
+  - buyCount: 2
     discountPercentage: 0
     buyWithAd: 0
     buySprite: {fileID: 662968826, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
