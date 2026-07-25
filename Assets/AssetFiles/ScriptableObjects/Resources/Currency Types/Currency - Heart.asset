@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51dab175d7bbabd4ba800ef53b34235c, type: 3}
   m_Name: Currency - Heart
   m_EditorClassIdentifier: Assembly-CSharp:Dogabeey:CurrencyModel
+  currencyElementPrefab: {fileID: 6021937502238936245, guid: d5350f9ad836e2743815f1ac9c77039a, type: 3}
   currencyID: Heart
   startingAmount: 1
   currencyIcon: {fileID: 664843773, guid: 0b65362f13aef9845a6f36ae73845469, type: 3}
   showFormat: 0
-  isNewCurrencyTimerEnabled: 1
-  newCurrencyTimer: 300
-  maxAmount: 5
   spriteIndexForUI: 5
+  isNewCurrencyTimerEnabled: 1
+  newCurrencyTimer: 59
+  maxAmount: 5
+  regenTextFormat: '{0:00}:{1:00}'

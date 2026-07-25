@@ -94,7 +94,7 @@ namespace Game
             int hours = totalSeconds / 3600;
             int minutes = (totalSeconds % 3600) / 60;
             int seconds = totalSeconds % 60;
-            return hours > 0 ? $"+1 <sprite index={refCurrency.spriteIndexForUI}> in {hours}:{minutes:00}:{seconds:00}" : $"{minutes:00}:{seconds:00}";
+            return hours > 0 ? $"{hours:D2}:{minutes:D2}:{seconds:D2}" : $"{minutes:D2}:{seconds:D2}";
         }
 
         private void SetCooldownUIVisible(bool isVisible)

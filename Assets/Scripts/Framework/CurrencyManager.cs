@@ -26,7 +26,6 @@ namespace Game
         [Header("References")]
         public Transform currencyContainer;
         public CanvasGroup currencyCanvasGroup;
-        public CurrencyElement currencyElementPrefab;
         public List<CurrencyInfo> currencyInfos;
 
         [Header("Animation Settings")]
@@ -114,9 +113,9 @@ namespace Game
             UpdateCurrencyCanvasVisibility();
             currencyElements.Clear();
 
-            foreach (var currencyInfo in currencyInfos)
+            foreach (CurrencyInfo currencyInfo in currencyInfos)
             {
-                CurrencyElement instantiatedElement = Instantiate(currencyElementPrefab, currencyContainer);
+                CurrencyElement instantiatedElement = Instantiate(currencyInfo.currencyModel.currencyElementPrefab, currencyContainer);
                 instantiatedElement.currencyTransform = instantiatedElement.transform;
                 if (instantiatedElement.currencyText == null)
                     instantiatedElement.currencyText = instantiatedElement.GetComponentInChildren<TMP_Text>();

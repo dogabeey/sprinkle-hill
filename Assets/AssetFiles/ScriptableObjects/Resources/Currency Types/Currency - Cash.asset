@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51dab175d7bbabd4ba800ef53b34235c, type: 3}
   m_Name: Currency - Cash
   m_EditorClassIdentifier: Assembly-CSharp:Dogabeey:CurrencyModel
+  currencyElementPrefab: {fileID: 6021937502238936245, guid: a2d8821a1d527de4cab774a18abad611, type: 3}
   currencyID: Cash
   startingAmount: 0
   currencyIcon: {fileID: -729034639, guid: 0b65362f13aef9845a6f36ae73845469, type: 3}
   showFormat: 0
   spriteIndexForUI: 3
+  isNewCurrencyTimerEnabled: 0
+  newCurrencyTimer: 30
+  maxAmount: 5
