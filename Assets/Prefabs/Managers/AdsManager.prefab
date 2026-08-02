@@ -45,12 +45,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 1
-  adInterval: 60
-  firstLevelInterval: 10
-  levelInterval: 2
-  androidInterstitialAdUnitId: ca-app-pub-5053129562534405/6063909105
-  androidRewardedAdUnitId: ca-app-pub-5053129562534405/9605101235
-  androidBannerAdUnitId: ca-app-pub-5053129562534405/8439479361
+  adInterval: 999
+  firstLevelInterval: 999
+  levelInterval: 999
+  androidInterstitialAdUnitId: ca-app-pub-3940256099942544/1033173712
+  androidRewardedAdUnitId: ca-app-pub-3940256099942544/5224354917
+  androidBannerAdUnitId: ca-app-pub-3940256099942544/6300978111
   iosInterstitialAdUnitId: ca-app-pub-3940256099942544/4411468910
   iosRewardedAdUnitId: ca-app-pub-3940256099942544/1712485313
   iosBannerAdUnitId: ca-app-pub-3940256099942544/2934735716

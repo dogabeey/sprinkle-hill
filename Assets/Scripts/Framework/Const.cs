@@ -49,6 +49,10 @@ namespace Game
         public float elementDestroyPunchElasticity = 0.8f;
         public ParticleSystem elementDestroyParticlePrefab;
 
+        [Header("Action Bar")]
+        [RemoteConfig("action_bar_destroy_speed_multiplier", 2f)]
+        [Min(0.01f)] public float actionBarDestroySpeedMultiplier = 2f;
+
         [Header("Disco Ball")]
         [RemoteConfig("disco_ball_trail_duration", 0.12f)]
         public float discoBallTrailDuration = 0.12f;
@@ -178,6 +182,7 @@ namespace Game
             elementDestroyPunchDuration = RemoteConfigManager.Instance.GetFloat("element_destroy_punch_duration", ref elementDestroyPunchDuration, pathToConfigFile);
             elementDestroyPunchVibrato = RemoteConfigManager.Instance.GetInt("element_destroy_punch_vibrato", ref elementDestroyPunchVibrato, pathToConfigFile);
             elementDestroyPunchElasticity = RemoteConfigManager.Instance.GetFloat("element_destroy_punch_elasticity", ref elementDestroyPunchElasticity, pathToConfigFile);
+            actionBarDestroySpeedMultiplier = RemoteConfigManager.Instance.GetFloat("action_bar_destroy_speed_multiplier", ref actionBarDestroySpeedMultiplier, pathToConfigFile);
             discoBallTrailDuration = RemoteConfigManager.Instance.GetFloat("disco_ball_trail_duration", ref discoBallTrailDuration, pathToConfigFile);
             discoBallTrailSpawnDelay = RemoteConfigManager.Instance.GetFloat("disco_ball_trail_spawn_delay", ref discoBallTrailSpawnDelay, pathToConfigFile);
             discoBallEmissionPeak = RemoteConfigManager.Instance.GetFloat("disco_ball_emission_peak", ref discoBallEmissionPeak, pathToConfigFile);

@@ -633,15 +633,29 @@ namespace Game
             }
 
             Vector2Int targetCenter = ResolveActionCenter(torchAction, coordinates);
+            float destroySpeedMultiplier = GetActionBarDestroySpeedMultiplier();
 
             yield return StartCoroutine(PlayPreExecutionAnimation(torchAction, targetCenter));
             torchAction.currentCount--;
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: torchAction.ItemName));
-            yield return StartCoroutine(match3Grid.ClearRowAt(targetCenter.y, false));
+            yield return StartCoroutine(match3Grid.ClearRowAt(
+                targetCenter.y,
+                allowConditionedBreakableWalls: false,
+                allowAdjacentFeatureTriggers: false,
+                allowAdjacentBreakableBoxes: false,
+                destroyAnimationSpeedMultiplier: destroySpeedMultiplier));
             yield return StartCoroutine(match3Grid.ResolveBoardAfterSpecialClear());
 
             isProcessing = false;
             idleTimer = 0f;
+        }
+
+        private static float GetActionBarDestroySpeedMultiplier()
+        {
+            ConstantManager constantManager = ConstantManager.Instance;
+            return constantManager != null
+                ? Mathf.Max(0.01f, constantManager.actionBarDestroySpeedMultiplier)
+                : 2f;
         }
 
         private IEnumerator BombPlacementRoutine(Vector2Int center)
@@ -656,12 +670,19 @@ namespace Game
             }
 
             Vector2Int targetCenter = ResolveActionCenter(bombAction, center);
+            float destroySpeedMultiplier = GetActionBarDestroySpeedMultiplier();
 
             yield return StartCoroutine(PlayPreExecutionAnimation(bombAction, targetCenter));
             bombAction.currentCount--;
             yield return StartCoroutine(bombAction.BombThrowAnim(match3Grid.GetCellPositionInGrid(targetCenter)));
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: "Bomb Placement"));
-            yield return StartCoroutine(match3Grid.ClearAreaAt(targetCenter, 1, false));
+            yield return StartCoroutine(match3Grid.ClearAreaAt(
+                targetCenter,
+                1,
+                allowConditionedBreakableWalls: false,
+                allowAdjacentFeatureTriggers: false,
+                allowAdjacentBreakableBoxes: false,
+                destroyAnimationSpeedMultiplier: destroySpeedMultiplier));
             yield return StartCoroutine(match3Grid.ResolveBoardAfterSpecialClear());
             isProcessing = false;
             idleTimer = 0f;
@@ -680,11 +701,17 @@ namespace Game
             }
 
             Vector2Int targetCenter = ResolveActionCenter(hammerAction, center);
+            float destroySpeedMultiplier = GetActionBarDestroySpeedMultiplier();
 
             yield return StartCoroutine(PlayPreExecutionAnimation(hammerAction, targetCenter));
             hammerAction.currentCount--;
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: hammerAction.ItemName));
-            yield return StartCoroutine(match3Grid.ClearCellAt(targetCenter, false));
+            yield return StartCoroutine(match3Grid.ClearCellAt(
+                targetCenter,
+                allowConditionedBreakableWalls: false,
+                allowAdjacentBreakableBoxes: false,
+                allowAdjacentFeatureTriggers: false,
+                destroyAnimationSpeedMultiplier: destroySpeedMultiplier));
             yield return StartCoroutine(match3Grid.ResolveBoardAfterSpecialClear());
 
             isProcessing = false;
@@ -704,11 +731,17 @@ namespace Game
             }
 
             Vector2Int targetCenter = ResolveActionCenter(cannonAction, center);
+            float destroySpeedMultiplier = GetActionBarDestroySpeedMultiplier();
 
             yield return StartCoroutine(PlayPreExecutionAnimation(cannonAction, targetCenter));
             cannonAction.currentCount--;
             EventManager.TriggerEvent(GameEvent.ACTION_SUCCESSFUL, new EventParam(paramStr: cannonAction.ItemName));
-            yield return StartCoroutine(match3Grid.ClearColumnAt(targetCenter.x, false));
+            yield return StartCoroutine(match3Grid.ClearColumnAt(
+                targetCenter.x,
+                allowConditionedBreakableWalls: false,
+                allowAdjacentFeatureTriggers: false,
+                allowAdjacentBreakableBoxes: false,
+                destroyAnimationSpeedMultiplier: destroySpeedMultiplier));
             yield return StartCoroutine(match3Grid.ResolveBoardAfterSpecialClear());
 
             isProcessing = false;

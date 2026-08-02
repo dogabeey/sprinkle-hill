@@ -55,7 +55,7 @@ namespace Game
             yield break;
         }
 
-        public override IEnumerator DestroyElement()
+        public override IEnumerator DestroyElement(float animationSpeedMultiplier = 1f)
         {
             if (this == null || transform == null)
                 yield break;
@@ -72,7 +72,7 @@ namespace Game
 
             ConstantManager constantManager = ConstantManager.Instance;
             Vector3 punchScale = constantManager.elementDestroyPunchScale * Vector3.one;
-            float punchDuration = constantManager.elementDestroyPunchDuration;
+            float punchDuration = constantManager.elementDestroyPunchDuration / Mathf.Max(0.01f, animationSpeedMultiplier);
             int punchVibrato = constantManager.elementDestroyPunchVibrato;
             float punchElasticity = constantManager.elementDestroyPunchElasticity;
 

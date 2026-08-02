@@ -5,7 +5,6 @@ using System.Linq;
 using UnityEngine; 
 using Game.EventManagement;
 using UnityEngine.UI;
-using Game.EventManagement;
 using Game.Singleton;
 
 namespace Game

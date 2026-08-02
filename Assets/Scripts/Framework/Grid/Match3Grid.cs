@@ -1179,7 +1179,7 @@ namespace Game
         // ------------------------------------------------------------------
         //  Area clear (used by bomb)
         // ------------------------------------------------------------------
-        public IEnumerator ClearAreaAt(Vector2Int center, int radius, bool allowConditionedBreakableWalls = true, bool allowAdjacentFeatureTriggers = true)
+        public IEnumerator ClearAreaAt(Vector2Int center, int radius, bool allowConditionedBreakableWalls = true, bool allowAdjacentFeatureTriggers = true, bool allowAdjacentBreakableBoxes = true, float destroyAnimationSpeedMultiplier = 1f)
         {
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
             HashSet<Vector2Int> boxesProcessed = new HashSet<Vector2Int>();
@@ -1224,8 +1224,9 @@ namespace Game
                     NotifyElementCleared(pos);
                     cell.elementInfo = null;
                     if (matchedElement != null)
-                        yield return StartCoroutine(matchedElement.DestroyElement());
-                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                        yield return StartCoroutine(matchedElement.DestroyElement(destroyAnimationSpeedMultiplier));
+                    if (allowAdjacentBreakableBoxes)
+                        BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
                 }
             }
 
@@ -1235,7 +1236,7 @@ namespace Game
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
 
-        public IEnumerator ClearRowAt(int y, bool allowConditionedBreakableWalls = true, bool allowAdjacentFeatureTriggers = true)
+        public IEnumerator ClearRowAt(int y, bool allowConditionedBreakableWalls = true, bool allowAdjacentFeatureTriggers = true, bool allowAdjacentBreakableBoxes = true, float destroyAnimationSpeedMultiplier = 1f)
         {
             if (y < 0 || y >= gridSize.y)
                 yield break;
@@ -1287,19 +1288,21 @@ namespace Game
                 cell.elementInfo = null;
                 if (matchedElement != null)
                 {
-                    yield return StartCoroutine(matchedElement.DestroyElement());
-                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                    yield return StartCoroutine(matchedElement.DestroyElement(destroyAnimationSpeedMultiplier));
+                    if (allowAdjacentBreakableBoxes)
+                        BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
                 }
                 else
                 {
-                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                    if (allowAdjacentBreakableBoxes)
+                        BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
                 }
             }
 
             yield return new WaitForSeconds(GetCurrentMatchClearDelay());
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
-        public IEnumerator ClearColumnAt(int columnX, bool allowConditionedBreakableWalls = true, bool allowAdjacentFeatureTriggers = true)
+        public IEnumerator ClearColumnAt(int columnX, bool allowConditionedBreakableWalls = true, bool allowAdjacentFeatureTriggers = true, bool allowAdjacentBreakableBoxes = true, float destroyAnimationSpeedMultiplier = 1f)
         {
             if (columnX < 0 || columnX >= gridSize.x)
                 yield break;
@@ -1351,12 +1354,14 @@ namespace Game
                 cell.elementInfo = null;
                 if (matchedElement != null)
                 {
-                    yield return StartCoroutine(matchedElement.DestroyElement());
-                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                    yield return StartCoroutine(matchedElement.DestroyElement(destroyAnimationSpeedMultiplier));
+                    if (allowAdjacentBreakableBoxes)
+                        BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
                 }
                 else
                 {
-                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                    if (allowAdjacentBreakableBoxes)
+                        BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
                 }
             }
 
@@ -1364,7 +1369,7 @@ namespace Game
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
         }
 
-        public IEnumerator ClearCellAt(Vector2Int pos, bool allowConditionedBreakableWalls = true, bool allowAdjacentBreakableBoxes = true, bool allowAdjacentFeatureTriggers = true)
+        public IEnumerator ClearCellAt(Vector2Int pos, bool allowConditionedBreakableWalls = true, bool allowAdjacentBreakableBoxes = true, bool allowAdjacentFeatureTriggers = true, float destroyAnimationSpeedMultiplier = 1f)
         {
             GridCell cell = GetCell(pos);
             if (cell == null)
@@ -1406,12 +1411,12 @@ namespace Game
             NotifyElementCleared(pos);
             cell.elementInfo = null;
             if (matchedElement != null)
-                yield return StartCoroutine(matchedElement.DestroyElement());
+                yield return StartCoroutine(matchedElement.DestroyElement(destroyAnimationSpeedMultiplier));
 
             if (allowAdjacentBreakableBoxes)
                 BreakAdjacentBreakableBoxesImmediate(pos, new HashSet<Vector2Int>());
         }
-        public IEnumerator ClearCrossAt(Vector2Int center, bool allowConditionedBreakableWalls = true, bool allowAdjacentFeatureTriggers = true)
+        public IEnumerator ClearCrossAt(Vector2Int center, bool allowConditionedBreakableWalls = true, bool allowAdjacentFeatureTriggers = true, bool allowAdjacentBreakableBoxes = true, float destroyAnimationSpeedMultiplier = 1f)
         {
             Vector2Int[] offsets =
             {
@@ -1469,12 +1474,14 @@ namespace Game
                 cell.elementInfo = null;
                 if (matchedElement != null)
                 {
-                    yield return StartCoroutine(matchedElement.DestroyElement());
-                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                    yield return StartCoroutine(matchedElement.DestroyElement(destroyAnimationSpeedMultiplier));
+                    if (allowAdjacentBreakableBoxes)
+                        BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
                 }
                 else
                 {
-                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                    if (allowAdjacentBreakableBoxes)
+                        BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
                 }
             }
 

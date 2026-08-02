@@ -9640,22 +9640,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 492599855}
     m_Modifications:
-    - target: {fileID: 5092102555726562428, guid: a834de95be05b4446860498d9de41de9, type: 3}
-      propertyPath: firstLevelInterval
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 5092102555726562428, guid: a834de95be05b4446860498d9de41de9, type: 3}
-      propertyPath: androidBannerAdUnitId
-      value: ca-app-pub-3940256099942544/6300978111
-      objectReference: {fileID: 0}
-    - target: {fileID: 5092102555726562428, guid: a834de95be05b4446860498d9de41de9, type: 3}
-      propertyPath: androidRewardedAdUnitId
-      value: ca-app-pub-3940256099942544/5224354917
-      objectReference: {fileID: 0}
-    - target: {fileID: 5092102555726562428, guid: a834de95be05b4446860498d9de41de9, type: 3}
-      propertyPath: androidInterstitialAdUnitId
-      value: ca-app-pub-3940256099942544/1033173712
-      objectReference: {fileID: 0}
     - target: {fileID: 5092102555726562430, guid: a834de95be05b4446860498d9de41de9, type: 3}
       propertyPath: m_Name
       value: AdsManager
@@ -10217,19 +10201,19 @@ PrefabInstance:
       objectReference: {fileID: 66476413}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877643594432512].unlockedLevel
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877643594432513].unlockedLevel
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1021877643594432514].unlockedLevel
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 196025287769839163, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: managedReferences[1949156293352620133].unlockedLevel
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1925703224431792360, guid: 7cd73e4b21726ff48b0aba4b14b08d4a, type: 3}
       propertyPath: m_LocalPosition.x

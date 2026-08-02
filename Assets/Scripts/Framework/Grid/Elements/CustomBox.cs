@@ -32,7 +32,7 @@ namespace Game
         {
         }
 
-        public override IEnumerator DestroyElement()
+        public override IEnumerator DestroyElement(float animationSpeedMultiplier = 1f)
         {
             
             Destroy(gameObject);

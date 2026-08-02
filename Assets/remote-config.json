@@ -4,10 +4,10 @@
     "loading_screen_duration": 1.0,
     "element_swap_move_duration": 0.3,
     "element_fall_speed": 10.0,
-    "match_clear_delay": 0.3,
+    "match_clear_delay": 0.15,
     "chain_match_speed_increase_per_combo": 0.2,
-    "element_destroy_punch_scale": 0.25,
-    "element_destroy_punch_duration": 0.2,
+    "element_destroy_punch_scale": 0.2,
+    "element_destroy_punch_duration": 0.15,
     "element_destroy_punch_vibrato": 8.0,
     "element_destroy_punch_elasticity": 0.8,
     "disco_ball_trail_duration": 0.15,
@@ -33,7 +33,8 @@
     "max_cauldron_count": 99.0,
     "max_cauldron_indirect_count": 3.0,
     "disco_ball_emission_on_trail_arrival": 2.0,
-    "ad_reward_multiplier": 2.0
+    "ad_reward_multiplier": 2.0,
+    "action_bar_destroy_speed_multiplier": 2.0
   },
   "types": {
     "loading_screen_duration": "FLOAT",
@@ -68,6 +69,7 @@
     "max_cauldron_count": "FLOAT",
     "max_cauldron_indirect_count": "FLOAT",
     "disco_ball_emission_on_trail_arrival": "FLOAT",
-    "ad_reward_multiplier": "FLOAT"
+    "ad_reward_multiplier": "FLOAT",
+    "action_bar_destroy_speed_multiplier": "FLOAT"
   }
 }

@@ -246,7 +246,7 @@ namespace Game
                 transform.DOKill();
         }
 
-        public abstract IEnumerator DestroyElement();
+        public abstract IEnumerator DestroyElement(float animationSpeedMultiplier = 1f);
     }
 
     [System.Serializable]

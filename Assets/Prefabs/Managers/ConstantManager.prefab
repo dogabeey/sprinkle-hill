@@ -46,15 +46,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Game::Game.ConstantManager
   dontDestroyOnLoad: 1
   loadingScreenDuration: 1
-  elementSwapMoveDuration: 0.25
+  elementSwapMoveDuration: 0.2
   elementFallSpeed: 10
-  matchClearDelay: 0.3
+  matchClearDelay: 0.15
   chainMatchSpeedIncreasePerCombo: 0.2
-  elementDestroyPunchScale: 0.25
-  elementDestroyPunchDuration: 0.2
+  elementDestroyPunchScale: 0.2
+  elementDestroyPunchDuration: 0.15
   elementDestroyPunchVibrato: 8
   elementDestroyPunchElasticity: 0.8
   elementDestroyParticlePrefab: {fileID: 6553830495741696104, guid: c66bb7ca972ded84692b09698947ca71, type: 3}
+  actionBarDestroySpeedMultiplier: 2
   discoBallTrailDuration: 0.15
   discoBallTrailSpawnDelay: 0.1
   discoBallEmissionPeak: 1
@@ -83,3 +84,4 @@ MonoBehaviour:
   maxDiscoBallIndirectCount: 3
   maxCauldronCount: 99
   maxCauldronIndirectCount: 3
+  adRewardMultiplier: 2
