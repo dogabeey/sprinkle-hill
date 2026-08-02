@@ -8638,6 +8638,10 @@ PrefabInstance:
       propertyPath: currencyAnimationContainer
       value: 
       objectReference: {fileID: 4133448082132307929}
+    - target: {fileID: 1412219885008021530, guid: 91eb49e68eb92be4cb5694f681479a91, type: 3}
+      propertyPath: currencyInfos.Array.data[2].isUnlocked
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

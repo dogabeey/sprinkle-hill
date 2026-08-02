@@ -12,10 +12,14 @@ namespace Game
     public class CurrencyElement : MonoBehaviour
     {
         public Transform currencyTransform;
+        public Button buyButton; // NOT IMPLEMENTED YET
+        public CanvasGroup plusImage;
+        public Image buyButtonImage;
         public Image currencyImage;
         public TMP_Text currencyText;
         public TMP_Text remainingCooldownText;
         public GameObject currencyTimerBG;
+        public Image lockedImage;
 
         internal CurrencyModel refCurrency;
 
@@ -65,26 +69,46 @@ namespace Game
             refCurrency = currency;
 
             float finalAmount = CurrencyManager.Instance.GetCurrencyAmount(currency);
-            if (currencyTextTween != null && currencyTextTween.IsActive())
+            bool isUnlocked = CurrencyManager.Instance.IsCurrencyUnlocked(currency);
+            if(currencyText)
             {
-                currencyTextTween.Kill();
+                currencyText.DOFade(isUnlocked ? 1f : 0f, 0f);
+                if (currencyTextTween != null && currencyTextTween.IsActive())
+                {
+                    currencyTextTween.Kill();
+                }
+                if(amount < 0)
+                    currencyText.text = $"{(finalAmount - amount).ToLargeNumberString()} <color=red>\n-{(-amount).ToLargeNumberString()}";
+                else
+                    currencyText.text = $"{(finalAmount - amount).ToLargeNumberString()} <color=green>\n+{amount.ToLargeNumberString()}";
+                
+                yield return new WaitForSeconds(0.1f);
+                currencyTextTween = DOVirtual.Float(finalAmount - amount, finalAmount, 0.1f, (value) =>
+                {
+                    string formattedAmount = value.ToLargeNumberString();
+                    currencyText.text = formattedAmount;
+                });
+                
             }
-            if(amount < 0)
-                currencyText.text = $"{(finalAmount - amount).ToLargeNumberString()} <color=red>\n-{(-amount).ToLargeNumberString()}";
-            else
-                currencyText.text = $"{(finalAmount - amount).ToLargeNumberString()} <color=green>\n+{amount.ToLargeNumberString()}";
-            
-            yield return new WaitForSeconds(0.1f);
-            currencyTextTween = DOVirtual.Float(finalAmount - amount, finalAmount, 0.1f, (value) =>
+            if(plusImage != null)
             {
-                string formattedAmount = value.ToLargeNumberString();
-                currencyText.text = formattedAmount;
-            });
-
+                plusImage.alpha = isUnlocked ? 1f : 0f;
+            }
             if(currencyImage != null)
             {
                 currencyImage.sprite = currency.currencyIcon;
+                currencyImage.color = isUnlocked ? Color.white : Color.clear;
             }
+            if(buyButtonImage != null)
+            {
+                buyButtonImage.color = isUnlocked ? Color.white : Color.gray;
+            }
+            if (lockedImage != null)
+            {
+                lockedImage.gameObject.SetActive(!isUnlocked);
+            }
+
+
             yield return new WaitForSeconds(0.5f);
         }
 

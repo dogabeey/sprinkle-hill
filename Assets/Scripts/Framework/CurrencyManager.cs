@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -21,6 +22,7 @@ namespace Game
         {
             public CurrencyModel currencyModel;
             public float amount;
+            public bool isUnlocked = true;
         }
 
         [Header("References")]
@@ -274,6 +276,7 @@ namespace Game
                 if (currencyInfo.currencyModel != null)
                 {
                     saveData[currencyInfo.currencyModel.currencyID] = currencyInfo.amount;
+                    saveData[$"{currencyInfo.currencyModel.currencyID}_isUnlocked"] = currencyInfo.isUnlocked;
                     if (currencyTimerStartUtc.TryGetValue(currencyInfo.currencyModel, out DateTime timerStart))
                         saveData[GetCurrencyTimerSaveKey(currencyInfo.currencyModel)] = timerStart.Ticks.ToString(CultureInfo.InvariantCulture);
                 }
@@ -300,6 +303,10 @@ namespace Game
                     if (saveData[currencyID] != null)
                     {
                         currencyInfo.amount = saveData[currencyID].AsFloat;
+                    }
+                    if (saveData[$"{currencyID}_isUnlocked"] != null)
+                    {
+                        currencyInfo.isUnlocked = saveData[$"{currencyID}_isUnlocked"].AsBool;
                     }
 
                     string timerSaveKey = GetCurrencyTimerSaveKey(currencyInfo.currencyModel);
@@ -416,6 +423,15 @@ namespace Game
         private static string GetCurrencyTimerSaveKey(CurrencyModel currencyModel)
         {
             return $"{currencyModel.currencyID}_currencyTimerStartUtcTicks";
+        }
+
+        internal bool IsCurrencyUnlocked(CurrencyModel currency)
+        {
+            if (currencyInfos == null)
+                return false;
+
+            CurrencyInfo currencyInfo = currencyInfos.FirstOrDefault(ci => ci.currencyModel == currency);
+            return currencyInfo != null && currencyInfo.isUnlocked;
         }
     }
 }

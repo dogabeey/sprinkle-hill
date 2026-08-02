@@ -80,8 +80,6 @@ MonoBehaviour:
   rewards:
   - type: {fileID: 11400000, guid: 31b1c667ab353af4a80bfe0daaa96451, type: 2}
     amount: 50
-  - type: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
-    amount: 2
   extraMoveCost:
     type: {fileID: 11400000, guid: 31b1c667ab353af4a80bfe0daaa96451, type: 2}
     amount: 100
