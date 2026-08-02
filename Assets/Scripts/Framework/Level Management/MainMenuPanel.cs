@@ -21,6 +21,8 @@ namespace Game
         [SerializeField] private Button leaderboardButton;
         [SerializeField] private Button homeButton;
         [SerializeField] private Button missionsButton;
+        private Coroutine currencyRefreshRoutine;
+        private Coroutine pendingPlayRoutine;
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
@@ -32,18 +34,46 @@ namespace Game
         }
         void OnEnable()
         {
-            CurrencyManager.Instance.currencyCanvasGroup.alpha = 1f;
+            if (CurrencyManager.Instance != null && CurrencyManager.Instance.currencyCanvasGroup != null)
+                CurrencyManager.Instance.currencyCanvasGroup.alpha = 1f;
             EventManager.StartListening(GameEvent.CURRENCY_CHANGED, OnCurrencyChanged);
             UpdateCurrentLevelText();
+
+            if (currencyRefreshRoutine == null)
+                currencyRefreshRoutine = StartCoroutine(RefreshAfterCurrencyInitialization());
         }
 
         private void OnDisable()
         {
             EventManager.StopListening(GameEvent.CURRENCY_CHANGED, OnCurrencyChanged);
             UnsubscribeFromRewardedAdEvents();
+
+            if (currencyRefreshRoutine != null)
+            {
+                StopCoroutine(currencyRefreshRoutine);
+                currencyRefreshRoutine = null;
+            }
+
+            if (pendingPlayRoutine != null)
+            {
+                StopCoroutine(pendingPlayRoutine);
+                pendingPlayRoutine = null;
+            }
         }
         
         private void OnCurrentLevelButtonClicked()
+        {
+            if (!AreCurrenciesInitialized())
+            {
+                if (pendingPlayRoutine == null)
+                    pendingPlayRoutine = StartCoroutine(StartLevelAfterCurrencyInitialization());
+                return;
+            }
+
+            TryStartCurrentLevel();
+        }
+
+        private void TryStartCurrentLevel()
         {
             if (!HasEnoughHearts())
             {
@@ -53,6 +83,32 @@ namespace Game
 
             CurrencyManager.Instance.AddCurrency(heartCurrency, -levelStartHeartCost);
             GameManager.Instance.ChangeGameState(GameState.Level);
+        }
+
+        private IEnumerator RefreshAfterCurrencyInitialization()
+        {
+            yield return new WaitUntil(AreCurrenciesInitialized);
+            currencyRefreshRoutine = null;
+            UpdateCurrentLevelText();
+        }
+
+        private IEnumerator StartLevelAfterCurrencyInitialization()
+        {
+            if (currentLevelButton != null)
+                currentLevelButton.interactable = false;
+
+            yield return new WaitUntil(AreCurrenciesInitialized);
+
+            if (currentLevelButton != null)
+                currentLevelButton.interactable = true;
+
+            pendingPlayRoutine = null;
+            TryStartCurrentLevel();
+        }
+
+        private static bool AreCurrenciesInitialized()
+        {
+            return CurrencyManager.Instance != null && CurrencyManager.Instance.IsInitialized;
         }
 
         private void ShowHeartRefillRewardedAd()
@@ -119,6 +175,12 @@ namespace Game
         {
             if (currentLevelText == null)
                 return;
+
+            if (!AreCurrenciesInitialized())
+            {
+                currentLevelText.text = string.Format(currentLevelTextFormat, GameManager.Instance.CurrentLevelIndex + 1);
+                return;
+            }
 
             currentLevelText.text = HasEnoughHearts()
                 ? string.Format(currentLevelTextFormat, GameManager.Instance.CurrentLevelIndex + 1)

@@ -37,6 +37,8 @@ namespace Game
         private readonly List<CurrencyElement> currencyElements = new List<CurrencyElement>();
         private readonly Dictionary<CurrencyModel, DateTime> currencyTimerStartUtc = new Dictionary<CurrencyModel, DateTime>();
 
+        public bool IsInitialized { get; private set; }
+
         public string SaveId => "currency_management";
 
         public SaveDataType SaveDataType => SaveDataType.WorldProgression;
@@ -53,6 +55,7 @@ namespace Game
 
             InitializeCurrencyTimers();
             ProcessCurrencyTimers();
+            IsInitialized = true;
         }
 
         private void OnEnable()
