@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34cdb16ba66f3394ca9d5fbeb985b8db, type: 3}
   m_Name: Unbreakable Wall Tile Data
   m_EditorClassIdentifier: 
+  tileMaterial: {fileID: 0}
+  colorRuleset:
+    rid: -2
   topLeftCorner: {fileID: 120667313, guid: 30070fa507ff3a5409bdc0d086715eee, type: 3}
   topRightCorner: {fileID: 262520162, guid: 30070fa507ff3a5409bdc0d086715eee, type: 3}
   bottomLeftCorner: {fileID: -1553399037, guid: 30070fa507ff3a5409bdc0d086715eee, type: 3}
@@ -41,4 +44,9 @@ MonoBehaviour:
   bottomLeftConvexCorner: {fileID: -513136796, guid: 30070fa507ff3a5409bdc0d086715eee, type: 3}
   bottomRightConvexCorner: {fileID: -271041133, guid: 30070fa507ff3a5409bdc0d086715eee, type: 3}
   singleInnerTile: {fileID: 1262562994, guid: 30070fa507ff3a5409bdc0d086715eee, type: 3}
-  errorTile: {fileID: 21300000, guid: 321dfcc1c12d7cf42b0037754b1cdf9b, type: 3}
+  errorTile: {fileID: 1262562994, guid: 30070fa507ff3a5409bdc0d086715eee, type: 3}
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
