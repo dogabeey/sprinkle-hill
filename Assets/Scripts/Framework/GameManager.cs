@@ -128,8 +128,7 @@ namespace Game
             {
                 particle.Play();
             }
-            DOVirtual.DelayedCall(1, () =>
-            ScreenManager.Instance.Show(Screens.WinScreen));
+            ScreenManager.Instance.Show(Screens.WinScreen);
         }
         void OnLevelFailed(EventParam param)
         {
