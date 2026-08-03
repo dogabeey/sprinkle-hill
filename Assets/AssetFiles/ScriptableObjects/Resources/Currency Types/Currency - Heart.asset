@@ -20,5 +20,6 @@ MonoBehaviour:
   spriteIndexForUI: 5
   isNewCurrencyTimerEnabled: 1
   newCurrencyTimer: 59
-  maxAmount: 5
+  maxAmount: 10
   regenTextFormat: '{0:00}:{1:00}'
+  regenTextFormatWhenMax: MAX

@@ -21,6 +21,7 @@ namespace Game
         public GameObject currencyTimerBG;
         public Image lockedImage;
 
+
         internal CurrencyModel refCurrency;
 
         private void OnEnable()
@@ -52,7 +53,22 @@ namespace Game
                 return;
             }
 
-            if (CurrencyManager.Instance.TryGetRemainingCurrencyCooldown(refCurrency, out TimeSpan remainingCooldown))
+            CurrencyManager currencyManager = CurrencyManager.Instance;
+            if (!refCurrency.isNewCurrencyTimerEnabled)
+            {
+                SetCooldownUIVisible(false);
+                return;
+            }
+
+            if (currencyManager.GetCurrencyAmount(refCurrency) >= refCurrency.maxAmount)
+            {
+                SetCooldownUIVisible(true);
+                if (remainingCooldownText != null)
+                    remainingCooldownText.text = refCurrency.regenTextFormatWhenMax;
+                return;
+            }
+
+            if (currencyManager.TryGetRemainingCurrencyCooldown(refCurrency, out TimeSpan remainingCooldown))
             {
                 SetCooldownUIVisible(true);
                 if (remainingCooldownText != null)

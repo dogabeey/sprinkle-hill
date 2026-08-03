@@ -21,5 +21,6 @@ namespace Game
         [Min(1f), Tooltip("Maximum amount regeneration can restore this currency to.")]
         public float maxAmount = 5f;
         public string regenTextFormat = "{0:00}:{1:00}";
+        public string regenTextFormatWhenMax = "MAX";
     }
 }
