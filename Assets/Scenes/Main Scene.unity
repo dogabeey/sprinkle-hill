@@ -8818,17 +8818,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 407152368}
     m_Modifications:
-    - target: {fileID: 87432344577016092, guid: 4415aee893641684cb114784cf067567, type: 3}
-      propertyPath: m_fontSize
-      value: 48.8
-      objectReference: {fileID: 0}
     - target: {fileID: 498586416535445872, guid: 4415aee893641684cb114784cf067567, type: 3}
       propertyPath: m_fontSize
-      value: 44.2
+      value: 35.1
       objectReference: {fileID: 0}
     - target: {fileID: 2193009673902640282, guid: 4415aee893641684cb114784cf067567, type: 3}
       propertyPath: m_fontSize
-      value: 44.2
+      value: 35.1
       objectReference: {fileID: 0}
     - target: {fileID: 2505312795482951362, guid: 4415aee893641684cb114784cf067567, type: 3}
       propertyPath: m_AnchorMax.y
@@ -8853,42 +8849,6 @@ PrefabInstance:
     - target: {fileID: 2505312795482951362, guid: 4415aee893641684cb114784cf067567, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2613290041628552253, guid: 4415aee893641684cb114784cf067567, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 578.56
-      objectReference: {fileID: 0}
-    - target: {fileID: 2613290041628552253, guid: 4415aee893641684cb114784cf067567, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 2613290041628552253, guid: 4415aee893641684cb114784cf067567, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 273.84
-      objectReference: {fileID: 0}
-    - target: {fileID: 4344247133389090086, guid: 4415aee893641684cb114784cf067567, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4344247133389090086, guid: 4415aee893641684cb114784cf067567, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4344247133389090086, guid: 4415aee893641684cb114784cf067567, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 579.21
-      objectReference: {fileID: 0}
-    - target: {fileID: 4344247133389090086, guid: 4415aee893641684cb114784cf067567, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 214.38
-      objectReference: {fileID: 0}
-    - target: {fileID: 4344247133389090086, guid: 4415aee893641684cb114784cf067567, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4344247133389090086, guid: 4415aee893641684cb114784cf067567, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -348.96
       objectReference: {fileID: 0}
     - target: {fileID: 4989513423341232649, guid: 4415aee893641684cb114784cf067567, type: 3}
       propertyPath: m_AnchorMax.y
@@ -8971,18 +8931,6 @@ PrefabInstance:
       value: 819.87
       objectReference: {fileID: 0}
     - target: {fileID: 6771873619466600905, guid: 4415aee893641684cb114784cf067567, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6771873619466600905, guid: 4415aee893641684cb114784cf067567, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6771873619466600905, guid: 4415aee893641684cb114784cf067567, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6771873619466600905, guid: 4415aee893641684cb114784cf067567, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -9030,17 +8978,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6771873619466600905, guid: 4415aee893641684cb114784cf067567, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8761148475518410833, guid: 4415aee893641684cb114784cf067567, type: 3}
       propertyPath: m_fontSize
-      value: 44.2
+      value: 35.1
       objectReference: {fileID: 0}
     - target: {fileID: 9125214576170542009, guid: 4415aee893641684cb114784cf067567, type: 3}
       propertyPath: m_Name
       value: Prompt Panel
+      objectReference: {fileID: 0}
+    - target: {fileID: 9125214576170542009, guid: 4415aee893641684cb114784cf067567, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

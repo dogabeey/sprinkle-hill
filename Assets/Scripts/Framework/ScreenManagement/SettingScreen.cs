@@ -69,17 +69,27 @@ namespace Game
             });
             homeButton?.onClick.AddListener(() =>
             {
-                if (CurrencyManager.Instance != null && heartCurrency != null)
-                    CurrencyManager.Instance.AddCurrency(heartCurrency, -homeHeartCost);
-
-                GameManager.Instance.ReturnToMainMenu();
-                ScreenManager.Instance.CloseAllNonPersistentScreens();
+                PromptScreen.ShowPrompt(
+                    "Return Home?",
+                    $"Returning home screen will cost you {homeHeartCost} {CurrencyManager.Instance.GetCurrencyModelByID("heart") }."
+                    + "\nAre you sure you want to return home?",
+                    ("OK", ReturnToMainMenu),
+                    ("Cancel", () => ScreenManager.Instance.CloseAllNonPersistentScreens()));
             });
             previousLevelButton?.onClick.AddListener(() =>
             {
                 GameManager.Instance.LoadPreviousLevel();
                 ScreenManager.Instance.CloseAllNonPersistentScreens();
             });
+        }
+
+        private void ReturnToMainMenu()
+        {
+            if (CurrencyManager.Instance != null && heartCurrency != null)
+                CurrencyManager.Instance.AddCurrency(heartCurrency, -homeHeartCost);
+
+            GameManager.Instance.ReturnToMainMenu();
+            ScreenManager.Instance.CloseAllNonPersistentScreens();
         }
 
         public override void InitUI(EventParam eventParam)

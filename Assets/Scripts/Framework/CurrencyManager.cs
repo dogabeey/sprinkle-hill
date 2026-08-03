@@ -433,5 +433,14 @@ namespace Game
             CurrencyInfo currencyInfo = currencyInfos.FirstOrDefault(ci => ci.currencyModel == currency);
             return currencyInfo != null && currencyInfo.isUnlocked;
         }
+
+        public CurrencyModel GetCurrencyModelByID(string currencyID)
+        {
+            if (currencyInfos == null)
+                return null;
+
+            CurrencyInfo currencyInfo = currencyInfos.FirstOrDefault(ci => ci.currencyModel != null && ci.currencyModel.currencyID == currencyID);
+            return currencyInfo?.currencyModel;
+        }
     }
 }

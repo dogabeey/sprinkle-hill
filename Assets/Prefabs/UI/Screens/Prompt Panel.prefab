@@ -356,7 +356,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6771873619466600905
 RectTransform:
   m_ObjectHideFlags: 0
@@ -473,5 +473,5 @@ MonoBehaviour:
   notClosedByOpeningAnotherScreen: 0
   titleText: {fileID: 3305716221152825941}
   descriptionText: {fileID: 87432344577016092}
-  buttonsLayoutGroup: {fileID: 0}
+  buttonsLayoutGroup: {fileID: 3026725392567293731}
   promptButtonPrefab: {fileID: -2978148910844814499, guid: 2b663bb6df5f505498e0705cc88e07b2, type: 3}
