@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1326926123591389946}
   - component: {fileID: 2707976697085934069}
+  - component: {fileID: 2915077026308629898}
   m_Layer: 5
   m_Name: lower-menu
   m_TagString: Untagged
@@ -67,6 +68,19 @@ MonoBehaviour:
   m_ChildScaleWidth: 1
   m_ChildScaleHeight: 1
   m_ReverseArrangement: 0
+--- !u!114 &2915077026308629898
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 723214749696837450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f95e1b9a7c77a74482109b1e1139f9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Util::Game.BannerSafeAreaAdjuster
+  rectTarget: {fileID: 1326926123591389946}
 --- !u!1 &5643171467652455745
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,7 +269,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 490.22217}
-  m_SizeDelta: {x: 465.44, y: 175.24}
+  m_SizeDelta: {x: 465.44, y: 259}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7840223977615632725
 CanvasRenderer:
@@ -285,9 +299,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8cca925359a725349af0175dd6bfc632, type: 3}
-  m_Type: 1
-  m_PreserveAspect: 0
+  m_Sprite: {fileID: 1693915073, guid: 7f533e4be66015a4b81e2be094d66267, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -451,8 +465,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 374.32, y: 108.11}
+  m_AnchoredPosition: {x: 0, y: 4.54}
+  m_SizeDelta: {x: 432.06, y: 187.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7799247060161638373
 CanvasRenderer:
@@ -513,7 +527,7 @@ MonoBehaviour:
   m_fontSizeBase: 53.82
   m_fontWeight: 400
   m_enableAutoSizing: 1
-  m_fontSizeMin: 40
+  m_fontSizeMin: 35
   m_fontSizeMax: 55
   m_fontStyle: 0
   m_HorizontalAlignment: 2
@@ -884,7 +898,7 @@ PrefabInstance:
     - target: {fileID: 8019745668939518953, guid: 4c6a15d86ab29fc4a8101105e8f6ac7e, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: -320327708, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+      objectReference: {fileID: 1006600997, guid: e1721e006356ea443baff2090acf6c5d, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1164,6 +1178,14 @@ PrefabInstance:
       propertyPath: screenID
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 1054867579727122699, guid: 8e40dc73227ff8c48b24d41061c290a0, type: 3}
+      propertyPath: homeButton
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1054867579727122699, guid: 8e40dc73227ff8c48b24d41061c290a0, type: 3}
+      propertyPath: nextLevelButton
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1570219554841974244, guid: 8e40dc73227ff8c48b24d41061c290a0, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -1282,7 +1304,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4196175810872243825, guid: 8e40dc73227ff8c48b24d41061c290a0, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8398070266829870491, guid: 8e40dc73227ff8c48b24d41061c290a0, type: 3}
+    - {fileID: 1994837246839590393, guid: 8e40dc73227ff8c48b24d41061c290a0, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8e40dc73227ff8c48b24d41061c290a0, type: 3}
