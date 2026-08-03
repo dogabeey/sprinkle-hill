@@ -573,8 +573,8 @@ MonoBehaviour:
   animator: {fileID: 5660818586105596882}
   playAnimationName: lose_screen_pop
   closeAnimationName: 
-  notClosedByClickingOutside: 0
-  notClosedByOpeningAnotherScreen: 0
+  notClosedByClickingOutside: 1
+  notClosedByOpeningAnotherScreen: 1
   levelHeaderText: {fileID: 7233249454556271696}
   levelLostReason: {fileID: 842609956816249221}
   addMovesText: {fileID: 8044131330533471035}
