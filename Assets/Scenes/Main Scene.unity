@@ -9270,6 +9270,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2120086930441402043, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
+      propertyPath: marketButton
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2645911229673195427, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -320327708, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
     - target: {fileID: 4391334057077226476, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

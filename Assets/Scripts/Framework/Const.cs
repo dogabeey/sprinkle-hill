@@ -17,6 +17,7 @@ namespace Game
         LevelSettingScreen,
         FeatureProgress,
         BoosterSelection,
+        Prompt,
         BuyMenu,
         ConsentPopup,
         Market,
