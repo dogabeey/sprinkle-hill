@@ -510,7 +510,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 53.7
+  m_fontSize: 46.45
   m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -575,7 +575,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2644979211408110882
 RectTransform:
   m_ObjectHideFlags: 0
@@ -687,10 +687,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Game::Game.ConsentPopupScreen
   animator: {fileID: 5489645690243221849}
-  playAnimationName: 
+  playAnimationName: scale_out
   closeAnimationName: 
-  notClosedByClickingOutside: 0
-  notClosedByOpeningAnotherScreen: 0
+  notClosedByClickingOutside: 1
+  notClosedByOpeningAnotherScreen: 1
   acceptButton: {fileID: 6865398758857651300}
   declineButton: {fileID: 8340727777104500310}
 --- !u!1 &7010890617085230256
@@ -864,7 +864,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -0.00000071526, y: -60}
+  m_AnchoredPosition: {x: -0.00000071526, y: -90}
   m_SizeDelta: {x: 407.29, y: 59.42}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &153497849860584974
@@ -895,7 +895,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: WELCOME TO SPRINKLE HILL
+  m_text: SPRINKLE HILL
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: c6d8f825370347744845aa7b10cf3420, type: 2}
   m_sharedMaterial: {fileID: 320891412821721280, guid: c6d8f825370347744845aa7b10cf3420, type: 2}
@@ -922,8 +922,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28.59
-  m_fontSizeBase: 28.59
+  m_fontSize: 45
+  m_fontSizeBase: 45
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

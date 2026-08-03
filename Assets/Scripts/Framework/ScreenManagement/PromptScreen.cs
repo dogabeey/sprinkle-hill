@@ -6,6 +6,7 @@ using Game.EventManagement;
 using Game.Ads;
 using UnityEngine.UI;
 using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
@@ -19,7 +20,11 @@ namespace Game
         public const string buttonActionKey = "button_{0}_action";
         public const string buttonTextKey = "button_{0}_text";
     }
-
+    /// <summary>
+    /// Prompt screen is a generic screen that can be used to show a prompt with a title, description and buttons. The buttons can be
+    /// configured with text and actions. The screen can be shown by calling the static method ShowPrompt with the appropriate 
+    /// parameters.
+    /// </summary>
     public class PromptScreen : GameScreen
     {
         [FoldoutGroup("References")] public TMP_Text titleText;
@@ -59,6 +64,7 @@ namespace Game
                     {
                         descriptionText.text = description.ToString();
                     }
+                    ClearButtons();
                     int i = 0;
                     while(eventParam.paramDictionary.TryGetValue(string.Format(PromptButtonParameters.buttonActionKey, i), out object button_action) 
                     && eventParam.paramDictionary.TryGetValue(string.Format(PromptButtonParameters.buttonTextKey, i), out object button_text))
@@ -70,6 +76,14 @@ namespace Game
                         i++;
                     }
                 }
+            }
+        }
+
+        private void ClearButtons()
+        {
+            foreach (Transform child in buttonsLayoutGroup.transform)
+            {
+                Destroy(child.gameObject);
             }
         }
 
