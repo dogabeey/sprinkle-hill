@@ -253,7 +253,8 @@ namespace Game
 
             EventManager.TriggerEvent(GameEvent.STAGE_COMPLETED, new EventParam(paramInt: currentLevelEditorIndex));
 
-            yield return PlayRemainingElementsWinAnimation();
+            if (GameManager.Instance == null || GameManager.Instance.playGridAnimationWhenWon)
+                yield return PlayRemainingElementsWinAnimation();
             yield return PlayStageCompletePopupText();
 
             if (currentLevelEditorIndex + 1 < levelEditors.Count)

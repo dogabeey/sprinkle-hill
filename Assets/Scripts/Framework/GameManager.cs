@@ -33,6 +33,8 @@ namespace Game
         public CurrencyModel premiumCurrency;
         [FoldoutGroup("Settings")]
         public bool autoShuffleWhenOutOfPossibleMoves;
+        [FoldoutGroup("Settings")]
+        public bool playGridAnimationWhenWon = true;
         [FoldoutGroup("Cell Features")]
         public WaferFeature waferFeature;
         [FoldoutGroup("Cell Features")]
