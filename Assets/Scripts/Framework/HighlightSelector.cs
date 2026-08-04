@@ -506,4 +506,88 @@ namespace Game
                 : null;
         }
     }
+    [Serializable]
+    public class AllWaferElements_Highlight : HighlightSelector
+    {
+        public override GameObject[] HighlightedObjects
+        {
+            get
+            {
+                Match3Grid grid = GetGrid();
+                if (grid == null) return new GameObject[0];
+
+                List<GameObject> highlightedObjects = new List<GameObject>();
+                Vector2Int size = grid.GridSize;
+
+                for (int x = 0; x < size.x; x++)
+                {
+                    for (int y = 0; y < size.y; y++)
+                    {
+                        Vector2Int pos = new Vector2Int(x, y);
+                        Grid3D.GridCell cell = grid.GetCellPublic(pos);
+                        if (cell != null && cell.cellFeature is WaferFeature)
+                        {
+                            GridElement element = grid.GetElementAt(pos);
+                            if (element != null)
+                                highlightedObjects.Add(element.gameObject);
+                        }
+                    }
+                }
+
+                return highlightedObjects.ToArray();
+            }
+        }
+
+        private static Match3Grid GetGrid()
+        {
+            if (GameManager.Instance == null)
+                return null;
+
+            return GameManager.Instance.CurrentLevel is LevelScene_Match3Game level
+                ? level.grid as Match3Grid
+                : null;
+        }
+    }
+    [Serializable]
+    public class AllGlassElements_Highlight : HighlightSelector
+    {
+        public override GameObject[] HighlightedObjects
+        {
+            get
+            {
+                Match3Grid grid = GetGrid();
+                if (grid == null) return new GameObject[0];
+
+                List<GameObject> highlightedObjects = new List<GameObject>();
+                Vector2Int size = grid.GridSize;
+
+                for (int x = 0; x < size.x; x++)
+                {
+                    for (int y = 0; y < size.y; y++)
+                    {
+                        Vector2Int pos = new Vector2Int(x, y);
+                        Grid3D.GridCell cell = grid.GetCellPublic(pos);
+                        if (cell != null && cell.cellFeature is GlassFeature)
+                        {
+                            GridElement element = grid.GetElementAt(pos);
+                            if (element != null)
+                                highlightedObjects.Add(element.gameObject);
+                        }
+                    }
+                }
+
+                return highlightedObjects.ToArray();
+            }
+        }
+
+        private static Match3Grid GetGrid()
+        {
+            if (GameManager.Instance == null)
+                return null;
+
+            return GameManager.Instance.CurrentLevel is LevelScene_Match3Game level
+                ? level.grid as Match3Grid
+                : null;
+        }
+    }
 }

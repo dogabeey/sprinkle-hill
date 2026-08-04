@@ -164,6 +164,8 @@ namespace Game
                         ? new List<Vector2Int>(highlightSelectorSettings.selectedCoordinates)
                         : new List<Vector2Int>()
                 },
+                HighlightSelectorType.AllWaferCells => new AllWaferElements_Highlight(),
+                HighlightSelectorType.AllGlassCells => new AllGlassElements_Highlight(),
                 _ => null
             };
         }
@@ -205,7 +207,9 @@ namespace Game
         DiscoBall,
         ActionButton,
         SelectedTags,
-        SelectedGridCoordinates
+        SelectedGridCoordinates,
+        AllWaferCells,
+        AllGlassCells,
     }
 
     [Serializable]

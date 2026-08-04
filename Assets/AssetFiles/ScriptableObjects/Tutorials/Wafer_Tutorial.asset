@@ -10,37 +10,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a23e412978b2f9b43ae72e9ce71bb98b, type: 3}
-  m_Name: Level_1_Stage_1_Step_1
+  m_Name: Wafer_Tutorial
   m_EditorClassIdentifier: 
-  Id: level_1_stage_1_step_1
-  directive: 
+  Id: wafer_tutorial
+  directive: Make a match on wafer to destroy it!
   directiveParentHeight: 493.38
   anchorMin: {x: 0, y: 0}
   anchorMax: {x: 1, y: 0}
   disablesActionBar: 1
-  requiredLevelIndex: 0
+  requiredLevelIndex: 3
   requiredStageIndex: -1
-  tutorialAnimationType: 4
+  tutorialAnimationType: 0
   tutorialAnimationSettings:
-    tutorialAnimationType: 4
-    tutorialObject: {fileID: 5451101766555202300, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
+    tutorialAnimationType: 0
+    tutorialObject: {fileID: 0}
     screenPositionOffset: {x: 0, y: 0}
     duration: 1
     isLoop: 1
     rotationOffset: -90
-    startCoordinate: {x: 5, y: 3}
-    endCoordinate: {x: 5, y: 4}
-  highlightSelectorType: 8
+    startCoordinate: {x: 0, y: 0}
+    endCoordinate: {x: 0, y: 0}
+  highlightSelectorType: 9
   highlightSelectorSettings:
-    highlightSelectorType: 8
+    highlightSelectorType: 9
     actionName: 
     selectedTags: []
-    selectedCoordinates:
-    - {x: 3, y: 4}
-    - {x: 4, y: 4}
-    - {x: 5, y: 4}
-    - {x: 5, y: 3}
-  startEvent: 202
+    selectedCoordinates: []
+  startEvent: 206
   startEventExpectedParams: 0
   startEventExpectedParamValues:
     paramObj: {fileID: 0}
@@ -50,7 +46,7 @@ MonoBehaviour:
     paramStr: 
     vectorList: []
     paramBool: 0
-  completionEvent: 402
+  completionEvent: 813
   completionEventExpectedParams: 0
   completionEventExpectedParamValues:
     paramObj: {fileID: 0}
