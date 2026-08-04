@@ -473,4 +473,37 @@ namespace Game
         }
 #endif
     }
+    [Serializable]
+    public class SelectedGridCoordinates_Highlight : HighlightSelector
+    {
+        public List<Vector2Int> selectedCoordinates;
+        public override GameObject[] HighlightedObjects
+        {
+            get
+            {
+                Match3Grid grid = GetGrid();
+                if (grid == null || selectedCoordinates == null || selectedCoordinates.Count == 0)
+                    return new GameObject[0];
+
+                List<GameObject> highlightedObjects = new List<GameObject>();
+                foreach (Vector2Int coord in selectedCoordinates)
+                {
+                    GridElement element = grid.GetElementAt(coord);
+                    if (element != null)
+                        highlightedObjects.Add(element.gameObject);
+                }
+                return highlightedObjects.ToArray();
+            }
+        }
+
+        private static Match3Grid GetGrid()
+        {
+            if (GameManager.Instance == null)
+                return null;
+
+            return GameManager.Instance.CurrentLevel is LevelScene_Match3Game level
+                ? level.grid as Match3Grid
+                : null;
+        }
+    }
 }

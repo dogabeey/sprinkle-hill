@@ -22,7 +22,17 @@ namespace Game
         public int requiredStageIndex = -1;  
         public TutorialAnimationType tutorialAnimationType;
         public TutorialAnimationSettings tutorialAnimationSettings = new TutorialAnimationSettings();
-        public HighlightSelectorType highlightSelectorType;
+        [OnValueChanged(nameof(InitHighlightSelector))] public HighlightSelectorType highlightSelectorType;
+
+        private void InitHighlightSelector()
+        {
+            Debug.Log($"InitHighlightSelector: {highlightSelectorType}");
+            highlightSelectorSettings = new HighlightSelectorSettings
+            {
+                highlightSelectorType = highlightSelectorType
+            };
+        }
+
         public HighlightSelectorSettings highlightSelectorSettings = new HighlightSelectorSettings();
         public GameEvent startEvent;
         [ShowIf(nameof(IsAdvancedMode))]
@@ -135,6 +145,12 @@ namespace Game
                         ? new List<string>(highlightSelectorSettings.selectedTags)
                         : new List<string>()
                 },
+                HighlightSelectorType.SelectedGridCoordinates => new SelectedGridCoordinates_Highlight
+                {
+                    selectedCoordinates = highlightSelectorSettings.selectedCoordinates != null
+                        ? new List<Vector2Int>(highlightSelectorSettings.selectedCoordinates)
+                        : new List<Vector2Int>()
+                },
                 _ => null
             };
         }
@@ -145,7 +161,12 @@ namespace Game
             if (tutorialAnimationSettings == null)
                 tutorialAnimationSettings = new TutorialAnimationSettings();
             if (highlightSelectorSettings == null)
-                highlightSelectorSettings = new HighlightSelectorSettings();
+            {
+                highlightSelectorSettings = new HighlightSelectorSettings
+                {
+                    highlightSelectorType = highlightSelectorType
+                };
+            }
 
             RebuildRuntimeReferences();
         }
@@ -169,7 +190,8 @@ namespace Game
         Rocket,
         DiscoBall,
         ActionButton,
-        SelectedTags
+        SelectedTags,
+        SelectedGridCoordinates
     }
 
     [Serializable]
@@ -185,8 +207,23 @@ namespace Game
     [Serializable]
     public class HighlightSelectorSettings
     {
-        public string actionName;
-        public List<string> selectedTags = new List<string>();
+        [HideInInspector] public HighlightSelectorType highlightSelectorType;
+        [ShowIf(nameof(IsActionNameRequired))] public string actionName;
+        [ShowIf(nameof(AreSelectedTagsRequired))] public List<string> selectedTags = new List<string>();
+        [ShowIf(nameof(AreSelectedCoordinatesRequired))] public List<Vector2Int> selectedCoordinates = new List<Vector2Int>();
+
+        public bool IsActionNameRequired()
+        {
+            return highlightSelectorType == HighlightSelectorType.ActionButton;
+        }
+        public bool AreSelectedTagsRequired()
+        {
+            return highlightSelectorType == HighlightSelectorType.SelectedTags;
+        }
+        public bool AreSelectedCoordinatesRequired()
+        {
+            return highlightSelectorType == HighlightSelectorType.SelectedGridCoordinates;
+        }
     }
 }
 

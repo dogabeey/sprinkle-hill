@@ -52,6 +52,8 @@ namespace Game
         [SerializeField] private bool allowBombCreation = true;
         [FoldoutGroup("Power Up Settings")]
         [SerializeField] private bool allowPropellerCreation = true;
+        [FoldoutGroup("Power Up Settings")]
+        public bool isBoosterPickerEnabled = true;
 
         [FoldoutGroup("Power Up Settings")]
         public int sparklingPowerAfterXCombo = 3;
@@ -115,6 +117,9 @@ namespace Game
 
         private IEnumerator Start()
         {
+            if (!isBoosterPickerEnabled)
+                yield break;
+
             // Wait until every scene object's Start has run. This ensures the grid, objectives,
             // and ScreenManager's screen list are ready before the selection panel is shown.
             yield return null;
