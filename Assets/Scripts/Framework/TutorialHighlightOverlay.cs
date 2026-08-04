@@ -32,14 +32,8 @@ namespace Game
         private static readonly int ID_RectCount    = Shader.PropertyToID("_RectCount");
         private static readonly int ID_CornerRadius = Shader.PropertyToID("_CornerRadius");
         private static readonly int ID_EdgeSoftness = Shader.PropertyToID("_EdgeSoftness");
-        private static readonly int[] ID_Rects =
-        {
-            Shader.PropertyToID("_Rect0"),
-            Shader.PropertyToID("_Rect1"),
-            Shader.PropertyToID("_Rect2"),
-            Shader.PropertyToID("_Rect3"),
-        };
-        private const int MaxSpotlights = 4;
+        private static readonly int ID_Rects = Shader.PropertyToID("_Rects");
+        private const int MaxSpotlights = 128;
 
         // -----------------------------------------------------------------
         //  Inspector
@@ -172,43 +166,30 @@ namespace Game
         // -----------------------------------------------------------------
         private void SetRects(IList<GameObject> targets)
         {
-            Camera cam   = worldCamera != null ? worldCamera : Camera.main;
-            int    count = Mathf.Min(targets != null ? targets.Count : 0, MaxSpotlights);
+            Camera cam = worldCamera != null ? worldCamera : Camera.main;
+            List<Vector4> rects = new List<Vector4>();
 
-            _mat.SetFloat(ID_RectCount,    count);
-            _mat.SetFloat(ID_CornerRadius, cornerRadius);
-            _mat.SetFloat(ID_EdgeSoftness, edgeSoftness);
-
-            Debug.Log($"[TutorialHighlightOverlay] SetRects — target count: {count} | screen: {Screen.width}x{Screen.height} | camera: {(cam != null ? cam.name : "NULL")}");
-
-            for (int i = 0; i < MaxSpotlights; i++)
+            if (targets != null)
             {
-                if (i < count && targets[i] != null)
+                for (int i = 0; i < targets.Count && rects.Count < MaxSpotlights; i++)
                 {
-                    Rect sr = ScreenRectFor(targets[i], cam);
+                    if (targets[i] == null)
+                        continue;
 
-                    Vector4 rectVec = new Vector4(
-                        sr.xMin - padding,
-                        sr.yMin - padding,
-                        sr.xMax + padding,
-                        sr.yMax + padding);
-
-                    _mat.SetVector(ID_Rects[i], rectVec);
-
-                    Debug.Log(
-                        $"[TutorialHighlightOverlay] Slot {i} | GameObject: \"{targets[i].name}\" | " +
-                        $"raw screen rect: xMin={sr.xMin:F1} yMin={sr.yMin:F1} xMax={sr.xMax:F1} yMax={sr.yMax:F1} | " +
-                        $"padded shader rect: ({rectVec.x:F1}, {rectVec.y:F1}, {rectVec.z:F1}, {rectVec.w:F1})",
-                        targets[i]);
-                }
-                else
-                {
-                    _mat.SetVector(ID_Rects[i], Vector4.zero);
+                    Rect screenRect = ScreenRectFor(targets[i], cam);
+                    rects.Add(new Vector4(
+                        screenRect.xMin - padding,
+                        screenRect.yMin - padding,
+                        screenRect.xMax + padding,
+                        screenRect.yMax + padding));
                 }
             }
 
+            _mat.SetFloat(ID_RectCount, rects.Count);
+            _mat.SetFloat(ID_CornerRadius, cornerRadius);
+            _mat.SetFloat(ID_EdgeSoftness, edgeSoftness);
+            _mat.SetVectorArray(ID_Rects, rects);
         }
-
         // -----------------------------------------------------------------
         //  Screen-rect helpers
         // -----------------------------------------------------------------

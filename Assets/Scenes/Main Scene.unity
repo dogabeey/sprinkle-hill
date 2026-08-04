@@ -9076,6 +9076,14 @@ PrefabInstance:
       propertyPath: animationObjectParent
       value: 
       objectReference: {fileID: 4133448082132307929}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: tutorialSteps.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093018097172270814, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
+      propertyPath: 'tutorialSteps.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: a2e044a068bb3574cbd14c45b3a4c273, type: 2}
     - target: {fileID: 5195539440205897226, guid: 3f5cd6d58ff86ce41bde12ac7af26e7e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

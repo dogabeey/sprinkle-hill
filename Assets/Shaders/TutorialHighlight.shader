@@ -3,10 +3,6 @@ Shader "UI/TutorialHighlight"
     Properties
     {
         _OverlayColor  ("Overlay Color",  Color)   = (0, 0, 0, 0.75)
-        _Rect0         ("Spotlight 0 (xMin yMin xMax yMax)", Vector) = (0, 0, 0, 0)
-        _Rect1         ("Spotlight 1 (xMin yMin xMax yMax)", Vector) = (0, 0, 0, 0)
-        _Rect2         ("Spotlight 2 (xMin yMin xMax yMax)", Vector) = (0, 0, 0, 0)
-        _Rect3         ("Spotlight 3 (xMin yMin xMax yMax)", Vector) = (0, 0, 0, 0)
         _RectCount     ("Active Rect Count",  Float) = 0
         _CornerRadius  ("Corner Radius (px)", Float) = 16
         _EdgeSoftness  ("Edge Softness (px)", Float) = 4
@@ -54,10 +50,7 @@ Shader "UI/TutorialHighlight"
 
             CBUFFER_START(UnityPerMaterial)
                 half4  _OverlayColor;
-                float4 _Rect0;
-                float4 _Rect1;
-                float4 _Rect2;
-                float4 _Rect3;
+                float4 _Rects[128];
                 float  _RectCount;
                 float  _CornerRadius;
                 float  _EdgeSoftness;
@@ -93,20 +86,15 @@ Shader "UI/TutorialHighlight"
                 // Convert 0..1 UV to pixel position (matches Unity's Screen.width / Screen.height)
                 float2 px = IN.screenUV * _ScreenParams.xy;
 
-                float4 rects[4];
-                rects[0] = _Rect0;
-                rects[1] = _Rect1;
-                rects[2] = _Rect2;
-                rects[3] = _Rect3;
-
                 float soft   = max(_EdgeSoftness, 0.5);
                 float radius = max(_CornerRadius, 0.0);
                 float cutout = 0.0;
 
-                int count = (int)clamp(_RectCount, 0, 4);
+                int count = (int)clamp(_RectCount, 0, 128);
+                [loop]
                 for (int k = 0; k < count; k++)
                 {
-                    float sdf = RoundedRectSDF(rects[k], px, radius);
+                    float sdf = RoundedRectSDF(_Rects[k], px, radius);
                     // smoothstep: negative sdf = inside rect = transparent hole
                     cutout = max(cutout, 1.0 - smoothstep(-soft, soft, sdf));
                 }
