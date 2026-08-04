@@ -140,6 +140,9 @@ namespace Game
                 return;
             }
 
+            EventManager.TriggerEvent(GameEvent.LEVEL_START_BOOSTER_PICKED,
+                new EventParam(paramInt: (int)selectedPowerUp));
+
             int replacedElementCount = grid.ReplaceRandomRegularElementsWithPowerUp(selectedPowerUp, replacementCount);
             if (replacedElementCount > 0)
                 ScreenManager.Instance.CloseAllScreens();

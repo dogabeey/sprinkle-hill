@@ -20,10 +20,18 @@ namespace Game
         public int requiredLevelIndex = -1;
         [Tooltip("-1 means any stage. Otherwise this step only runs when currentStageIndex equals this value.")]
         public int requiredStageIndex = -1;  
-        public TutorialAnimationType tutorialAnimationType;
+        [OnValueChanged(nameof(InitTutorialAnimation))] public TutorialAnimationType tutorialAnimationType;
         public TutorialAnimationSettings tutorialAnimationSettings = new TutorialAnimationSettings();
         [OnValueChanged(nameof(InitHighlightSelector))] public HighlightSelectorType highlightSelectorType;
 
+        private void InitTutorialAnimation()
+        {
+            Debug.Log($"InitTutorialAnimation: {tutorialAnimationType}");
+            tutorialAnimationSettings = new TutorialAnimationSettings
+            {
+                tutorialAnimationType = tutorialAnimationType
+            };
+        }
         private void InitHighlightSelector()
         {
             Debug.Log($"InitHighlightSelector: {highlightSelectorType}");
@@ -112,6 +120,11 @@ namespace Game
                 {
                     rotationOffset = tutorialAnimationSettings.rotationOffset
                 },
+                TutorialAnimationType.MoveBetweenTwoCoordinates => new MoveBetweenTwoCoordinates()
+                {
+                    startCoordinate = tutorialAnimationSettings.startCoordinate,
+                    endCoordinate = tutorialAnimationSettings.endCoordinate
+                },
                 _ => null
             };
 
@@ -178,7 +191,8 @@ namespace Game
         None,
         MoveBetweenTwoPoint,
         ClickOnFirstHighlightedObject,
-        LookAndPointAtFirstHighlightedObject
+        LookAndPointAtFirstHighlightedObject,
+        MoveBetweenTwoCoordinates,
     }
 
     public enum HighlightSelectorType
@@ -197,11 +211,23 @@ namespace Game
     [Serializable]
     public class TutorialAnimationSettings
     {
+        [HideInInspector] public TutorialAnimationType tutorialAnimationType;
         public RectTransform tutorialObject;
-        public Vector2 screenPositionOffset;
+        [ShowIf(nameof(IsScreenPositionOffsetRequired))] public Vector2 screenPositionOffset;
         public float duration = 1f;
         public bool isLoop = true;
         public float rotationOffset = -90f;
+        [ShowIf(nameof(AreStartAndEndCoordinatesRequired))] public Vector2Int startCoordinate;
+        [ShowIf(nameof(AreStartAndEndCoordinatesRequired))] public Vector2Int endCoordinate;
+
+        private bool IsScreenPositionOffsetRequired()
+        {
+            return tutorialAnimationType == TutorialAnimationType.LookAndPointAtFirstHighlightedObject;
+        }
+        private bool AreStartAndEndCoordinatesRequired()
+        {
+            return tutorialAnimationType == TutorialAnimationType.MoveBetweenTwoCoordinates;
+        }
     }
 
     [Serializable]
