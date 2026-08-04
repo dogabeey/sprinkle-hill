@@ -53,6 +53,8 @@ public class ElementData : VisualizableScriptableObject
     public string defaultIdleAnimation = "idle";
     [FoldoutGroup("Animation")]
     public RuntimeAnimatorController animationController;
+    [FoldoutGroup("Effects")]
+    public ParticleSystem elementDestroyEffect;
 
     [Serializable]
     public class ElementAnimationByProgress

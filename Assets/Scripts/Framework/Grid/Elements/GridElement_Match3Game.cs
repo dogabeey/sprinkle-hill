@@ -84,9 +84,13 @@ namespace Game
             if (destroyTween != null && destroyTween.active)
                 yield return destroyTween.WaitForCompletion();
 
-            if (this != null && constantManager != null && transform != null)
+            if (this != null && transform != null)
             {
-                SpawnParticleEffect(constantManager.elementDestroyParticlePrefab);
+                ParticleSystem destroyEffect = elementInfo?.elementData?.elementDestroyEffect;
+                if (destroyEffect == null && Gfx.Instance != null)
+                    destroyEffect = Gfx.Instance.elementDestroyParticlePrefab;
+
+                SpawnParticleEffect(destroyEffect);
             }
 
             if (this != null)

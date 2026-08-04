@@ -48,7 +48,6 @@ namespace Game
         public int elementDestroyPunchVibrato = 8;
         [RemoteConfig("element_destroy_punch_elasticity", 0.8f)]
         public float elementDestroyPunchElasticity = 0.8f;
-        public ParticleSystem elementDestroyParticlePrefab;
 
         [Header("Action Bar")]
         [RemoteConfig("action_bar_destroy_speed_multiplier", 2f)]

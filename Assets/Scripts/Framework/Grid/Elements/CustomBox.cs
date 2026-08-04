@@ -34,7 +34,11 @@ namespace Game
 
         public override IEnumerator DestroyElement(float animationSpeedMultiplier = 1f)
         {
-            
+            ParticleSystem destroyEffect = elementInfo?.elementData?.elementDestroyEffect;
+            if (destroyEffect == null && Gfx.Instance != null)
+                destroyEffect = Gfx.Instance.elementDestroyParticlePrefab;
+
+            SpawnParticleEffect(destroyEffect);
             Destroy(gameObject);
             yield break;
         }

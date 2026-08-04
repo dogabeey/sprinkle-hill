@@ -22,3 +22,4 @@ MonoBehaviour:
   behaviorFlags: 0
   defaultIdleAnimation: idle
   animationController: {fileID: 0}
+  elementDestroyEffect: {fileID: 6553830495741696104, guid: 168091d2c7a475345b3635c8fa88e458, type: 3}
