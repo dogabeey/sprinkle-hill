@@ -484,6 +484,38 @@ namespace Game
         }
 
 #if UNITY_EDITOR
+        [System.NonSerialized] private Vector2Int hoveredGridCoordinates;
+        [System.NonSerialized] private double gridCoordinateHoverStartTime = -1d;
+        [System.NonSerialized] private bool isGridCoordinateHoverUpdateSubscribed;
+
+        private void UpdateGridCoordinateHover(Vector2Int coordinates)
+        {
+            if (hoveredGridCoordinates == coordinates && gridCoordinateHoverStartTime >= 0d)
+                return;
+
+            hoveredGridCoordinates = coordinates;
+            gridCoordinateHoverStartTime = EditorApplication.timeSinceStartup;
+
+            if (!isGridCoordinateHoverUpdateSubscribed)
+            {
+                EditorApplication.update += RepaintAfterGridCoordinateHoverDelay;
+                isGridCoordinateHoverUpdateSubscribed = true;
+            }
+        }
+
+        private void RepaintAfterGridCoordinateHoverDelay()
+        {
+            if (gridCoordinateHoverStartTime < 0d ||
+                EditorApplication.timeSinceStartup - gridCoordinateHoverStartTime < 1d)
+            {
+                return;
+            }
+
+            UnityEditorInternal.InternalEditorUtility.RepaintAllViews();
+            EditorApplication.update -= RepaintAfterGridCoordinateHoverDelay;
+            isGridCoordinateHoverUpdateSubscribed = false;
+        }
+
         private Grid3D.GridCell DrawGridCells(Rect rect, Grid3D.GridCell value)
         {
             if (value == null)
@@ -510,6 +542,11 @@ namespace Game
             {
                 alignment = TextAnchor.UpperRight,
             };
+            GUIStyle coordinateText = new GUIStyle(EditorStyles.boldLabel)
+            {
+                alignment = TextAnchor.MiddleCenter
+            };
+            coordinateText.normal.textColor = Color.white;
 
             // DRAWING
             // Draw cell background based on type
@@ -533,8 +570,16 @@ namespace Game
                 
             }
 
+            bool isMouseOverCell = rect.Contains(Event.current.mousePosition);
+            if (isMouseOverCell)
+            {
+                UpdateGridCoordinateHover(value.coordinates);
+                if (EditorApplication.timeSinceStartup - gridCoordinateHoverStartTime >= 1d)
+                    GUI.Label(rect, $"({value.coordinates.x}, {value.coordinates.y})", coordinateText);
+            }
+
             // EVENTS
-            if (rect.Contains(Event.current.mousePosition))
+            if (isMouseOverCell)
             {
                 // Handle right-click to open context menu for cell features and element assignment
                 if (Event.current.type == EventType.MouseDown)

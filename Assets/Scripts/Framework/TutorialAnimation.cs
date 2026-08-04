@@ -160,6 +160,56 @@ namespace Game
         }
     }
     [System.Serializable]
+    public class MoveBetweenTwoCoordinates : TutorialAnimation
+    {
+        public Vector2Int startCoordinate;
+        public Vector2Int endCoordinate;
+
+        public override void PlayAnim()
+        {
+            if (tutorialObjectInstance == null)
+                return;
+
+            Vector2 startAnchoredPos = GetAnchoredPositionFromCoordinate(startCoordinate);
+            Vector2 endAnchoredPos = GetAnchoredPositionFromCoordinate(endCoordinate);
+
+            tutorialObjectInstance.DOKill();
+            tutorialObjectInstance.anchoredPosition = startAnchoredPos;
+
+            AnimateBetweenPoints(startAnchoredPos, endAnchoredPos);
+        }
+
+        private Vector2 GetAnchoredPositionFromCoordinate(Vector2Int coordinate)
+        {
+            // Assuming you have a method to convert grid coordinates to world position
+            Vector3 worldPosition = GridToWorldPosition(coordinate);
+            return ScreenToAnchoredPosition(GetScreenPosition(new GameObject { transform = { position = worldPosition } }.transform));
+        }
+
+        private Vector3 GridToWorldPosition(Vector2Int coordinate)
+        {
+            // Implement your logic to convert grid coordinates to world position
+            // This is a placeholder implementation
+            return new Vector3(coordinate.x, coordinate.y, 0);
+        }
+
+        private void AnimateBetweenPoints(Vector2 startAnchoredPos, Vector2 endAnchoredPos)
+        {
+            if (isLoop)
+            {
+                tutorialObjectInstance.DOAnchorPos(endAnchoredPos, duration / 2f).SetLoops(-1, LoopType.Yoyo);
+            }
+            else
+            {
+                tutorialObjectInstance.DOAnchorPos(endAnchoredPos, duration / 2f).OnComplete(() =>
+                {
+                    if (tutorialObjectInstance != null)
+                        tutorialObjectInstance.DOAnchorPos(startAnchoredPos, duration / 2f);
+                });
+            }
+        }
+    }
+    [System.Serializable]
     public class ClickOnFirstHighlightedObject : TutorialAnimation
     {
 
