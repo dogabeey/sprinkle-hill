@@ -62,6 +62,12 @@ namespace Game
             return cam != null ? cam.WorldToScreenPoint(target.position) : target.position;
         }
 
+        protected static Vector3 GetScreenPosition(Vector3 worldPosition)
+        {
+            Camera cam = Camera.main;
+            return cam != null ? cam.WorldToScreenPoint(worldPosition) : worldPosition;
+        }
+
         protected Vector2 ScreenToAnchoredPosition(Vector2 screenPosition)
         {
             if (tutorialObjectInstance == null)
@@ -170,8 +176,11 @@ namespace Game
             if (tutorialObjectInstance == null)
                 return;
 
-            Vector2 startAnchoredPos = GetAnchoredPositionFromCoordinate(startCoordinate);
-            Vector2 endAnchoredPos = GetAnchoredPositionFromCoordinate(endCoordinate);
+            if (!TryGetAnchoredPositionFromCoordinate(startCoordinate, out Vector2 startAnchoredPos) ||
+                !TryGetAnchoredPositionFromCoordinate(endCoordinate, out Vector2 endAnchoredPos))
+            {
+                return;
+            }
 
             tutorialObjectInstance.DOKill();
             tutorialObjectInstance.anchoredPosition = startAnchoredPos;
@@ -179,18 +188,21 @@ namespace Game
             AnimateBetweenPoints(startAnchoredPos, endAnchoredPos);
         }
 
-        private Vector2 GetAnchoredPositionFromCoordinate(Vector2Int coordinate)
+        private bool TryGetAnchoredPositionFromCoordinate(Vector2Int coordinate, out Vector2 anchoredPosition)
         {
-            // Assuming you have a method to convert grid coordinates to world position
-            Vector3 worldPosition = GridToWorldPosition(coordinate);
-            return ScreenToAnchoredPosition(GetScreenPosition(new GameObject { transform = { position = worldPosition } }.transform));
-        }
+            anchoredPosition = default;
 
-        private Vector3 GridToWorldPosition(Vector2Int coordinate)
-        {
-            // Implement your logic to convert grid coordinates to world position
-            // This is a placeholder implementation
-            return new Vector3(coordinate.x, coordinate.y, 0);
+            Match3Grid grid = (GameManager.Instance?.CurrentLevel as LevelScene_Match3Game)?.grid as Match3Grid;
+            GridCellController cell = grid != null ? grid.GetCellControllerAt(coordinate) : null;
+            if (cell == null)
+                return false;
+
+            Vector3 cellCenter = cell.gridSprite != null
+                ? cell.gridSprite.bounds.center
+                : cell.transform.position;
+            Vector2 screenPosition = GetScreenPosition(cellCenter);
+            anchoredPosition = ScreenToAnchoredPosition(screenPosition + screenPositionOffset);
+            return true;
         }
 
         private void AnimateBetweenPoints(Vector2 startAnchoredPos, Vector2 endAnchoredPos)

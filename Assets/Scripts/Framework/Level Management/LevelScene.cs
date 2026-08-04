@@ -35,6 +35,14 @@ namespace Game
         protected virtual void Awake()
         {
             Instance = this;
+            StartCoroutine(TriggerLevelStartedAfterInitialization());
+        }
+
+        private IEnumerator TriggerLevelStartedAfterInitialization()
+        {
+            // TutorialManager and other listeners may not be enabled when this level's
+            // Awake runs. Dispatch on the next frame after scene initialization instead.
+            yield return null;
             EventManager.TriggerEvent(GameEvent.LEVEL_STARTED, new EventParam());
         }
 
