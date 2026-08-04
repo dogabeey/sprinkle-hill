@@ -1258,7 +1258,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   overlayImage: {fileID: 900864209}
   worldCamera: {fileID: 1886584752}
-  overlayColor: {r: 0, g: 0, b: 0, a: 0.75}
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.8784314}
   cornerRadius: 16
   edgeSoftness: 2
   padding: 5
