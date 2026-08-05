@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using DG.Tweening;
 using static Game.Grid3D;
 using System;
-using UnityEngine.EventSystems;
 
 namespace Game
 {
@@ -850,28 +849,7 @@ namespace Game
         private bool ShouldBlockBoardInput()
         {
             LevelScene currentLevel = GameManager.Instance != null ? GameManager.Instance.CurrentLevel : null;
-            return (currentLevel != null && (currentLevel.isPaused || currentLevel.isEnded)) || IsPointerOverUi();
-        }
-
-        private static bool IsPointerOverUi()
-        {
-            EventSystem eventSystem = EventSystem.current;
-            if (eventSystem == null)
-            {
-                return false;
-            }
-
-            // Mouse input on mobile is simulated from the active touch, so use the
-            // touch pointer IDs when available as well as the regular mouse pointer.
-            for (int i = 0; i < Input.touchCount; i++)
-            {
-                if (eventSystem.IsPointerOverGameObject(Input.GetTouch(i).fingerId))
-                {
-                    return true;
-                }
-            }
-
-            return eventSystem.IsPointerOverGameObject();
+            return currentLevel != null && (currentLevel.isPaused || currentLevel.isEnded);
         }
 
         private void OnInputReceived(EventParam _)
