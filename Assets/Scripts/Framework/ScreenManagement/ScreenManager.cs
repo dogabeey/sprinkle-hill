@@ -74,7 +74,7 @@ namespace Game
         {
             screens.ForEach(screen =>
             {
-                if (!screen.notClosedByClickingOutside)
+                if (!screen.notClosedByClickingOutside && screen.gameObject.activeSelf)
                 {
                     backgroundImage.DOFade(0, 0.5f);
                     backgroundImage.enabled = false;
@@ -87,10 +87,7 @@ namespace Game
             backgroundImage.enabled = false;
             screens.ForEach(screen =>
             {
-                if (!screen.notClosedByOpeningAnotherScreen)
-                {
-                    screen.CloseUI();
-                }
+                screen.CloseUI();
             });
         }
 

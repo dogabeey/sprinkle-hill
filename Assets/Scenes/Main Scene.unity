@@ -482,6 +482,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -100
       objectReference: {fileID: 0}
+    - target: {fileID: 4350764761320666777, guid: 81cf5ef0b55d6c341adf08c801e14320, type: 3}
+      propertyPath: notClosedByClickingOutside
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4350764761320666777, guid: 81cf5ef0b55d6c341adf08c801e14320, type: 3}
+      propertyPath: notClosedByOpeningAnotherScreen
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6052314207170396806, guid: 81cf5ef0b55d6c341adf08c801e14320, type: 3}
       propertyPath: m_Name
       value: Market Panel
@@ -1058,6 +1066,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1409572470591466394, guid: dc0969486c55e344c94964f602d84506, type: 3}
       propertyPath: notClosedByClickingOutside
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1409572470591466394, guid: dc0969486c55e344c94964f602d84506, type: 3}
+      propertyPath: notClosedByOpeningAnotherScreen
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2644979211408110882, guid: dc0969486c55e344c94964f602d84506, type: 3}
@@ -8408,6 +8420,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5466670897944041255, guid: 16e73610690391f48848a8e2191dc0f7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5466670897944041255, guid: 16e73610690391f48848a8e2191dc0f7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1269927695}
@@ -8821,6 +8837,14 @@ PrefabInstance:
     - target: {fileID: 498586416535445872, guid: 4415aee893641684cb114784cf067567, type: 3}
       propertyPath: m_fontSize
       value: 35.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2002134379664914200, guid: 4415aee893641684cb114784cf067567, type: 3}
+      propertyPath: notClosedByClickingOutside
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2002134379664914200, guid: 4415aee893641684cb114784cf067567, type: 3}
+      propertyPath: notClosedByOpeningAnotherScreen
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2193009673902640282, guid: 4415aee893641684cb114784cf067567, type: 3}
       propertyPath: m_fontSize
