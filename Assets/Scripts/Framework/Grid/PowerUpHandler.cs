@@ -2092,7 +2092,7 @@ namespace Game
             // Clear the propeller's original neighbors to simulate the blast impact
             yield return grid.StartCoroutine(ApplyPropellerNeighborImpact(propellerPos));
             // Clear only the target cell after the propeller arrives, without triggering adjacent breakables or features.
-            yield return grid.StartCoroutine(grid.ClearCellAt(targetPos, true, false, false));
+            yield return grid.StartCoroutine(ClearPropellerTargetCell(targetPos));
         }
 
         private IEnumerator ApplyPropellerNeighborImpact(Vector2Int centerPos)
@@ -2182,6 +2182,17 @@ namespace Game
             else
             {
                 yield return new WaitForSeconds(0.3f);
+            }
+
+            yield return grid.StartCoroutine(ClearPropellerTargetCell(targetPos));
+        }
+
+        private IEnumerator ClearPropellerTargetCell(Vector2Int targetPos)
+        {
+            if (grid.GetCellPublic(targetPos)?.cellFeature is GlassFeature)
+            {
+                grid.DamageGlassFeatureAt(targetPos);
+                yield break;
             }
 
             yield return grid.StartCoroutine(grid.ClearCellAt(targetPos, true, false, false));
@@ -2289,6 +2300,7 @@ namespace Game
         {
             List<Vector2Int> breakableObstacleCells = new List<Vector2Int>();
             List<Vector2Int> hiddenElements = new List<Vector2Int>();
+            List<Vector2Int> glassCells = new List<Vector2Int>();
             List<Vector2Int> waferCells = new List<Vector2Int>();
             List<Vector2Int> normalCandidates = new List<Vector2Int>();
             List<Vector2Int> belowGarbageCandidates = new List<Vector2Int>();
@@ -2317,6 +2329,12 @@ namespace Game
 
                     if (cell.cellType != Grid3D.CellType.Normal)
                         continue;
+
+                    if (cell.cellFeature is GlassFeature)
+                    {
+                        glassCells.Add(pos);
+                        continue;
+                    }
 
                     if (cell.elementInfo?.elementData is BreakableBoxElementData)
                     {
@@ -2369,11 +2387,13 @@ namespace Game
                 }
             }
 
-            // Priority: Breakable obstacles (walls/boxes) -> Hidden Elements -> Wafer Features -> Normal Cells -> Elements below garbage bags
+            // Priority: Breakable obstacles (walls/boxes) -> Hidden Elements -> Glass -> Wafer Features -> Normal Cells -> Elements below garbage bags
             if (breakableObstacleCells.Count > 0)
                 return breakableObstacleCells[Random.Range(0, breakableObstacleCells.Count)];
             if (hiddenElements.Count > 0)
                 return hiddenElements[Random.Range(0, hiddenElements.Count)];
+            if (glassCells.Count > 0)
+                return glassCells[Random.Range(0, glassCells.Count)];
             if (waferCells.Count > 0)
                 return waferCells[Random.Range(0, waferCells.Count)];
             if (normalCandidates.Count > 0)
