@@ -15,7 +15,7 @@ namespace Game
         public string playAnimationName;
         public string closeAnimationName;
         public bool notClosedByClickingOutside;
-        public bool notClosedByOpeningAnotherScreen;
+        public bool doesNotCloseOtherOpenScreens;
 
         private void OnValidate()
         {

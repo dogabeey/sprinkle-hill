@@ -50,9 +50,16 @@ namespace Game
 
         public void Show(Screens screenID)
         {
-            CloseAllScreens();
-            ShowBackground();
             GameScreen gameScreen = screens.Find(screen => screen.ScreenID == screenID);
+            if(gameScreen.doesNotCloseOtherOpenScreens)
+            {
+            CloseAllScreens();
+            }
+            else
+            {
+                CloseAllNonPersistentScreens();
+            }
+            ShowBackground();
             ShowScreen(gameScreen);
         }
 
