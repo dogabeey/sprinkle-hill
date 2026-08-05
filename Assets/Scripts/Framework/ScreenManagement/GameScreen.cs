@@ -7,6 +7,9 @@ namespace Game
 {
     public abstract class GameScreen : MonoBehaviour
     {
+        public static bool IsAnyScreenOpen =>
+            UnityEngine.Object.FindAnyObjectByType<GameScreen>(FindObjectsInactive.Exclude) != null;
+
         public abstract Screens ScreenID { get; }
         public Animator animator;
         public string playAnimationName;

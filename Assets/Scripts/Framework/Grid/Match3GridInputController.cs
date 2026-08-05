@@ -849,7 +849,8 @@ namespace Game
         private bool ShouldBlockBoardInput()
         {
             LevelScene currentLevel = GameManager.Instance != null ? GameManager.Instance.CurrentLevel : null;
-            return currentLevel != null && (currentLevel.isPaused || currentLevel.isEnded);
+            return GameScreen.IsAnyScreenOpen
+                || (currentLevel != null && (currentLevel.isPaused || currentLevel.isEnded));
         }
 
         private void OnInputReceived(EventParam _)
