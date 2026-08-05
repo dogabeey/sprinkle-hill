@@ -1992,17 +1992,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2031149426823417237, guid: 94b80f5fdde1378409e115d1f60ac5a7, type: 3}
   m_PrefabInstance: {fileID: 1267771052}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1269927695 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2547576709511450939, guid: 70bd33374545fe1428a509f86d0456fd, type: 3}
-  m_PrefabInstance: {fileID: 5532669354995979708}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e4e01d7881730e4c9a5310902158970, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1340314732
 GameObject:
   m_ObjectHideFlags: 0
@@ -8421,12 +8410,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5466670897944041255, guid: 16e73610690391f48848a8e2191dc0f7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5466670897944041255, guid: 16e73610690391f48848a8e2191dc0f7, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1269927695}
+      objectReference: {fileID: 2547576709511450939, guid: 70bd33374545fe1428a509f86d0456fd, type: 3}
+    - target: {fileID: 5466670897944041255, guid: 16e73610690391f48848a8e2191dc0f7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CloseAllNonPersistentScreens
+      objectReference: {fileID: 0}
+    - target: {fileID: 5466670897944041255, guid: 16e73610690391f48848a8e2191dc0f7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Game.ScreenManager, Game
+      objectReference: {fileID: 0}
+    - target: {fileID: 5466670897944041255, guid: 16e73610690391f48848a8e2191dc0f7, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 7023704218230927892, guid: 16e73610690391f48848a8e2191dc0f7, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
