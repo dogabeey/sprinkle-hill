@@ -26,11 +26,11 @@ namespace Game
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-            currentLevelButton.onClick.AddListener(OnCurrentLevelButtonClicked);
-            marketButton.onClick.AddListener(OnMarketButtonClicked);
-            leaderboardButton.onClick.AddListener(OnLeaderboardButtonClicked);
-            homeButton.onClick.AddListener(OnHomeButtonClicked);
-            missionsButton.onClick.AddListener(OnMissionsButtonClicked);
+            if(currentLevelButton) currentLevelButton.onClick.AddListener(OnCurrentLevelButtonClicked);
+            if(marketButton) marketButton.onClick.AddListener(OnMarketButtonClicked);
+            if(leaderboardButton) leaderboardButton.onClick.AddListener(OnLeaderboardButtonClicked);
+            if(homeButton) homeButton.onClick.AddListener(OnHomeButtonClicked);
+            if(missionsButton) missionsButton.onClick.AddListener(OnMissionsButtonClicked);
         }
         void OnEnable()
         {
