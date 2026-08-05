@@ -3179,9 +3179,6 @@ namespace Game
             if (!acceptsElements)
                 return false;
 
-            if (cell.cellFeature is GlassFeature)
-                return false;
-
             if (IsCellCoveredByMultiCellElement(pos))
                 return false;
 
@@ -3419,9 +3416,6 @@ namespace Game
                         FlushCurrentSection();
                         continue;
                     }
-
-                    if (cell.cellFeature is GlassFeature)
-                        continue;
 
                     if (IsCellCoveredByMultiCellElement(pos))
                         continue;
