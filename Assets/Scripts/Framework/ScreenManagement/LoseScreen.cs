@@ -36,13 +36,7 @@ namespace Game
             addMovesButton.interactable = CanAddMovesOrTime();
 
             addMovesButton.onClick.RemoveAllListeners();
-            addMovesButton.onClick.AddListener(() =>
-            { 
-                ScreenManager.Instance.CloseAllNonPersistentScreens();
-                (GameManager.Instance.CurrentLevel as LevelScene_Match3Game).BuyExtraMovesOrTime();
-                // Restore the game state to what it was before the lose condition was triggered, so that the player can continue playing after buying extra moves or time
-                GameManager.Instance.CurrentLevel.RestoreStateBeforeLoseCondition();
-            });
+            addMovesButton.onClick.AddListener(BuyMovesAndShowBoosterSelection);
 
             repeatLevelButton.onClick.RemoveAllListeners();
             repeatLevelButton.onClick.AddListener(OnRepeatLevelButtonClicked);
@@ -68,14 +62,73 @@ namespace Game
         {
             if (HasEnoughHearts())
             {
-                CurrencyManager.Instance.AddCurrency(heartCurrency, -retryHeartCost);
-                ScreenManager.Instance.CloseAllNonPersistentScreens();
-                EventManager.TriggerEvent(GameEvent.LEVEL_EXTRA_MOVE_REJECTED);
-                GameManager.Instance.ResetCurrentLevel();
+                if (CanAddMovesOrTime())
+                {
+                    ShowRetryOrBuyMovesPrompt();
+                }
+                else
+                {
+                    RetryLevel();
+                }
                 return;
             }
 
             ShowHeartRefillRewardedAd();
+        }
+
+        private void ShowRetryOrBuyMovesPrompt()
+        {
+            LevelScene_Match3Game levelScene = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
+            if (levelScene == null)
+            {
+                RetryLevel();
+                return;
+            }
+
+            string buyMovesText = string.Format(
+                addMovesCostFormat,
+                levelScene.extraMoveCost.amount,
+                levelScene.extraMoveCost.type.spriteIndexForUI);
+
+            PromptScreen.ShowPrompt(
+                string.Empty,
+                string.Format(buyHeartPromptText, retryHeartCost),
+                ("OK", RetryLevel),
+                (buyMovesText, BuyMovesAndShowBoosterSelection));
+        }
+
+        private void RetryLevel()
+        {
+            CurrencyManager.Instance.AddCurrency(heartCurrency, -retryHeartCost);
+            ScreenManager.Instance.CloseAllNonPersistentScreens();
+            EventManager.TriggerEvent(GameEvent.LEVEL_EXTRA_MOVE_REJECTED);
+            GameManager.Instance.ResetCurrentLevel();
+        }
+
+        private void BuyMovesAndShowBoosterSelection()
+        {
+            LevelScene_Match3Game levelScene = GameManager.Instance.CurrentLevel as LevelScene_Match3Game;
+            if (levelScene == null || !levelScene.CanBuyExtraMovesOrTime())
+                return;
+
+            ScreenManager.Instance.CloseAllNonPersistentScreens();
+            levelScene.BuyExtraMovesOrTime();
+            // Restore the game state to what it was before the lose condition was triggered, so that the player can continue playing after buying extra moves or time.
+            levelScene.RestoreStateBeforeLoseCondition();
+            ShowBoosterSelectionScreen();
+        }
+
+        private void ShowBoosterSelectionScreen()
+        {
+            GameScreen boosterSelectionScreen = ScreenManager.Instance.screens.Find(
+                screen => screen != null && screen.ScreenID == Screens.BoosterSelection);
+            if (boosterSelectionScreen == null)
+            {
+                Debug.LogWarning("BoosterSelectionScreen was not found by ScreenManager. Add the Booster Selection Panel to the scene.");
+                return;
+            }
+
+            ScreenManager.Instance.Show(boosterSelectionScreen);
         }
 
         private void ShowHeartRefillRewardedAd()
