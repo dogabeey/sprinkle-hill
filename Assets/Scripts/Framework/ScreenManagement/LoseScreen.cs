@@ -19,10 +19,10 @@ namespace Game
         public CurrencyModel heartCurrency;
         [Header("Settings")]
         public string levelHeaderFormat = "LEVEL {0} FAILED";
-        public string addMovesButtonFormat = "+{0} MOVES";
         public string addMovesCostFormat = "{0}<sprite index=1>";
         public string repeatLevelButtonFormat = "TRY AGAIN\n<sprite index={0}> -{1}";
         public string buyHeartsButtonFormat = "BUY {0} HEARTS";
+        public string buyHeartPromptText = "Retrying this level will cost {0} hearts and you will lose your progress. Continue?";
         [Min(1)] public int retryHeartCost = 1;
         [Min(1)] public int rewardedHeartAmount = 3;
 
