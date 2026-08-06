@@ -20,16 +20,16 @@ MonoBehaviour:
   disablesActionBar: 1
   requiredLevelIndex: 6
   requiredStageIndex: -1
-  tutorialAnimationType: 0
+  tutorialAnimationType: 4
   tutorialAnimationSettings:
-    tutorialAnimationType: 0
-    tutorialObject: {fileID: 0}
-    screenPositionOffset: {x: 0, y: 0}
+    tutorialAnimationType: 4
+    tutorialObject: {fileID: 5451101766555202300, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
+    screenPositionOffset: {x: 75, y: -50}
     duration: 1
     isLoop: 1
     rotationOffset: -90
-    startCoordinate: {x: 0, y: 0}
-    endCoordinate: {x: 0, y: 0}
+    startCoordinate: {x: 4, y: 6}
+    endCoordinate: {x: 4, y: 7}
   highlightSelectors:
   - highlightSelectorType: 10
     actionName: 
@@ -49,7 +49,7 @@ MonoBehaviour:
     actionName: 
     selectedTags: []
     selectedCoordinates: []
-  startEvent: 206
+  startEvent: 202
   startEventExpectedParams: 0
   startEventExpectedParamValues:
     paramObj: {fileID: 0}

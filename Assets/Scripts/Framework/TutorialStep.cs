@@ -26,9 +26,17 @@ namespace Game
         private void InitTutorialAnimation()
         {
             Debug.Log($"InitTutorialAnimation: {tutorialAnimationType}");
+            TutorialAnimationSettings previousSettings = tutorialAnimationSettings ?? new TutorialAnimationSettings();
             tutorialAnimationSettings = new TutorialAnimationSettings
             {
-                tutorialAnimationType = tutorialAnimationType
+                tutorialAnimationType = tutorialAnimationType,
+                tutorialObject = previousSettings.tutorialObject,
+                screenPositionOffset = previousSettings.screenPositionOffset,
+                duration = previousSettings.duration,
+                isLoop = previousSettings.isLoop,
+                rotationOffset = previousSettings.rotationOffset,
+                startCoordinate = previousSettings.startCoordinate,
+                endCoordinate = previousSettings.endCoordinate
             };
         }
         [LabelText("Highlight Selectors")]
@@ -227,6 +235,7 @@ namespace Game
         {
             if (tutorialAnimationSettings == null)
                 tutorialAnimationSettings = new TutorialAnimationSettings();
+            tutorialAnimationSettings.tutorialAnimationType = tutorialAnimationType;
 
             if (highlightSelectors == null)
                 highlightSelectors = new List<HighlightSelectorSettings>();
@@ -273,17 +282,13 @@ namespace Game
     {
         [HideInInspector] public TutorialAnimationType tutorialAnimationType;
         public RectTransform tutorialObject;
-        [ShowIf(nameof(IsScreenPositionOffsetRequired))] public Vector2 screenPositionOffset;
+        [SerializeField] public Vector2 screenPositionOffset;
         public float duration = 1f;
         public bool isLoop = true;
         public float rotationOffset = -90f;
         [ShowIf(nameof(AreStartAndEndCoordinatesRequired))] public Vector2Int startCoordinate;
         [ShowIf(nameof(AreStartAndEndCoordinatesRequired))] public Vector2Int endCoordinate;
 
-        private bool IsScreenPositionOffsetRequired()
-        {
-            return tutorialAnimationType == TutorialAnimationType.LookAndPointAtFirstHighlightedObject;
-        }
         private bool AreStartAndEndCoordinatesRequired()
         {
             return tutorialAnimationType == TutorialAnimationType.MoveBetweenTwoCoordinates;

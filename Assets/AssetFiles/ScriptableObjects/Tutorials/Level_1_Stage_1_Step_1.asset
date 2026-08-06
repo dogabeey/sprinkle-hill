@@ -24,13 +24,22 @@ MonoBehaviour:
   tutorialAnimationSettings:
     tutorialAnimationType: 4
     tutorialObject: {fileID: 5451101766555202300, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
-    screenPositionOffset: {x: 0, y: 0}
+    screenPositionOffset: {x: 75, y: -50}
     duration: 1
     isLoop: 1
     rotationOffset: -90
     startCoordinate: {x: 5, y: 3}
     endCoordinate: {x: 5, y: 4}
-  highlightSelectorType: 8
+  highlightSelectors:
+  - highlightSelectorType: 8
+    actionName: 
+    selectedTags: []
+    selectedCoordinates:
+    - {x: 3, y: 4}
+    - {x: 4, y: 4}
+    - {x: 5, y: 4}
+    - {x: 5, y: 3}
+  highlightSelectorType: 0
   highlightSelectorSettings:
     highlightSelectorType: 8
     actionName: 
