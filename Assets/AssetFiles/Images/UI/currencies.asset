@@ -70,9 +70,9 @@ MonoBehaviour:
     m_Name: currencies_heart
   - m_ElementType: 2
     m_Unicode: 65534
-    m_GlyphIndex: 6
+    m_GlyphIndex: 7
     m_Scale: 1
-    m_Name: currencies_0
+    m_Name: currencies_1
   m_GlyphTable:
   - m_Index: 0
     m_Metrics:
@@ -170,22 +170,22 @@ MonoBehaviour:
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
     sprite: {fileID: 664843773, guid: 0b65362f13aef9845a6f36ae73845469, type: 3}
-  - m_Index: 6
+  - m_Index: 7
     m_Metrics:
       m_Width: 128
       m_Height: 128
-      m_HorizontalBearingX: -64
-      m_HorizontalBearingY: 64
+      m_HorizontalBearingX: 0
+      m_HorizontalBearingY: 90
       m_HorizontalAdvance: 128
     m_GlyphRect:
-      m_X: 256
-      m_Y: 0
+      m_X: 768
+      m_Y: 128
       m_Width: 128
       m_Height: 128
-    m_Scale: 1
+    m_Scale: 1.5
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
-    sprite: {fileID: -1311512106, guid: 0b65362f13aef9845a6f36ae73845469, type: 3}
+    sprite: {fileID: -990279467, guid: 0b65362f13aef9845a6f36ae73845469, type: 3}
   spriteInfoList: []
   fallbackSpriteAssets: []
 --- !u!21 &6193819708317371155
