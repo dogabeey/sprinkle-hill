@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a23e412978b2f9b43ae72e9ce71bb98b, type: 3}
   m_Name: Glass_Tutorial
   m_EditorClassIdentifier: 
-  Id: wafer_tutorial
-  directive: Make a match on wafer to destroy it!
+  Id: glass_tutorial
+  directive: 
   directiveParentHeight: 493.38
   anchorMin: {x: 0, y: 0}
   anchorMax: {x: 1, y: 0}
   disablesActionBar: 1
-  requiredLevelIndex: 3
+  requiredLevelIndex: 6
   requiredStageIndex: -1
   tutorialAnimationType: 0
   tutorialAnimationSettings:
@@ -30,9 +30,22 @@ MonoBehaviour:
     rotationOffset: -90
     startCoordinate: {x: 0, y: 0}
     endCoordinate: {x: 0, y: 0}
-  highlightSelectorType: 9
+  highlightSelectors:
+  - highlightSelectorType: 10
+    actionName: 
+    selectedTags: []
+    selectedCoordinates: []
+  - highlightSelectorType: 8
+    actionName: 
+    selectedTags: []
+    selectedCoordinates:
+    - {x: 3, y: 6}
+    - {x: 4, y: 6}
+    - {x: 5, y: 6}
+    - {x: 4, y: 7}
+  highlightSelectorType: 0
   highlightSelectorSettings:
-    highlightSelectorType: 9
+    highlightSelectorType: 10
     actionName: 
     selectedTags: []
     selectedCoordinates: []
@@ -46,7 +59,7 @@ MonoBehaviour:
     paramStr: 
     vectorList: []
     paramBool: 0
-  completionEvent: 813
+  completionEvent: 817
   completionEventExpectedParams: 0
   completionEventExpectedParamValues:
     paramObj: {fileID: 0}

@@ -22,7 +22,6 @@ namespace Game
         public int requiredStageIndex = -1;  
         [OnValueChanged(nameof(InitTutorialAnimation))] public TutorialAnimationType tutorialAnimationType;
         public TutorialAnimationSettings tutorialAnimationSettings = new TutorialAnimationSettings();
-        [OnValueChanged(nameof(InitHighlightSelector))] public HighlightSelectorType highlightSelectorType;
 
         private void InitTutorialAnimation()
         {
@@ -32,16 +31,12 @@ namespace Game
                 tutorialAnimationType = tutorialAnimationType
             };
         }
-        private void InitHighlightSelector()
-        {
-            Debug.Log($"InitHighlightSelector: {highlightSelectorType}");
-            highlightSelectorSettings = new HighlightSelectorSettings
-            {
-                highlightSelectorType = highlightSelectorType
-            };
-        }
+        [LabelText("Highlight Selectors")]
+        public List<HighlightSelectorSettings> highlightSelectors = new List<HighlightSelectorSettings>();
 
-        public HighlightSelectorSettings highlightSelectorSettings = new HighlightSelectorSettings();
+        // Kept for existing TutorialStep assets. New steps should use highlightSelectors.
+        [HideInInspector] public HighlightSelectorType highlightSelectorType;
+        [HideInInspector] public HighlightSelectorSettings highlightSelectorSettings = new HighlightSelectorSettings();
         public GameEvent startEvent;
         [ShowIf(nameof(IsAdvancedMode))]
         public EventParams startEventExpectedParams;
@@ -67,7 +62,7 @@ namespace Game
         public bool isCompleted;
 
         [NonSerialized] private TutorialAnimation runtimeTutorialAnimation;
-        [NonSerialized] private HighlightSelector runtimeHighlightSelector;
+        [NonSerialized] private List<HighlightSelector> runtimeHighlightSelectors;
 
         public bool IsAdvancedMode() => advancedMode;
 
@@ -96,18 +91,48 @@ namespace Game
             return runtimeTutorialAnimation;
         }
 
+        public IReadOnlyList<HighlightSelector> GetHighlightSelectors()
+        {
+            if (runtimeHighlightSelectors == null)
+                runtimeHighlightSelectors = CreateHighlightSelectors();
+
+            return runtimeHighlightSelectors;
+        }
+
+        [Obsolete("Use GetHighlightSelectors or GetHighlightedObjects instead.")]
         public HighlightSelector GetHighlightSelector()
         {
-            if (runtimeHighlightSelector == null)
-                runtimeHighlightSelector = CreateHighlightSelector();
+            IReadOnlyList<HighlightSelector> selectors = GetHighlightSelectors();
+            return selectors.Count > 0 ? selectors[0] : null;
+        }
 
-            return runtimeHighlightSelector;
+        public GameObject[] GetHighlightedObjects()
+        {
+            List<GameObject> highlightedObjects = new List<GameObject>();
+            HashSet<GameObject> uniqueObjects = new HashSet<GameObject>();
+            IReadOnlyList<HighlightSelector> selectors = GetHighlightSelectors();
+
+            for (int selectorIndex = 0; selectorIndex < selectors.Count; selectorIndex++)
+            {
+                GameObject[] selectorObjects = selectors[selectorIndex]?.HighlightedObjects;
+                if (selectorObjects == null)
+                    continue;
+
+                for (int objectIndex = 0; objectIndex < selectorObjects.Length; objectIndex++)
+                {
+                    GameObject highlightedObject = selectorObjects[objectIndex];
+                    if (highlightedObject != null && uniqueObjects.Add(highlightedObject))
+                        highlightedObjects.Add(highlightedObject);
+                }
+            }
+
+            return highlightedObjects.ToArray();
         }
 
         public void RebuildRuntimeReferences()
         {
             runtimeTutorialAnimation = CreateTutorialAnimation();
-            runtimeHighlightSelector = CreateHighlightSelector();
+            runtimeHighlightSelectors = CreateHighlightSelectors();
         }
 
         private TutorialAnimation CreateTutorialAnimation()
@@ -139,9 +164,36 @@ namespace Game
             return animation;
         }
 
-        private HighlightSelector CreateHighlightSelector()
+        private List<HighlightSelector> CreateHighlightSelectors()
         {
-            return highlightSelectorType switch
+            List<HighlightSelector> selectors = new List<HighlightSelector>();
+            if (highlightSelectors != null)
+            {
+                for (int i = 0; i < highlightSelectors.Count; i++)
+                {
+                    HighlightSelector selector = CreateHighlightSelector(highlightSelectors[i]);
+                    if (selector != null)
+                        selectors.Add(selector);
+                }
+            }
+
+            // Existing assets have only the legacy selector fields until they are opened and migrated in the editor.
+            if (selectors.Count == 0 && highlightSelectorType != HighlightSelectorType.None)
+            {
+                HighlightSelector selector = CreateHighlightSelector(highlightSelectorSettings);
+                if (selector != null)
+                    selectors.Add(selector);
+            }
+
+            return selectors;
+        }
+
+        private HighlightSelector CreateHighlightSelector(HighlightSelectorSettings settings)
+        {
+            if (settings == null)
+                return null;
+
+            return settings.highlightSelectorType switch
             {
                 HighlightSelectorType.TwoRandomMatchableElements => new TwoRandomMatchableElements_Highlight(),
                 HighlightSelectorType.TwoRandomSquareMatchableElements => new TwoRandomSquareMatchableElement_Highlight(),
@@ -150,18 +202,18 @@ namespace Game
                 HighlightSelectorType.DiscoBall => new DiscoBall_Highlight(),
                 HighlightSelectorType.ActionButton => new ActionButton_Highlight
                 {
-                    actionName = highlightSelectorSettings.actionName
+                    actionName = settings.actionName
                 },
                 HighlightSelectorType.SelectedTags => new SelectedTags_Highlight
                 {
-                    selectedTags = highlightSelectorSettings.selectedTags != null
-                        ? new List<string>(highlightSelectorSettings.selectedTags)
+                    selectedTags = settings.selectedTags != null
+                        ? new List<string>(settings.selectedTags)
                         : new List<string>()
                 },
                 HighlightSelectorType.SelectedGridCoordinates => new SelectedGridCoordinates_Highlight
                 {
-                    selectedCoordinates = highlightSelectorSettings.selectedCoordinates != null
-                        ? new List<Vector2Int>(highlightSelectorSettings.selectedCoordinates)
+                    selectedCoordinates = settings.selectedCoordinates != null
+                        ? new List<Vector2Int>(settings.selectedCoordinates)
                         : new List<Vector2Int>()
                 },
                 HighlightSelectorType.AllWaferCells => new AllWaferElements_Highlight(),
@@ -175,12 +227,16 @@ namespace Game
         {
             if (tutorialAnimationSettings == null)
                 tutorialAnimationSettings = new TutorialAnimationSettings();
-            if (highlightSelectorSettings == null)
+
+            if (highlightSelectors == null)
+                highlightSelectors = new List<HighlightSelectorSettings>();
+
+            if (highlightSelectors.Count == 0 && highlightSelectorType != HighlightSelectorType.None)
             {
-                highlightSelectorSettings = new HighlightSelectorSettings
-                {
-                    highlightSelectorType = highlightSelectorType
-                };
+                highlightSelectorSettings ??= new HighlightSelectorSettings();
+                highlightSelectorSettings.highlightSelectorType = highlightSelectorType;
+                highlightSelectors.Add(highlightSelectorSettings);
+                highlightSelectorType = HighlightSelectorType.None;
             }
 
             RebuildRuntimeReferences();
@@ -237,7 +293,7 @@ namespace Game
     [Serializable]
     public class HighlightSelectorSettings
     {
-        [HideInInspector] public HighlightSelectorType highlightSelectorType;
+        [LabelText("Selector")] public HighlightSelectorType highlightSelectorType;
         [ShowIf(nameof(IsActionNameRequired))] public string actionName;
         [ShowIf(nameof(AreSelectedTagsRequired))] public List<string> selectedTags = new List<string>();
         [ShowIf(nameof(AreSelectedCoordinatesRequired))] public List<Vector2Int> selectedCoordinates = new List<Vector2Int>();

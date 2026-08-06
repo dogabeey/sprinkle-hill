@@ -375,8 +375,7 @@ namespace Game
 
         private void ShowOverlay(TutorialStep step)
         {
-            HighlightSelector selector = step != null ? step.GetHighlightSelector() : null;
-            GameObject[] targets = selector != null ? selector.HighlightedObjects : null;
+            GameObject[] targets = step != null ? step.GetHighlightedObjects() : null;
             bool hasTargets = targets != null && targets.Length > 0;
 
             Debug.Log($"[Tutorial] ShowOverlay | Step: {GetStepDebugName(step)} | HasTargets: {hasTargets} | TargetCount: {(targets != null ? targets.Length : 0)}");
@@ -442,8 +441,7 @@ namespace Game
             if (step == null || !step.isStarted || step.isCompleted)
                 return true;
 
-            HighlightSelector selector = step.GetHighlightSelector();
-            GameObject[] highlighted = selector != null ? selector.HighlightedObjects : null;
+            GameObject[] highlighted = step.GetHighlightedObjects();
             if (highlighted == null || highlighted.Length == 0)
                 return true;
 

@@ -109,8 +109,7 @@ namespace Game
 
         public override void PlayAnim()
         {
-            HighlightSelector selector = referenceStep != null ? referenceStep.GetHighlightSelector() : null;
-            GameObject[] highlightedObjects = selector != null ? selector.HighlightedObjects : null;
+            GameObject[] highlightedObjects = referenceStep != null ? referenceStep.GetHighlightedObjects() : null;
             if (tutorialObjectInstance == null || highlightedObjects == null || highlightedObjects.Length < 2)
                 return;
 
@@ -131,8 +130,7 @@ namespace Game
 
         private void TutorialObjectsAnim()
         {
-            HighlightSelector selector = referenceStep != null ? referenceStep.GetHighlightSelector() : null;
-            GameObject[] highlightedObjects = selector != null ? selector.HighlightedObjects : null;
+            GameObject[] highlightedObjects = referenceStep != null ? referenceStep.GetHighlightedObjects() : null;
             if (highlightedObjects == null || highlightedObjects.Length < 2 || highlightedObjects[0] == null || highlightedObjects[1] == null)
                 return;
 
@@ -227,8 +225,7 @@ namespace Game
 
         public override void PlayAnim()
         {
-            HighlightSelector selector = referenceStep != null ? referenceStep.GetHighlightSelector() : null;
-            GameObject[] highlightedObjects = selector != null ? selector.HighlightedObjects : null;
+            GameObject[] highlightedObjects = referenceStep != null ? referenceStep.GetHighlightedObjects() : null;
             if (tutorialObjectInstance == null || highlightedObjects == null || highlightedObjects.Length == 0)
                 return;
 
@@ -249,8 +246,7 @@ namespace Game
 
         private void TutorialObjectsAnim()
         {
-            HighlightSelector selector = referenceStep != null ? referenceStep.GetHighlightSelector() : null;
-            GameObject[] highlightedObjects = selector != null ? selector.HighlightedObjects : null;
+            GameObject[] highlightedObjects = referenceStep != null ? referenceStep.GetHighlightedObjects() : null;
             if (highlightedObjects == null || highlightedObjects.Length == 0 || highlightedObjects[0] == null)
                 return;
 
@@ -278,8 +274,7 @@ namespace Game
 
         public override void PlayAnim()
         {
-            HighlightSelector selector = referenceStep != null ? referenceStep.GetHighlightSelector() : null;
-            GameObject[] highlightedObjects = selector != null ? selector.HighlightedObjects : null;
+            GameObject[] highlightedObjects = referenceStep != null ? referenceStep.GetHighlightedObjects() : null;
             if (tutorialObjectInstance == null || highlightedObjects == null || highlightedObjects.Length == 0)
                 return;
 
