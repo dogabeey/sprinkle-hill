@@ -42,7 +42,8 @@ public class ElementData : VisualizableScriptableObject
         NotTargetableByPropeller = 1 << 5,
         NotAffectedByGravity = 1 << 6,
         BlocksFeatureTriggers = 1 << 7, // Blocks features like Wafer, Bomb, etc. from triggering when this element is present in a cell.
-    }
+        NotConversibleByDiscoBalls  = 1 << 9, 
+        }
 
     public Sprite breakableWallOverride;
     public Mesh elementMesh;

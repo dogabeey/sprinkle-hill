@@ -1761,9 +1761,11 @@ namespace Game
 
         private ElementData ResolveDefaultDiscoBallTargetElement(ElementData requestedTargetElementData)
         {
-            if (requestedTargetElementData != null)
+            Debug.Log($"Resolving default disco ball target element. Requested target: {requestedTargetElementData?.name ?? "null"}");
+            if (requestedTargetElementData != null && !requestedTargetElementData.HasBehavior(ElementData.ElementBehaviorFlags.NotConversibleByDiscoBalls))
                 return requestedTargetElementData;
 
+            Debug.LogWarning("Disco Ball activated without a valid target element. Resolving to the most common element on the grid.");
             return GetMostCommonElementOnGrid();
         }
 
@@ -1869,6 +1871,9 @@ namespace Game
                 return false;
 
             if (cell.elementInfo.isHidden)
+                return false;
+
+            if(cell.elementInfo.elementData.HasBehavior(ElementData.ElementBehaviorFlags.NotConversibleByDiscoBalls))
                 return false;
 
             if (IsSpecialPowerUp(cell.elementInfo.powerUpType))
