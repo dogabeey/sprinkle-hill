@@ -24,7 +24,7 @@ MonoBehaviour:
   tutorialAnimationSettings:
     tutorialAnimationType: 4
     tutorialObject: {fileID: 5451101766555202300, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
-    screenPositionOffset: {x: 75, y: -50}
+    screenPositionOffset: {x: 50, y: -50}
     duration: 1
     isLoop: 1
     rotationOffset: -90
