@@ -695,19 +695,29 @@ namespace Game
             return didBreakAnyGlass;
         }
 
-        public void TriggerCellFeatureMatchedOverAt(Vector2Int pos)
+        public bool TriggerCellFeatureMatchedOverAt(Vector2Int pos)
         {
             GridCell cell = GetCell(pos);
             if (cell?.cellFeature == null || IsCellFeatureTriggerBlocked(cell))
-                return;
+                return false;
+
+            if (cell.cellFeature is GlassFeature)
+            {
+                DamageGlassFeatureAt(pos);
+                return true;
+            }
 
             GridElement element = GetElementAt(pos);
             cell.cellFeature.OnElementMatchedOverTheCell(cell, element);
             RefreshCellFeatureVisual(pos);
+            return false;
         }
 
         public void TriggerCellFeatureMatchedAdjacentToAt(Vector2Int matchedPos, GridCell matchedCell, GridElement matchedElement)
         {
+            if (matchedCell?.cellFeature is GlassFeature)
+                return;
+
             Vector2Int[] adjacentOffsets = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
             for (int i = 0; i < adjacentOffsets.Length; i++)
             {
@@ -799,7 +809,7 @@ namespace Game
             GridCell firstCell = GetCell(first);
             GridCell secondCell = GetCell(second);
 
-            if (firstCell?.cellFeature is GlassFeature || secondCell?.cellFeature is GlassFeature)
+            if (PreventsSwapping(firstCell) || PreventsSwapping(secondCell))
                 yield break;
 
             // Activate power-ups on swap
@@ -1209,8 +1219,8 @@ namespace Game
                     if (cell.cellType != CellType.Normal || cell.elementInfo == null) continue;
 
                     GridElement matchedElement = GetElementAt(pos);
-                    TriggerCellFeatureMatchedOverAt(pos);
-                    if (allowAdjacentFeatureTriggers)
+                    bool wasCoveredByGlass = TriggerCellFeatureMatchedOverAt(pos);
+                    if (allowAdjacentFeatureTriggers && !wasCoveredByGlass)
                         TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
                     if (TryRevealHiddenBoxAt(pos))
@@ -1271,8 +1281,8 @@ namespace Game
                     continue;
 
                 GridElement matchedElement = GetElementAt(pos);
-                TriggerCellFeatureMatchedOverAt(pos);
-                if (allowAdjacentFeatureTriggers)
+                bool wasCoveredByGlass = TriggerCellFeatureMatchedOverAt(pos);
+                if (allowAdjacentFeatureTriggers && !wasCoveredByGlass)
                     TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
                 if (TryRevealHiddenBoxAt(pos))
@@ -1337,8 +1347,8 @@ namespace Game
                     continue;
 
                 GridElement matchedElement = GetElementAt(pos);
-                TriggerCellFeatureMatchedOverAt(pos);
-                if (allowAdjacentFeatureTriggers)
+                bool wasCoveredByGlass = TriggerCellFeatureMatchedOverAt(pos);
+                if (allowAdjacentFeatureTriggers && !wasCoveredByGlass)
                     TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
                 if (TryRevealHiddenBoxAt(pos))
@@ -1395,8 +1405,8 @@ namespace Game
                 yield break;
 
             GridElement matchedElement = GetElementAt(pos);
-            TriggerCellFeatureMatchedOverAt(pos);
-            if (allowAdjacentFeatureTriggers)
+            bool wasCoveredByGlass = TriggerCellFeatureMatchedOverAt(pos);
+            if (allowAdjacentFeatureTriggers && !wasCoveredByGlass)
                 TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
             if (TryRevealHiddenBoxAt(pos))
@@ -1457,8 +1467,8 @@ namespace Game
                     continue;
 
                 GridElement matchedElement = GetElementAt(pos);
-                TriggerCellFeatureMatchedOverAt(pos);
-                if (allowAdjacentFeatureTriggers)
+                bool wasCoveredByGlass = TriggerCellFeatureMatchedOverAt(pos);
+                if (allowAdjacentFeatureTriggers && !wasCoveredByGlass)
                     TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
 
                 if (TryRevealHiddenBoxAt(pos))
@@ -1987,7 +1997,6 @@ namespace Game
             GridCell cell = GetCell(new Vector2Int(x, y));
             return cell != null &&
                    cell.cellType == CellType.Normal &&
-                   !(cell.cellFeature is GlassFeature) &&
                    cell.elementInfo != null &&
                    !cell.elementInfo.isHidden &&
                    cell.elementInfo.powerUpType == ElementPowerUpType.None &&
@@ -2072,7 +2081,6 @@ namespace Game
             {
                 GridCell cell = GetCell(new Vector2Int(x, y));
                 if (cell == null || cell.cellType != CellType.Normal || cell.elementInfo == null ||
-                    cell.cellFeature is GlassFeature ||
                     cell.elementInfo.isHidden || PowerUpHandler.IsSpecialPowerUp(cell.elementInfo.powerUpType) ||
                     IsMultiCellData(cell.elementInfo.elementData) ||
                     HasBehavior(cell.elementInfo.elementData, ElementData.ElementBehaviorFlags.NonMatchable) ||
@@ -2206,9 +2214,9 @@ namespace Game
                     GridElement matchedElement = GetElementAt(pos);
 
 
-                    TriggerCellFeatureMatchedOverAt(pos);
-
-                    ProcessAdjacentFeatureMatchEffects(pos, cell, matchedElement, allMatchedPositions, adjacentFeatureProcessed, adjacentOffsets);
+                    bool wasCoveredByGlass = TriggerCellFeatureMatchedOverAt(pos);
+                    if (!wasCoveredByGlass)
+                        ProcessAdjacentFeatureMatchEffects(pos, cell, matchedElement, allMatchedPositions, adjacentFeatureProcessed, adjacentOffsets);
 
                     NotifyElementCleared(pos);
                     cell.elementInfo = null;
@@ -3457,7 +3465,6 @@ namespace Game
             ElementData elementData = cell?.elementInfo?.elementData;
             return cell != null &&
                    cell.cellType == CellType.Normal &&
-                   !(cell.cellFeature is GlassFeature) &&
                    cell.elementInfo != null &&
                    elementData != null &&
                    !IsPowerGeneratorData(elementData) &&
@@ -3467,6 +3474,12 @@ namespace Game
                     !HasBehavior(elementData, ElementData.ElementBehaviorFlags.NonSwappable) &&
                    !cell.elementInfo.isHidden &&
                    cell.elementInfo.powerUpType == ElementPowerUpType.None;
+        }
+
+        private static bool PreventsSwapping(GridCell cell)
+        {
+            return cell?.cellFeature != null &&
+                   cell.cellFeature.FeatureFlags.HasFlag(CellFeature.CellFeatureFlags.PreventSwapping);
         }
 
         private static Vector2Int GetGridCoverage(ElementData data)
@@ -3619,6 +3632,7 @@ namespace Game
                         Vector2Int bPos = aPos + dirs[i];
                         GridCell bCell = GetCell(bPos);
                         if (!IsMatchableForMove(bCell)) continue;
+                        if (PreventsSwapping(aCell) || PreventsSwapping(bCell)) continue;
 
                         ElementData aData = aCell.elementInfo.elementData;
                         ElementData bData = bCell.elementInfo.elementData;
@@ -3664,6 +3678,7 @@ namespace Game
                         Vector2Int bPos = aPos + dirs[i];
                         GridCell bCell = GetCell(bPos);
                         if (!IsMatchableForMove(bCell)) continue;
+                        if (PreventsSwapping(aCell) || PreventsSwapping(bCell)) continue;
 
                         ElementData aData = aCell.elementInfo.elementData;
                         ElementData bData = bCell.elementInfo.elementData;

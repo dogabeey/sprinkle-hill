@@ -171,7 +171,8 @@ namespace Game
             {
                 GridCell draggedCell = match3Grid.GetCellPublic(draggedPos);
 
-                if (HasBehavior(draggedCell, ElementData.ElementBehaviorFlags.NonSwappable))
+                if (HasBehavior(draggedCell, ElementData.ElementBehaviorFlags.NonSwappable) ||
+                    draggedCell?.cellFeature != null && draggedCell.cellFeature.FeatureFlags.HasFlag(CellFeature.CellFeatureFlags.PreventSwapping))
                 {
                     Debug.Log("Dragged element is non-swappable. Cancelling drag.");
                     return;
@@ -223,7 +224,9 @@ namespace Game
 
             GridCell fromCell = match3Grid.GetCellPublic(fromPos);
             GridCell toCell = match3Grid.GetCellPublic(toPos);
-            if (toCell?.elementInfo != null && toCell.elementInfo.elementData.behaviorFlags.HasFlag(ElementData.ElementBehaviorFlags.NonSwappable))
+            if (toCell?.elementInfo != null &&
+                (toCell.elementInfo.elementData.behaviorFlags.HasFlag(ElementData.ElementBehaviorFlags.NonSwappable) ||
+                 toCell.cellFeature != null && toCell.cellFeature.FeatureFlags.HasFlag(CellFeature.CellFeatureFlags.PreventSwapping)))
             {
                 CancelDrag();
                 return;

@@ -19,6 +19,7 @@ namespace Game
             NotTargetableByPropeller = 1 << 2,
             DestroyedBehalfOfTheElement = 1 << 3,
             PreventBoosterPlacement = 1 << 4,
+            PreventSwapping = 1 << 5,
         }
 
         public TileSpriteSet tileSpriteSet;
