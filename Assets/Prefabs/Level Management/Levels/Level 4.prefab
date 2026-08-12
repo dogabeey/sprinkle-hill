@@ -105,7 +105,7 @@ MonoBehaviour:
   allowRocketCreation: 1
   allowBombCreation: 1
   allowPropellerCreation: 1
-  isBoosterPickerEnabled: 0
+  isBoosterPickerEnabled: 1
   sparklingPowerAfterXCombo: 1
   sparklingAppearChance: 0
   refillChainReductionStartDepth: 1
@@ -187,18 +187,18 @@ PrefabInstance:
     - target: {fileID: 7246755640242585530, guid: 3e8df80b38a2a6143b6d9751ba3c98fc, type: 3}
       propertyPath: serializationData.Prefab
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 7246755640242585530, guid: 3e8df80b38a2a6143b6d9751ba3c98fc, type: 3}
     - target: {fileID: 7246755640242585530, guid: 3e8df80b38a2a6143b6d9751ba3c98fc, type: 3}
       propertyPath: serializationData.SerializedFormat
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7246755640242585530, guid: 3e8df80b38a2a6143b6d9751ba3c98fc, type: 3}
       propertyPath: serializationData.SerializedBytes.Array.size
-      value: 24
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7246755640242585530, guid: 3e8df80b38a2a6143b6d9751ba3c98fc, type: 3}
       propertyPath: serializationData.SerializationNodes.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7246755640242585530, guid: 3e8df80b38a2a6143b6d9751ba3c98fc, type: 3}
       propertyPath: 'serializationData.SerializedBytes.Array.data[0]'

@@ -12,13 +12,13 @@ namespace Game
     ///
     /// Scene Setup
     /// -----------
-    ///  1. Create a Canvas (Screen Space – Overlay, high Sort Order, e.g. 999).
+    ///  1. Create a Canvas (Screen Space ï¿½ Overlay, high Sort Order, e.g. 999).
     ///  2. Add a child RawImage that stretches to fill the canvas (anchor: stretch/stretch).
     ///  3. Create a Material using the "UI/TutorialHighlight" shader and assign it
     ///     to the RawImage's Material slot.
     ///  4. Add this component to any GameObject in the scene and assign:
-    ///       • overlayImage  ? the RawImage from step 2
-    ///       • worldCamera   ? the camera that renders world-space objects
+    ///       ï¿½ overlayImage  ? the RawImage from step 2
+    ///       ï¿½ worldCamera   ? the camera that renders world-space objects
     ///         (leave null to fall back to Camera.main)
     ///  5. Assign this component to TutorialManager.highlightOverlay.
     /// </summary>
@@ -69,6 +69,7 @@ namespace Game
         // -----------------------------------------------------------------
         private Material _mat;
         private bool     _shown;
+        private readonly Vector4[] _rects = new Vector4[MaxSpotlights];
 
         // -----------------------------------------------------------------
         //  Unity lifecycle
@@ -97,6 +98,7 @@ namespace Game
             _mat.SetFloat(ID_RectCount, 0f);
             _mat.SetFloat(ID_CornerRadius, cornerRadius);
             _mat.SetFloat(ID_EdgeSoftness, edgeSoftness);
+            _mat.SetVectorArray(ID_Rects, _rects);
 
             gameObject.SetActive(false);
         }
@@ -107,7 +109,7 @@ namespace Game
         }
 
         // -----------------------------------------------------------------
-        //  Public API – called by TutorialManager
+        //  Public API ï¿½ called by TutorialManager
         // -----------------------------------------------------------------
 
         /// <summary>
@@ -167,28 +169,28 @@ namespace Game
         private void SetRects(IList<GameObject> targets)
         {
             Camera cam = worldCamera != null ? worldCamera : Camera.main;
-            List<Vector4> rects = new List<Vector4>();
+            int rectCount = 0;
 
             if (targets != null)
             {
-                for (int i = 0; i < targets.Count && rects.Count < MaxSpotlights; i++)
+                for (int i = 0; i < targets.Count && rectCount < MaxSpotlights; i++)
                 {
                     if (targets[i] == null)
                         continue;
 
                     Rect screenRect = ScreenRectFor(targets[i], cam);
-                    rects.Add(new Vector4(
+                    _rects[rectCount++] = new Vector4(
                         screenRect.xMin - padding,
                         screenRect.yMin - padding,
                         screenRect.xMax + padding,
-                        screenRect.yMax + padding));
+                        screenRect.yMax + padding);
                 }
             }
 
-            _mat.SetFloat(ID_RectCount, rects.Count);
+            _mat.SetFloat(ID_RectCount, rectCount);
             _mat.SetFloat(ID_CornerRadius, cornerRadius);
             _mat.SetFloat(ID_EdgeSoftness, edgeSoftness);
-            _mat.SetVectorArray(ID_Rects, rects);
+            _mat.SetVectorArray(ID_Rects, _rects);
         }
         // -----------------------------------------------------------------
         //  Screen-rect helpers
