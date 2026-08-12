@@ -18,7 +18,7 @@ MonoBehaviour:
   anchorMin: {x: 0, y: 0}
   anchorMax: {x: 1, y: 0}
   disablesActionBar: 1
-  requiredLevelIndex: 3
+  requiredLevelIndex: 1
   requiredStageIndex: -1
   tutorialAnimationType: 0
   tutorialAnimationSettings:
@@ -30,13 +30,18 @@ MonoBehaviour:
     rotationOffset: -90
     startCoordinate: {x: 0, y: 0}
     endCoordinate: {x: 0, y: 0}
-  highlightSelectorType: 9
+  highlightSelectors:
+  - highlightSelectorType: 9
+    actionName: 
+    selectedTags: []
+    selectedCoordinates: []
+  highlightSelectorType: 0
   highlightSelectorSettings:
     highlightSelectorType: 9
     actionName: 
     selectedTags: []
     selectedCoordinates: []
-  startEvent: 206
+  startEvent: 202
   startEventExpectedParams: 0
   startEventExpectedParamValues:
     paramObj: {fileID: 0}

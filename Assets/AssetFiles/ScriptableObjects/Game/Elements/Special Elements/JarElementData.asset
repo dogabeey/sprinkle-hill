@@ -22,4 +22,4 @@ MonoBehaviour:
   behaviorFlags: 1670
   defaultIdleAnimation: idle
   animationController: {fileID: 0}
-  elementDestroyEffect: {fileID: 0}
+  elementDestroyEffect: {fileID: 9101700452171790528, guid: 526c6923429d8f14c97ff5fd27307d83, type: 3}
