@@ -180,20 +180,26 @@ namespace Game
         private void InitLevel()
         {
             CurrentWorld = worlds[0];
+
+            // A LevelScene placed directly in Main Scene is an explicit debug launch target.
+            // Use that instance as-is and bypass the normal save/menu-driven level loading flow.
+            LevelScene scenePlacedLevel = FindAnyObjectByType<LevelScene>(FindObjectsInactive.Exclude);
+            if (scenePlacedLevel != null)
+            {
+                World.Instance.CurrentLevel = scenePlacedLevel;
+                currentGameState = GameState.Level;
+                if (mainMenuPanel != null)
+                    mainMenuPanel.gameObject.SetActive(false);
+
+                EventManager.TriggerEvent(GameEvent.GAME_STATE_CHANGED, new EventParam { paramInt = (int)currentGameState });
+                return;
+            }
+
             SetFirstLaunch();
 
             if (isSequentalLevels)
             {
-                LevelScene foundLevel;
-                foundLevel = FindAnyObjectByType<LevelScene>();
-                if (!foundLevel)
-                {
-                    CurrentGameState = firstLaunch ? GameState.Level : currentGameState;
-                }
-                else
-                {
-                    World.Instance.CurrentLevel = Instantiate(foundLevel, levelContainer);
-                }
+                CurrentGameState = firstLaunch ? GameState.Level : currentGameState;
             }
         }
 
