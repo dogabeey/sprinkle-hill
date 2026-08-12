@@ -38,6 +38,11 @@ Good:
 
 ---
 
+## BUG FIXING
+* Do not write backward compatibility unless I asked specifically.
+* Prefer actual solution over insanity checks.
+* Do not put null check where It doesn't require any. If the absence of a feature would break the game flow, do not put a null check.
+
 ## YAGNI
 
 Do not implement features that are not currently required.
