@@ -31,6 +31,9 @@ namespace Game
 
         public void Show(GameScreen gameScreen)
         {
+            if (gameScreen == null || IsScreenOpeningPrevented(gameScreen))
+                return;
+
             backgroundImage.color = new Color(backgroundImage.color.r, backgroundImage.color.g, backgroundImage.color.b, 0);
             backgroundImage.enabled = true;
             backgroundImage.DOFade(defaultBGAlpha, 0.5f);
@@ -51,6 +54,9 @@ namespace Game
         public void Show(Screens screenID)
         {
             GameScreen gameScreen = screens.Find(screen => screen.ScreenID == screenID);
+            if (gameScreen == null || IsScreenOpeningPrevented(gameScreen))
+                return;
+
             if(gameScreen.doesNotCloseOtherOpenScreens)
             {
             CloseAllScreens();
@@ -65,10 +71,22 @@ namespace Game
 
         public void Show(Screens screenID, EventParam eventParam)
         {
+            GameScreen gameScreen = screens.Find(screen => screen.ScreenID == screenID);
+            if (gameScreen == null || IsScreenOpeningPrevented(gameScreen))
+                return;
+
             CloseAllScreens();
             ShowBackground();
-            GameScreen gameScreen = screens.Find(screen => screen.ScreenID == screenID);
             ShowScreen(gameScreen, eventParam);
+        }
+
+        private bool IsScreenOpeningPrevented(GameScreen requestedScreen)
+        {
+            return screens.Exists(screen =>
+                screen != null &&
+                screen != requestedScreen &&
+                screen.gameObject.activeInHierarchy &&
+                screen.preventsOtherScreensFromOpening);
         }
         private void ShowBackground()
         {
@@ -81,7 +99,7 @@ namespace Game
         {
             screens.ForEach(screen =>
             {
-                if (!screen.notClosedByClickingOutside && screen.gameObject.activeSelf)
+                if (screen && screen.gameObject && !screen.notClosedByClickingOutside && screen.gameObject.activeSelf)
                 {
                     backgroundImage.DOFade(0, 0.5f);
                     backgroundImage.enabled = false;
@@ -94,7 +112,7 @@ namespace Game
             backgroundImage.enabled = false;
             screens.ForEach(screen =>
             {
-                screen.CloseUI();
+                if (screen) screen.CloseUI();
             });
         }
 
