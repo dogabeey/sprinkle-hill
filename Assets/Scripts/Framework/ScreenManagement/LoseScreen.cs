@@ -120,6 +120,10 @@ namespace Game
 
         private void ShowBoosterSelectionScreen()
         {
+            Match3Grid grid = (GameManager.Instance.CurrentLevel as LevelScene_Match3Game)?.grid as Match3Grid;
+            if (grid == null || !grid.HasAvailableBoosterPlacement())
+                return;
+
             GameScreen boosterSelectionScreen = ScreenManager.Instance.screens.Find(
                 screen => screen != null && screen.ScreenID == Screens.BoosterSelection);
             if (boosterSelectionScreen == null)

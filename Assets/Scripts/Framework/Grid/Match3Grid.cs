@@ -201,27 +201,7 @@ namespace Game
             if (count <= 0 || !CanCreateBonusPowerUp(powerUpType))
                 return 0;
 
-            List<Vector2Int> candidates = new List<Vector2Int>();
-            for (int x = 0; x < gridSize.x; x++)
-            {
-                for (int y = 0; y < gridSize.y; y++)
-                {
-                    Vector2Int position = new Vector2Int(x, y);
-                    GridCell cell = GetCell(position);
-                    if (cell == null ||
-                        cell.cellType != CellType.Normal ||
-                        cell.cellFeature != null ||
-                        cell.elementInfo == null ||
-                        cell.elementInfo.isHidden ||
-                        cell.elementInfo.elementData == null ||
-                        cell.elementInfo.elementData.GetType() != typeof(ElementData) ||
-                        cell.elementInfo.powerUpType != ElementPowerUpType.None)
-                        continue;
-
-                    candidates.Add(position);
-                }
-            }
-
+            List<Vector2Int> candidates = GetBoosterPlacementCandidates();
             int replacementCount = Mathf.Min(count, candidates.Count);
             for (int i = 0; i < replacementCount; i++)
             {
@@ -234,6 +214,35 @@ namespace Game
             }
 
             return replacementCount;
+        }
+
+        public bool HasAvailableBoosterPlacement()
+        {
+            return GetBoosterPlacementCandidates().Count > 0;
+        }
+
+        private List<Vector2Int> GetBoosterPlacementCandidates()
+        {
+            List<Vector2Int> candidates = new List<Vector2Int>();
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                for (int y = 0; y < gridSize.y; y++)
+                {
+                    Vector2Int position = new Vector2Int(x, y);
+                    GridCell cell = GetCell(position);
+                    if (cell == null ||
+                        cell.cellType != CellType.Normal ||
+                        cell.elementInfo == null ||
+                        cell.elementInfo.elementData == null ||
+                        cell.elementInfo.elementData.HasBehavior(ElementData.ElementBehaviorFlags.PreventBoosterPlacement) ||
+                        (cell.cellFeature != null && cell.cellFeature.FeatureFlags.HasFlag(CellFeature.CellFeatureFlags.PreventBoosterPlacement)))
+                        continue;
+
+                    candidates.Add(position);
+                }
+            }
+
+            return candidates;
         }
 
         private static bool CanCreateBonusPowerUp(ElementPowerUpType powerUpType)

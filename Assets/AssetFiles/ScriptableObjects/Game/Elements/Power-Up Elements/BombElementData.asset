@@ -19,9 +19,10 @@ MonoBehaviour:
   elementMesh: {fileID: 0}
   elementMaterial: {fileID: 0}
   gridCoverage: {x: 1, y: 1}
-  behaviorFlags: 2
+  behaviorFlags: 1026
   defaultIdleAnimation: idle
   animationController: {fileID: 9100000, guid: cb78fcfe153a4514991876745d866bf6, type: 2}
+  elementDestroyEffect: {fileID: 0}
   powerUpActivationString: activate
   bombClearRadius: 1
   bombComboClearRadius: 10

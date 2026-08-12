@@ -215,8 +215,8 @@ namespace Game
 
         public void LoadLevel(LevelScene levelScene)
         {
+            ScreenManager.Instance.CloseAllScreens();
             EndCurrentLevel();
-            ScreenManager.Instance.CloseAllNonPersistentScreens();
             World.Instance.CurrentLevel = Instantiate(levelScene, levelContainer);
         }
         public void LoadCurrentLevel()

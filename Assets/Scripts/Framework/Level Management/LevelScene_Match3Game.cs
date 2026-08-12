@@ -127,6 +127,10 @@ namespace Game
             if (isEnded || GameManager.Instance == null || GameManager.Instance.CurrentLevel != this || ScreenManager.Instance == null)
                 yield break;
 
+            Match3Grid match3Grid = grid as Match3Grid;
+            if (match3Grid == null || !match3Grid.HasAvailableBoosterPlacement())
+                yield break;
+
             GameScreen boosterSelectionScreen = ScreenManager.Instance.screens.Find(screen => screen != null && screen.ScreenID == Screens.BoosterSelection);
             if (boosterSelectionScreen == null)
             {

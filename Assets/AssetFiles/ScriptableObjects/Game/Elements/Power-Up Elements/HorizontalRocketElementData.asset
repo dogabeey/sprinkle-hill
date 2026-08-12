@@ -19,9 +19,10 @@ MonoBehaviour:
   elementMesh: {fileID: 0}
   elementMaterial: {fileID: 0}
   gridCoverage: {x: 1, y: 1}
-  behaviorFlags: 2
+  behaviorFlags: 1026
   defaultIdleAnimation: idle
   animationController: {fileID: 0}
+  elementDestroyEffect: {fileID: 0}
   powerUpActivationString: 
   rocketPropelTrailEffect: {fileID: 6553830495741696104, guid: 6004a563187092a48932c66eba0f64a8, type: 3}
   rocketBodyDisintegrationEffect: {fileID: 0}

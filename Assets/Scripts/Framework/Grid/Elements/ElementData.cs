@@ -43,6 +43,7 @@ public class ElementData : VisualizableScriptableObject
         NotAffectedByGravity = 1 << 6,
         BlocksFeatureTriggers = 1 << 7, // Blocks features like Wafer, Bomb, etc. from triggering when this element is present in a cell.
         NotConversibleByDiscoBalls  = 1 << 9, 
+        PreventBoosterPlacement = 1 << 10, // Prevents boosters from being placed on this element.
         }
 
     public Sprite breakableWallOverride;

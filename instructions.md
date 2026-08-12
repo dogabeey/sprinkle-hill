@@ -40,6 +40,7 @@ Good:
 
 ## BUG FIXING
 * Do not write backward compatibility unless I asked specifically.
+* Explain why It wasn't working at the first place when you applied a solution to a bug.
 * Prefer actual solution over insanity checks.
 * Do not put null check where It doesn't require any. If the absence of a feature would break the game flow, do not put a null check.
 
