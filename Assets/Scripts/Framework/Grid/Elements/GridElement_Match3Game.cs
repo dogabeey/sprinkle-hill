@@ -87,6 +87,8 @@ namespace Game
             if (this != null && transform != null)
             {
                 ParticleSystem destroyEffect = elementInfo?.elementData?.elementDestroyEffect;
+                float randomPitch = Random.Range(-0.1f, 0.1f);
+                SoundManager.Instance.Play(elementInfo?.elementData?.elementDestroySoundEffectName, pitchOffset: randomPitch);
                 if (destroyEffect == null && Gfx.Instance != null)
                     destroyEffect = Gfx.Instance.elementDestroyParticlePrefab;
 

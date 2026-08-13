@@ -27,6 +27,7 @@ namespace Game
         public int spriteLayerIndex;
         public ParticleSystem idleParticleEffect;
         public ParticleSystem destroyParticleEffect;
+        public string destroySoundEffectName;
 
         public abstract CellFeatureFlags FeatureFlags { get; }
 

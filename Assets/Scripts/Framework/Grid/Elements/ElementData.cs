@@ -57,6 +57,7 @@ public class ElementData : VisualizableScriptableObject
     public RuntimeAnimatorController animationController;
     [FoldoutGroup("Effects")]
     public ParticleSystem elementDestroyEffect;
+    public string elementDestroySoundEffectName;
 
     [Serializable]
     public class ElementAnimationByProgress

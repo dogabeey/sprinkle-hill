@@ -103,16 +103,23 @@ namespace Game
             currentComboCount = 0;
         }
 
-        private void PlayCellFeatureDestroyEffect(CellFeature feature, Vector2Int pos)
+        private void CellFeatureDestroyEffect(CellFeature feature, Vector2Int pos)
         {
-            if (feature?.destroyParticleEffect == null)
-                return;
+            
 
-            Vector3 worldPos = GetWorldPosition(pos);
-            ParticleSystem fx = Instantiate(feature.destroyParticleEffect, worldPos, Quaternion.identity);
-            fx.Play();
-            float lifeTime = fx.main.duration + fx.main.startLifetime.constantMax + 0.2f;
-            Destroy(fx.gameObject, lifeTime);
+            if (feature.destroyParticleEffect)
+            {
+                Vector3 worldPos = GetWorldPosition(pos);
+                ParticleSystem fx = Instantiate(feature.destroyParticleEffect, worldPos, Quaternion.identity);
+                fx.Play();
+                float lifeTime = fx.main.duration + fx.main.startLifetime.constantMax + 0.2f;
+                Destroy(fx.gameObject, lifeTime);
+            }
+
+            if (!string.IsNullOrEmpty(feature.destroySoundEffectName))
+            {
+                SoundManager.Instance.Play(feature.destroySoundEffectName);
+            }
         }
 
         private void SyncCellFeatureIdleParticleAt(Vector2Int pos)
@@ -182,7 +189,7 @@ namespace Game
 
         public void PlayCellFeatureDestroyEffectAt(CellFeature feature, Vector2Int pos)
         {
-            PlayCellFeatureDestroyEffect(feature, pos);
+            CellFeatureDestroyEffect(feature, pos);
         }
 
         // ------------------------------------------------------------------
@@ -671,7 +678,7 @@ namespace Game
                             vectorList: new Vector3[] { new Vector3(pos.x, pos.y, 0f) }
                         ));
 
-                        PlayCellFeatureDestroyEffect(destroyedFeature, pos);
+                        CellFeatureDestroyEffect(destroyedFeature, pos);
                         RefreshCellFeatureVisual(pos);
                         StopCellFeatureIdleParticleAt(pos);
                     }
