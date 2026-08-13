@@ -57,6 +57,7 @@ public class ElementData : VisualizableScriptableObject
     public RuntimeAnimatorController animationController;
     [FoldoutGroup("Effects")]
     public ParticleSystem elementDestroyEffect;
+    [ValueDropdown("@Game.ConstantManager.GetSoundNames()")]
     public string elementDestroySoundEffectName;
 
     [Serializable]

@@ -23,3 +23,4 @@ MonoBehaviour:
   defaultIdleAnimation: idle
   animationController: {fileID: 0}
   elementDestroyEffect: {fileID: 0}
+  elementDestroySoundEffectName: BreakableBoxDestroy

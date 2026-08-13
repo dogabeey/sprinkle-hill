@@ -75,32 +75,67 @@ MonoBehaviour:
     playAndLoopOnStart: 0
     clipVolume: 1
   - id: Bomb
-    audioClips: []
+    audioClips:
+    - {fileID: 8300000, guid: bb209c7286e88394f980b22604e1e601, type: 3}
     type: 0
     playAndLoopOnStart: 0
     clipVolume: 1
   - id: Rocket
-    audioClips: []
+    audioClips:
+    - {fileID: 8300000, guid: 4f964561c7c3cbc4d80ff6bdfea70904, type: 3}
     type: 0
     playAndLoopOnStart: 0
-    clipVolume: 1
+    clipVolume: 0.619
   - id: DiscoBallActivate
     audioClips: []
     type: 0
     playAndLoopOnStart: 0
     clipVolume: 1
   - id: DiscoBallTrail
-    audioClips: []
+    audioClips:
+    - {fileID: 8300000, guid: 8de1ae02f89423247921d40037e4fe26, type: 3}
     type: 0
     playAndLoopOnStart: 0
     clipVolume: 1
   - id: ButtonClickFail
-    audioClips: []
+    audioClips:
+    - {fileID: 8300000, guid: be7c12d3dbfa12e4dbe8343724a66e3d, type: 3}
     type: 0
     playAndLoopOnStart: 0
     clipVolume: 1
   - id: ButtonClickSuccess
-    audioClips: []
+    audioClips:
+    - {fileID: 8300000, guid: acae9cad0bd49a64d9495420ac72218b, type: 3}
     type: 0
     playAndLoopOnStart: 0
     clipVolume: 1
+  - id: Propeller
+    audioClips:
+    - {fileID: 8300000, guid: 0c3cfafb5c4f53f45b87b2fcf7939f76, type: 3}
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 1
+  - id: WaferDestroy
+    audioClips:
+    - {fileID: 8300000, guid: 3b5a71225b6359a4eaddaffd490e3c79, type: 3}
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 0.327
+  - id: GlassDestroy
+    audioClips:
+    - {fileID: 8300000, guid: 37b31637238220943813f073978f88e3, type: 3}
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 0.619
+  - id: BreakableBoxDestroy
+    audioClips:
+    - {fileID: 8300000, guid: 764f72090e99a2945866fe28e4a24050, type: 3}
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 0.619
+  - id: ElementDestroyGeneric
+    audioClips:
+    - {fileID: 8300000, guid: 565c2739074cf354d8c448727e49757d, type: 3}
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 0.735

@@ -3,6 +3,9 @@ using Game.EventManagement;
 using Game.Singleton;
 using System.Collections;
 using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Sirenix.OdinInspector;
 
 namespace Game
 {
@@ -135,8 +138,37 @@ namespace Game
                 public const string ROCKET = "Rocket";
                 public const string DISCO_BALL_ACTIVATE = "DiscoBallActivate";
                 public const string DISCO_BALL_TRAIL = "DiscoBallTrail";
+                public const string PROPELLER = "Propeller";
+                public const string WAFER_DESTROY = "WaferDestroy";
+                public const string GLASS_DESTROY = "GlassDestroy";
+                public const string BREAKABLE_BOX_DESTROY = "BreakableBoxDestroy";
+                public const string JAR_DESTROY = "JarDestroy";
+                public const string ELEMENT_DESTROY_GENERIC = "ElementDestroyGeneric";
                 public const string BUTTON_CLICK_FAIL = "ButtonClickFail";
                 public const string BUTTON_CLICK_SUCCESS = "ButtonClickSuccess";
+            }
+        }
+
+        public static IEnumerable<ValueDropdownItem<string>> GetSoundNames()
+        {
+            return GetSoundNames(typeof(SOUNDS), nameof(SOUNDS));
+        }
+
+        private static IEnumerable<ValueDropdownItem<string>> GetSoundNames(Type type, string path)
+        {
+            FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly);
+            for (int i = 0; i < fields.Length; i++)
+            {
+                FieldInfo field = fields[i];
+                if (field.FieldType == typeof(string))
+                    yield return new ValueDropdownItem<string>($"{path}/{field.Name}", (string)field.GetRawConstantValue());
+            }
+
+            Type[] nestedTypes = type.GetNestedTypes(BindingFlags.Public);
+            for (int i = 0; i < nestedTypes.Length; i++)
+            {
+                foreach (ValueDropdownItem<string> soundName in GetSoundNames(nestedTypes[i], $"{path}/{nestedTypes[i].Name}"))
+                    yield return soundName;
             }
         }
 

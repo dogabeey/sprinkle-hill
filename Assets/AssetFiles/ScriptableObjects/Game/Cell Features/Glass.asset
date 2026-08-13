@@ -17,6 +17,7 @@ MonoBehaviour:
   spriteLayerIndex: 4
   idleParticleEffect: {fileID: 0}
   destroyParticleEffect: {fileID: 9101700452171790528, guid: 1bef21c7670fdbf47b1c1bef147242ad, type: 3}
+  destroySoundEffectName: GlassDestroy
   defaultGroupHealth: 4
   damageSprites:
   - missingHealth: 0

@@ -1,4 +1,5 @@
 using UnityEngine; using Game.EventManagement;
+using Sirenix.OdinInspector;
 
 namespace Game
 {
@@ -27,6 +28,7 @@ namespace Game
         public int spriteLayerIndex;
         public ParticleSystem idleParticleEffect;
         public ParticleSystem destroyParticleEffect;
+        [ValueDropdown("@Game.ConstantManager.GetSoundNames()")]
         public string destroySoundEffectName;
 
         public abstract CellFeatureFlags FeatureFlags { get; }

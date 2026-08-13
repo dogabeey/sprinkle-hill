@@ -41,7 +41,7 @@ MonoBehaviour:
     actionName: 
     selectedTags: []
     selectedCoordinates: []
-  startEvent: 202
+  startEvent: 206
   startEventExpectedParams: 0
   startEventExpectedParamValues:
     paramObj: {fileID: 0}

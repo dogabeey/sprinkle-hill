@@ -2053,7 +2053,7 @@ namespace Game
 
             // Event and sound
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
-            PlayEffect(ConstantManager.SOUNDS.EFFECTS.ROCKET, volumeMultiplier: 0.9f, pitchOffset: 0.08f);
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.PROPELLER, volumeMultiplier: 0.9f, pitchOffset: 0.08f);
 
             // Get propeller element and kill any existing tweens
             GridElement propellerElement = grid.GetElementAt(propellerPos);
@@ -2161,7 +2161,7 @@ namespace Game
             Vector3 targetWorldPos = grid.GetWorldPosition(targetPos);
             GameObject propellerCopy = CreateTemporaryElementCopy(sourcePropellerElement, startWorldPos, "PropellerComboCopy");
 
-            PlayEffect(ConstantManager.SOUNDS.EFFECTS.ROCKET, volumeMultiplier: 0.8f, pitchOffset: 0.06f + Mathf.Clamp(burstIndex * 0.02f, 0f, 0.12f));
+            PlayEffect(ConstantManager.SOUNDS.EFFECTS.PROPELLER, volumeMultiplier: 0.8f, pitchOffset: 0.06f + Mathf.Clamp(burstIndex * 0.02f, 0f, 0.12f));
 
             if (propellerCopy != null)
             {

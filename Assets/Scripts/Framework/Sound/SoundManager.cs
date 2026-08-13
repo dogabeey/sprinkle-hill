@@ -6,6 +6,7 @@ using Game.SimpleJSON;
 using Sirenix.Utilities;
 using System;
 using Game.Singleton;
+using Sirenix.OdinInspector;
 
 namespace Game
 {
@@ -16,6 +17,7 @@ namespace Game
 		[System.Serializable]
 		public class SoundInfo
 		{
+			[ValueDropdown("@ConstantManager.GetSoundNames()")]
 			public string id = "";
 			public List<AudioClip> audioClips;
 			public SoundType type = SoundType.SoundEffect;
