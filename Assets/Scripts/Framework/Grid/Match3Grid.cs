@@ -210,17 +210,48 @@ namespace Game
 
             List<Vector2Int> candidates = GetBoosterPlacementCandidates();
             int replacementCount = Mathf.Min(count, candidates.Count);
-            for (int i = 0; i < replacementCount; i++)
+            List<Vector2Int> placementPositions = SelectBoosterPlacementPositions(candidates, replacementCount);
+            for (int i = 0; i < placementPositions.Count; i++)
             {
-                int randomIndex = UnityEngine.Random.Range(i, candidates.Count);
-                (candidates[i], candidates[randomIndex]) = (candidates[randomIndex], candidates[i]);
                 ElementPowerUpType resolvedPowerUpType = powerUpType == ElementPowerUpType.Rocket
                     ? (UnityEngine.Random.value < 0.5f ? ElementPowerUpType.HorizontalRocket : ElementPowerUpType.VerticalRocket)
                     : powerUpType;
-                powerUpHandler.CreatePowerUpAt(candidates[i], resolvedPowerUpType);
+                powerUpHandler.CreatePowerUpAt(placementPositions[i], resolvedPowerUpType);
             }
 
-            return replacementCount;
+            return placementPositions.Count;
+        }
+
+        /// <summary>
+        /// Chooses booster positions without sharing an edge when possible. Once every remaining
+        /// candidate touches an already selected position, placement falls back to the remaining cells.
+        /// </summary>
+        private static List<Vector2Int> SelectBoosterPlacementPositions(List<Vector2Int> candidates, int count)
+        {
+            List<Vector2Int> remainingCandidates = new List<Vector2Int>(candidates);
+            List<Vector2Int> selectedPositions = new List<Vector2Int>(count);
+
+            while (selectedPositions.Count < count && remainingCandidates.Count > 0)
+            {
+                List<Vector2Int> nonAdjacentCandidates = remainingCandidates
+                    .Where(candidate => selectedPositions.All(selected => !AreOrthogonallyAdjacent(candidate, selected)))
+                    .ToList();
+
+                List<Vector2Int> selectionPool = nonAdjacentCandidates.Count > 0
+                    ? nonAdjacentCandidates
+                    : remainingCandidates;
+                Vector2Int selectedPosition = selectionPool[UnityEngine.Random.Range(0, selectionPool.Count)];
+
+                selectedPositions.Add(selectedPosition);
+                remainingCandidates.Remove(selectedPosition);
+            }
+
+            return selectedPositions;
+        }
+
+        private static bool AreOrthogonallyAdjacent(Vector2Int first, Vector2Int second)
+        {
+            return Mathf.Abs(first.x - second.x) + Mathf.Abs(first.y - second.y) == 1;
         }
 
         public bool HasAvailableBoosterPlacement()
@@ -571,75 +602,6 @@ namespace Game
 
             }
         }
-
-        private static void ResetDamageIndicatorTransform(SpriteRenderer indicator)
-        {
-            if (indicator == null)
-                return;
-
-            indicator.transform.localPosition = Vector3.zero;
-            indicator.transform.localScale = Vector3.one;
-            indicator.transform.localRotation = Quaternion.identity;
-        }
-
-        private void ConfigureGroupDamageIndicator(GridCellController anchorTile, List<Vector2Int> groupCells)
-        {
-            if (anchorTile == null || anchorTile.damageIndicator == null || groupCells == null || groupCells.Count == 0)
-                return;
-
-            float minWorldX = float.MaxValue;
-            float maxWorldX = float.MinValue;
-            float minWorldY = float.MaxValue;
-            float maxWorldY = float.MinValue;
-
-            int minGridX = int.MaxValue;
-            int maxGridX = int.MinValue;
-            int minGridY = int.MaxValue;
-            int maxGridY = int.MinValue;
-
-            for (int i = 0; i < groupCells.Count; i++)
-            {
-                Vector2Int pos = groupCells[i];
-                if (pos.x < minGridX) minGridX = pos.x;
-                if (pos.x > maxGridX) maxGridX = pos.x;
-                if (pos.y < minGridY) minGridY = pos.y;
-                if (pos.y > maxGridY) maxGridY = pos.y;
-
-                if (!generatedTiles.TryGetValue(pos, out GridCellController tile) || tile == null)
-                    continue;
-
-                Vector3 worldPos = tile.transform.position;
-                if (worldPos.x < minWorldX) minWorldX = worldPos.x;
-                if (worldPos.x > maxWorldX) maxWorldX = worldPos.x;
-                if (worldPos.y < minWorldY) minWorldY = worldPos.y;
-                if (worldPos.y > maxWorldY) maxWorldY = worldPos.y;
-            }
-
-            if (minWorldX > maxWorldX || minWorldY > maxWorldY)
-                return;
-
-            SpriteRenderer indicator = anchorTile.damageIndicator;
-            ResetDamageIndicatorTransform(indicator);
-
-            float cellWidth = anchorTile.gridSprite != null ? anchorTile.gridSprite.bounds.size.x : 1f;
-            float cellHeight = anchorTile.gridSprite != null ? anchorTile.gridSprite.bounds.size.y : 1f;
-
-            float targetWorldWidth = (maxGridX - minGridX + 1) * cellWidth;
-            float targetWorldHeight = (maxGridY - minGridY + 1) * cellHeight;
-
-            Vector3 centerWorld = new Vector3((minWorldX + maxWorldX) * 0.5f, (minWorldY + maxWorldY) * 0.5f, indicator.transform.position.z);
-            indicator.transform.position = centerWorld;
-
-            Vector3 baseWorldSize = indicator.bounds.size;
-            if (baseWorldSize.x <= 0f || baseWorldSize.y <= 0f)
-                return;
-
-            Vector3 localScale = indicator.transform.localScale;
-            localScale.x *= targetWorldWidth / baseWorldSize.x;
-            localScale.y *= targetWorldHeight / baseWorldSize.y;
-            indicator.transform.localScale = localScale;
-        }
-
         private bool DamageGlassGroupsForMatch(HashSet<GlassGroupId> groupsToDamage)
         {
             if (groupsToDamage == null || groupsToDamage.Count == 0)
@@ -3319,54 +3281,6 @@ namespace Game
 
             return canSlideLeft ? downLeftPos : downRightPos;
         }
-
-        private List<Vector2Int> GetGravityTravelPath(Vector2Int startPos)
-        {
-            List<Vector2Int> path = new List<Vector2Int> { startPos };
-            Vector2Int currentPos = startPos;
-            int safetyCounter = Mathf.Max(1, gridSize.x * gridSize.y * 2);
-
-            while (safetyCounter-- > 0)
-            {
-                Vector2Int verticalLanding = GetVerticalLandingPosition(currentPos);
-                if (verticalLanding != path[path.Count - 1])
-                    path.Add(verticalLanding);
-
-                Vector2Int downLeftPos = new Vector2Int(verticalLanding.x - 1, verticalLanding.y + 1);
-                Vector2Int downRightPos = new Vector2Int(verticalLanding.x + 1, verticalLanding.y + 1);
-                bool canSlideLeft = CanSlideInto(downLeftPos);
-                bool canSlideRight = CanSlideInto(downRightPos);
-
-                if (!canSlideLeft && !canSlideRight)
-                    break;
-
-                Vector2Int nextPos;
-                if (canSlideLeft && canSlideRight)
-                {
-                    Vector2Int leftLanding = GetGravityLandingPosition(downLeftPos);
-                    Vector2Int rightLanding = GetGravityLandingPosition(downRightPos);
-
-                    if (leftLanding.y > rightLanding.y)
-                        nextPos = downLeftPos;
-                    else if (rightLanding.y > leftLanding.y)
-                        nextPos = downRightPos;
-                    else
-                        nextPos = downLeftPos.x <= downRightPos.x ? downLeftPos : downRightPos;
-                }
-                else
-                {
-                    nextPos = canSlideLeft ? downLeftPos : downRightPos;
-                }
-
-                if (nextPos != path[path.Count - 1])
-                    path.Add(nextPos);
-
-                currentPos = nextPos;
-            }
-
-            return path;
-        }
-
         private Vector2Int GetGravityLandingPosition(Vector2Int startPos)
         {
             Vector2Int currentPos = startPos;
@@ -3551,75 +3465,6 @@ namespace Game
             }
 
             return false;
-        }
-
-        private void NormalizeMultiCellLayout()
-        {
-            bool[,] occupied = new bool[gridSize.x, gridSize.y];
-
-            for (int y = 0; y < gridSize.y; y++)
-            {
-                for (int x = 0; x < gridSize.x; x++)
-                {
-                    Vector2Int anchorPos = new Vector2Int(x, y);
-                    GridCell anchorCell = GetCell(anchorPos);
-                    if (anchorCell == null)
-                        continue;
-
-                    if (anchorCell.cellType != CellType.Normal)
-                    {
-                        anchorCell.elementInfo = null;
-                        continue;
-                    }
-
-                    if (anchorCell.elementInfo == null || anchorCell.elementInfo.elementData == null)
-                        continue;
-
-                    Vector2Int coverage = GetGridCoverage(anchorCell.elementInfo.elementData);
-                    bool isValid = true;
-
-                    for (int dx = 0; dx < coverage.x && isValid; dx++)
-                    {
-                        for (int dy = 0; dy < coverage.y; dy++)
-                        {
-                            Vector2Int coveredPos = new Vector2Int(x + dx, y + dy);
-                            if (!IsInsideGrid(coveredPos))
-                            {
-                                isValid = false;
-                                break;
-                            }
-
-                            GridCell coveredCell = GetCell(coveredPos);
-                            if (coveredCell == null || coveredCell.cellType != CellType.Normal || occupied[coveredPos.x, coveredPos.y])
-                            {
-                                isValid = false;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (!isValid)
-                    {
-                        anchorCell.elementInfo = null;
-                        continue;
-                    }
-
-                    for (int dx = 0; dx < coverage.x; dx++)
-                    {
-                        for (int dy = 0; dy < coverage.y; dy++)
-                        {
-                            Vector2Int coveredPos = new Vector2Int(x + dx, y + dy);
-                            occupied[coveredPos.x, coveredPos.y] = true;
-                            if (dx != 0 || dy != 0)
-                            {
-                                GridCell coveredCell = GetCell(coveredPos);
-                                if (coveredCell != null)
-                                    coveredCell.elementInfo = null;
-                            }
-                        }
-                    }
-                }
-            }
         }
 
         public bool HasAnyPossibleMove()
