@@ -319,9 +319,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6926926603401114173}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e7242f07a524d28a683a16b0cde37d9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_EditorClassIdentifier: Game::Game.ClickSoundButton
+  buttonClickSound: ButtonClickSuccess
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
@@ -817,9 +818,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e7242f07a524d28a683a16b0cde37d9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_EditorClassIdentifier: Game::Game.ClickSoundButton
 --- !u!1001 &5472988506504385610
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -933,9 +934,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e7242f07a524d28a683a16b0cde37d9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_EditorClassIdentifier: Game::Game.ClickSoundButton
 --- !u!224 &6439280127595678472 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1346326855865589570, guid: 4c6a15d86ab29fc4a8101105e8f6ac7e, type: 3}
@@ -1054,9 +1055,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e7242f07a524d28a683a16b0cde37d9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_EditorClassIdentifier: Game::Game.ClickSoundButton
 --- !u!224 &8389203826076692394 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1346326855865589570, guid: 4c6a15d86ab29fc4a8101105e8f6ac7e, type: 3}
@@ -1179,9 +1180,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e7242f07a524d28a683a16b0cde37d9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_EditorClassIdentifier: Game::Game.ClickSoundButton
 --- !u!224 &7788664925516156784 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1346326855865589570, guid: 4c6a15d86ab29fc4a8101105e8f6ac7e, type: 3}

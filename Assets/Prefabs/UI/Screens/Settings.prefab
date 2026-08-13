@@ -85,9 +85,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1994837246839590393}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e7242f07a524d28a683a16b0cde37d9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Game::Game.ClickSoundButton
+  buttonClickSound: ButtonClickSuccess
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
@@ -205,9 +206,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2201175509630763404}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e7242f07a524d28a683a16b0cde37d9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Game::Game.ClickSoundButton
+  buttonClickSound: ButtonClickSuccess
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
@@ -476,9 +478,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2604781311603546185}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e7242f07a524d28a683a16b0cde37d9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Game::Game.ClickSoundButton
+  buttonClickSound: ButtonClickSuccess
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
@@ -1443,9 +1446,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 8398070266829870491}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e7242f07a524d28a683a16b0cde37d9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Game::Game.ClickSoundButton
+  buttonClickSound: ButtonClickSuccess
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0

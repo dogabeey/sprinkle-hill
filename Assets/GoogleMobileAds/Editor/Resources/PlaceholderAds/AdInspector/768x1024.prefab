@@ -87,9 +87,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1026234277025590}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e7242f07a524d28a683a16b0cde37d9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Game::Game.ClickSoundButton
+  buttonClickSound: ButtonClickSuccess
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
@@ -467,9 +468,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1919592978971710}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e7242f07a524d28a683a16b0cde37d9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Game::Game.ClickSoundButton
+  buttonClickSound: ButtonClickSuccess
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
