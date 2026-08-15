@@ -79,7 +79,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: bb209c7286e88394f980b22604e1e601, type: 3}
     type: 0
     playAndLoopOnStart: 0
-    clipVolume: 1
+    clipVolume: 0.646
   - id: Rocket
     audioClips:
     - {fileID: 8300000, guid: 4f964561c7c3cbc4d80ff6bdfea70904, type: 3}
@@ -105,7 +105,7 @@ MonoBehaviour:
     clipVolume: 1
   - id: ButtonClickSuccess
     audioClips:
-    - {fileID: 8300000, guid: acae9cad0bd49a64d9495420ac72218b, type: 3}
+    - {fileID: 8300000, guid: 8c6a213c24ab9944d9d60e4c889d71a1, type: 3}
     type: 0
     playAndLoopOnStart: 0
     clipVolume: 1
@@ -132,7 +132,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 764f72090e99a2945866fe28e4a24050, type: 3}
     type: 0
     playAndLoopOnStart: 0
-    clipVolume: 0.619
+    clipVolume: 0.769
   - id: ElementDestroyGeneric
     audioClips:
     - {fileID: 8300000, guid: 565c2739074cf354d8c448727e49757d, type: 3}

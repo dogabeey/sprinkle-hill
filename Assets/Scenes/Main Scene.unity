@@ -3633,6 +3633,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Managers
       objectReference: {fileID: 0}
+    - target: {fileID: 3683412245140407640, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
+      propertyPath: soundInfos.Array.data[13].clipVolume
+      value: 0.51
+      objectReference: {fileID: 0}
     - target: {fileID: 4416487564072169646, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: currencyContainer
       value: 
