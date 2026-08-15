@@ -96,7 +96,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 8de1ae02f89423247921d40037e4fe26, type: 3}
     type: 0
     playAndLoopOnStart: 0
-    clipVolume: 1
+    clipVolume: 0.456
   - id: ButtonClickFail
     audioClips:
     - {fileID: 8300000, guid: be7c12d3dbfa12e4dbe8343724a66e3d, type: 3}
@@ -114,7 +114,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 0c3cfafb5c4f53f45b87b2fcf7939f76, type: 3}
     type: 0
     playAndLoopOnStart: 0
-    clipVolume: 1
+    clipVolume: 0.667
   - id: WaferDestroy
     audioClips:
     - {fileID: 8300000, guid: 3b5a71225b6359a4eaddaffd490e3c79, type: 3}

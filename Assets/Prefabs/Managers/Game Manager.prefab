@@ -49,8 +49,8 @@ MonoBehaviour:
   levelScenes:
   - {fileID: 5642481185505650832, guid: 03cd690296332aa48aa5a6ba8b08dbf4, type: 3}
   - {fileID: 5642481185505650832, guid: f1b3a0c20464b214996c267f8da65ac5, type: 3}
-  - {fileID: 5642481185505650832, guid: ef554c21c0426924b9fda1d50c40e672, type: 3}
   - {fileID: 5642481185505650832, guid: defba240414cdaa4da2342dcdded36bb, type: 3}
+  - {fileID: 5642481185505650832, guid: ef554c21c0426924b9fda1d50c40e672, type: 3}
   - {fileID: 5642481185505650832, guid: 3bc11f4f360509e4cb05515d4c2fcc65, type: 3}
   - {fileID: 5642481185505650832, guid: 73106999465da8c448a9dd4a1917b3b8, type: 3}
   - {fileID: 5642481185505650832, guid: fd4cf23451c9daa49a2f98f6a6103d3c, type: 3}
@@ -114,6 +114,7 @@ MonoBehaviour:
   cashCurrency: {fileID: 11400000, guid: 31b1c667ab353af4a80bfe0daaa96451, type: 2}
   premiumCurrency: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
   autoShuffleWhenOutOfPossibleMoves: 1
+  playGridAnimationWhenWon: 0
   waferFeature: {fileID: 11400000, guid: 9a0a4a3b932d9dd48b6c09ede6bf2324, type: 2}
   glassFeature: {fileID: 11400000, guid: 66b5b66c4fb707c46810127020dbbb17, type: 2}
   electricField: {fileID: 11400000, guid: 533e37ef7d2d727448f260ed616b4b05, type: 2}

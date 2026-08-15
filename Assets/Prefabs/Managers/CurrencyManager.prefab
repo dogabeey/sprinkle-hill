@@ -47,14 +47,16 @@ MonoBehaviour:
   dontDestroyOnLoad: 1
   currencyContainer: {fileID: 0}
   currencyCanvasGroup: {fileID: 0}
-  currencyElementPrefab: {fileID: 6021937502238936245, guid: a2d8821a1d527de4cab774a18abad611, type: 3}
   currencyInfos:
   - currencyModel: {fileID: 11400000, guid: 31b1c667ab353af4a80bfe0daaa96451, type: 2}
     amount: 0
+    isUnlocked: 1
   - currencyModel: {fileID: 11400000, guid: 207bff0ab05b9b541ba52eb637b40673, type: 2}
     amount: 0
+    isUnlocked: 1
   - currencyModel: {fileID: 11400000, guid: df89d50f797990447a2175706ce22e1a, type: 2}
     amount: 0
+    isUnlocked: 0
   currencyAnimationContainer: {fileID: 0}
   currencySpritePrefab: {fileID: 2570130478893252555, guid: 0bb994df5a34fab418c2b7cd753ad551, type: 3}
   flightDuration: 0.5

@@ -47,6 +47,8 @@ MonoBehaviour:
   dontDestroyOnLoad: 1
   tutorialSteps:
   - {fileID: 11400000, guid: b71aef537cde7dc47a731839858a4b86, type: 2}
+  - {fileID: 11400000, guid: a2e044a068bb3574cbd14c45b3a4c273, type: 2}
+  - {fileID: 11400000, guid: 5e422ba9076792d4cbc199276fb0e251, type: 2}
   animationObjectParent: {fileID: 0}
   directiveText: {fileID: 0}
   directiveParent: {fileID: 0}
