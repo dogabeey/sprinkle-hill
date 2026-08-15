@@ -22,5 +22,5 @@ MonoBehaviour:
   behaviorFlags: 1479
   defaultIdleAnimation: idle
   animationController: {fileID: 0}
-  elementDestroyEffect: {fileID: 0}
+  elementDestroyEffect: {fileID: 9101700452171790528, guid: 5493ad96a4f0f794eb5dd2b77b66b59c, type: 3}
   elementDestroySoundEffectName: BreakableBoxDestroy
