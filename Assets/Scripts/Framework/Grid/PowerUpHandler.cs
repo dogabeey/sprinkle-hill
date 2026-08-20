@@ -127,6 +127,15 @@ namespace Game
             return activePowerUpChainCount > 0;
         }
 
+        /// <summary>
+        /// An activated power-up owns its logical cell until its strategy has
+        /// consumed it. Gravity must not relocate that cell in the meantime.
+        /// </summary>
+        public bool IsActivationInProgressAt(Vector2Int pos)
+        {
+            return activatingPowerUpPositions.Contains(pos);
+        }
+
         public struct SpawnRequest
         {
             public Vector2Int position;
@@ -727,7 +736,7 @@ namespace Game
                     yield break;
 
                 activePowerUpChainCount++;
-                grid.BeginPowerUpGravityTracking();
+                grid.BeginImmediateClearGravityTracking();
 
                 // If the element at position has an animator and a power-up activation trigger name,
                 // play the activation animation first and wait for it to complete before running the power-up.
@@ -750,7 +759,7 @@ namespace Game
             }
             finally
             {
-                grid.EndPowerUpGravityTracking();
+                grid.EndImmediateClearGravityTracking();
                 if (activePowerUpChainCount > 0)
                     activePowerUpChainCount--;
 
@@ -822,7 +831,7 @@ namespace Game
                     yield break;
 
                 activePowerUpChainCount++;
-                grid.BeginPowerUpGravityTracking();
+                grid.BeginImmediateClearGravityTracking();
                 ComboIntroResult comboIntroResult = new ComboIntroResult();
                 SwapComboVisualType comboVisualType = ResolveSwapComboVisualType(strategy);
                 yield return grid.StartCoroutine(PlayPowerUpComboIntro(firstPos, secondPos, comboVisualType, comboIntroResult));
@@ -830,7 +839,7 @@ namespace Game
             }
             finally
             {
-                grid.EndPowerUpGravityTracking();
+                grid.EndImmediateClearGravityTracking();
                 if (activePowerUpChainCount > 0)
                     activePowerUpChainCount--;
 

@@ -58,9 +58,9 @@ namespace Game
         private static readonly CurrencyModel MatchRewardCurrency;
         private int currentComboCount = 0;
         private bool isResolvingIndirectCascade;
-        private int powerUpGravityTrackingDepth;
-        private bool powerUpGravityRequested;
-        private Coroutine powerUpGravityCoroutine;
+        private int immediateClearGravityTrackingDepth;
+        private bool immediateClearGravityRequested;
+        private Coroutine immediateClearGravityCoroutine;
         private PowerUpHandler powerUpHandler;
         private readonly Dictionary<Vector2Int, ParticleSystem> activeCellFeatureIdleParticles = new Dictionary<Vector2Int, ParticleSystem>();
 
@@ -299,46 +299,52 @@ namespace Game
         public IEnumerator ApplyGravityPublic() => ApplyGravity();
 
         /// <summary>
-        /// Marks a power-up activation scope. Clears reported during this scope
-        /// start gravity independently of the power-up's remaining animation.
+        /// Marks a clear-resolution scope. Clears reported during this scope
+        /// start gravity independently of the remaining clear animations.
         /// </summary>
-        public void BeginPowerUpGravityTracking()
+        public void BeginImmediateClearGravityTracking()
         {
-            powerUpGravityTrackingDepth++;
+            immediateClearGravityTrackingDepth++;
         }
 
-        public void EndPowerUpGravityTracking()
+        public void EndImmediateClearGravityTracking()
         {
-            powerUpGravityTrackingDepth = Mathf.Max(0, powerUpGravityTrackingDepth - 1);
+            immediateClearGravityTrackingDepth = Mathf.Max(0, immediateClearGravityTrackingDepth - 1);
         }
 
-        public void RequestImmediatePowerUpGravity()
+        public void RequestImmediateClearGravity()
         {
-            powerUpGravityRequested = true;
-            if (powerUpGravityCoroutine == null)
-                powerUpGravityCoroutine = StartCoroutine(ApplyRequestedPowerUpGravity());
+            immediateClearGravityRequested = true;
+            if (immediateClearGravityCoroutine == null)
+                immediateClearGravityCoroutine = StartCoroutine(ApplyRequestedClearGravity());
         }
 
-        public IEnumerator WaitForRequestedPowerUpGravity()
+        public IEnumerator WaitForRequestedClearGravity()
         {
-            yield return new WaitUntil(() => powerUpGravityCoroutine == null && !powerUpGravityRequested);
+            yield return new WaitUntil(() => immediateClearGravityCoroutine == null && !immediateClearGravityRequested);
         }
 
-        private IEnumerator ApplyRequestedPowerUpGravity()
+        private IEnumerator ApplyRequestedClearGravity()
         {
             // Clear routines update logical occupancy immediately after reporting
             // the clear. Waiting one frame ensures gravity sees that empty cell.
             yield return null;
 
-            while (powerUpGravityRequested)
+            while (immediateClearGravityRequested)
             {
-                powerUpGravityRequested = false;
+                immediateClearGravityRequested = false;
+
+                // A match already present on the board must resolve before
+                // movement changes it. Otherwise, let cleared columns fall now.
+                if (CheckMatchOf(3).Count > 0)
+                    break;
+
                 // Leave power-up destruction visuals intact while their effect
                 // continues; the final board resolution performs the sanity pass.
                 yield return StartCoroutine(ApplyGravity(runOccupancySanityPass: false));
             }
 
-            powerUpGravityCoroutine = null;
+            immediateClearGravityCoroutine = null;
         }
 
         public IEnumerator PlaceDiscoBallActionAt(Vector2Int center)
@@ -715,8 +721,8 @@ namespace Game
             // Power-up clear paths report their feature hit before clearing the
             // logical cell. Queue gravity here as well so source power-ups that
             // do not emit NotifyElementCleared still release their column.
-            if (powerUpGravityTrackingDepth > 0)
-                RequestImmediatePowerUpGravity();
+            if (immediateClearGravityTrackingDepth > 0)
+                RequestImmediateClearGravity();
 
             GridCell cell = GetCell(pos);
             if (cell?.cellFeature == null || IsCellFeatureTriggerBlocked(cell))
@@ -784,8 +790,8 @@ namespace Game
 
         public void NotifyElementCleared(Vector2Int clearedPos)
         {
-            if (powerUpGravityTrackingDepth > 0)
-                RequestImmediatePowerUpGravity();
+            if (immediateClearGravityTrackingDepth > 0)
+                RequestImmediateClearGravity();
 
             GridCell clearedCell = GetCell(clearedPos);
             if (clearedCell?.elementInfo?.elementData is BreakableBoxElementData breakableBoxData)
@@ -1028,6 +1034,7 @@ namespace Game
                     powerUpHandler.CreatePowerUpAt(rocketSpawns[i].position, rocketSpawns[i].powerUpType);
 
                 // Gravity
+                yield return StartCoroutine(WaitForRequestedClearGravity());
                 yield return StartCoroutine(ApplyGravity());
             }
 
@@ -1116,7 +1123,7 @@ namespace Game
                 EventManager.TriggerEvent(GameEvent.ELEMENT_MATCHED, new EventParam(
                     paramScriptable: GetCell(group[0])?.elementInfo?.elementData, paramInt: group.Count));
 
-            yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions));
+            yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions, allowImmediateGravity: false));
 
             if (IsMatchResolutionBlocked())
                 yield break;
@@ -1139,7 +1146,7 @@ namespace Game
             currentComboCount = 0;
             isResolvingIndirectCascade = true;
             yield return new WaitUntil(() => !powerUpHandler.IsChainReactionInProgress());
-            yield return StartCoroutine(WaitForRequestedPowerUpGravity());
+            yield return StartCoroutine(WaitForRequestedClearGravity());
 
             if (IsMatchResolutionBlocked())
             {
@@ -1202,6 +1209,7 @@ namespace Game
                 for (int i = 0; i < rocketSpawns.Count; i++)
                     powerUpHandler.CreatePowerUpAt(rocketSpawns[i].position, rocketSpawns[i].powerUpType);
 
+                yield return StartCoroutine(WaitForRequestedClearGravity());
                 yield return StartCoroutine(ApplyGravity());
             }
 
@@ -2188,7 +2196,20 @@ namespace Game
         // ------------------------------------------------------------------
         //  Clear matches
         // ------------------------------------------------------------------
-        private IEnumerator ClearMatches(List<List<Vector2Int>> matchedPositions, HashSet<Vector2Int> protectedPositions = null)
+        private IEnumerator ClearMatches(List<List<Vector2Int>> matchedPositions, HashSet<Vector2Int> protectedPositions = null, bool allowImmediateGravity = true)
+        {
+            if (!allowImmediateGravity)
+            {
+                yield return StartCoroutine(ClearMatchesInternal(matchedPositions, protectedPositions));
+                yield break;
+            }
+
+            BeginImmediateClearGravityTracking();
+            yield return StartCoroutine(ClearMatchesInternal(matchedPositions, protectedPositions));
+            EndImmediateClearGravityTracking();
+        }
+
+        private IEnumerator ClearMatchesInternal(List<List<Vector2Int>> matchedPositions, HashSet<Vector2Int> protectedPositions)
         {
             ConstantManager cm = ConstantManager.Instance;
             HashSet<Vector2Int> wallsToBreak = new HashSet<Vector2Int>();
@@ -2589,6 +2610,9 @@ namespace Game
                     Vector2Int pos = new Vector2Int(x, y);
                     GridCell cell = GetCell(pos);
                     GridElementInfo info = cell?.elementInfo;
+                    if (powerUpHandler != null && powerUpHandler.IsActivationInProgressAt(pos))
+                        continue;
+
                     if (!CanElementMoveByGravity(info))
                         continue;
 
@@ -2610,6 +2634,9 @@ namespace Game
 
                     GridCell fromCell = GetCell(fromPos);
                     GridElementInfo movingInfo = fromCell?.elementInfo;
+                    if (powerUpHandler != null && powerUpHandler.IsActivationInProgressAt(fromPos))
+                        continue;
+
                     if (!CanElementMoveByGravity(movingInfo))
                         continue;
 
