@@ -49,6 +49,7 @@ MonoBehaviour:
   elementSwapMoveDuration: 0.2
   elementFallSpeed: 10
   matchClearDelay: 0.15
+  elementDestroyGravityDelay: 0.2
   chainMatchSpeedIncreasePerCombo: 0.2
   elementDestroyPunchScale: 0.2
   elementDestroyPunchDuration: 0.15

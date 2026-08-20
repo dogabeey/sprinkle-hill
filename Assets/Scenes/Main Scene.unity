@@ -3649,6 +3649,10 @@ PrefabInstance:
       propertyPath: currencyAnimationContainer
       value: 
       objectReference: {fileID: 4133448082132307929}
+    - target: {fileID: 4552575611684592911, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
+      propertyPath: elementDestroyGravityDelay
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 5261046741495651290, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: mainCanvas
       value: 
