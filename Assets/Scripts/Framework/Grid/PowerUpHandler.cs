@@ -727,6 +727,7 @@ namespace Game
                     yield break;
 
                 activePowerUpChainCount++;
+                grid.BeginPowerUpGravityTracking();
 
                 // If the element at position has an animator and a power-up activation trigger name,
                 // play the activation animation first and wait for it to complete before running the power-up.
@@ -749,6 +750,7 @@ namespace Game
             }
             finally
             {
+                grid.EndPowerUpGravityTracking();
                 if (activePowerUpChainCount > 0)
                     activePowerUpChainCount--;
 
@@ -820,6 +822,7 @@ namespace Game
                     yield break;
 
                 activePowerUpChainCount++;
+                grid.BeginPowerUpGravityTracking();
                 ComboIntroResult comboIntroResult = new ComboIntroResult();
                 SwapComboVisualType comboVisualType = ResolveSwapComboVisualType(strategy);
                 yield return grid.StartCoroutine(PlayPowerUpComboIntro(firstPos, secondPos, comboVisualType, comboIntroResult));
@@ -827,6 +830,7 @@ namespace Game
             }
             finally
             {
+                grid.EndPowerUpGravityTracking();
                 if (activePowerUpChainCount > 0)
                     activePowerUpChainCount--;
 
