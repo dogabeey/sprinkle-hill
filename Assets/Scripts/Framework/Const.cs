@@ -41,8 +41,6 @@ namespace Game
         public float elementFallSpeed = 3.3f;
         [RemoteConfig("match_clear_delay", 0.3f)]
         public float matchClearDelay = 0.3f;
-        [RemoteConfig("element_destroy_gravity_delay", 0.2f)]
-        public float elementDestroyGravityDelay = 0.2f;
         [RemoteConfig("chain_match_speed_increase_per_combo", 0.2f)]
         public float chainMatchSpeedIncreasePerCombo = 0.2f;
         [RemoteConfig("element_destroy_punch_scale", 0.25f)]
@@ -211,7 +209,6 @@ namespace Game
             elementSwapMoveDuration = RemoteConfigManager.Instance.GetFloat("element_swap_move_duration", ref elementSwapMoveDuration, pathToConfigFile);
             elementFallSpeed = RemoteConfigManager.Instance.GetFloat("element_fall_speed", ref elementFallSpeed, pathToConfigFile);
             matchClearDelay = RemoteConfigManager.Instance.GetFloat("match_clear_delay", ref matchClearDelay, pathToConfigFile);
-            elementDestroyGravityDelay = RemoteConfigManager.Instance.GetFloat("element_destroy_gravity_delay", ref elementDestroyGravityDelay, pathToConfigFile);
             chainMatchSpeedIncreasePerCombo = RemoteConfigManager.Instance.GetFloat("chain_match_speed_increase_per_combo", ref chainMatchSpeedIncreasePerCombo, pathToConfigFile);
             elementDestroyPunchScale = RemoteConfigManager.Instance.GetFloat("element_destroy_punch_scale", ref elementDestroyPunchScale, pathToConfigFile);
             elementDestroyPunchDuration = RemoteConfigManager.Instance.GetFloat("element_destroy_punch_duration", ref elementDestroyPunchDuration, pathToConfigFile);

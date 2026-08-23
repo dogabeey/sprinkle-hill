@@ -60,7 +60,6 @@ namespace Game
         private bool isResolvingIndirectCascade;
         private int immediateClearGravityTrackingDepth;
         private bool immediateClearGravityRequested;
-        private int immediateClearGravityRequestVersion;
         private Coroutine immediateClearGravityCoroutine;
         private PowerUpHandler powerUpHandler;
         private readonly Dictionary<Vector2Int, ParticleSystem> activeCellFeatureIdleParticles = new Dictionary<Vector2Int, ParticleSystem>();
@@ -316,7 +315,6 @@ namespace Game
         public void RequestImmediateClearGravity()
         {
             immediateClearGravityRequested = true;
-            immediateClearGravityRequestVersion++;
             if (immediateClearGravityCoroutine == null)
                 immediateClearGravityCoroutine = StartCoroutine(ApplyRequestedClearGravity());
         }
@@ -335,23 +333,6 @@ namespace Game
             while (immediateClearGravityRequested)
             {
                 immediateClearGravityRequested = false;
-                int requestVersion = immediateClearGravityRequestVersion;
-
-                ConstantManager constantManager = ConstantManager.Instance;
-                float delay = constantManager != null
-                    ? Mathf.Max(0f, constantManager.elementDestroyGravityDelay)
-                    : 0.2f;
-                if (delay > 0f)
-                    yield return new WaitForSeconds(delay);
-
-                // Destruction is often progressive (bomb rings, rocket travel,
-                // and trail arrivals). Restart the short delay so every fall
-                // begins after the most recent destroy event.
-                if (requestVersion != immediateClearGravityRequestVersion)
-                {
-                    immediateClearGravityRequested = true;
-                    continue;
-                }
 
                 // A match already present on the board must resolve before
                 // movement changes it. Otherwise, let cleared columns fall now.
