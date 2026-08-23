@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Game::Game.SoundManager
   dontDestroyOnLoad: 1
+  maxSimultaneousInstancesPerSound: 5
   soundInfos:
   - id: LevelComplete
     audioClips:
@@ -132,7 +133,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 764f72090e99a2945866fe28e4a24050, type: 3}
     type: 0
     playAndLoopOnStart: 0
-    clipVolume: 0.769
+    clipVolume: 0.51
   - id: ElementDestroyGeneric
     audioClips:
     - {fileID: 8300000, guid: 565c2739074cf354d8c448727e49757d, type: 3}
