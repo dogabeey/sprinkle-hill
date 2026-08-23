@@ -58,9 +58,6 @@ namespace Game
         private static readonly CurrencyModel MatchRewardCurrency;
         private int currentComboCount = 0;
         private bool isResolvingIndirectCascade;
-        private int powerUpGravityTrackingDepth;
-        private bool powerUpGravityRequested;
-        private Coroutine powerUpGravityCoroutine;
         private PowerUpHandler powerUpHandler;
         private readonly Dictionary<Vector2Int, ParticleSystem> activeCellFeatureIdleParticles = new Dictionary<Vector2Int, ParticleSystem>();
 
@@ -297,49 +294,6 @@ namespace Game
         }
 
         public IEnumerator ApplyGravityPublic() => ApplyGravity();
-
-        /// <summary>
-        /// Marks a power-up activation scope. Clears reported during this scope
-        /// start gravity independently of the power-up's remaining animation.
-        /// </summary>
-        public void BeginPowerUpGravityTracking()
-        {
-            powerUpGravityTrackingDepth++;
-        }
-
-        public void EndPowerUpGravityTracking()
-        {
-            powerUpGravityTrackingDepth = Mathf.Max(0, powerUpGravityTrackingDepth - 1);
-        }
-
-        public void RequestImmediatePowerUpGravity()
-        {
-            powerUpGravityRequested = true;
-            if (powerUpGravityCoroutine == null)
-                powerUpGravityCoroutine = StartCoroutine(ApplyRequestedPowerUpGravity());
-        }
-
-        public IEnumerator WaitForRequestedPowerUpGravity()
-        {
-            yield return new WaitUntil(() => powerUpGravityCoroutine == null && !powerUpGravityRequested);
-        }
-
-        private IEnumerator ApplyRequestedPowerUpGravity()
-        {
-            // Clear routines update logical occupancy immediately after reporting
-            // the clear. Waiting one frame ensures gravity sees that empty cell.
-            yield return null;
-
-            while (powerUpGravityRequested)
-            {
-                powerUpGravityRequested = false;
-                // Leave power-up destruction visuals intact while their effect
-                // continues; the final board resolution performs the sanity pass.
-                yield return StartCoroutine(ApplyGravity(runOccupancySanityPass: false));
-            }
-
-            powerUpGravityCoroutine = null;
-        }
 
         public IEnumerator PlaceDiscoBallActionAt(Vector2Int center)
         {
@@ -712,12 +666,6 @@ namespace Game
 
         public bool TriggerCellFeatureMatchedOverAt(Vector2Int pos)
         {
-            // Power-up clear paths report their feature hit before clearing the
-            // logical cell. Queue gravity here as well so source power-ups that
-            // do not emit NotifyElementCleared still release their column.
-            if (powerUpGravityTrackingDepth > 0)
-                RequestImmediatePowerUpGravity();
-
             GridCell cell = GetCell(pos);
             if (cell?.cellFeature == null || IsCellFeatureTriggerBlocked(cell))
                 return false;
@@ -784,9 +732,6 @@ namespace Game
 
         public void NotifyElementCleared(Vector2Int clearedPos)
         {
-            if (powerUpGravityTrackingDepth > 0)
-                RequestImmediatePowerUpGravity();
-
             GridCell clearedCell = GetCell(clearedPos);
             if (clearedCell?.elementInfo?.elementData is BreakableBoxElementData breakableBoxData)
             {
@@ -1139,7 +1084,6 @@ namespace Game
             currentComboCount = 0;
             isResolvingIndirectCascade = true;
             yield return new WaitUntil(() => !powerUpHandler.IsChainReactionInProgress());
-            yield return StartCoroutine(WaitForRequestedPowerUpGravity());
 
             if (IsMatchResolutionBlocked())
             {
@@ -2521,7 +2465,7 @@ namespace Game
         // ------------------------------------------------------------------
         //  Gravity
         // ------------------------------------------------------------------
-        private IEnumerator ApplyGravity(bool runOccupancySanityPass = true)
+        private IEnumerator ApplyGravity()
         {
             EventManager.TriggerEvent(GameEvent.GRAVITY_STARTED);
 
@@ -2781,8 +2725,7 @@ namespace Game
             generatedElements.RemoveAll(el => el == null);
             if (hasTween) yield return gravitySeq.WaitForCompletion();
 
-            if (runOccupancySanityPass)
-                RunOccupancySanityPass();
+            RunOccupancySanityPass();
 
             EventManager.TriggerEvent(GameEvent.GRAVITY_COMPLETED);
 
