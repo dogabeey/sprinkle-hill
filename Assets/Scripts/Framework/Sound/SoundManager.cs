@@ -227,6 +227,14 @@ namespace Game
 		}
 
 		/// <summary>
+		/// Returns whether a sound ID is configured in this manager.
+		/// </summary>
+		public bool HasSound(string id)
+		{
+			return GetSoundInfo(id) != null;
+		}
+
+		/// <summary>
 		/// Stops all playing sounds with the given id
 		/// </summary>
 		public void Stop(string id)

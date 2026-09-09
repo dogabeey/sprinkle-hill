@@ -45,7 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Game::Game.SoundManager
   dontDestroyOnLoad: 1
-  maxSimultaneousInstancesPerSound: 5
   soundInfos:
   - id: LevelComplete
     audioClips:
@@ -80,7 +79,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: bb209c7286e88394f980b22604e1e601, type: 3}
     type: 0
     playAndLoopOnStart: 0
-    clipVolume: 0.646
+    clipVolume: 0.698
   - id: Rocket
     audioClips:
     - {fileID: 8300000, guid: 4f964561c7c3cbc4d80ff6bdfea70904, type: 3}
@@ -121,7 +120,7 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 3b5a71225b6359a4eaddaffd490e3c79, type: 3}
     type: 0
     playAndLoopOnStart: 0
-    clipVolume: 0.327
+    clipVolume: 0.241
   - id: GlassDestroy
     audioClips:
     - {fileID: 8300000, guid: 37b31637238220943813f073978f88e3, type: 3}
@@ -134,9 +133,16 @@ MonoBehaviour:
     type: 0
     playAndLoopOnStart: 0
     clipVolume: 0.51
+  - id: PowerUpCreated
+    audioClips:
+    - {fileID: 8300000, guid: b726575d1445ba44e8ce0030532d1435, type: 3}
+    type: 0
+    playAndLoopOnStart: 0
+    clipVolume: 0.764
   - id: ElementDestroyGeneric
     audioClips:
     - {fileID: 8300000, guid: 565c2739074cf354d8c448727e49757d, type: 3}
     type: 0
     playAndLoopOnStart: 0
     clipVolume: 0.735
+  maxSimultaneousInstancesPerSound: 5

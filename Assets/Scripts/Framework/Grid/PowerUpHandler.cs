@@ -695,7 +695,14 @@ namespace Game
                 ApplySortingBoost(element, type == ElementPowerUpType.Bomb);
             }
 
+            PlayPowerUpCreatedEffect();
             TriggerPowerUpCreatedEvent(type, elementData);
+        }
+
+        private static void PlayPowerUpCreatedEffect()
+        {
+            if (SoundManager.Instance != null && SoundManager.Instance.HasSound(ConstantManager.SOUNDS.EFFECTS.POWER_UP_CREATED))
+                SoundManager.Instance.Play(ConstantManager.SOUNDS.EFFECTS.POWER_UP_CREATED);
         }
 
         private void TriggerPowerUpCreatedEvent(ElementPowerUpType type, ElementData data)
