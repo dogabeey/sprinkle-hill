@@ -3,10 +3,11 @@
 // which will prevent push notifications from working. You should remove this script before 
 // submitting your app to the App Store.
 // Instead, modify the certificate and provisioning profile used for your app to not include the APNs entitlement.
-
-
+/*
 #if UNITY_IOS
+
 using System.IO;
+using System.Reflection;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
@@ -52,10 +53,21 @@ public static class IOSPostProcess
 
         if (!string.IsNullOrEmpty(notificationTarget))
         {
-            project.RemoveTarget(notificationTarget);
+            // RemoveTarget is unavailable in some Unity editor versions.
+            MethodInfo removeTarget = typeof(PBXProject).GetMethod(
+                "RemoveTarget",
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                null,
+                new[] { typeof(string) },
+                null);
+
+            if (removeTarget != null)
+                removeTarget.Invoke(project, new object[] { notificationTarget });
         }
 
         project.WriteToFile(projectPath);
     }
 }
+
 #endif
+*/
