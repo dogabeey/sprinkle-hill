@@ -134,6 +134,7 @@ namespace Game
                 public const string LEVEL_FAILED = "LevelFailed";
                 public const string ELEMENT_SWAP = "ElementSwap";
                 public const string MATCH = "Match";
+                public const string POWER_UP_CREATED = "PowerUpCreated";
                 public const string BOMB = "Bomb";
                 public const string ROCKET = "Rocket";
                 public const string DISCO_BALL_ACTIVATE = "DiscoBallActivate";

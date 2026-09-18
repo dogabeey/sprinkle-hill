@@ -695,7 +695,14 @@ namespace Game
                 ApplySortingBoost(element, type == ElementPowerUpType.Bomb);
             }
 
+            PlayPowerUpCreatedEffect();
             TriggerPowerUpCreatedEvent(type, elementData);
+        }
+
+        private static void PlayPowerUpCreatedEffect()
+        {
+            if (SoundManager.Instance != null && SoundManager.Instance.HasSound(ConstantManager.SOUNDS.EFFECTS.POWER_UP_CREATED))
+                SoundManager.Instance.Play(ConstantManager.SOUNDS.EFFECTS.POWER_UP_CREATED);
         }
 
         private void TriggerPowerUpCreatedEvent(ElementPowerUpType type, ElementData data)
@@ -1300,7 +1307,7 @@ namespace Game
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
 
             // Sound Effect
-            PlayEffect(ConstantManager.SOUNDS.EFFECTS.DISCO_BALL_ACTIVATE);
+            SoundManager.PlayingSound activationSound = PlayEffect(ConstantManager.SOUNDS.EFFECTS.DISCO_BALL_ACTIVATE);
 
             // Visual: Start spinning the disco ball.
             GridElement discoBallElement = grid.GetElementAt(discoBallPos);
@@ -1322,6 +1329,7 @@ namespace Game
 
             // Clear disco ball
             StopAndDestroyDiscoBallElement(discoBallElement, spinTween);
+            StopEffect(activationSound);
 
         }
 
@@ -2053,7 +2061,7 @@ namespace Game
 
             // Event and sound
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
-            PlayEffect(ConstantManager.SOUNDS.EFFECTS.PROPELLER, volumeMultiplier: 0.9f, pitchOffset: 0.08f);
+            SoundManager.PlayingSound activationSound = PlayEffect(ConstantManager.SOUNDS.EFFECTS.PROPELLER, volumeMultiplier: 0.9f, pitchOffset: 0.08f);
 
             // Get propeller element and kill any existing tweens
             GridElement propellerElement = grid.GetElementAt(propellerPos);
@@ -2098,6 +2106,7 @@ namespace Game
             yield return grid.StartCoroutine(ApplyPropellerNeighborImpact(propellerPos));
             // Clear only the target cell after the propeller arrives, without triggering adjacent breakables or features.
             yield return grid.StartCoroutine(ClearPropellerTargetCell(targetPos));
+            StopEffect(activationSound);
         }
 
         private IEnumerator ApplyPropellerNeighborImpact(Vector2Int centerPos)
@@ -2239,9 +2248,10 @@ namespace Game
                 yield return new WaitForSeconds(0.32f);
             }
 
-            PlayEffect(ConstantManager.SOUNDS.EFFECTS.BOMB);
+            SoundManager.PlayingSound activationSound = PlayEffect(ConstantManager.SOUNDS.EFFECTS.BOMB);
             PlayBombImpactEffects(targetWorldPos);
             yield return grid.StartCoroutine(ClearBombAreaProgressive(targetPos, false));
+            StopEffect(activationSound);
         }
 
         private IEnumerator ActivateReservedPropellerBurst(List<Vector2Int> propellerPositions, List<Vector2Int> reservedTargets)
@@ -2615,7 +2625,7 @@ namespace Game
                 yield break;
 
             EventManager.TriggerEvent(GameEvent.SPECIAL_ELEMENT_ACTIVATED);
-            PlayEffect(ConstantManager.SOUNDS.EFFECTS.BOMB);
+            SoundManager.PlayingSound activationSound = PlayEffect(ConstantManager.SOUNDS.EFFECTS.BOMB);
 
             GridElement bombElement = grid.GetElementAt(bombPos);
             Vector3 impactWorldPos = grid.GetWorldPosition(bombPos);
@@ -2632,6 +2642,7 @@ namespace Game
             grid.TriggerCellFeatureMatchedOverAt(bombPos);
             bombCell.elementInfo = null;
             yield return grid.StartCoroutine(ClearBombAreaProgressive(bombPos, false));
+            StopEffect(activationSound);
         }
 
         private IEnumerator ActivateRocket(Vector2Int rocketPos)
@@ -2764,7 +2775,7 @@ namespace Game
             if (preLaunchDelay > 0f)
                 yield return new WaitForSeconds(preLaunchDelay);
 
-            PlayEffect(ConstantManager.SOUNDS.EFFECTS.ROCKET, volumeMultiplier, pitchOffset);
+            SoundManager.PlayingSound activationSound = PlayEffect(ConstantManager.SOUNDS.EFFECTS.ROCKET, volumeMultiplier, pitchOffset);
 
             Vector3 originWorld = grid.GetWorldPosition(rocketPos);
             ConstantManager cm = ConstantManager.Instance;
@@ -2812,6 +2823,8 @@ namespace Game
                 yield return travelCoroutines[i];
                 Object.Destroy(rocketCopies[i]);
             }
+
+            StopEffect(activationSound);
         }
 
 
@@ -3112,12 +3125,18 @@ namespace Game
             }
         }
 
-        private void PlayEffect(string effectId, float volumeMultiplier = 1f, float pitchOffset = 0f)
+        private SoundManager.PlayingSound PlayEffect(string effectId, float volumeMultiplier = 1f, float pitchOffset = 0f)
         {
             if (GameManager.Instance == null || SoundManager.Instance == null)
-                return;
+                return null;
 
-            SoundManager.Instance.Play(effectId, false, 0f, volumeMultiplier, pitchOffset);
+            return SoundManager.Instance.Play(effectId, false, 0f, volumeMultiplier, pitchOffset);
+        }
+
+        private static void StopEffect(SoundManager.PlayingSound playingSound)
+        {
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.Stop(playingSound);
         }
 
         private static Vector2Int PickPreferred(HashSet<Vector2Int> groupSet, Vector2Int[] candidates, Vector2Int init1, Vector2Int init2)

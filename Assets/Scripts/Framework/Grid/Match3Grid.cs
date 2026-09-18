@@ -2629,7 +2629,7 @@ namespace Game
                         Vector3 targetWorldPos = pathTile.transform.position;
                         float segmentDistance = Vector3.Distance(currentWorldPos, targetWorldPos);
                         float segmentDuration = fallSpeed > 0f ? segmentDistance / fallSpeed : 0f;
-                        moveSequence.Append(movingElement.transform.DOMove(targetWorldPos, segmentDuration).SetEase(Ease.OutQuad));
+                        moveSequence.Append(movingElement.transform.DOMove(targetWorldPos, segmentDuration).SetEase(Ease.OutBack));
                         currentWorldPos = targetWorldPos;
                         hasPathTween = true;
                     }

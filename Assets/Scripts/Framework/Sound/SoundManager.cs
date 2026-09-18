@@ -49,6 +49,8 @@ namespace Game
 		#region Inspector Variables
 
 		[SerializeField] private List<SoundInfo> soundInfos = null;
+		[Tooltip("Maximum number of simultaneous instances allowed for one sound ID.")]
+		[SerializeField, Min(1)] private int maxSimultaneousInstancesPerSound = 5;
 
 		#endregion
 
@@ -130,15 +132,15 @@ namespace Game
 		/// <summary>
 		/// Plays the sound with the give id
 		/// </summary>
-		public void Play(string id)
+		public PlayingSound Play(string id)
 		{
-			Play(id, false, 0);
+			return Play(id, false, 0);
 		}
 
 		/// <summary>
 		/// Plays the sound with the give id, if loop is set to true then the sound will only stop if the Stop method is called
 		/// </summary>
-		public void Play(string id, bool loop = false, float playDelay = 0, float volumeMultiplier = 1, float pitchOffset = 0)
+		public PlayingSound Play(string id, bool loop = false, float playDelay = 0, float volumeMultiplier = 1, float pitchOffset = 0)
 		{
 			SoundInfo soundInfo = GetSoundInfo(id);
 
@@ -146,14 +148,19 @@ namespace Game
 			{
 				Debug.LogError("[SoundManager] There is no Sound Info with the given id: " + id);
 
-				return;
+				return null;
 			}
 
 			if ((soundInfo.type == SoundType.Music && !IsMusicOn) ||
 				(soundInfo.type == SoundType.SoundEffect && !IsSoundEffectsOn) ||
 				soundInfo.audioClips.IsNullOrEmpty())
 			{
-				return;
+				return null;
+			}
+
+			if (GetPlayingSoundCount(id) >= maxSimultaneousInstancesPerSound)
+			{
+				return null;
 			}
 
 			AudioSource audioSource = CreateAudioSource(id);
@@ -197,6 +204,34 @@ namespace Game
 			{
 				EventManager.TriggerEvent(GameEvent.SOUND_PLAYED, new EventParam(paramStr: id));
 			}
+
+			return playingSound;
+		}
+
+		/// <summary>
+		/// Stops one playback instance without affecting other instances of the same sound.
+		/// </summary>
+		public void Stop(PlayingSound playingSound)
+		{
+			if (playingSound == null)
+				return;
+
+			playingAudioSources?.Remove(playingSound);
+			loopingAudioSources?.Remove(playingSound);
+
+			if (playingSound.audioSource != null)
+			{
+				playingSound.audioSource.Stop();
+				Destroy(playingSound.audioSource.gameObject);
+			}
+		}
+
+		/// <summary>
+		/// Returns whether a sound ID is configured in this manager.
+		/// </summary>
+		public bool HasSound(string id)
+		{
+			return GetSoundInfo(id) != null;
 		}
 
 		/// <summary>
@@ -353,6 +388,29 @@ namespace Game
 			}
 
 			return null;
+		}
+
+		private int GetPlayingSoundCount(string id)
+		{
+			int count = 0;
+			count += CountSoundsWithId(id, playingAudioSources);
+			count += CountSoundsWithId(id, loopingAudioSources);
+			return count;
+		}
+
+		private static int CountSoundsWithId(string id, List<PlayingSound> playingSounds)
+		{
+			int count = 0;
+			for (int i = 0; i < playingSounds.Count; i++)
+			{
+				PlayingSound playingSound = playingSounds[i];
+				if (playingSound.soundInfo != null && playingSound.soundInfo.id == id)
+				{
+					count++;
+				}
+			}
+
+			return count;
 		}
 
 		private AudioSource CreateAudioSource(string id)
