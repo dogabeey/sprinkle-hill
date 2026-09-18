@@ -4,6 +4,7 @@
 // submitting your app to the App Store.
 // Instead, modify the certificate and provisioning profile used for your app to not include the APNs entitlement.
 
+
 #if UNITY_IOS
 using System.IO;
 using UnityEditor;
@@ -25,7 +26,7 @@ public static class IOSPostProcess
 
         string mainTarget = project.GetUnityMainTargetGuid();
 
-        // Find the entitlements file used by the main target.
+        // 1. Remove aps-environment from the main app entitlements
         string entitlementsRelativePath =
             project.GetEntitlementFilePathForTarget(mainTarget);
 
@@ -39,11 +40,19 @@ public static class IOSPostProcess
                 var entitlements = new PlistDocument();
                 entitlements.ReadFromFile(entitlementsPath);
 
-                // Remove APNs entitlement.
                 entitlements.root.values.Remove("aps-environment");
 
                 entitlements.WriteToFile(entitlementsPath);
             }
+        }
+
+        // 2. Remove the Notification Service Extension target
+        string notificationTarget =
+            project.TargetGuidByName("notificationservice");
+
+        if (!string.IsNullOrEmpty(notificationTarget))
+        {
+            project.RemoveTarget(notificationTarget);
         }
 
         project.WriteToFile(projectPath);
