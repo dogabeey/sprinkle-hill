@@ -1703,8 +1703,6 @@ namespace Game
             PlayEffect(ConstantManager.SOUNDS.EFFECTS.BOMB, volumeMultiplier: 1.12f, pitchOffset: -0.04f);
 
             GridElement primaryBombElement = grid.GetElementAt(primaryBombPos);
-            Vector3 impactWorldPos = grid.GetWorldPosition(primaryBombPos);
-            PlayBombImpactEffects(impactWorldPos);
 
             grid.TriggerCellFeatureMatchedOverAt(primaryBombPos);
             primaryBombCell.elementInfo = null;
@@ -2252,7 +2250,6 @@ namespace Game
             }
 
             SoundManager.PlayingSound activationSound = PlayEffect(ConstantManager.SOUNDS.EFFECTS.BOMB);
-            PlayBombImpactEffects(targetWorldPos);
             yield return grid.StartCoroutine(ClearBombAreaProgressive(targetPos, false));
             StopEffect(activationSound);
         }
@@ -2631,15 +2628,9 @@ namespace Game
             SoundManager.PlayingSound activationSound = PlayEffect(ConstantManager.SOUNDS.EFFECTS.BOMB);
 
             GridElement bombElement = grid.GetElementAt(bombPos);
-            Vector3 impactWorldPos = grid.GetWorldPosition(bombPos);
             if (bombElement != null)
             {
-                PlayBombImpactEffects(impactWorldPos);
                 grid.StartCoroutine(bombElement.DestroyElement());
-            }
-            else
-            {
-                PlayBombImpactEffects(impactWorldPos);
             }
 
             grid.TriggerCellFeatureMatchedOverAt(bombPos);
@@ -2811,7 +2802,7 @@ namespace Game
                 Vector2Int direction = directions[i];
                 List<Vector2Int> lineCells = CollectLineCells(rocketPos, direction);
                 Vector3 lineEnd = GetRocketLineEnd(originWorld, lineCells, direction);
-                SpriteRenderer rocketCopy = CreateRocketCopyForDirection(rocketElement, originWorld, cm, direction, rocketType);
+                SpriteRenderer rocketCopy = CreateRocketCopyForDirection(rocketElement, originWorld, direction, rocketType);
                 rocketCopies.Add(rocketCopy.gameObject);
                 travelCoroutines.Add(grid.StartCoroutine(TravelRocketCopy(rocketCopy.gameObject, originWorld, lineEnd, lineCells, cm, processedWalls)));
             }
@@ -2861,7 +2852,7 @@ namespace Game
             }
             return cells;
         }
-        private SpriteRenderer CreateRocketCopyForDirection(GridElement sourceElement, Vector3 origin, ConstantManager cm, Vector2Int direction, ElementPowerUpType rocketType)
+        private SpriteRenderer CreateRocketCopyForDirection(GridElement sourceElement, Vector3 origin, Vector2Int direction, ElementPowerUpType rocketType)
         {
             GameObject copy = new GameObject("RocketCopy");
             copy.transform.position = origin;
@@ -2905,23 +2896,12 @@ namespace Game
                 }
             }
 
-            if (cm.rocketTrailParticlePrefab != null)
-            {
-                ParticleSystem trail = Object.Instantiate(cm.rocketTrailParticlePrefab, copy.transform);
-                trail.transform.localPosition = Vector3.zero;
-                trail.Play();
-            }
-
             return sr;
         }
 
         private ParticleSystem GetParticleByRocketTypeAndDirection(GridElement sourceElement, Vector2Int direction)
         {
-            if (sourceElement?.elementInfo?.elementData is RocketElementData rocketElementData)
-            {
-                return rocketElementData.rocketPropelTrailEffect;
-            }
-            return null;
+            return sourceElement?.elementInfo?.elementData?.elementDestroyEffect;
         }
 
         private Sprite GetSpriteByRocketTypeAndDirection(GridElement sourceElement, Vector2Int direction)
@@ -3103,18 +3083,6 @@ namespace Game
                 return;
 
             grid.StartCoroutine(grid.BreakWallAt(wallPos));
-        }
-
-        private void PlayBombImpactEffects(Vector3 impactPos)
-        {
-            ConstantManager cm = GameManager.Instance != null ? ConstantManager.Instance : null;
-            if (cm == null) return;
-            if (cm.bombImpactParticlePrefab != null)
-            {
-                ParticleSystem p = Object.Instantiate(cm.bombImpactParticlePrefab, impactPos, Quaternion.identity);
-                p.Play();
-                Object.Destroy(p.gameObject, p.main.duration + p.main.startLifetime.constantMax + 0.2f);
-            }
         }
 
         public void ApplySortingBoost(GridElement element, bool boost)

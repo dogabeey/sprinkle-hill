@@ -22,10 +22,9 @@ MonoBehaviour:
   behaviorFlags: 1026
   defaultIdleAnimation: idle
   animationController: {fileID: 0}
-  elementDestroyEffect: {fileID: 0}
+  elementDestroyEffect: {fileID: 6553830495741696104, guid: 6004a563187092a48932c66eba0f64a8, type: 3}
   elementDestroySoundEffectName: Rocket
   powerUpActivationString: 
-  rocketPropelTrailEffect: {fileID: 0}
   rocketBodyDisintegrationEffect: {fileID: 0}
   upperPieceSprite: {fileID: 629513516, guid: 257c40514632f31409f61c409a033e51, type: 3}
   lowerPieceSprite: {fileID: 170389122, guid: 257c40514632f31409f61c409a033e51, type: 3}

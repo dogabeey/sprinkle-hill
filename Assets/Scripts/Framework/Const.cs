@@ -85,11 +85,7 @@ namespace Game
         [RemoteConfig("sparkling_trail_fade_delay", 0.5f)]
         public float sparklingTrailFadeDelay = 0.5f;
 
-        [Header("Bomb Impact")]
-        public ParticleSystem bombImpactParticlePrefab;
-
         [Header("Rocket")]
-        public ParticleSystem rocketTrailParticlePrefab;
         [RemoteConfig("rocket_travel_speed", 10f)]
         public float rocketTravelSpeed = 10f;
 

@@ -68,8 +68,6 @@ MonoBehaviour:
   sparklingTrailDuration: 0.3
   sparklingTrailSpawnDelay: 0.2
   sparklingTrailFadeDelay: 0
-  bombImpactParticlePrefab: {fileID: 6553830495741696104, guid: 0b989c0118a79ff489a67064e4ccd54b, type: 3}
-  rocketTrailParticlePrefab: {fileID: 6553830495741696104, guid: 6004a563187092a48932c66eba0f64a8, type: 3}
   rocketTravelSpeed: 12
   elementToCauldronMaxHeight: 0.75
   elementToCauldronHeightMultiplier: 0.5
