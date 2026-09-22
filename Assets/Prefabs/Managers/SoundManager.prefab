@@ -130,9 +130,6 @@ MonoBehaviour:
   - id: BreakableBoxDestroy
     audioClips:
     - {fileID: 8300000, guid: 764f72090e99a2945866fe28e4a24050, type: 3}
-    - {fileID: 8300000, guid: 03c77e4014be7d942b1b4c7da28c21c7, type: 3}
-    - {fileID: 8300000, guid: 0d24ad3ea2b8c7a4281c7609d144156a, type: 3}
-    - {fileID: 8300000, guid: 411b3b4625ef70545bd3fe4a5fa4c43d, type: 3}
     type: 0
     playAndLoopOnStart: 0
     clipVolume: 0.51

@@ -18,6 +18,23 @@ namespace Game
         private Quaternion _initialLocalRotation;
         private readonly List<RendererSortingState> _initialRendererSortingStates = new List<RendererSortingState>();
         private readonly List<ColliderEnabledState> _initialColliderStates = new List<ColliderEnabledState>();
+        private readonly List<TransformLocalState> _initialTransformStates = new List<TransformLocalState>();
+
+        private readonly struct TransformLocalState
+        {
+            public readonly Transform transform;
+            public readonly Vector3 localPosition;
+            public readonly Quaternion localRotation;
+            public readonly Vector3 localScale;
+
+            public TransformLocalState(Transform transform)
+            {
+                this.transform = transform;
+                localPosition = transform.localPosition;
+                localRotation = transform.localRotation;
+                localScale = transform.localScale;
+            }
+        }
 
         private readonly struct RendererSortingState
         {
@@ -74,11 +91,7 @@ namespace Game
             this.ownerGrid = ownerGrid;
             this.elementInfo = elementInfo;
 
-            if (!_cachedInitialScale)
-            {
-                _initialLocalScale = transform.localScale;
-                _cachedInitialScale = true;
-            }
+            CaptureInitialPoolState();
 
             SetElement();
             SetElementAnimation();
@@ -279,15 +292,15 @@ namespace Game
         public override void OnSpawn()
         {
             base.OnSpawn();
-            CachePoolState();
-            transform.DOKill();
+            CaptureInitialPoolState();
+            KillTransformTweens();
             StopAllCoroutines();
             RestorePoolState();
         }
 
         public override void OnDespawn()
         {
-            transform.DOKill();
+            KillTransformTweens();
             StopAllCoroutines();
             RestorePoolState();
             elementInfo = null;
@@ -329,6 +342,21 @@ namespace Game
             return suppress;
         }
 
+        /// <summary>
+        /// Captures the prefab-local state before the visual is initialized or
+        /// reparented under a board with a potentially different scale.
+        /// </summary>
+        internal void CaptureInitialPoolState()
+        {
+            if (!_cachedInitialScale)
+            {
+                _initialLocalScale = transform.localScale;
+                _cachedInitialScale = true;
+            }
+
+            CachePoolState();
+        }
+
         private void CachePoolState()
         {
             if (_cachedPoolState)
@@ -336,6 +364,15 @@ namespace Game
 
             _cachedPoolState = true;
             _initialLocalRotation = transform.localRotation;
+
+            Transform[] transforms = GetComponentsInChildren<Transform>(true);
+            for (int i = 0; i < transforms.Length; i++)
+            {
+                // The root position is assigned by the grid on every spawn; only
+                // reset local transform state for the visual hierarchy beneath it.
+                if (transforms[i] != null && transforms[i] != transform)
+                    _initialTransformStates.Add(new TransformLocalState(transforms[i]));
+            }
 
             Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
             for (int i = 0; i < renderers.Length; i++)
@@ -361,6 +398,17 @@ namespace Game
             if (_cachedInitialScale)
                 transform.localScale = _initialLocalScale;
 
+            for (int i = 0; i < _initialTransformStates.Count; i++)
+            {
+                TransformLocalState state = _initialTransformStates[i];
+                if (state.transform == null)
+                    continue;
+
+                state.transform.localPosition = state.localPosition;
+                state.transform.localRotation = state.localRotation;
+                state.transform.localScale = state.localScale;
+            }
+
             for (int i = 0; i < _initialRendererSortingStates.Count; i++)
             {
                 RendererSortingState state = _initialRendererSortingStates[i];
@@ -379,10 +427,22 @@ namespace Game
             }
         }
 
+        private void KillTransformTweens()
+        {
+            if (transform == null)
+                return;
+
+            Transform[] transforms = GetComponentsInChildren<Transform>(true);
+            for (int i = 0; i < transforms.Length; i++)
+            {
+                if (transforms[i] != null)
+                    transforms[i].DOKill();
+            }
+        }
+
         private void OnDestroy()
         {
-            if (transform != null)
-                transform.DOKill();
+            KillTransformTweens();
         }
 
         public abstract IEnumerator DestroyElement(float animationSpeedMultiplier = 1f);

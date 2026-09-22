@@ -104,6 +104,10 @@ namespace Game
         private GridElement CreateElementInstance(GridElement sourcePrefab)
         {
             GridElement instance = Instantiate(sourcePrefab, EnsureInactiveElementRoot());
+            // Capture the prefab-local transform before SpawnElement reparents it
+            // with worldPositionStays. Otherwise a scaled board parent can become
+            // the pooled instance's incorrect scale baseline.
+            instance.CaptureInitialPoolState();
             sourcePrefabByInstance[instance] = sourcePrefab;
             return instance;
         }
