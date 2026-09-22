@@ -2680,6 +2680,31 @@ namespace Game
 
             // Refill only after all existing elements have claimed their final
             // positions. Refill elements are never used as slide candidates.
+            Vector3 GetRefillSpawnPosition(int column, GravityColumnSection section, int stackIndex, GridCellController fallbackTile)
+            {
+                Vector3 entryPosition = fallbackTile.transform.position;
+                float cellHeight = 1f;
+
+                // Every refillable section receives elements from its top-most
+                // playable cell. Starting from the target cell could place a
+                // low target's refill inside the board and let later elements
+                // visually pass through it.
+                Vector2Int entryPos = new Vector2Int(column, section.rows[0]);
+                if (generatedTiles.TryGetValue(entryPos, out GridCellController entryTile) && entryTile != null)
+                {
+                    entryPosition = entryTile.transform.position;
+
+                    if (section.rows.Count > 1)
+                    {
+                        Vector2Int nextPos = new Vector2Int(column, section.rows[1]);
+                        if (generatedTiles.TryGetValue(nextPos, out GridCellController nextTile) && nextTile != null)
+                            cellHeight = Mathf.Max(0.01f, Mathf.Abs(entryPosition.y - nextTile.transform.position.y));
+                    }
+                }
+
+                return entryPosition + Vector3.up * (cellHeight * stackIndex);
+            }
+
             for (int x = 0; x < gridSize.x && elementPool.Count > 0; x++)
             {
                 List<GravityColumnSection> sections = BuildColumnSections(x);
@@ -2724,8 +2749,8 @@ namespace Game
                         if (!generatedTiles.TryGetValue(targetPos, out GridCellController targetTile) || targetTile == null)
                             continue;
 
-                        int stackOffset = ++spawnIndex;
-                        Vector3 spawnWorldPos = targetTile.transform.position + Vector3.up * stackOffset;
+                        int stackIndex = ++spawnIndex;
+                        Vector3 spawnWorldPos = GetRefillSpawnPosition(x, section, stackIndex, targetTile);
                         GridElement newElement = SpawnGridElement(spawnWorldPos, Quaternion.identity, targetTile.transform);
                         if (newElement == null)
                             continue;
