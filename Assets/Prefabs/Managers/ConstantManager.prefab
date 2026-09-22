@@ -48,6 +48,8 @@ MonoBehaviour:
   loadingScreenDuration: 1
   elementSwapMoveDuration: 0.2
   elementFallSpeed: 10
+  elementFinalLandingDurationMultiplier: 1
+  elementFinalLandingOutBackOvershoot: 1.75
   matchClearDelay: 0.15
   chainMatchSpeedIncreasePerCombo: 0.2
   elementDestroyPunchScale: 0.2

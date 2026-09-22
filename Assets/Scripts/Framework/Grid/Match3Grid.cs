@@ -2471,6 +2471,12 @@ namespace Game
 
             ConstantManager cm = GameManager.Instance != null ? ConstantManager.Instance : null;
             float fallSpeed = GetChainAdjustedFallSpeed(cm != null ? cm.elementFallSpeed : 3.3f);
+            float finalLandingDurationMultiplier = cm != null
+                ? Mathf.Max(0.01f, cm.elementFinalLandingDurationMultiplier)
+                : 2f;
+            float finalLandingOutBackOvershoot = cm != null
+                ? Mathf.Max(0f, cm.elementFinalLandingOutBackOvershoot)
+                : 1.7f;
 
             EnsureGridCells();
             List<ElementData> elementPool = BuildElementPool();
@@ -2630,13 +2636,20 @@ namespace Game
                         float segmentDistance = Vector3.Distance(currentWorldPos, targetWorldPos);
                         float segmentDuration = fallSpeed > 0f ? segmentDistance / fallSpeed : 0f;
                         // Travel through every intermediate cell at a constant
-                        // speed. Only the final landing eases out, so an element
+                        // speed. Only the final landing uses OutBack, so an element
                         // that keeps falling or sliding never appears to stop at
                         // a temporary cell.
-                        Ease segmentEase = pathIndex == path.Count - 1
-                            ? Ease.OutQuad
-                            : Ease.Linear;
-                        moveSequence.Append(movingElement.transform.DOMove(targetWorldPos, segmentDuration).SetEase(segmentEase));
+                        bool isFinalSegment = pathIndex == path.Count - 1;
+                        if (isFinalSegment)
+                            segmentDuration *= finalLandingDurationMultiplier;
+
+                        Tweener moveTween = movingElement.transform.DOMove(targetWorldPos, segmentDuration);
+                        if (isFinalSegment)
+                            moveTween.SetEase(Ease.OutBack, finalLandingOutBackOvershoot);
+                        else
+                            moveTween.SetEase(Ease.Linear);
+
+                        moveSequence.Append(moveTween);
                         currentWorldPos = targetWorldPos;
                         hasPathTween = true;
                     }
