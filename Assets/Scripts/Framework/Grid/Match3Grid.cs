@@ -2629,7 +2629,14 @@ namespace Game
                         Vector3 targetWorldPos = pathTile.transform.position;
                         float segmentDistance = Vector3.Distance(currentWorldPos, targetWorldPos);
                         float segmentDuration = fallSpeed > 0f ? segmentDistance / fallSpeed : 0f;
-                        moveSequence.Append(movingElement.transform.DOMove(targetWorldPos, segmentDuration).SetEase(Ease.OutBack));
+                        // Travel through every intermediate cell at a constant
+                        // speed. Only the final landing eases out, so an element
+                        // that keeps falling or sliding never appears to stop at
+                        // a temporary cell.
+                        Ease segmentEase = pathIndex == path.Count - 1
+                            ? Ease.OutQuad
+                            : Ease.Linear;
+                        moveSequence.Append(movingElement.transform.DOMove(targetWorldPos, segmentDuration).SetEase(segmentEase));
                         currentWorldPos = targetWorldPos;
                         hasPathTween = true;
                     }
@@ -3252,9 +3259,12 @@ namespace Game
 
         private Vector2Int GetGravityNextStep(Vector2Int startPos)
         {
-            Vector2Int verticalLanding = GetVerticalLandingPosition(startPos);
-            if (verticalLanding != startPos)
-                return verticalLanding;
+            // Resolve vertical gravity one cell at a time. Besides matching the
+            // board's incremental gravity rules, this gives the renderer a
+            // complete path so only the element's final landing is eased.
+            Vector2Int belowPos = new Vector2Int(startPos.x, startPos.y + 1);
+            if (CanGravityElementOccupy(belowPos))
+                return belowPos;
 
             Vector2Int downLeftPos = new Vector2Int(startPos.x - 1, startPos.y + 1);
             Vector2Int downRightPos = new Vector2Int(startPos.x + 1, startPos.y + 1);
