@@ -44,3 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43444e0696910504e931291423e95744, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game::Game.PoolingManager
+  dontDestroyOnLoad: 1
+  elementPrefab: {fileID: 8349045300224855682, guid: 0f40901e0f40be44e954010c90139ad8, type: 3}
+  initialElementPoolSize: 72

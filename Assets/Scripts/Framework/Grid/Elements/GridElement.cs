@@ -3,15 +3,44 @@ using MobileHapticsProFreeEdition;
 using Sirenix.OdinInspector;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine; using Game.EventManagement;
 
 namespace Game
 {
-    public abstract class GridElement : Grid3D, IPoolable<GridElement>
+    public abstract class GridElement : Grid3D
     {
         private bool _cachedInitialScale;
         private Vector3 _initialLocalScale;
+        private bool _cachedPoolState;
+        private Quaternion _initialLocalRotation;
+        private readonly List<RendererSortingState> _initialRendererSortingStates = new List<RendererSortingState>();
+        private readonly List<ColliderEnabledState> _initialColliderStates = new List<ColliderEnabledState>();
+
+        private readonly struct RendererSortingState
+        {
+            public readonly Renderer renderer;
+            public readonly int sortingOrder;
+
+            public RendererSortingState(Renderer renderer)
+            {
+                this.renderer = renderer;
+                sortingOrder = renderer.sortingOrder;
+            }
+        }
+
+        private readonly struct ColliderEnabledState
+        {
+            public readonly Collider collider;
+            public readonly bool enabled;
+
+            public ColliderEnabledState(Collider collider)
+            {
+                this.collider = collider;
+                enabled = collider.enabled;
+            }
+        }
 
         [System.Serializable]
         public class MeshData
@@ -240,6 +269,90 @@ namespace Game
         {
             yield break;
         }
+
+        public override void OnSpawn()
+        {
+            base.OnSpawn();
+            CachePoolState();
+            transform.DOKill();
+            StopAllCoroutines();
+            RestorePoolState();
+        }
+
+        public override void OnDespawn()
+        {
+            transform.DOKill();
+            StopAllCoroutines();
+            RestorePoolState();
+            elementInfo = null;
+            ownerGrid = null;
+            currentAnimationLayerIndex = -1;
+            base.OnDespawn();
+        }
+
+        /// <summary>Returns this element visual to its owning grid's shared pool.</summary>
+        protected void DespawnToPool()
+        {
+            if (ownerGrid != null)
+            {
+                ownerGrid.ReleaseElementVisual(this);
+                return;
+            }
+
+            PoolingManager poolingManager = PoolingManager.Instance;
+            if (poolingManager != null)
+                poolingManager.DespawnElement(this);
+            else
+                Destroy(gameObject);
+        }
+
+        private void CachePoolState()
+        {
+            if (_cachedPoolState)
+                return;
+
+            _cachedPoolState = true;
+            _initialLocalRotation = transform.localRotation;
+
+            Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] != null)
+                    _initialRendererSortingStates.Add(new RendererSortingState(renderers[i]));
+            }
+
+            Collider[] colliders = GetComponentsInChildren<Collider>(true);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if (colliders[i] != null)
+                    _initialColliderStates.Add(new ColliderEnabledState(colliders[i]));
+            }
+        }
+
+        private void RestorePoolState()
+        {
+            if (!_cachedPoolState)
+                return;
+
+            transform.localRotation = _initialLocalRotation;
+            if (_cachedInitialScale)
+                transform.localScale = _initialLocalScale;
+
+            for (int i = 0; i < _initialRendererSortingStates.Count; i++)
+            {
+                RendererSortingState state = _initialRendererSortingStates[i];
+                if (state.renderer != null)
+                    state.renderer.sortingOrder = state.sortingOrder;
+            }
+
+            for (int i = 0; i < _initialColliderStates.Count; i++)
+            {
+                ColliderEnabledState state = _initialColliderStates[i];
+                if (state.collider != null)
+                    state.collider.enabled = state.enabled;
+            }
+        }
+
         private void OnDestroy()
         {
             if (transform != null)

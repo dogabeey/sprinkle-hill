@@ -339,13 +339,12 @@ namespace Game
             GridElement oldElement = tile.GetComponentInChildren<GridElement>();
             if (oldElement != null)
             {
-                oldElement.transform.DOKill();
-                oldElement.transform.SetParent(null, true);
-                generatedElements.Remove(oldElement);
-                Destroy(oldElement.gameObject);
+                ReleaseElementVisual(oldElement);
             }
 
-            GridElement newElement = Instantiate(gridElementPrefab, tile.transform.position, Quaternion.identity, tile.transform);
+            GridElement newElement = SpawnGridElement(tile.transform.position, Quaternion.identity, tile.transform);
+            if (newElement == null)
+                return null;
             newElement.elementInfo = elementInfo;
             generatedElements.Add(newElement);
             newElement.InitElement(this, elementInfo);
@@ -1893,7 +1892,9 @@ namespace Game
                     if (cell.cellFeature is GlassFeature && cell.elementInfo?.elementData == null)
                         continue;
 
-                    GridElement element = Instantiate(gridElementPrefab, tile.transform.position, Quaternion.identity, tile.transform); // TODO: Use pooling
+                    GridElement element = SpawnGridElement(tile.transform.position, Quaternion.identity, tile.transform);
+                    if (element == null)
+                        continue;
                     element.elementInfo = cell.elementInfo;
                     generatedElements.Add(element);
                     element.InitElement(this, element.elementInfo);
@@ -2293,7 +2294,7 @@ namespace Game
 
             yield return move.WaitForCompletion();
             if (element != null)
-                Destroy(element.gameObject);
+                ReleaseElementVisual(element);
         }
 
         private void ProcessAdjacentFeatureMatchEffects(
@@ -2577,7 +2578,11 @@ namespace Game
                             gravitySeq.Join(bagElement.transform.DOMove(bagElement.transform.position + Vector3.down * dropDist, 0f).SetEase(Ease.InQuad));
                             gravitySeq.Join(bagElement.transform.DOScale(0.92f, 0f).SetEase(Ease.InQuad));
                             generatedElements.Remove(bagElement);
-                            Destroy(bagElement.gameObject, 0.05f);
+                            DOVirtual.DelayedCall(0.05f, () =>
+                            {
+                                if (bagElement != null)
+                                    ReleaseElementVisual(bagElement);
+                            });
                             hasTween = true;
                         }
 
@@ -2721,8 +2726,9 @@ namespace Game
 
                         int stackOffset = ++spawnIndex;
                         Vector3 spawnWorldPos = targetTile.transform.position + Vector3.up * stackOffset;
-                        GridElement newElement = Instantiate(gridElementPrefab, spawnWorldPos, Quaternion.identity); // TODO: Use pooling
-                        newElement.transform.SetParent(targetTile.transform, true);
+                        GridElement newElement = SpawnGridElement(spawnWorldPos, Quaternion.identity, targetTile.transform);
+                        if (newElement == null)
+                            continue;
                         newElement.elementInfo = newInfo;
                         generatedElements.Add(newElement);
                         newElement.InitElement(this, newInfo);
@@ -2794,18 +2800,14 @@ namespace Game
                             continue;
                         }
 
-                        element.transform.DOKill();
-                        generatedElements.Remove(element);
-                        Destroy(element.gameObject);
+                        ReleaseElementVisual(element);
                     }
 
                     if (!shouldHaveElement)
                     {
                         if (selected != null)
                         {
-                            selected.transform.DOKill();
-                            generatedElements.Remove(selected);
-                            Destroy(selected.gameObject);
+                            ReleaseElementVisual(selected);
                         }
 
                         continue;
@@ -2813,7 +2815,9 @@ namespace Game
 
                     if (selected == null)
                     {
-                        GridElement created = Instantiate(gridElementPrefab, tile.transform.position, Quaternion.identity, tile.transform);
+                        GridElement created = SpawnGridElement(tile.transform.position, Quaternion.identity, tile.transform);
+                        if (created == null)
+                            continue;
                         created.elementInfo = cell.elementInfo;
                         created.InitElement(this, cell.elementInfo);
                         generatedElements.Add(created);
@@ -2850,9 +2854,7 @@ namespace Game
                 if (validElements.Contains(element))
                     continue;
 
-                element.transform.DOKill();
-                Destroy(element.gameObject);
-                generatedElements.RemoveAt(i);
+                ReleaseElementVisual(element);
             }
         }
 
@@ -2944,7 +2946,7 @@ namespace Game
             for (int i = 0; i < activeElements.Count; i++)
             {
                 if (activeElements[i] != null)
-                    Destroy(activeElements[i].gameObject);
+                    ReleaseElementVisual(activeElements[i]);
             }
             generatedElements.Clear();
 

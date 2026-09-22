@@ -2814,7 +2814,7 @@ namespace Game
             }
 
             if (rocketElement != null)
-                Object.Destroy(rocketElement.gameObject);
+                grid.ReleaseElementVisual(rocketElement);
 
             BreakAdjacentWallsImmediate(rocketPos, processedWalls);
 

@@ -39,7 +39,7 @@ namespace Game
                 destroyEffect = Gfx.Instance.elementDestroyParticlePrefab;
 
             SpawnParticleEffect(destroyEffect);
-            Destroy(gameObject);
+            DespawnToPool();
             yield break;
         }
     }

@@ -54,6 +54,36 @@ namespace Game
         protected List<GridElement> generatedElements = new();
         private bool isInitialized;
 
+        protected GridElement SpawnGridElement(Vector3 position, Quaternion rotation, Transform parentTransform)
+        {
+            if (gridElementPrefab == null)
+                return null;
+
+            PoolingManager poolingManager = PoolingManager.Instance;
+            return poolingManager != null
+                ? poolingManager.SpawnElement(gridElementPrefab, position, rotation, parentTransform)
+                : Instantiate(gridElementPrefab, position, rotation, parentTransform);
+        }
+
+        /// <summary>
+        /// Removes an element from this grid and returns its visual to the shared pool.
+        /// Safe to call more than once for the same visual.
+        /// </summary>
+        public void ReleaseElementVisual(GridElement element)
+        {
+            if (element == null)
+                return;
+
+            generatedElements.Remove(element);
+            element.transform.DOKill();
+
+            PoolingManager poolingManager = PoolingManager.Instance;
+            if (poolingManager != null)
+                poolingManager.DespawnElement(element);
+            else
+                Destroy(element.gameObject);
+        }
+
         protected virtual void Start()
         {
             PreInit();
@@ -153,10 +183,10 @@ namespace Game
                     Destroy(tile.Value.gameObject);
             }
 
-            for (int i = 0; i < generatedElements.Count; i++)
+            for (int i = generatedElements.Count - 1; i >= 0; i--)
             {
                 if (generatedElements[i] != null)
-                    Destroy(generatedElements[i].gameObject);
+                    ReleaseElementVisual(generatedElements[i]);
             }
 
             generatedTiles.Clear();
@@ -316,7 +346,9 @@ namespace Game
                         continue;
                     }
 
-                    GridElement element = Instantiate(gridElementPrefab, tile.transform.position, Quaternion.identity, tile.transform);
+                    GridElement element = SpawnGridElement(tile.transform.position, Quaternion.identity, tile.transform);
+                    if (element == null)
+                        continue;
                     element.elementInfo = cell.elementInfo;
                     generatedElements.Add(element);
                     element.InitElement(this, element.elementInfo);
@@ -448,11 +480,11 @@ namespace Game
             return pool;
         }
 
-        public void OnSpawn()
+        public virtual void OnSpawn()
         {
         }
 
-        public void OnDespawn()
+        public virtual void OnDespawn()
         {
         }
 

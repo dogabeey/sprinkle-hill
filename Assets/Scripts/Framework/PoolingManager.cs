@@ -1,89 +1,140 @@
-using Sirenix.OdinInspector;
-using System;
 using System.Collections.Generic;
-using UnityEngine; using Game.EventManagement;
+using Game.Singleton;
+using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Game
 {
-    public interface IPoolable<T> where T : Behaviour
+    /// <summary>
+    /// Owns reusable runtime visuals. Grid elements are returned here rather
+    /// than destroyed once their clear animation has completed.
+    /// </summary>
+    public class PoolingManager : SingletonComponent<PoolingManager>
     {
-        void OnSpawn();
-        void OnDespawn();
-    }
+        [Title("Grid Element Pool")]
+        [SerializeField] private GridElement elementPrefab;
+        [SerializeField, Min(0)] private int initialElementPoolSize = 72;
 
-    public class PoolingManager : SerializedMonoBehaviour
-    {
-        /// <summary>
-        /// Dictionary to hold pools for different types of objects. Each pool is a queue of available instances of that type.
-        /// </summary>
-        [SerializeField]
-        public Dictionary<string, Queue<Behaviour>> poolsDicitonary = new Dictionary<string, Queue<Behaviour>>();
+        private readonly Dictionary<GridElement, Queue<GridElement>> elementPools = new Dictionary<GridElement, Queue<GridElement>>();
+        private readonly Dictionary<GridElement, GridElement> sourcePrefabByInstance = new Dictionary<GridElement, GridElement>();
+        private Transform inactiveElementRoot;
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
+        protected override void Awake()
         {
-        
+            base.Awake();
+            EnsureInactiveElementRoot();
+            PrewarmElementPool();
         }
 
-        // Update is called once per frame
-        void Update()
+        /// <summary>Gets an element visual from the pool associated with its prefab.</summary>
+        public GridElement SpawnElement(GridElement prefab, Vector3 position, Quaternion rotation, Transform parent)
         {
-        
-        }
+            GridElement sourcePrefab = prefab != null ? prefab : elementPrefab;
+            if (sourcePrefab == null)
+            {
+                Debug.LogError("[PoolingManager] Cannot spawn a grid element because no prefab is assigned.");
+                return null;
+            }
 
-        public T Spawn<T>(T prefab, Vector3 position, Quaternion rotation, Transform parent) where T : Behaviour
-        {
-            // Implement pooling logic here (e.g., check for available instances in the pool, instantiate if necessary)
-            if (!GetFromPool(out T instance))
-            {
-                instance = Instantiate(prefab, position, rotation, parent);
-            }
-            if (instance is IPoolable<T> poolable)
-            {
-                poolable.OnSpawn();
-            }
+            GridElement instance = GetElementFromPool(sourcePrefab) ?? CreateElementInstance(sourcePrefab);
+            if (instance == null)
+                return null;
+
+            Transform instanceTransform = instance.transform;
+            instanceTransform.SetParent(parent, true);
+            instanceTransform.SetPositionAndRotation(position, rotation);
+            instance.gameObject.SetActive(true);
+            instance.OnSpawn();
             return instance;
         }
-        public T Spawn<T>(T prefab, Vector3 position, Quaternion rotation) where T : Behaviour
-        {
-            return Spawn(prefab, position, rotation, null);
-        }
-        public T Spawn<T>(T prefab, Vector3 position) where T : Behaviour
-        {
-            return Spawn(prefab, position, Quaternion.identity, null);
-        }
 
-        public void Despawn<T>(T instance) where T : Behaviour
+        /// <summary>Returns a previously spawned grid element visual to its pool.</summary>
+        public void DespawnElement(GridElement instance)
         {
-            if (instance is IPoolable<T> poolable)
-            {
-                poolable.OnDespawn();
-            }
-            // Implement pooling logic here (e.g., return the instance to the pool instead of destroying it)
-            ReturnToPool(instance);
-        }
+            if (instance == null)
+                return;
 
-        private void ReturnToPool<T>(T instance) where T : Behaviour
-        {
-            string type = typeof(T).Name;
-            if (!poolsDicitonary.ContainsKey(type))
+            if (!sourcePrefabByInstance.TryGetValue(instance, out GridElement sourcePrefab) || sourcePrefab == null)
             {
-                poolsDicitonary[type] = new Queue<Behaviour>();
+                Destroy(instance.gameObject);
+                return;
             }
-            poolsDicitonary[type].Enqueue(instance);
+
+            // Guard against a repeated release from two overlapping clear paths.
+            if (!instance.gameObject.activeSelf)
+                return;
+
+            instance.OnDespawn();
+            instance.transform.SetParent(EnsureInactiveElementRoot(), false);
             instance.gameObject.SetActive(false);
+            GetOrCreatePool(sourcePrefab).Enqueue(instance);
         }
-        private bool GetFromPool<T>(out T instance) where T : Behaviour
+
+        private void PrewarmElementPool()
         {
-            string type = typeof(T).Name;
-            if (poolsDicitonary.ContainsKey(type) && poolsDicitonary[type].Count > 0)
+            if (elementPrefab == null)
+                return;
+
+            Queue<GridElement> pool = GetOrCreatePool(elementPrefab);
+            for (int i = pool.Count; i < initialElementPoolSize; i++)
             {
-                instance = (T)poolsDicitonary[type].Dequeue();
-                instance.gameObject.SetActive(true);
-                return true;
+                GridElement instance = CreateElementInstance(elementPrefab);
+                if (instance == null)
+                    break;
+
+                instance.transform.SetParent(EnsureInactiveElementRoot(), false);
+                instance.gameObject.SetActive(false);
+                pool.Enqueue(instance);
             }
-            instance = null;
-            return false;
+        }
+
+        private GridElement GetElementFromPool(GridElement sourcePrefab)
+        {
+            Queue<GridElement> pool = GetOrCreatePool(sourcePrefab);
+            while (pool.Count > 0)
+            {
+                GridElement instance = pool.Dequeue();
+                if (instance != null)
+                    return instance;
+            }
+
+            return null;
+        }
+
+        private GridElement CreateElementInstance(GridElement sourcePrefab)
+        {
+            GridElement instance = Instantiate(sourcePrefab, EnsureInactiveElementRoot());
+            sourcePrefabByInstance[instance] = sourcePrefab;
+            return instance;
+        }
+
+        private Queue<GridElement> GetOrCreatePool(GridElement sourcePrefab)
+        {
+            if (!elementPools.TryGetValue(sourcePrefab, out Queue<GridElement> pool))
+            {
+                pool = new Queue<GridElement>();
+                elementPools.Add(sourcePrefab, pool);
+            }
+
+            return pool;
+        }
+
+        private Transform EnsureInactiveElementRoot()
+        {
+            if (inactiveElementRoot != null)
+                return inactiveElementRoot;
+
+            Transform existing = transform.Find("Inactive Elements");
+            if (existing != null)
+            {
+                inactiveElementRoot = existing;
+                return inactiveElementRoot;
+            }
+
+            GameObject root = new GameObject("Inactive Elements");
+            inactiveElementRoot = root.transform;
+            inactiveElementRoot.SetParent(transform, false);
+            return inactiveElementRoot;
         }
     }
 }

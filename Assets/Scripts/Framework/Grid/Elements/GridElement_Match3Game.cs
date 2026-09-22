@@ -96,7 +96,7 @@ namespace Game
             }
 
             if (this != null)
-                Destroy(gameObject);
+                DespawnToPool();
         }
     }
 }
