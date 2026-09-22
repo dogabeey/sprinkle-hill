@@ -60,6 +60,7 @@ namespace Game
             if (this == null || transform == null)
                 yield break;
 
+            bool suppressDestroySound = ConsumeDestroySoundSuppression();
             transform.DOKill();
 
             Collider[] colliders = GetComponentsInChildren<Collider>();
@@ -80,20 +81,22 @@ namespace Game
 
             EventManager.TriggerEvent(GameEvent.ELEMENT_DESTROYED,
                 eventParam: new EventParam(paramScriptable: elementInfo != null ? elementInfo.elementData : null));
-
-            if (destroyTween != null && destroyTween.active)
-                yield return destroyTween.WaitForCompletion();
-
+                
             if (this != null && transform != null)
             {
                 ParticleSystem destroyEffect = elementInfo?.elementData?.elementDestroyEffect;
                 float randomPitch = Random.Range(-0.1f, 0.1f);
-                SoundManager.Instance.Play(elementInfo?.elementData?.elementDestroySoundEffectName, pitchOffset: randomPitch);
+                if (!suppressDestroySound)
+                    SoundManager.Instance.Play(elementInfo?.elementData?.elementDestroySoundEffectName, pitchOffset: randomPitch);
                 if (destroyEffect == null && Gfx.Instance != null)
                     destroyEffect = Gfx.Instance.elementDestroyParticlePrefab;
 
                 SpawnParticleEffect(destroyEffect);
             }
+
+            if (destroyTween != null && destroyTween.active)
+                yield return destroyTween.WaitForCompletion();
+
 
             if (this != null)
                 DespawnToPool();

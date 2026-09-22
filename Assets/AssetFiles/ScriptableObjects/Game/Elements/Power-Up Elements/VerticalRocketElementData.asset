@@ -23,6 +23,7 @@ MonoBehaviour:
   defaultIdleAnimation: idle
   animationController: {fileID: 0}
   elementDestroyEffect: {fileID: 0}
+  elementDestroySoundEffectName: Rocket
   powerUpActivationString: 
   rocketPropelTrailEffect: {fileID: 0}
   rocketBodyDisintegrationEffect: {fileID: 0}

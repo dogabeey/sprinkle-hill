@@ -14,6 +14,7 @@ namespace Game
         private bool _cachedInitialScale;
         private Vector3 _initialLocalScale;
         private bool _cachedPoolState;
+        private bool _suppressNextDestroySound;
         private Quaternion _initialLocalRotation;
         private readonly List<RendererSortingState> _initialRendererSortingStates = new List<RendererSortingState>();
         private readonly List<ColliderEnabledState> _initialColliderStates = new List<ColliderEnabledState>();
@@ -22,11 +23,16 @@ namespace Game
         {
             public readonly Renderer renderer;
             public readonly int sortingOrder;
+            public readonly Material[] sharedMaterials;
 
             public RendererSortingState(Renderer renderer)
             {
                 this.renderer = renderer;
                 sortingOrder = renderer.sortingOrder;
+                // Effects access Renderer.material, which creates and mutates a
+                // per-instance material. Keep the prefab's material assignment so
+                // pooled visuals never retain those runtime values (e.g. emission).
+                sharedMaterials = renderer.sharedMaterials;
             }
         }
 
@@ -287,6 +293,7 @@ namespace Game
             elementInfo = null;
             ownerGrid = null;
             currentAnimationLayerIndex = -1;
+            _suppressNextDestroySound = false;
             base.OnDespawn();
         }
 
@@ -304,6 +311,22 @@ namespace Game
                 poolingManager.DespawnElement(this);
             else
                 Destroy(gameObject);
+        }
+
+        /// <summary>
+        /// Prevents the next destroy animation from replaying its data-driven sound.
+        /// Used when an activation has already started that same effect.
+        /// </summary>
+        public void SuppressNextDestroySound()
+        {
+            _suppressNextDestroySound = true;
+        }
+
+        protected bool ConsumeDestroySoundSuppression()
+        {
+            bool suppress = _suppressNextDestroySound;
+            _suppressNextDestroySound = false;
+            return suppress;
         }
 
         private void CachePoolState()
@@ -342,7 +365,10 @@ namespace Game
             {
                 RendererSortingState state = _initialRendererSortingStates[i];
                 if (state.renderer != null)
+                {
                     state.renderer.sortingOrder = state.sortingOrder;
+                    state.renderer.sharedMaterials = state.sharedMaterials;
+                }
             }
 
             for (int i = 0; i < _initialColliderStates.Count; i++)

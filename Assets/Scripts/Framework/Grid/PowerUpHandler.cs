@@ -2095,6 +2095,9 @@ namespace Game
                         .SetRelative());
 
                 yield return travelSequence.WaitForCompletion();
+                // The propeller sound begins at flight activation. Avoid replaying
+                // the same data-driven destroy sound when it reaches its target.
+                propellerElement.SuppressNextDestroySound();
                 grid.StartCoroutine(propellerElement.DestroyElement());
             }
 
@@ -2881,7 +2884,7 @@ namespace Game
                 sr.material = sourceRenderer.material;
                 sr.sortingLayerID = sourceRenderer.sortingLayerID;
                 sr.sortingOrder = sourceRenderer.sortingOrder + SortingOrderBoost;
-                sr.color = sourceRenderer.color;
+                sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 1f);
             }
 
             if (sourceElement != null)
