@@ -15,16 +15,8 @@ namespace Game
         public Sprite hiddenIndicatorIcon;
         [FoldoutGroup("Editor Icons")]
         public Sprite sparklingIndicatorIcon;
-        [FoldoutGroup("Buy Icons")]
-        public Sprite cashSmallAmount, cashMediumAmount, cashLargeAmount;
-        [FoldoutGroup("Buy Icons")]
-        public Sprite premiumCurrencySmallAmount, premiumCurrencyMediumAmount, premiumCurrencyLargeAmount;
         [FoldoutGroup("Particle Systems")]
         public ParticleSystem elementDestroyParticlePrefab;
-        [FoldoutGroup("Particle Systems")]
-        public ParticleSystem bombImpactParticlePrefab;
-        [FoldoutGroup("Particle Systems")]
-        public ParticleSystem rocketTrailParticlePrefab;
         [FoldoutGroup("Particle Systems")]
         public ParticleSystem addTimePowerupTrailParticlePrefab;
         [FoldoutGroup("Particle Systems")]
