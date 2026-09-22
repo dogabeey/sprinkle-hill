@@ -74,12 +74,12 @@ namespace Game
                     $"Returning home screen will cost you {homeHeartCost} {CurrencyManager.Instance.GetCurrencyModelByID("heart") }."
                     + "\nAre you sure you want to return home?",
                     ("OK", ReturnToMainMenu),
-                    ("Cancel", () => ScreenManager.Instance.CloseAllNonPersistentScreens()));
+                    ("Cancel", () => ScreenManager.Instance.CloseAllScreens()));
             });
             previousLevelButton?.onClick.AddListener(() =>
             {
                 GameManager.Instance.LoadPreviousLevel();
-                ScreenManager.Instance.CloseAllNonPersistentScreens();
+                ScreenManager.Instance.CloseAllScreens();
             });
         }
 
@@ -89,7 +89,7 @@ namespace Game
                 CurrencyManager.Instance.AddCurrency(heartCurrency, -homeHeartCost);
 
             GameManager.Instance.ReturnToMainMenu();
-            ScreenManager.Instance.CloseAllNonPersistentScreens();
+            ScreenManager.Instance.CloseAllScreens();
         }
 
         public override void InitUI(EventParam eventParam)
