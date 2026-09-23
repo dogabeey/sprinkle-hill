@@ -98,6 +98,12 @@ namespace Game
             return GetChainAdjustedDuration(baseDelay);
         }
 
+        private float GetChainMatchGroupDelay()
+        {
+            ConstantManager cm = ConstantManager.Instance;
+            return cm != null ? Mathf.Max(0f, cm.chainMatchGroupDelay) : 0.2f;
+        }
+
         private void ResetChainSpeedState()
         {
             currentComboCount = 0;
@@ -2156,69 +2162,101 @@ namespace Game
                 }
             }
 
-            foreach (var group in matchedPositions)
+            int pendingGroups = 0;
+            for (int i = 0; i < matchedPositions.Count; i++)
             {
                 if (IsMatchResolutionBlocked())
                     yield break;
 
-                Vector2Int? mergeTarget = FindMergeTarget(group, protectedPositions);
-                if (mergeTarget.HasValue)
-                {
-                    GridElement mergeEl = GetElementAt(mergeTarget.Value);
-                    if (mergeEl != null)
-                        GridHelper.AnimateEmission(mergeEl, 1.5f, 0.2f);
-                }
+                pendingGroups++;
+                StartCoroutine(ClearMatchGroup(
+                    matchedPositions[i],
+                    protectedPositions,
+                    allMatchedPositions,
+                    adjacentFeatureProcessed,
+                    adjacentOffsets,
+                    boxesProcessed,
+                    wallsToBreak,
+                    hiddenToReveal,
+                    () => pendingGroups--));
 
-                int pendingDestructions = 0;
-
-                foreach (var pos in group)
-                {
-                    if (IsMatchResolutionBlocked())
-                        yield break;
-
-                    GridCell cell = GetCell(pos);
-                    if (cell?.elementInfo == null) continue;
-                    if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron) continue;
-                    ElementData destroyedElementData = cell.elementInfo.elementData;
-
-                    GridElement matchedElement = GetElementAt(pos);
-
-
-                    bool wasCoveredByGlass = TriggerCellFeatureMatchedOverAt(pos);
-                    if (!wasCoveredByGlass)
-                        ProcessAdjacentFeatureMatchEffects(pos, cell, matchedElement, allMatchedPositions, adjacentFeatureProcessed, adjacentOffsets);
-
-                    NotifyElementCleared(pos);
-                    cell.elementInfo = null;
-                    if (matchedElement != null)
-                    {
-                        pendingDestructions++;
-                        StartCoroutine(ClearMatchedElementAfterAnimation(
-                            pos,
-                            matchedElement,
-                            destroyedElementData,
-                            mergeTarget,
-                            boxesProcessed,
-                            wallsToBreak,
-                            hiddenToReveal,
-                            adjacentOffsets,
-                            () => pendingDestructions--));
-                    }
-                    else
-                    {
-                        BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
-                        ProcessAdjacentWallAndHiddenEffects(pos, destroyedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
-                    }
-                }
-
-                if (pendingDestructions > 0)
-                    yield return new WaitUntil(() => pendingDestructions == 0);
-
-                yield return new WaitForSeconds(GetCurrentMatchClearDelay());
+                if (i < matchedPositions.Count - 1)
+                    yield return new WaitForSeconds(GetChainMatchGroupDelay());
             }
+
+            if (pendingGroups > 0)
+                yield return new WaitUntil(() => pendingGroups == 0);
+
+            if (IsMatchResolutionBlocked())
+                yield break;
 
             foreach (Vector2Int rp in hiddenToReveal) RevealHiddenElement(rp);
             yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
+        }
+
+        private IEnumerator ClearMatchGroup(
+            List<Vector2Int> group,
+            HashSet<Vector2Int> protectedPositions,
+            HashSet<Vector2Int> allMatchedPositions,
+            HashSet<Vector2Int> adjacentFeatureProcessed,
+            Vector2Int[] adjacentOffsets,
+            HashSet<Vector2Int> boxesProcessed,
+            HashSet<Vector2Int> wallsToBreak,
+            HashSet<Vector2Int> hiddenToReveal,
+            System.Action onCompleted)
+        {
+            Vector2Int? mergeTarget = FindMergeTarget(group, protectedPositions);
+            if (mergeTarget.HasValue)
+            {
+                GridElement mergeEl = GetElementAt(mergeTarget.Value);
+                if (mergeEl != null)
+                    GridHelper.AnimateEmission(mergeEl, 1.5f, 0.2f);
+            }
+
+            int pendingDestructions = 0;
+            foreach (Vector2Int pos in group)
+            {
+                if (IsMatchResolutionBlocked())
+                    break;
+
+                GridCell cell = GetCell(pos);
+                if (cell?.elementInfo == null || cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron)
+                    continue;
+
+                ElementData destroyedElementData = cell.elementInfo.elementData;
+                GridElement matchedElement = GetElementAt(pos);
+                bool wasCoveredByGlass = TriggerCellFeatureMatchedOverAt(pos);
+                if (!wasCoveredByGlass)
+                    ProcessAdjacentFeatureMatchEffects(pos, cell, matchedElement, allMatchedPositions, adjacentFeatureProcessed, adjacentOffsets);
+
+                NotifyElementCleared(pos);
+                cell.elementInfo = null;
+                if (matchedElement != null)
+                {
+                    pendingDestructions++;
+                    StartCoroutine(ClearMatchedElementAfterAnimation(
+                        pos,
+                        matchedElement,
+                        destroyedElementData,
+                        mergeTarget,
+                        boxesProcessed,
+                        wallsToBreak,
+                        hiddenToReveal,
+                        adjacentOffsets,
+                        () => pendingDestructions--));
+                }
+                else
+                {
+                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                    ProcessAdjacentWallAndHiddenEffects(pos, destroyedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
+                }
+            }
+
+            if (pendingDestructions > 0)
+                yield return new WaitUntil(() => pendingDestructions == 0);
+
+            yield return new WaitForSeconds(GetCurrentMatchClearDelay());
+            onCompleted?.Invoke();
         }
 
         private bool IsMatchResolutionBlocked()

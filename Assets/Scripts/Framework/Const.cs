@@ -47,6 +47,8 @@ namespace Game
         public float matchClearDelay = 0.3f;
         [RemoteConfig("chain_match_speed_increase_per_combo", 0.2f)]
         public float chainMatchSpeedIncreasePerCombo = 0.2f;
+        [RemoteConfig("chain_match_group_delay", 0.2f)]
+        public float chainMatchGroupDelay = 0.2f;
         [RemoteConfig("element_destroy_punch_scale", 0.25f)]
         public float elementDestroyPunchScale = 0.25f;
         [RemoteConfig("element_destroy_punch_duration", 0.2f)]
@@ -213,6 +215,7 @@ namespace Game
             elementFinalLandingOutBackOvershoot = RemoteConfigManager.Instance.GetFloat("element_final_landing_out_back_overshoot", ref elementFinalLandingOutBackOvershoot, pathToConfigFile);
             matchClearDelay = RemoteConfigManager.Instance.GetFloat("match_clear_delay", ref matchClearDelay, pathToConfigFile);
             chainMatchSpeedIncreasePerCombo = RemoteConfigManager.Instance.GetFloat("chain_match_speed_increase_per_combo", ref chainMatchSpeedIncreasePerCombo, pathToConfigFile);
+            chainMatchGroupDelay = RemoteConfigManager.Instance.GetFloat("chain_match_group_delay", ref chainMatchGroupDelay, pathToConfigFile);
             elementDestroyPunchScale = RemoteConfigManager.Instance.GetFloat("element_destroy_punch_scale", ref elementDestroyPunchScale, pathToConfigFile);
             elementDestroyPunchDuration = RemoteConfigManager.Instance.GetFloat("element_destroy_punch_duration", ref elementDestroyPunchDuration, pathToConfigFile);
             elementDestroyPunchVibrato = RemoteConfigManager.Instance.GetInt("element_destroy_punch_vibrato", ref elementDestroyPunchVibrato, pathToConfigFile);
