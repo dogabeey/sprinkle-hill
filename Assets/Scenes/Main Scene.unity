@@ -3745,7 +3745,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9155597906615986520, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: managedReferences[1021877643594432512].unlockedLevel
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9155597906615986520, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: managedReferences[1021877643594432513].startingCount
@@ -3753,7 +3753,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9155597906615986520, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: managedReferences[1021877643594432513].unlockedLevel
-      value: 12
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 9155597906615986520, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: managedReferences[1021877643594432514].startingCount
@@ -3761,7 +3761,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9155597906615986520, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: managedReferences[1021877643594432514].unlockedLevel
-      value: 16
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 9155597906615986520, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: managedReferences[1949156293352620133].startingCount
@@ -3769,7 +3769,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9155597906615986520, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: managedReferences[1949156293352620133].unlockedLevel
-      value: 8
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:
@@ -5036,6 +5036,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 407152368}
     m_Modifications:
+    - target: {fileID: 4753654417552710471, guid: 4415aee893641684cb114784cf067567, type: 3}
+      propertyPath: notClosedByClickingOutside
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6771873619466600905, guid: 4415aee893641684cb114784cf067567, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

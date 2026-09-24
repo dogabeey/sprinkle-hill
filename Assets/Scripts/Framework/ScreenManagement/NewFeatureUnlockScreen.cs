@@ -20,6 +20,7 @@ namespace Game
 
         private void Awake()
         {
+            Debug.Log($"[FeatureUnlock] NewFeatureUnlockScreen Awake | Close button assigned: {closeButton != null}");
             if (closeButton != null)
                 closeButton.onClick.AddListener(Close);
         }
@@ -40,6 +41,7 @@ namespace Game
 
         public override void ResolveParams(EventParam eventParam)
         {
+            Debug.Log($"[FeatureUnlock] NewFeatureUnlockScreen ResolveParams | Has params: {eventParam?.paramDictionary != null}");
             if(eventParam != null)
             {
                 if(eventParam.paramDictionary != null)

@@ -73,9 +73,15 @@ namespace Game
         {
             GameScreen gameScreen = screens.Find(screen => screen.ScreenID == screenID);
             if (gameScreen == null || IsScreenOpeningPrevented(gameScreen))
+            {
+                Debug.LogWarning($"[FeatureUnlock] ScreenManager.Show({screenID}) blocked | Found: {gameScreen != null} | Opening prevented: {gameScreen != null && IsScreenOpeningPrevented(gameScreen)}");
                 return;
+            }
 
-            CloseAllScreens();
+            if (screenID == Screens.Feature)
+                Debug.Log($"[FeatureUnlock] ScreenManager is opening Screens.Feature ({gameScreen.name}).");
+
+            CloseAllNonPersistentScreens();
             ShowBackground();
             ShowScreen(gameScreen, eventParam);
         }
@@ -129,6 +135,7 @@ namespace Game
         }
         private static void ShowScreen(GameScreen gameScreen, EventParam eventParam)
         {
+            Debug.Log($"[ScreenManager] ShowScreen called for {gameScreen.name} with params: {eventParam?.paramDictionary?.Count ?? 0}");
             gameScreen.gameObject.SetActive(true);
             gameScreen.ResolveParams(eventParam);
             gameScreen.InitUI(eventParam);

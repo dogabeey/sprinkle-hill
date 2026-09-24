@@ -105,6 +105,7 @@ MonoBehaviour:
   allowRocketCreation: 1
   allowBombCreation: 1
   allowPropellerCreation: 1
+  isBoosterPickerEnabled: 0
   sparklingPowerAfterXCombo: 1
   sparklingAppearChance: 0
   refillChainReductionStartDepth: 1

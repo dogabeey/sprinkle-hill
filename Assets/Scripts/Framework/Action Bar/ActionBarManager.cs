@@ -33,12 +33,12 @@ namespace Game
 
         private void OnEnable()
         {
-            EventManager.StartListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
+            EventManager.StartListening(GameEvent.LOADING_SCREEN_COMPLETE, OnLevelStarted);
         }
 
         private void OnDisable()
         {
-            EventManager.StopListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
+            EventManager.StopListening(GameEvent.LOADING_SCREEN_COMPLETE, OnLevelStarted);
         }
 
         private void Start()
@@ -49,8 +49,11 @@ namespace Game
 
         private void OnLevelStarted(EventParam eventParam)
         {
+            Debug.Log($"[FeatureUnlock] LOADING_SCREEN_COMPLETE | Level: {World.Instance?.lastPlayedLevelIndex.ToString() ?? "none"} | Snapshot: {hasAvailabilitySnapshot}");
+
             if (!hasAvailabilitySnapshot)
             {
+                Debug.Log("[FeatureUnlock] Availability snapshot was unavailable; caching now and skipping unlock presentation.");
                 CacheActionAvailability();
                 return;
             }
@@ -65,16 +68,26 @@ namespace Game
                 bool isAvailable = action.IsAvailable();
                 bool wasAvailable = actionAvailability.TryGetValue(action, out bool cachedAvailability) && cachedAvailability;
                 actionAvailability[action] = isAvailable;
+                bool unlocksOnCurrentLevel = IsUnlockedOnCurrentLevel(action);
+
+                Debug.Log($"[FeatureUnlock] Action: {action.ItemName} | WasAvailable: {wasAvailable} | IsAvailable: {isAvailable} | UnlocksCurrentLevel: {unlocksOnCurrentLevel} | AlreadyShown: {action.HasShownUnlockScreen}");
 
                 if (newlyUnlockedAction == null &&
                     !action.HasShownUnlockScreen &&
-                    ((!wasAvailable && isAvailable) || IsUnlockedOnCurrentLevel(action)))
+                    ((!wasAvailable && isAvailable) || unlocksOnCurrentLevel))
                     newlyUnlockedAction = action;
             }
 
             RefreshActionBarViews();
             if (newlyUnlockedAction != null)
+            {
+                Debug.Log($"[FeatureUnlock] Showing feature unlock screen for: {newlyUnlockedAction.ItemName}");
                 ShowNewFeatureUnlockScreen(newlyUnlockedAction);
+            }
+            else
+            {
+                Debug.Log("[FeatureUnlock] No new action matched the feature unlock criteria.");
+            }
         }
 
         private static bool IsUnlockedOnCurrentLevel(ActionBarItem action)
@@ -109,8 +122,19 @@ namespace Game
         private void ShowNewFeatureUnlockScreen(ActionBarItem action)
         {
             if (ScreenManager.Instance == null)
+            {
+                Debug.LogError($"[FeatureUnlock] Cannot show {action.ItemName}: ScreenManager instance is missing.");
                 return;
+            }
 
+            GameScreen featureScreen = ScreenManager.Instance.screens.Find(screen => screen != null && screen.ScreenID == Screens.Feature);
+            if (featureScreen == null)
+            {
+                Debug.LogError($"[FeatureUnlock] Cannot show {action.ItemName}: Screens.Feature is not registered. Registered screens: {ScreenManager.Instance.screens.Count}.");
+                return;
+            }
+
+            Debug.Log($"[FeatureUnlock] Screens.Feature found ({featureScreen.name}); requesting display.");
             action.MarkUnlockScreenShown();
             ScreenManager.Instance.Show(Screens.Feature, new EventParam(new Dictionary<string, object>
             {
