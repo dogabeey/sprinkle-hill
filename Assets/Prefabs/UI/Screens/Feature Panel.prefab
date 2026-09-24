@@ -320,7 +320,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 64.15
+  m_fontSize: 72
   m_fontSizeBase: 30
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -423,7 +423,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7395400015189605694}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -481,7 +481,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Game::Game.NewFeatureUnlockScreen
   animator: {fileID: 2720137003585931562}
-  playAnimationName: 
+  playAnimationName: scale_out
   closeAnimationName: 
   notClosedByClickingOutside: 0
   doesNotCloseOtherOpenScreens: 0
@@ -633,8 +633,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 7eb54bbe46579e94f90ed0e96d2f0104, type: 2}
-  m_sharedMaterial: {fileID: 320891412821721280, guid: 7eb54bbe46579e94f90ed0e96d2f0104, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ab1ffdf7f68ffe745a3d3b9964c97bfb, type: 2}
+  m_sharedMaterial: {fileID: -2831885914188979708, guid: ab1ffdf7f68ffe745a3d3b9964c97bfb, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
