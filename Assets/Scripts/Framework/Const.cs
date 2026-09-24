@@ -21,6 +21,7 @@ namespace Game
         FeatureProgress,
         BoosterSelection,
         Prompt,
+        Feature,
         BuyMenu,
         ConsentPopup,
         Market,

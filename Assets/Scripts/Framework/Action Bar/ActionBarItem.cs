@@ -9,6 +9,7 @@ using UnityEngine;
 using Game.Ads;
 using UnityEngine.UI;
 using Game.EventManagement;
+using UnityEngine.Serialization;
 
 namespace Game
 {
@@ -39,8 +40,11 @@ namespace Game
 
 
         public int currentCount;
+        private bool hasShownUnlockScreen;
 
-        public Sprite ActionBarIcon;
+        [FormerlySerializedAs("ActionBarIcon")]
+        public Sprite actionBarIcon;
+        public Sprite textSprite; // Used by NewFeatureUnlockScreen to show the feature name as an image.
         public List<IBuyable.BuyBundle> buyConfig;
         public List<IBuyable.BuyBundle> BuyConfig => buyConfig;
         public int[] BuyChoices => new int[] { 1, 5, 25 };
@@ -140,6 +144,13 @@ namespace Game
             }
         }
 
+        public bool HasShownUnlockScreen => hasShownUnlockScreen;
+
+        public void MarkUnlockScreenShown()
+        {
+            hasShownUnlockScreen = true;
+        }
+
         abstract public int GetCost();
 
         abstract public void OnClick();
@@ -201,7 +212,7 @@ namespace Game
                 break;
             }
 
-            Sprite feedbackSprite = ActionBarIcon;
+            Sprite feedbackSprite = actionBarIcon;
             if (feedbackSprite == null)
                 return;
 
@@ -254,7 +265,8 @@ namespace Game
         {
             Dictionary<string, object> saveData = new Dictionary<string, object>
             {
-                { "currentCount", currentCount }
+                { "currentCount", currentCount },
+                { "hasShownUnlockScreen", hasShownUnlockScreen }
             };
             return saveData;
         }
@@ -272,6 +284,10 @@ namespace Game
             if (saveData.HasKey("currentCount"))
             {
                 currentCount = saveData["currentCount"].AsInt;
+            }
+            if (saveData.HasKey("hasShownUnlockScreen"))
+            {
+                hasShownUnlockScreen = saveData["hasShownUnlockScreen"].AsBool;
             }
 
             onLoadSuccess?.Invoke();

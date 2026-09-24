@@ -122,7 +122,7 @@ namespace Game
                 if (actionIcon)
                 {
                     actionIcon.enabled = actionBarItem.IsAvailable();
-                    actionIcon.sprite = actionBarItem.ActionBarIcon;
+                    actionIcon.sprite = actionBarItem.actionBarIcon;
                 }
                 if (lockedIcon)
                     lockedIcon.enabled = actionIcon && !actionIcon.enabled;

@@ -18,7 +18,7 @@ namespace Game
 
         private IEnumerator Start()
         {
-            screens.AddRange(Object.FindObjectsByType<GameScreen>(FindObjectsSortMode.None));
+            screens.AddRange(Object.FindObjectsByType<GameScreen>(FindObjectsInactive.Include, FindObjectsSortMode.None));
 
             defaultBGAlpha = backgroundImage.color.a;
             yield break;

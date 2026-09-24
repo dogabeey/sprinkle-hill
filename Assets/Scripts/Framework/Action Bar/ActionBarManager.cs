@@ -22,15 +22,101 @@ namespace Game
         public Sprite lockedSprite; // Used for not available actions.
 
         internal List<ActionBarView> actionBarViews = new List<ActionBarView>();
+        private readonly Dictionary<ActionBarItem, bool> actionAvailability = new Dictionary<ActionBarItem, bool>();
+        private bool hasAvailabilitySnapshot;
 
-        private void Awake()
+        protected override void Awake()
         {
-
+            base.Awake();
             actionBarItemList.ForEach(actionBarItem => actionBarItem.Init());
         }
+
+        private void OnEnable()
+        {
+            EventManager.StartListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
+        }
+
+        private void OnDisable()
+        {
+            EventManager.StopListening(GameEvent.LEVEL_STARTED, OnLevelStarted);
+        }
+
         private void Start()
         {
             DrawUI();
+            CacheActionAvailability();
+        }
+
+        private void OnLevelStarted(EventParam eventParam)
+        {
+            if (!hasAvailabilitySnapshot)
+            {
+                CacheActionAvailability();
+                return;
+            }
+
+            ActionBarItem newlyUnlockedAction = null;
+            for (int i = 0; i < actionBarItemList.Count; i++)
+            {
+                ActionBarItem action = actionBarItemList[i];
+                if (action == null)
+                    continue;
+
+                bool isAvailable = action.IsAvailable();
+                bool wasAvailable = actionAvailability.TryGetValue(action, out bool cachedAvailability) && cachedAvailability;
+                actionAvailability[action] = isAvailable;
+
+                if (newlyUnlockedAction == null &&
+                    !action.HasShownUnlockScreen &&
+                    ((!wasAvailable && isAvailable) || IsUnlockedOnCurrentLevel(action)))
+                    newlyUnlockedAction = action;
+            }
+
+            RefreshActionBarViews();
+            if (newlyUnlockedAction != null)
+                ShowNewFeatureUnlockScreen(newlyUnlockedAction);
+        }
+
+        private static bool IsUnlockedOnCurrentLevel(ActionBarItem action)
+        {
+            return action is BoosterBarAction boosterAction &&
+                   World.Instance != null &&
+                   World.Instance.lastPlayedLevelIndex == boosterAction.unlockedLevel;
+        }
+
+        private void CacheActionAvailability()
+        {
+            actionAvailability.Clear();
+            for (int i = 0; i < actionBarItemList.Count; i++)
+            {
+                ActionBarItem action = actionBarItemList[i];
+                if (action != null)
+                    actionAvailability[action] = action.IsAvailable();
+            }
+
+            hasAvailabilitySnapshot = true;
+        }
+
+        private void RefreshActionBarViews()
+        {
+            for (int i = 0; i < actionBarViews.Count; i++)
+            {
+                if (actionBarViews[i] != null)
+                    actionBarViews[i].DrawUI();
+            }
+        }
+
+        private void ShowNewFeatureUnlockScreen(ActionBarItem action)
+        {
+            if (ScreenManager.Instance == null)
+                return;
+
+            action.MarkUnlockScreenShown();
+            ScreenManager.Instance.Show(Screens.Feature, new EventParam(new Dictionary<string, object>
+            {
+                { NewFeatureUnlockScreen.NewFeatureUnlockParameters.featureNameKey, action.textSprite },
+                { NewFeatureUnlockScreen.NewFeatureUnlockParameters.featureIconKey, action.actionBarIcon }
+            }));
         }
 
         protected virtual void DrawUI()
