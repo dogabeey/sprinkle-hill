@@ -31,21 +31,77 @@ public class WarpableSpriteModifier : MonoBehaviour
     [OnValueChanged(nameof(SetMaterialValues))]
     public Vector2 distortionDirection;
 
+    private bool hasInitialValues;
+    private Texture2D initialMainTexture;
+    private Vector2 initialTwirl;
+    private Vector2 initialScale;
+    private Vector2 initialSpherize;
+    private Texture2D initialDistortionTexture;
+    private float initialDistortionStrength;
+    private float initialDistortionSpeed;
+    private Vector2 initialDistortionDirection;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private void Awake()
     {
-        
+        CacheInitialValues();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnEnable()
+    {
+        ResetToInitialValues();
+    }
+
+    private void OnDisable()
+    {
+        ResetToInitialValues();
+    }
+
+    private void Update()
     {
         SetMaterialValues();
     }
 
+    /// <summary>
+    /// Restores values that may have been modified by an animation before this
+    /// visual is returned to, or retrieved from, the element pool.
+    /// </summary>
+    public void ResetToInitialValues()
+    {
+        CacheInitialValues();
+
+        mainTexture = initialMainTexture;
+        twirl = initialTwirl;
+        scale = initialScale;
+        spherize = initialSpherize;
+        distortionTexture = initialDistortionTexture;
+        distortionStrength = initialDistortionStrength;
+        distortionSpeed = initialDistortionSpeed;
+        distortionDirection = initialDistortionDirection;
+
+        SetMaterialValues();
+    }
+
+    private void CacheInitialValues()
+    {
+        if (hasInitialValues)
+            return;
+
+        hasInitialValues = true;
+        initialMainTexture = mainTexture;
+        initialTwirl = twirl;
+        initialScale = scale;
+        initialSpherize = spherize;
+        initialDistortionTexture = distortionTexture;
+        initialDistortionStrength = distortionStrength;
+        initialDistortionSpeed = distortionSpeed;
+        initialDistortionDirection = distortionDirection;
+    }
+
     private void SetMaterialValues()
     {
+        if (rendererReference == null || rendererReference.sharedMaterial == null)
+            return;
+
         if(Application.isPlaying)
         {
             if (mainTexture)
