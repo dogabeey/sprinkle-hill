@@ -18,7 +18,7 @@ MonoBehaviour:
   anchorMin: {x: 0, y: 0}
   anchorMax: {x: 1, y: 0}
   disablesActionBar: 1
-  requiredLevelIndex: 1
+  requiredLevelIndex: 3
   requiredStageIndex: -1
   tutorialAnimationType: 0
   tutorialAnimationSettings:

@@ -3637,10 +3637,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Managers
       objectReference: {fileID: 0}
-    - target: {fileID: 3020878916053958284, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
-      propertyPath: initialElementPoolSize
-      value: 144
-      objectReference: {fileID: 0}
     - target: {fileID: 4416487564072169646, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: currencyContainer
       value: 
