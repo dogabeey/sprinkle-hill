@@ -65,7 +65,7 @@ namespace Game
             nextLevelButton?.onClick.AddListener(() =>
             {
                 GameManager.Instance.LoadNextLevel();
-                ScreenManager.Instance.CloseAllNonPersistentScreens();
+                ScreenManager.Instance.CloseAllScreens(false);
             });
             homeButton?.onClick.AddListener(() =>
             {
@@ -105,7 +105,7 @@ namespace Game
             toggleSettingsButton.onClick.RemoveAllListeners();
             toggleSettingsButton.onClick.AddListener(() =>
             {
-                ScreenManager.Instance.CloseAllNonPersistentScreens();
+                ScreenManager.Instance.CloseAllScreens(false);
             });
         }
         public override void CloseUI()

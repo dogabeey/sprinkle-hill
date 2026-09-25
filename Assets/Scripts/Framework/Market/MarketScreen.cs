@@ -89,6 +89,6 @@ namespace Game
             activeListings.Clear();
         }
 
-        private void Close() => ScreenManager.Instance.CloseAllNonPersistentScreens();
+        private void Close() => ScreenManager.Instance.CloseAllScreens(false);
     }
 }

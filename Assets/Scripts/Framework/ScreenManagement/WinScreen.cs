@@ -123,7 +123,7 @@ namespace Game
                 yield return StartCoroutine(CurrencyManager.Instance.AddCurrencyCoroutine(reward.type, rewardAmount, sourceObject));
             }
 
-            ScreenManager.Instance.CloseAllNonPersistentScreens();
+            ScreenManager.Instance.CloseAllScreens(false);
             if (GameManager.Instance.showFeatureProgressScreen)
             {
                 ScreenManager.Instance.Show(Screens.FeatureProgress);

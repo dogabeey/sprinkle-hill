@@ -138,7 +138,7 @@ namespace Game
                 yield break;
             }
 
-            ScreenManager.Instance.Show(boosterSelectionScreen);
+            ScreenManager.Instance.Show(boosterSelectionScreen.ScreenID);
         }
 
         private void OnEnable()

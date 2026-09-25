@@ -206,7 +206,7 @@ namespace Game
         }
         private void OnHomeButtonClicked()
         {
-            ScreenManager.Instance.CloseAllNonPersistentScreens();
+            ScreenManager.Instance.CloseAllScreens(false);
         }
         private void OnMissionsButtonClicked()
         {

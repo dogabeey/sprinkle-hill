@@ -100,7 +100,7 @@ namespace Game
         private void RetryLevel()
         {
             CurrencyManager.Instance.AddCurrency(heartCurrency, -retryHeartCost);
-            ScreenManager.Instance.CloseAllNonPersistentScreens();
+            ScreenManager.Instance.CloseAllScreens(false);
             EventManager.TriggerEvent(GameEvent.LEVEL_EXTRA_MOVE_REJECTED);
             GameManager.Instance.ResetCurrentLevel();
         }
@@ -111,7 +111,7 @@ namespace Game
             if (levelScene == null || !levelScene.CanBuyExtraMovesOrTime())
                 return;
 
-            ScreenManager.Instance.CloseAllNonPersistentScreens();
+            ScreenManager.Instance.CloseAllScreens(false);
             levelScene.BuyExtraMovesOrTime();
             // Restore the game state to what it was before the lose condition was triggered, so that the player can continue playing after buying extra moves or time.
             levelScene.RestoreStateBeforeLoseCondition();
@@ -132,7 +132,7 @@ namespace Game
                 return;
             }
 
-            ScreenManager.Instance.Show(boosterSelectionScreen);
+            ScreenManager.Instance.Show(boosterSelectionScreen.ScreenID);
         }
 
         private void ShowHeartRefillRewardedAd()

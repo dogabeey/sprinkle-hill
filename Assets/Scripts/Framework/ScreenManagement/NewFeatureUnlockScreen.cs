@@ -34,7 +34,7 @@ namespace Game
         private void Close()
         {
             if (ScreenManager.Instance != null)
-                ScreenManager.Instance.CloseAllNonPersistentScreens();
+                ScreenManager.Instance.CloseAllScreens(false);
             else
                 CloseUI();
         }

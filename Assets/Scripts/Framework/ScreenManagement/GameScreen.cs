@@ -14,7 +14,7 @@ namespace Game
         public Animator animator;
         public string playAnimationName;
         public string closeAnimationName;
-        public bool notClosedByClickingOutside;
+        public bool isPersistent;
         public bool doesNotCloseOtherOpenScreens;
         public bool preventsOtherScreensFromOpening;
 
