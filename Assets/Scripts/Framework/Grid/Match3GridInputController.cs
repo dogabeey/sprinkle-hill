@@ -587,14 +587,17 @@ namespace Game
                 return;
             }
 
+            PendingPlacementAction actionToPlace = pendingPlacementAction;
+            bool canTargetEmptyCell = actionToPlace == PendingPlacementAction.Cannon ||
+                                      actionToPlace == PendingPlacementAction.Torch;
             GridElement selectedElement = match3Grid.GetElementAt(cell.Coordinates);
-            if (selectedElement == null || !IsTutorialInputAllowed(selectedElement.gameObject))
+            GameObject tutorialTarget = selectedElement != null ? selectedElement.gameObject : cell.gameObject;
+            if ((selectedElement == null && !canTargetEmptyCell) || !IsTutorialInputAllowed(tutorialTarget))
             {
                 pendingPlacementAction = PendingPlacementAction.None;
                 return;
             }
 
-            PendingPlacementAction actionToPlace = pendingPlacementAction;
             pendingPlacementAction = PendingPlacementAction.None;
 
             if (actionToPlace == PendingPlacementAction.Bomb)
@@ -831,7 +834,66 @@ namespace Game
                 if (cell != null) return cell;
             }
 
-            return null;
+            return GetClosestGridCellAtScreenPosition(cam, screenPos);
+        }
+
+        private GridCellController GetClosestGridCellAtScreenPosition(Camera cam, Vector3 screenPos)
+        {
+            if (match3Grid == null)
+                return null;
+
+            GridCellController closestCell = null;
+            float closestDistanceSquared = float.MaxValue;
+            float closestCellSpacing = float.MaxValue;
+            Vector2 pointerPosition = screenPos;
+
+            for (int x = 0; x < match3Grid.GridSize.x; x++)
+            {
+                for (int y = 0; y < match3Grid.GridSize.y; y++)
+                {
+                    GridCellController candidate = match3Grid.GetCellControllerAt(new Vector2Int(x, y));
+                    if (candidate == null)
+                        continue;
+
+                    Vector3 candidateScreenPosition3D = cam.WorldToScreenPoint(candidate.transform.position);
+                    if (candidateScreenPosition3D.z < 0f)
+                        continue;
+
+                    Vector2 candidateScreenPosition = candidateScreenPosition3D;
+                    float distanceSquared = (candidateScreenPosition - pointerPosition).sqrMagnitude;
+                    if (distanceSquared < closestDistanceSquared)
+                    {
+                        closestDistanceSquared = distanceSquared;
+                        closestCell = candidate;
+                    }
+
+                    UpdateClosestCellSpacing(candidateScreenPosition, x + 1, y, ref closestCellSpacing, cam);
+                    UpdateClosestCellSpacing(candidateScreenPosition, x, y + 1, ref closestCellSpacing, cam);
+                }
+            }
+
+            if (closestCell == null)
+                return null;
+
+            float targetRadius = closestCellSpacing < float.MaxValue
+                ? closestCellSpacing * 0.6f
+                : 100f;
+            return closestDistanceSquared <= targetRadius * targetRadius ? closestCell : null;
+        }
+
+        private void UpdateClosestCellSpacing(Vector2 sourceScreenPosition, int x, int y, ref float closestCellSpacing, Camera cam)
+        {
+            GridCellController neighbor = match3Grid.GetCellControllerAt(new Vector2Int(x, y));
+            if (neighbor == null)
+                return;
+
+            Vector3 neighborScreenPosition3D = cam.WorldToScreenPoint(neighbor.transform.position);
+            if (neighborScreenPosition3D.z < 0f)
+                return;
+
+            float spacing = Vector2.Distance(sourceScreenPosition, (Vector2)neighborScreenPosition3D);
+            if (spacing > 0f)
+                closestCellSpacing = Mathf.Min(closestCellSpacing, spacing);
         }
 
         private bool IsTutorialInputAllowed(GameObject targetObject)

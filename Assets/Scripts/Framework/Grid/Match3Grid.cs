@@ -1251,13 +1251,16 @@ namespace Game
                     continue;
                 }
 
-                if (cell.cellType != CellType.Normal || cell.elementInfo == null)
+                if (cell.cellType != CellType.Normal)
                     continue;
 
                 GridElement matchedElement = GetElementAt(pos);
                 bool wasCoveredByGlass = TriggerCellFeatureMatchedOverAt(pos);
                 if (allowAdjacentFeatureTriggers && !wasCoveredByGlass)
                     TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+
+                if (cell.elementInfo == null)
+                    continue;
 
                 if (TryRevealHiddenBoxAt(pos))
                     continue;
@@ -1317,13 +1320,16 @@ namespace Game
                     continue;
                 }
 
-                if (cell.cellType != CellType.Normal || cell.elementInfo == null)
+                if (cell.cellType != CellType.Normal)
                     continue;
 
                 GridElement matchedElement = GetElementAt(pos);
                 bool wasCoveredByGlass = TriggerCellFeatureMatchedOverAt(pos);
                 if (allowAdjacentFeatureTriggers && !wasCoveredByGlass)
                     TriggerCellFeatureMatchedAdjacentToAt(pos, cell, matchedElement);
+
+                if (cell.elementInfo == null)
+                    continue;
 
                 if (TryRevealHiddenBoxAt(pos))
                     continue;
