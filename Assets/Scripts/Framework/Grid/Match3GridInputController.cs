@@ -266,19 +266,10 @@ namespace Game
 
         private GridElement_Match3Game GetElementAtScreenPos(Camera cam, Vector3 screenPos)
         {
-            Ray ray = cam.ScreenPointToRay(screenPos);
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                return hit.collider.GetComponentInParent<GridElement_Match3Game>();
-            }
-
-            RaycastHit2D hit2D = Physics2D.GetRayIntersection(ray);
-            if (hit2D.collider != null)
-            {
-                return hit2D.collider.GetComponentInParent<GridElement_Match3Game>();
-            }
-
-            return null;
+            GridCellController cell = GetCellAtScreenPos(cam, screenPos);
+            return cell != null
+                ? match3Grid.GetElementAt(cell.Coordinates) as GridElement_Match3Game
+                : null;
         }
 
         private void TryHandleClickActivationOrCancel()
@@ -820,20 +811,6 @@ namespace Game
 
         private GridCellController GetCellAtScreenPos(Camera cam, Vector3 screenPos)
         {
-            Ray ray = cam.ScreenPointToRay(screenPos);
-            if (Physics.Raycast(ray, out RaycastHit hit))
-            {
-                GridCellController cell = hit.collider.GetComponentInParent<GridCellController>();
-                if (cell != null) return cell;
-            }
-
-            RaycastHit2D hit2D = Physics2D.GetRayIntersection(ray);
-            if (hit2D.collider != null)
-            {
-                GridCellController cell = hit2D.collider.GetComponentInParent<GridCellController>();
-                if (cell != null) return cell;
-            }
-
             return GetClosestGridCellAtScreenPosition(cam, screenPos);
         }
 
@@ -859,7 +836,7 @@ namespace Game
                     if (candidateScreenPosition3D.z < 0f)
                         continue;
 
-                    Vector2 candidateScreenPosition = candidateScreenPosition3D;
+                    Vector2 candidateScreenPosition = (Vector2)candidateScreenPosition3D;
                     float distanceSquared = (candidateScreenPosition - pointerPosition).sqrMagnitude;
                     if (distanceSquared < closestDistanceSquared)
                     {
