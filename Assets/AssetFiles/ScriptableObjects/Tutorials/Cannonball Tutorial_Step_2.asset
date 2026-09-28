@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a23e412978b2f9b43ae72e9ce71bb98b, type: 3}
   m_Name: Cannonball Tutorial_Step_2
   m_EditorClassIdentifier: 
-  Id: cannonball_2
+  Id: cannon_2
   directive: 
   directiveParentHeight: 493.38
   anchorMin: {x: 0, y: 0}

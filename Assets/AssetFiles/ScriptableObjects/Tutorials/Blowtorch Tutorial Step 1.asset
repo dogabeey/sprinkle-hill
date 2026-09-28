@@ -10,34 +10,33 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a23e412978b2f9b43ae72e9ce71bb98b, type: 3}
-  m_Name: Hammer Tutorial_Step_2
+  m_Name: Blowtorch Tutorial Step 1
   m_EditorClassIdentifier: 
-  Id: hammer_2
+  Id: torch
   directive: 
   directiveParentHeight: 493.38
   anchorMin: {x: 0, y: 0}
   anchorMax: {x: 1, y: 0}
   disablesActionBar: 0
-  requiredLevelIndex: 1
+  requiredLevelIndex: 9
   requiredStageIndex: -1
   tutorialAnimationType: 2
   tutorialAnimationSettings:
     tutorialAnimationType: 2
     tutorialObject: {fileID: 5451101766555202300, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
-    screenPositionOffset: {x: 0, y: 0}
+    screenPositionOffset: {x: 90, y: -80}
     duration: 1
     isLoop: 1
-    rotationOffset: -90
+    rotationOffset: 0
     startCoordinate: {x: 0, y: 0}
     endCoordinate: {x: 0, y: 0}
   highlightSelectors:
-  - highlightSelectorType: 8
-    highlightCornerRadius: 8
-    highlightEdgeSoftness: 4
-    actionName: Hammer
+  - highlightSelectorType: 6
+    highlightCornerRadius: 56
+    highlightEdgeSoftness: 16
+    actionName: Torch
     selectedTags: []
-    selectedCoordinates:
-    - {x: 4, y: 0}
+    selectedCoordinates: []
     columnIndex: 0
     rowIndex: 0
   highlightSelectorType: 0
@@ -50,7 +49,7 @@ MonoBehaviour:
     selectedCoordinates: []
     columnIndex: 0
     rowIndex: 0
-  startEvent: 0
+  startEvent: 702
   startEventExpectedParams: 0
   startEventExpectedParamValues:
     paramObj: {fileID: 0}
@@ -60,7 +59,7 @@ MonoBehaviour:
     paramStr: 
     vectorList: []
     paramBool: 0
-  completionEvent: 601
+  completionEvent: 600
   completionEventExpectedParams: 0
   completionEventExpectedParamValues:
     paramObj: {fileID: 0}
@@ -76,7 +75,7 @@ MonoBehaviour:
   onComplete:
     m_PersistentCalls:
       m_Calls: []
-  nextStep: {fileID: 0}
+  nextStep: {fileID: 11400000, guid: dd9bccce60e67ee4fbd5c84aa41ddaf1, type: 2}
   advancedMode: 0
   serializationDepth: 0
   isStarted: 0

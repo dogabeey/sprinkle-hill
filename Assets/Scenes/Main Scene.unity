@@ -3667,7 +3667,7 @@ PrefabInstance:
       objectReference: {fileID: 2021190170}
     - target: {fileID: 5261046741829581099, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: debugStartingLevelIndex
-      value: 5
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6015500058473221691, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: directiveText
@@ -3687,7 +3687,7 @@ PrefabInstance:
       objectReference: {fileID: 752889591}
     - target: {fileID: 6015500058473221691, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: tutorialSteps.Array.size
-      value: 7
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 6015500058473221691, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: 'tutorialSteps.Array.data[3]'
@@ -3705,6 +3705,14 @@ PrefabInstance:
       propertyPath: 'tutorialSteps.Array.data[6]'
       value: 
       objectReference: {fileID: 11400000, guid: 88f9a38264be367458369d7634e67ac0, type: 2}
+    - target: {fileID: 6015500058473221691, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
+      propertyPath: 'tutorialSteps.Array.data[7]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 44b43bea34efa8943ab5c18f23087540, type: 2}
+    - target: {fileID: 6015500058473221691, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
+      propertyPath: 'tutorialSteps.Array.data[8]'
+      value: 
+      objectReference: {fileID: 11400000, guid: dd9bccce60e67ee4fbd5c84aa41ddaf1, type: 2}
     - target: {fileID: 8204118713837901211, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
