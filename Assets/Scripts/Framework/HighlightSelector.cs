@@ -10,6 +10,8 @@ namespace Game
     public abstract class HighlightSelector
     {
         public abstract GameObject[] HighlightedObjects { get; }
+        public float highlightCornerRadius = 8; // Set TutorialHighlight shader's highlight Corner Radius property to this value.
+        public float highlightEdgeSoftness = 4; // Set TutorialHighlight shader's edge Softness property to this value.
     }
 
     [Serializable]
