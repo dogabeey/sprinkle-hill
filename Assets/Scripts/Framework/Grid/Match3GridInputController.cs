@@ -154,6 +154,12 @@ namespace Game
                 return;
             }
 
+            if (!match3Grid.TryGetElementPosition(element, out Vector2Int elementPos) ||
+                match3Grid.IsColumnBusy(elementPos.x))
+            {
+                return;
+            }
+
             if (!IsTutorialInputAllowed(element.gameObject))
             {
                 return;
@@ -192,6 +198,12 @@ namespace Game
                 return;
             }
 
+            if (match3Grid.IsColumnBusy(fromPos.x))
+            {
+                CancelDrag();
+                return;
+            }
+
             Camera cam = inputCamera != null ? inputCamera : Camera.main;
             if (cam == null)
             {
@@ -219,6 +231,12 @@ namespace Game
 
             if (!Match3Grid.AreAdjacent(fromPos, toPos))
             {
+                return;
+            }
+
+            if (match3Grid.AreColumnsBusy(fromPos.x, toPos.x))
+            {
+                CancelDrag();
                 return;
             }
 
@@ -313,11 +331,11 @@ namespace Game
         private IEnumerator SwapAndMatchRoutine(Vector2Int firstPos, Vector2Int secondPos)
         {
             ClearHintVisuals();
-            isProcessing = true;
+            match3Grid.LockInputColumns(firstPos.x, secondPos.x);
 
             yield return StartCoroutine(match3Grid.SwapAndMatch(firstPos, secondPos));
 
-            isProcessing = false;
+            match3Grid.UnlockInputColumns(firstPos.x, secondPos.x);
             idleTimer = 0f;
         }
 
@@ -577,6 +595,10 @@ namespace Game
                 Debug.LogWarning("Cannot place action: No cell found at the screen position.");
                 return;
             }
+
+
+            if (match3Grid.IsColumnBusy(cell.Coordinates.x))
+                return;
 
             PendingPlacementAction actionToPlace = pendingPlacementAction;
             bool canTargetEmptyCell = actionToPlace == PendingPlacementAction.Cannon ||

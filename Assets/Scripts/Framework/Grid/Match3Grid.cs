@@ -60,6 +60,76 @@ namespace Game
         private bool isResolvingIndirectCascade;
         private PowerUpHandler powerUpHandler;
         private readonly Dictionary<Vector2Int, ParticleSystem> activeCellFeatureIdleParticles = new Dictionary<Vector2Int, ParticleSystem>();
+        private readonly Dictionary<int, int> busyColumnRefCounts = new Dictionary<int, int>();
+        private readonly HashSet<int> matchColumnsAwaitingGravity = new HashSet<int>();
+
+        public bool IsColumnBusy(int column)
+        {
+            return busyColumnRefCounts.TryGetValue(column, out int count) && count > 0;
+        }
+
+        public bool AreColumnsBusy(params int[] columns)
+        {
+            if (columns == null)
+                return false;
+
+            for (int i = 0; i < columns.Length; i++)
+                if (IsColumnBusy(columns[i]))
+                    return true;
+
+            return false;
+        }
+
+        public void LockInputColumns(params int[] columns)
+        {
+            if (columns == null)
+                return;
+
+            for (int i = 0; i < columns.Length; i++)
+                LockColumn(columns[i]);
+        }
+
+        public void UnlockInputColumns(params int[] columns)
+        {
+            if (columns == null)
+                return;
+
+            for (int i = 0; i < columns.Length; i++)
+                UnlockColumn(columns[i]);
+        }
+
+        private void LockColumn(int column)
+        {
+            if (column < 0 || column >= gridSize.x)
+                return;
+
+            busyColumnRefCounts.TryGetValue(column, out int count);
+            busyColumnRefCounts[column] = count + 1;
+        }
+
+        private void UnlockColumn(int column)
+        {
+            if (!busyColumnRefCounts.TryGetValue(column, out int count))
+                return;
+
+            if (count <= 1)
+                busyColumnRefCounts.Remove(column);
+            else
+                busyColumnRefCounts[column] = count - 1;
+        }
+
+        private void LockMatchColumnUntilGravity(int column)
+        {
+            if (matchColumnsAwaitingGravity.Add(column))
+                LockColumn(column);
+        }
+
+        private void ReleaseMatchColumnsAwaitingGravity()
+        {
+            foreach (int column in matchColumnsAwaitingGravity)
+                UnlockColumn(column);
+            matchColumnsAwaitingGravity.Clear();
+        }
 
         private LevelScene_Match3Game Match3Level => GameManager.Instance != null ? GameManager.Instance.CurrentLevel as LevelScene_Match3Game : null;
 
@@ -965,7 +1035,10 @@ namespace Game
                 yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions));
 
                 if (IsMatchResolutionBlocked())
+                {
+                    ReleaseMatchColumnsAwaitingGravity();
                     yield break;
+                }
 
                 // Create power-ups (disco ball has highest priority)
                 for (int i = 0; i < discoBallSpawns.Count; i++)
@@ -1069,7 +1142,10 @@ namespace Game
             yield return StartCoroutine(ClearMatches(matchedGroups, protectedPositions));
 
             if (IsMatchResolutionBlocked())
+            {
+                ReleaseMatchColumnsAwaitingGravity();
                 yield break;
+            }
 
             for (int i = 0; i < discoBallSpawns.Count; i++)
                 powerUpHandler.CreatePowerUpAt(discoBallSpawns[i].position, discoBallSpawns[i].powerUpType);
@@ -1138,6 +1214,7 @@ namespace Game
 
                 if (IsMatchResolutionBlocked())
                 {
+                    ReleaseMatchColumnsAwaitingGravity();
                     isResolvingIndirectCascade = false;
                     yield break;
                 }
@@ -2164,17 +2241,18 @@ namespace Game
                         continue;
 
                     for (int j = 0; j < group.Count; j++)
+                    {
                         allMatchedPositions.Add(group[j]);
+                        LockMatchColumnUntilGravity(group[j].x);
+                    }
                 }
             }
 
-            int pendingGroups = 0;
             for (int i = 0; i < matchedPositions.Count; i++)
             {
                 if (IsMatchResolutionBlocked())
                     yield break;
 
-                pendingGroups++;
                 StartCoroutine(ClearMatchGroup(
                     matchedPositions[i],
                     protectedPositions,
@@ -2183,21 +2261,19 @@ namespace Game
                     adjacentOffsets,
                     boxesProcessed,
                     wallsToBreak,
-                    hiddenToReveal,
-                    () => pendingGroups--));
-
-                if (i < matchedPositions.Count - 1)
-                    yield return new WaitForSeconds(GetChainMatchGroupDelay());
+                    hiddenToReveal));
             }
-
-            if (pendingGroups > 0)
-                yield return new WaitUntil(() => pendingGroups == 0);
 
             if (IsMatchResolutionBlocked())
                 yield break;
 
-            foreach (Vector2Int rp in hiddenToReveal) RevealHiddenElement(rp);
-            yield return StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
+            // StartCoroutine runs each group up to its first yield. At this point
+            // every matched cell is already logically empty, so refill can start
+            // while the detached match visuals finish their animations.
+            foreach (Vector2Int rp in hiddenToReveal)
+                RevealHiddenElement(rp);
+            StartCoroutine(BreakWallsSimultaneous(wallsToBreak));
+            yield break;
         }
 
         private IEnumerator ClearMatchGroup(
@@ -2208,8 +2284,7 @@ namespace Game
             Vector2Int[] adjacentOffsets,
             HashSet<Vector2Int> boxesProcessed,
             HashSet<Vector2Int> wallsToBreak,
-            HashSet<Vector2Int> hiddenToReveal,
-            System.Action onCompleted)
+            HashSet<Vector2Int> hiddenToReveal)
         {
             Vector2Int? mergeTarget = FindMergeTarget(group, protectedPositions);
             if (mergeTarget.HasValue)
@@ -2237,8 +2312,15 @@ namespace Game
 
                 NotifyElementCleared(pos);
                 cell.elementInfo = null;
+                BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
+                ProcessAdjacentWallAndHiddenEffects(pos, destroyedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
                 if (matchedElement != null)
                 {
+                    // This visual no longer represents board occupancy. Keeping it
+                    // out of generatedElements prevents gravity/sanity passes from
+                    // reclaiming it while its clear/merge animation is still playing.
+                    generatedElements.Remove(matchedElement);
+                    matchedElement.transform.SetParent(null, true);
                     pendingDestructions++;
                     StartCoroutine(ClearMatchedElementAfterAnimation(
                         pos,
@@ -2251,18 +2333,12 @@ namespace Game
                         adjacentOffsets,
                         () => pendingDestructions--));
                 }
-                else
-                {
-                    BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
-                    ProcessAdjacentWallAndHiddenEffects(pos, destroyedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
-                }
             }
 
             if (pendingDestructions > 0)
                 yield return new WaitUntil(() => pendingDestructions == 0);
 
             yield return new WaitForSeconds(GetCurrentMatchClearDelay());
-            onCompleted?.Invoke();
         }
 
         private bool IsMatchResolutionBlocked()
@@ -2290,8 +2366,6 @@ namespace Game
                     yield return StartCoroutine(matchedElement.DestroyElement());
             }
 
-            BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
-            ProcessAdjacentWallAndHiddenEffects(pos, destroyedElementData, adjacentOffsets, wallsToBreak, hiddenToReveal);
             onCompleted?.Invoke();
         }
 
@@ -2512,6 +2586,28 @@ namespace Game
         // ------------------------------------------------------------------
         private IEnumerator ApplyGravity()
         {
+            HashSet<int> gravityLockedColumns = new HashSet<int>();
+            for (int x = 0; x < gridSize.x; x++)
+            {
+                bool hasEmptyPlayableCell = false;
+                for (int y = 0; y < gridSize.y && !hasEmptyPlayableCell; y++)
+                {
+                    Vector2Int pos = new Vector2Int(x, y);
+                    GridCell cell = GetCell(pos);
+                    hasEmptyPlayableCell = CanAcceptGravityElementAt(pos, cell) && cell.elementInfo == null;
+                }
+
+                if (!hasEmptyPlayableCell)
+                    continue;
+
+                // Adjacent columns may feed a diagonal slide into this column.
+                for (int affectedX = Mathf.Max(0, x - 1); affectedX <= Mathf.Min(gridSize.x - 1, x + 1); affectedX++)
+                    gravityLockedColumns.Add(affectedX);
+            }
+
+            foreach (int column in gravityLockedColumns)
+                LockColumn(column);
+
             EventManager.TriggerEvent(GameEvent.GRAVITY_STARTED);
 
             ConstantManager cm = GameManager.Instance != null ? ConstantManager.Instance : null;
@@ -2833,6 +2929,10 @@ namespace Game
                 }
             if (refilledCount > 0)
                 EventManager.TriggerEvent(GameEvent.ELEMENTS_REFILLED, new EventParam(paramInt: refilledCount));
+
+            foreach (int column in gravityLockedColumns)
+                UnlockColumn(column);
+            ReleaseMatchColumnsAwaitingGravity();
         }
 
         private void RunOccupancySanityPass()
