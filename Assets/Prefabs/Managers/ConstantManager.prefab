@@ -47,10 +47,10 @@ MonoBehaviour:
   dontDestroyOnLoad: 1
   loadingScreenDuration: 1
   elementSwapMoveDuration: 0.2
-  elementFallSpeed: 9
+  elementFallSpeed: 8
   elementFinalLandingDurationMultiplier: 1
   elementFinalLandingOutBackOvershoot: 1
-  matchClearDelay: 0.15
+  matchClearDelay: 0
   chainMatchSpeedIncreasePerCombo: 0
   chainMatchGroupDelay: 0.1
   elementDestroyPunchScale: 0.2
