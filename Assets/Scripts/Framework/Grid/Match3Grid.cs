@@ -98,6 +98,16 @@ namespace Game
                 UnlockColumn(columns[i]);
         }
 
+        public void StartDetachedDestroyAnimation(GridElement element, float animationSpeedMultiplier = 1f)
+        {
+            if (element == null)
+                return;
+
+            generatedElements.Remove(element);
+            element.transform.SetParent(null, true);
+            StartCoroutine(element.DestroyElement(animationSpeedMultiplier));
+        }
+
         private void LockColumn(int column)
         {
             if (column < 0 || column >= gridSize.x)
@@ -1294,7 +1304,7 @@ namespace Game
                     NotifyElementCleared(pos);
                     cell.elementInfo = null;
                     if (matchedElement != null)
-                        yield return StartCoroutine(matchedElement.DestroyElement(destroyAnimationSpeedMultiplier));
+                        StartDetachedDestroyAnimation(matchedElement, destroyAnimationSpeedMultiplier);
                     if (allowAdjacentBreakableBoxes)
                         BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
                 }
@@ -1361,7 +1371,7 @@ namespace Game
                 cell.elementInfo = null;
                 if (matchedElement != null)
                 {
-                    yield return StartCoroutine(matchedElement.DestroyElement(destroyAnimationSpeedMultiplier));
+                    StartDetachedDestroyAnimation(matchedElement, destroyAnimationSpeedMultiplier);
                     if (allowAdjacentBreakableBoxes)
                         BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
                 }
@@ -1430,7 +1440,7 @@ namespace Game
                 cell.elementInfo = null;
                 if (matchedElement != null)
                 {
-                    yield return StartCoroutine(matchedElement.DestroyElement(destroyAnimationSpeedMultiplier));
+                    StartDetachedDestroyAnimation(matchedElement, destroyAnimationSpeedMultiplier);
                     if (allowAdjacentBreakableBoxes)
                         BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
                 }
@@ -1487,7 +1497,7 @@ namespace Game
             NotifyElementCleared(pos);
             cell.elementInfo = null;
             if (matchedElement != null)
-                yield return StartCoroutine(matchedElement.DestroyElement(destroyAnimationSpeedMultiplier));
+                StartDetachedDestroyAnimation(matchedElement, destroyAnimationSpeedMultiplier);
 
             if (allowAdjacentBreakableBoxes)
                 BreakAdjacentBreakableBoxesImmediate(pos, new HashSet<Vector2Int>());
@@ -1550,7 +1560,7 @@ namespace Game
                 cell.elementInfo = null;
                 if (matchedElement != null)
                 {
-                    yield return StartCoroutine(matchedElement.DestroyElement(destroyAnimationSpeedMultiplier));
+                    StartDetachedDestroyAnimation(matchedElement, destroyAnimationSpeedMultiplier);
                     if (allowAdjacentBreakableBoxes)
                         BreakAdjacentBreakableBoxesImmediate(pos, boxesProcessed);
                 }

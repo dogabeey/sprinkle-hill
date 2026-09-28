@@ -1072,7 +1072,7 @@ namespace Game
                 return;
 
             element.transform.DOKill();
-            grid.StartCoroutine(element.DestroyElement());
+            grid.StartDetachedDestroyAnimation(element);
         }
 
         private void AdjustSortingOrder(GridElement element, int delta)
@@ -1552,7 +1552,7 @@ namespace Game
                 
 
             if (sourcePropellerElement != null)
-                grid.StartCoroutine(sourcePropellerElement.DestroyElement());
+                grid.StartDetachedDestroyAnimation(sourcePropellerElement);
         }
 
         private IEnumerator ActivatePropellerAndBombCombo(Vector2Int bombPos)
@@ -1676,10 +1676,10 @@ namespace Game
             }
 
             if (bombElement != null)
-                grid.StartCoroutine(bombElement.DestroyElement());
+                grid.StartDetachedDestroyAnimation(bombElement);
 
             if (rocketElement != null)
-                grid.StartCoroutine(rocketElement.DestroyElement());
+                grid.StartDetachedDestroyAnimation(rocketElement);
 
             List<Vector2Int> rocketBurstOrigins = GetNormalCellsInSquareArea(bombPos, 1);
 
@@ -1715,7 +1715,7 @@ namespace Game
             }
 
             if (primaryBombElement != null)
-                grid.StartCoroutine(primaryBombElement.DestroyElement());
+                grid.StartDetachedDestroyAnimation(primaryBombElement);
 
             yield return grid.StartCoroutine(ClearBombAreaProgressive(primaryBombPos, false, 10));
         }
@@ -1998,7 +1998,7 @@ namespace Game
                 spinTween.Kill();
 
             if (discoBallElement != null)
-                grid.StartCoroutine(discoBallElement.DestroyElement());
+                grid.StartDetachedDestroyAnimation(discoBallElement);
 
         }
 
@@ -2039,7 +2039,7 @@ namespace Game
                 grid.NotifyElementCleared(pos);
                 cell.elementInfo = null;
                 if (matchedElement != null)
-                    grid.StartCoroutine(matchedElement.DestroyElement());
+                    grid.StartDetachedDestroyAnimation(matchedElement);
 
                 BreakAdjacentWallsImmediate(pos, processedAdjacentBreakables);
             }
@@ -2096,7 +2096,7 @@ namespace Game
                 // The propeller sound begins at flight activation. Avoid replaying
                 // the same data-driven destroy sound when it reaches its target.
                 propellerElement.SuppressNextDestroySound();
-                grid.StartCoroutine(propellerElement.DestroyElement());
+                grid.StartDetachedDestroyAnimation(propellerElement);
             }
 
             // Trigger cell features
@@ -2242,7 +2242,7 @@ namespace Game
                         .SetRelative());
 
                 yield return travelSequence.WaitForCompletion();
-                grid.StartCoroutine(bombElement.DestroyElement());
+                grid.StartDetachedDestroyAnimation(bombElement);
             }
             else
             {
@@ -2630,7 +2630,7 @@ namespace Game
             GridElement bombElement = grid.GetElementAt(bombPos);
             if (bombElement != null)
             {
-                grid.StartCoroutine(bombElement.DestroyElement());
+                grid.StartDetachedDestroyAnimation(bombElement);
             }
 
             grid.TriggerCellFeatureMatchedOverAt(bombPos);
@@ -2761,7 +2761,7 @@ namespace Game
             grid.NotifyElementCleared(pos);
             cell.elementInfo = null;
             if (matchedElement != null)
-                grid.StartCoroutine(matchedElement.DestroyElement());
+                grid.StartDetachedDestroyAnimation(matchedElement);
         }
 
         private IEnumerator ActivateRocketBurst(Vector2Int rocketPos, GridElement rocketElement, Vector2Int[] directions, ElementPowerUpType rocketType, bool clearSourceCell, bool clearOriginCell, float preLaunchDelay, float volumeMultiplier = 1f, float pitchOffset = 0f)
@@ -3057,7 +3057,7 @@ namespace Game
 
             grid.NotifyElementCleared(pos);
             cell.elementInfo = null;
-            if (matchedElement != null) grid.StartCoroutine(matchedElement.DestroyElement());
+            if (matchedElement != null) grid.StartDetachedDestroyAnimation(matchedElement);
         }
 
         private void BreakAdjacentWallsImmediate(Vector2Int pos, HashSet<Vector2Int> processedWalls)

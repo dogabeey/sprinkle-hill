@@ -331,11 +331,13 @@ namespace Game
         private IEnumerator SwapAndMatchRoutine(Vector2Int firstPos, Vector2Int secondPos)
         {
             ClearHintVisuals();
+            isProcessing = true;
             match3Grid.LockInputColumns(firstPos.x, secondPos.x);
 
             yield return StartCoroutine(match3Grid.SwapAndMatch(firstPos, secondPos));
 
             match3Grid.UnlockInputColumns(firstPos.x, secondPos.x);
+            isProcessing = false;
             idleTimer = 0f;
         }
 

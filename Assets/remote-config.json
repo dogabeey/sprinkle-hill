@@ -3,7 +3,7 @@
   "entries": {
     "loading_screen_duration": 1.0,
     "element_swap_move_duration": 0.3,
-    "element_fall_speed": 9.0,
+    "element_fall_speed": 8.0,
     "element_final_landing_duration_multiplier": 1.0,
     "element_final_landing_out_back_overshoot": 1.0,
     "match_clear_delay": 0.0,
