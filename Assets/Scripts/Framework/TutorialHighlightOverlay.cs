@@ -168,6 +168,10 @@ namespace Game
         // -----------------------------------------------------------------
         private void SetRects(IList<GameObject> targets)
         {
+            // Action bar items are laid out dynamically. Ensure their RectTransforms
+            // have their final bounds before converting them to spotlight rectangles.
+            Canvas.ForceUpdateCanvases();
+
             Camera cam = worldCamera != null ? worldCamera : Camera.main;
             int rectCount = 0;
 

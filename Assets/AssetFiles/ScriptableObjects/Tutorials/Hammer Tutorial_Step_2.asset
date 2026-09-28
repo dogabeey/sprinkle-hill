@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a23e412978b2f9b43ae72e9ce71bb98b, type: 3}
-  m_Name: Hammer Tutorial_Step_1
+  m_Name: Hammer Tutorial_Step_2
   m_EditorClassIdentifier: 
-  Id: hammer
+  Id: hammer_2
   directive: 
   directiveParentHeight: 493.38
   anchorMin: {x: 0, y: 0}
@@ -31,7 +31,7 @@ MonoBehaviour:
     startCoordinate: {x: 0, y: 0}
     endCoordinate: {x: 0, y: 0}
   highlightSelectors:
-  - highlightSelectorType: 6
+  - highlightSelectorType: 11
     actionName: Hammer
     selectedTags: []
     selectedCoordinates: []
@@ -45,7 +45,7 @@ MonoBehaviour:
     selectedCoordinates: []
     columnIndex: 0
     rowIndex: 0
-  startEvent: 702
+  startEvent: 0
   startEventExpectedParams: 0
   startEventExpectedParamValues:
     paramObj: {fileID: 0}
@@ -55,7 +55,7 @@ MonoBehaviour:
     paramStr: 
     vectorList: []
     paramBool: 0
-  completionEvent: 600
+  completionEvent: 601
   completionEventExpectedParams: 0
   completionEventExpectedParamValues:
     paramObj: {fileID: 0}
@@ -71,7 +71,7 @@ MonoBehaviour:
   onComplete:
     m_PersistentCalls:
       m_Calls: []
-  nextStep: {fileID: 11400000, guid: b237417519018cd42b271faff5805333, type: 2}
+  nextStep: {fileID: 0}
   advancedMode: 0
   serializationDepth: 0
   isStarted: 0

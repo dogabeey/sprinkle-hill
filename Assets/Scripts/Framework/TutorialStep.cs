@@ -1,7 +1,8 @@
 using Sirenix.OdinInspector;
 using System;
 using System.Collections.Generic;
-using UnityEngine; using Game.EventManagement;
+using UnityEngine; 
+using Game.EventManagement;
 using UnityEngine.Events;
 
 namespace Game
@@ -226,7 +227,14 @@ namespace Game
                 },
                 HighlightSelectorType.AllWaferCells => new AllWaferElements_Highlight(),
                 HighlightSelectorType.AllGlassCells => new AllGlassElements_Highlight(),
-                _ => null
+                HighlightSelectorType.EntireColumn => new EntireColumn_Highlight()
+                {
+                    columnIndex = settings.columnIndex
+                },
+                HighlightSelectorType.EntireRow => new EntireRow_Highlight()
+                {
+                    rowIndex = settings.rowIndex
+                },
             };
         }
 
@@ -275,6 +283,8 @@ namespace Game
         SelectedGridCoordinates,
         AllWaferCells,
         AllGlassCells,
+        EntireRow,
+        EntireColumn,
     }
 
     [Serializable]
@@ -302,6 +312,8 @@ namespace Game
         [ShowIf(nameof(IsActionNameRequired))] public string actionName;
         [ShowIf(nameof(AreSelectedTagsRequired))] public List<string> selectedTags = new List<string>();
         [ShowIf(nameof(AreSelectedCoordinatesRequired))] public List<Vector2Int> selectedCoordinates = new List<Vector2Int>();
+        [ShowIf(nameof(IsColumnIndexRequired))] public int columnIndex;
+        [ShowIf(nameof(IsRowIndexRequired))] public int rowIndex;
 
         public bool IsActionNameRequired()
         {
@@ -314,6 +326,14 @@ namespace Game
         public bool AreSelectedCoordinatesRequired()
         {
             return highlightSelectorType == HighlightSelectorType.SelectedGridCoordinates;
+        }
+        public bool IsColumnIndexRequired()
+        {
+            return highlightSelectorType == HighlightSelectorType.EntireColumn;
+        }
+        public bool IsRowIndexRequired()
+        {
+            return highlightSelectorType == HighlightSelectorType.EntireRow;
         }
     }
 }

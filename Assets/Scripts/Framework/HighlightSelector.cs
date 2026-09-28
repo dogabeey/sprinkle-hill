@@ -590,4 +590,84 @@ namespace Game
                 : null;
         }
     }
+    [Serializable]
+    public class EntireRow_Highlight : HighlightSelector
+    {
+        public int rowIndex;
+
+        public override GameObject[] HighlightedObjects
+        {
+            get
+            {
+                Match3Grid grid = GetGrid();
+                if (grid == null) return new GameObject[0];
+
+                List<GameObject> highlightedObjects = new List<GameObject>();
+                Vector2Int size = grid.GridSize;
+
+                if (rowIndex < 0 || rowIndex >= size.y)
+                    return new GameObject[0];
+
+                for (int x = 0; x < size.x; x++)
+                {
+                    Vector2Int pos = new Vector2Int(x, rowIndex);
+                    GridElement element = grid.GetElementAt(pos);
+                    if (element != null)
+                        highlightedObjects.Add(element.gameObject);
+                }
+
+                return highlightedObjects.ToArray();
+            }
+        }
+
+        private static Match3Grid GetGrid()
+        {
+            if (GameManager.Instance == null)
+                return null;
+
+            return GameManager.Instance.CurrentLevel is LevelScene_Match3Game level
+                ? level.grid as Match3Grid
+                : null;
+        }
+    }
+    [Serializable]
+    public class EntireColumn_Highlight : HighlightSelector
+    {
+        public int columnIndex;
+
+        public override GameObject[] HighlightedObjects
+        {
+            get
+            {
+                Match3Grid grid = GetGrid();
+                if (grid == null) return new GameObject[0];
+
+                List<GameObject> highlightedObjects = new List<GameObject>();
+                Vector2Int size = grid.GridSize;
+
+                if (columnIndex < 0 || columnIndex >= size.x)
+                    return new GameObject[0];
+
+                for (int y = 0; y < size.y; y++)
+                {
+                    Vector2Int pos = new Vector2Int(columnIndex, y);
+                    GridElement element = grid.GetElementAt(pos);
+                    if (element != null)
+                        highlightedObjects.Add(element.gameObject);
+                }
+
+                return highlightedObjects.ToArray();
+            }
+        }
+
+        private static Match3Grid GetGrid()
+        {
+            if (GameManager.Instance == null)
+                return null;
+
+            return GameManager.Instance.CurrentLevel is LevelScene_Match3Game level
+                ? level.grid as Match3Grid
+                : null;
+        }
+    }
 }

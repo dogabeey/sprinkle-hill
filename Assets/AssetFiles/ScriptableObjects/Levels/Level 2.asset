@@ -1835,11 +1835,11 @@ MonoBehaviour:
       Entry: 7
       Data: 56|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: randomElement
       Entry: 5
-      Data: true
+      Data: false
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -2429,11 +2429,11 @@ MonoBehaviour:
       Entry: 7
       Data: 74|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: randomElement
       Entry: 5
-      Data: true
+      Data: false
     - Name: isSparkling
       Entry: 5
       Data: false
@@ -3023,11 +3023,11 @@ MonoBehaviour:
       Entry: 7
       Data: 92|Game.GridElementInfo, Game
     - Name: elementData
-      Entry: 6
-      Data: 
+      Entry: 10
+      Data: 0
     - Name: randomElement
       Entry: 5
-      Data: true
+      Data: false
     - Name: isSparkling
       Entry: 5
       Data: false
