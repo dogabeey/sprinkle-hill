@@ -23,6 +23,11 @@ namespace Game
         [Min(0)] public int excludeFirstXLevelFromLoop;
         public int lastPlayedLevelIndex;
 
+#if UNITY_EDITOR
+        [Tooltip("-1 uses saved progress. Any other value starts Play Mode at that level index.")]
+        public int debugStartingLevelIndex = -1;
+#endif
+
         private LevelScene currentLevel;
 
         public LevelScene CurrentLevel { get => currentLevel;
@@ -44,6 +49,11 @@ namespace Game
             {
                 lastPlayedLevelIndex = 0;
             }
+
+#if UNITY_EDITOR
+            if (debugStartingLevelIndex != -1)
+                lastPlayedLevelIndex = debugStartingLevelIndex;
+#endif
             
         }
 
