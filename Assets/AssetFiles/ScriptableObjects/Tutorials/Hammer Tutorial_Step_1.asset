@@ -27,11 +27,13 @@ MonoBehaviour:
     screenPositionOffset: {x: 90, y: -80}
     duration: 1
     isLoop: 1
-    rotationOffset: -90
+    rotationOffset: 0
     startCoordinate: {x: 0, y: 0}
     endCoordinate: {x: 0, y: 0}
   highlightSelectors:
   - highlightSelectorType: 6
+    highlightCornerRadius: 56
+    highlightEdgeSoftness: 16
     actionName: Hammer
     selectedTags: []
     selectedCoordinates: []
@@ -40,6 +42,8 @@ MonoBehaviour:
   highlightSelectorType: 0
   highlightSelectorSettings:
     highlightSelectorType: 9
+    highlightCornerRadius: 8
+    highlightEdgeSoftness: 4
     actionName: 
     selectedTags: []
     selectedCoordinates: []

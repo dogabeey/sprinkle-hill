@@ -202,7 +202,7 @@ namespace Game
             if (settings == null)
                 return null;
 
-            return settings.highlightSelectorType switch
+            HighlightSelector selector = settings.highlightSelectorType switch
             {
                 HighlightSelectorType.TwoRandomMatchableElements => new TwoRandomMatchableElements_Highlight(),
                 HighlightSelectorType.TwoRandomSquareMatchableElements => new TwoRandomSquareMatchableElement_Highlight(),
@@ -236,6 +236,14 @@ namespace Game
                     rowIndex = settings.rowIndex
                 },
             };
+
+            if (selector != null)
+            {
+                selector.highlightCornerRadius = settings.highlightCornerRadius;
+                selector.highlightEdgeSoftness = settings.highlightEdgeSoftness;
+            }
+
+            return selector;
         }
 
 #if UNITY_EDITOR
@@ -309,6 +317,8 @@ namespace Game
     public class HighlightSelectorSettings
     {
         [LabelText("Selector")] public HighlightSelectorType highlightSelectorType;
+        [MinValue(0f)] public float highlightCornerRadius = 8f;
+        [MinValue(0.5f)] public float highlightEdgeSoftness = 4f;
         [ShowIf(nameof(IsActionNameRequired))] public string actionName;
         [ShowIf(nameof(AreSelectedTagsRequired))] public List<string> selectedTags = new List<string>();
         [ShowIf(nameof(AreSelectedCoordinatesRequired))] public List<Vector2Int> selectedCoordinates = new List<Vector2Int>();

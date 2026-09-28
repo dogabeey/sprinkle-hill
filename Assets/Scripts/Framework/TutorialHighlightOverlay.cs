@@ -69,6 +69,8 @@ namespace Game
         // -----------------------------------------------------------------
         private Material _mat;
         private bool     _shown;
+        private float    _activeCornerRadius;
+        private float    _activeEdgeSoftness;
         private readonly Vector4[] _rects = new Vector4[MaxSpotlights];
 
         // -----------------------------------------------------------------
@@ -96,8 +98,10 @@ namespace Game
             // Start fully transparent
             _mat.SetColor(ID_OverlayColor, new Color(overlayColor.r, overlayColor.g, overlayColor.b, 0f));
             _mat.SetFloat(ID_RectCount, 0f);
-            _mat.SetFloat(ID_CornerRadius, cornerRadius);
-            _mat.SetFloat(ID_EdgeSoftness, edgeSoftness);
+            _activeCornerRadius = cornerRadius;
+            _activeEdgeSoftness = edgeSoftness;
+            _mat.SetFloat(ID_CornerRadius, _activeCornerRadius);
+            _mat.SetFloat(ID_EdgeSoftness, _activeEdgeSoftness);
             _mat.SetVectorArray(ID_Rects, _rects);
 
             gameObject.SetActive(false);
@@ -116,10 +120,14 @@ namespace Game
         /// Shows the overlay with spotlight cutouts over every object in
         /// <paramref name="targets"/>.  Safe to call again to update targets.
         /// </summary>
-        public void Show(IList<GameObject> targets)
+        public void Show(IList<GameObject> targets, float highlightCornerRadius, float highlightEdgeSoftness)
         {
             if (_mat == null) return;
 
+            _activeCornerRadius = Mathf.Max(0f, highlightCornerRadius);
+            _activeEdgeSoftness = Mathf.Max(0.5f, highlightEdgeSoftness);
+            _mat.SetFloat(ID_CornerRadius, _activeCornerRadius);
+            _mat.SetFloat(ID_EdgeSoftness, _activeEdgeSoftness);
             gameObject.SetActive(true);
 
             DOTween.Kill(this);
@@ -192,8 +200,8 @@ namespace Game
             }
 
             _mat.SetFloat(ID_RectCount, rectCount);
-            _mat.SetFloat(ID_CornerRadius, cornerRadius);
-            _mat.SetFloat(ID_EdgeSoftness, edgeSoftness);
+            _mat.SetFloat(ID_CornerRadius, _activeCornerRadius);
+            _mat.SetFloat(ID_EdgeSoftness, _activeEdgeSoftness);
             _mat.SetVectorArray(ID_Rects, _rects);
         }
         // -----------------------------------------------------------------

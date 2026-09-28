@@ -388,7 +388,12 @@ namespace Game
                 }
                 else
                 {
-                    highlightOverlay.Show(targets);
+                    IReadOnlyList<HighlightSelector> selectors = step.GetHighlightSelectors();
+                    HighlightSelector styleSelector = selectors.Count > 0 ? selectors[0] : null;
+                    highlightOverlay.Show(
+                        targets,
+                        styleSelector != null ? styleSelector.highlightCornerRadius : highlightOverlay.cornerRadius,
+                        styleSelector != null ? styleSelector.highlightEdgeSoftness : highlightOverlay.edgeSoftness);
                 }
             }
 

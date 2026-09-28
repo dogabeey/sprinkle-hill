@@ -1444,7 +1444,7 @@ GameObject:
   - component: {fileID: 900864209}
   - component: {fileID: 900864208}
   m_Layer: 5
-  m_Name: Highlight
+  m_Name: Tutorial Highlight Overlay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1503,7 +1503,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 2100000, guid: 42d9663addda12b4fb33c217bebf5ed2, type: 2}
-  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
