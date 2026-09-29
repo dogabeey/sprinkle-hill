@@ -49,6 +49,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b71aef537cde7dc47a731839858a4b86, type: 2}
   - {fileID: 11400000, guid: a2e044a068bb3574cbd14c45b3a4c273, type: 2}
   - {fileID: 11400000, guid: 5e422ba9076792d4cbc199276fb0e251, type: 2}
+  - {fileID: 11400000, guid: 4c952a2346b3f3e4386a1ece50d8b087, type: 2}
+  - {fileID: 11400000, guid: b237417519018cd42b271faff5805333, type: 2}
+  - {fileID: 11400000, guid: 6fe92ba64b43929489472e1ba468e5b5, type: 2}
+  - {fileID: 11400000, guid: 88f9a38264be367458369d7634e67ac0, type: 2}
+  - {fileID: 11400000, guid: 44b43bea34efa8943ab5c18f23087540, type: 2}
+  - {fileID: 11400000, guid: dd9bccce60e67ee4fbd5c84aa41ddaf1, type: 2}
   animationObjectParent: {fileID: 0}
   directiveText: {fileID: 0}
   directiveParent: {fileID: 0}

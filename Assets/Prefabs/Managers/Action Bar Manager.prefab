@@ -47,10 +47,10 @@ MonoBehaviour:
   dontDestroyOnLoad: 1
   actionBarViewPrefab: {fileID: 230861821462889445, guid: 9e234be0c7761a34aaf9d63c420f9995, type: 3}
   actionBarItemList:
-  - rid: 1021877643594432512
+  - rid: 1021877643594432514
   - rid: 1949156293352620133
   - rid: 1021877643594432513
-  - rid: 1021877643594432514
+  - rid: 1021877643594432512
   actionBarParent: {fileID: 0}
   lockedSprite: {fileID: -320327708, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
   references:
@@ -59,9 +59,10 @@ MonoBehaviour:
     - rid: 1021877643594432512
       type: {class: HammerAction, ns: Game, asm: Game}
       data:
-        startingCount: 5
+        startingCount: 3
         currentCount: 0
-        ActionBarIcon: {fileID: -2001848189, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
+        actionBarIcon: {fileID: -2001848189, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
+        textSprite: {fileID: 21300000, guid: b5e021100b4414c4f80a17fa8c2293c1, type: 3}
         buyConfig:
         - buyCount: 3
           discountPercentage: 0
@@ -77,7 +78,7 @@ MonoBehaviour:
           buySprite: {fileID: -2001848189, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
         preExecutionAnimator: {fileID: 3490327515930101110, guid: 68dadf668f1c25c49b2d686970add31d, type: 3}
         animationName: hammer_anim
-        unlockedLevel: 0
+        unlockedLevel: 1
         buyCost: 50
         overrideCellLocationX: 0
         overrideCellLocationY: 0
@@ -86,9 +87,10 @@ MonoBehaviour:
     - rid: 1021877643594432513
       type: {class: CannonAction, ns: Game, asm: Game}
       data:
-        startingCount: 5
+        startingCount: 3
         currentCount: 0
-        ActionBarIcon: {fileID: 2118993033, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
+        actionBarIcon: {fileID: 2118993033, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
+        textSprite: {fileID: 21300000, guid: d704a1a0bfd9b7c4ca4d04b05eab2ae2, type: 3}
         buyConfig:
         - buyCount: 3
           discountPercentage: 0
@@ -104,7 +106,7 @@ MonoBehaviour:
           buySprite: {fileID: 2118993033, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
         preExecutionAnimator: {fileID: 0}
         animationName: cannon_anim
-        unlockedLevel: 0
+        unlockedLevel: 5
         buyCost: 50
         overrideCellLocationX: 0
         overrideCellLocationY: 1
@@ -113,9 +115,10 @@ MonoBehaviour:
     - rid: 1021877643594432514
       type: {class: ShuffleAction, ns: Game, asm: Game}
       data:
-        startingCount: 5
+        startingCount: 3
         currentCount: 0
-        ActionBarIcon: {fileID: 1090477734, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
+        actionBarIcon: {fileID: 1090477734, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
+        textSprite: {fileID: 21300000, guid: a11c334a391ba944abec703ca6e8d13c, type: 3}
         buyConfig:
         - buyCount: 3
           discountPercentage: 0
@@ -131,7 +134,7 @@ MonoBehaviour:
           buySprite: {fileID: 1090477734, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
         preExecutionAnimator: {fileID: 0}
         animationName: 
-        unlockedLevel: 0
+        unlockedLevel: 13
         buyCost: 50
         overrideCellLocationX: 0
         overrideCellLocationY: 0
@@ -140,9 +143,10 @@ MonoBehaviour:
     - rid: 1949156293352620133
       type: {class: TorchAction, ns: Game, asm: Game}
       data:
-        startingCount: 5
+        startingCount: 3
         currentCount: 0
-        ActionBarIcon: {fileID: 1815501369, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
+        actionBarIcon: {fileID: 1815501369, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
+        textSprite: {fileID: 21300000, guid: a3db76d8bae72ab40b319518ee18f981, type: 3}
         buyConfig:
         - buyCount: 3
           discountPercentage: 0
@@ -158,7 +162,7 @@ MonoBehaviour:
           buySprite: {fileID: 1815501369, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
         preExecutionAnimator: {fileID: 0}
         animationName: 
-        unlockedLevel: 0
+        unlockedLevel: 9
         buyCost: 50
         overrideCellLocationX: 1
         overrideCellLocationY: 0
