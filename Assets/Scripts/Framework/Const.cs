@@ -40,10 +40,8 @@ namespace Game
         public float elementSwapMoveDuration = 0.3f;
         [RemoteConfig("element_fall_speed", 3.3f)]
         public float elementFallSpeed = 3.3f;
-        [RemoteConfig("element_landing_bounce_count", 2)]
-        [Min(0)] public int elementLandingBounceCount = 2;
-        [RemoteConfig("element_landing_bounce_amount", 0.08f)]
-        [Min(0f)] public float elementLandingBounceAmount = 0.08f;
+        [RemoteConfig("element_landing_settle_amount", 0.08f)]
+        [Min(0f)] public float elementLandingSettleAmount = 0.08f;
         [RemoteConfig("match_clear_delay", 0.3f)]
         public float matchClearDelay = 0.3f;
         [RemoteConfig("chain_match_speed_increase_per_combo", 0.2f)]
@@ -212,8 +210,7 @@ namespace Game
             loadingScreenDuration = RemoteConfigManager.Instance.GetFloat("loading_screen_duration", ref loadingScreenDuration, pathToConfigFile);
             elementSwapMoveDuration = RemoteConfigManager.Instance.GetFloat("element_swap_move_duration", ref elementSwapMoveDuration, pathToConfigFile);
             elementFallSpeed = RemoteConfigManager.Instance.GetFloat("element_fall_speed", ref elementFallSpeed, pathToConfigFile);
-            elementLandingBounceCount = RemoteConfigManager.Instance.GetInt("element_landing_bounce_count", ref elementLandingBounceCount, pathToConfigFile);
-            elementLandingBounceAmount = RemoteConfigManager.Instance.GetFloat("element_landing_bounce_amount", ref elementLandingBounceAmount, pathToConfigFile);
+            elementLandingSettleAmount = RemoteConfigManager.Instance.GetFloat("element_landing_settle_amount", ref elementLandingSettleAmount, pathToConfigFile);
             matchClearDelay = RemoteConfigManager.Instance.GetFloat("match_clear_delay", ref matchClearDelay, pathToConfigFile);
             chainMatchSpeedIncreasePerCombo = RemoteConfigManager.Instance.GetFloat("chain_match_speed_increase_per_combo", ref chainMatchSpeedIncreasePerCombo, pathToConfigFile);
             chainMatchGroupDelay = RemoteConfigManager.Instance.GetFloat("chain_match_group_delay", ref chainMatchGroupDelay, pathToConfigFile);

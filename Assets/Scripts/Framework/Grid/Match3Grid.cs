@@ -2657,8 +2657,7 @@ namespace Game
 
             ConstantManager cm = GameManager.Instance != null ? ConstantManager.Instance : null;
             float fallSpeed = GetChainAdjustedFallSpeed(cm != null ? cm.elementFallSpeed : 3.3f);
-            int landingBounceCount = cm != null ? Mathf.Max(0, cm.elementLandingBounceCount) : 2;
-            float landingBounceAmount = cm != null ? Mathf.Max(0f, cm.elementLandingBounceAmount) : 0.08f;
+            float landingSettleAmount = cm != null ? Mathf.Max(0f, cm.elementLandingSettleAmount) : 0.08f;
 
             EnsureGridCells();
             List<ElementData> elementPool = BuildElementPool();
@@ -2832,20 +2831,21 @@ namespace Game
                     if (!hasPathTween)
                         continue;
 
-                    float bounceAmount = landingBounceAmount;
-                    for (int bounceIndex = 0; bounceIndex < landingBounceCount && bounceAmount > 0f; bounceIndex++)
+                    if (landingSettleAmount > 0f)
                     {
-                        float halfBounceDuration = fallSpeed > 0f
-                            ? Mathf.Max(0.03f, bounceAmount / fallSpeed)
+                        float settleDuration = fallSpeed > 0f
+                            ? Mathf.Max(0.03f, landingSettleAmount / fallSpeed)
                             : 0f;
-                        Vector3 bouncePeak = finalTile.transform.position + Vector3.up * bounceAmount;
+
+                        // After landing, dip below the tile and return at the same
+                        // linear speed as the fall for a subtle, non-bouncing settle.
+                        Vector3 settleBottom = finalTile.transform.position + Vector3.down * landingSettleAmount;
                         moveSequence.Append(movingElement.transform
-                            .DOMove(bouncePeak, halfBounceDuration)
+                            .DOMove(settleBottom, settleDuration)
                             .SetEase(Ease.Linear));
                         moveSequence.Append(movingElement.transform
-                            .DOMove(finalTile.transform.position, halfBounceDuration)
+                            .DOMove(finalTile.transform.position, settleDuration)
                             .SetEase(Ease.Linear));
-                        bounceAmount *= 0.5f;
                     }
 
                     GridElement elementForCompletion = movingElement;
