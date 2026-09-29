@@ -13,6 +13,7 @@ namespace Game
     {
         private readonly Match3Grid grid;
         private const int SortingOrderBoost = 200;
+        private const int ActivationSortingOrderBoost = 10;
         private const float ComboIntroMinRaiseHeight = 0.55f;
         private const float ComboIntroMaxRaiseHeight = 1.1f;
         private const float ComboIntroMinOrbitRadius = 0.25f;
@@ -738,6 +739,7 @@ namespace Game
                 // If the element at position has an animator and a power-up activation trigger name,
                 // play the activation animation first and wait for it to complete before running the power-up.
                 GridElement elem = grid.GetElementAt(pos);
+                AdjustSortingOrder(elem, ActivationSortingOrderBoost);
                 if (elem != null && elem.elementAnimator != null && elem.elementInfo.elementData is PowerUpElementData powerUpElementData && !string.IsNullOrEmpty(powerUpElementData.powerUpActivationString))
                 {
                     bool triggered = false;
@@ -907,14 +909,14 @@ namespace Game
             {
                 firstElement.transform.DOKill();
                 firstElement.transform.SetParent(orbitPivot.transform, true);
-                AdjustSortingOrder(firstElement, SortingOrderBoost);
+                AdjustSortingOrder(firstElement, ActivationSortingOrderBoost);
             }
 
             if (secondElement != null)
             {
                 secondElement.transform.DOKill();
                 secondElement.transform.SetParent(orbitPivot.transform, true);
-                AdjustSortingOrder(secondElement, SortingOrderBoost);
+                AdjustSortingOrder(secondElement, ActivationSortingOrderBoost);
             }
 
             ParticleSystem comboParticle = SpawnPowerUpComboParticle(orbitPivot.transform);
@@ -1063,7 +1065,7 @@ namespace Game
                 element.transform.localScale = Vector3.one;
             }
 
-            AdjustSortingOrder(element, -SortingOrderBoost);
+            AdjustSortingOrder(element, -ActivationSortingOrderBoost);
         }
 
         private void DestroyComboElementVisual(GridElement element)
@@ -1313,6 +1315,7 @@ namespace Game
             GridElement discoBallElement = grid.GetElementAt(discoBallPos);
             Tween spinTween = null;
             StartDiscoBallSpin(discoBallElement, ref spinTween);
+            DetachDiscoBallVisual(discoBallElement);
 
             // Remove logical occupancy, keep visual until trail animation finishes.
             grid.TriggerCellFeatureMatchedOverAt(discoBallPos);
@@ -1367,6 +1370,8 @@ namespace Game
             // Trigger the primary disco ball's spin first, then the secondary.
             StartDiscoBallSpin(primaryElement, ref primarySpinTween);
             StartDiscoBallSpin(secondaryElement, ref secondarySpinTween);
+            DetachDiscoBallVisual(primaryElement);
+            DetachDiscoBallVisual(secondaryElement);
 
             // Remove logical occupancy, keep visuals until trail animation finishes.
             grid.TriggerCellFeatureMatchedOverAt(primaryDiscoBallPos);
@@ -1425,6 +1430,7 @@ namespace Game
             RestoreDiscoBallDisplaySprite(discoBallElement, discoBallCell.elementInfo);
 
             StartDiscoBallSpin(discoBallElement, ref discoBallSpinTween);
+            DetachDiscoBallVisual(discoBallElement);
 
             grid.TriggerCellFeatureMatchedOverAt(discoBallPos);
             discoBallCell.elementInfo = null;
@@ -1475,6 +1481,7 @@ namespace Game
 
             // Start spinning the disco ball for visual feedback.
             StartDiscoBallSpin(discoBallElement, ref discoBallSpinTween);
+            DetachDiscoBallVisual(discoBallElement);
 
             // Remove logical occupancy, keep visual until trail animation finishes.
             grid.TriggerCellFeatureMatchedOverAt(discoBallPos);
@@ -1734,6 +1741,7 @@ namespace Game
             RestoreDiscoBallDisplaySprite(discoBallElement, discoBallCell.elementInfo);
 
             StartDiscoBallSpin(discoBallElement, ref discoBallSpinTween);
+            DetachDiscoBallVisual(discoBallElement);
 
             grid.TriggerCellFeatureMatchedOverAt(discoBallPos);
             discoBallCell.elementInfo = null; 
@@ -1985,6 +1993,15 @@ namespace Game
 
             if (discoBallElement.elementRenderer is SpriteRenderer spriteRenderer)
                 spriteRenderer.sprite = discoBallInfo.elementData.displayIcon;
+        }
+
+        // Keep a spinning Disco Ball out of the tile hierarchy while its trails
+        // resolve. The logical cell is freed immediately, so gravity/refill can
+        // reuse it without reinitializing this still-visible source element.
+        private void DetachDiscoBallVisual(GridElement discoBallElement)
+        {
+            if (discoBallElement != null)
+                grid.DetachElementVisual(discoBallElement);
         }
 
         private void StopAndDestroyDiscoBallElement(GridElement discoBallElement, Tween spinTween)

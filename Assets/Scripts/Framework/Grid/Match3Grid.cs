@@ -2442,6 +2442,12 @@ namespace Game
 
             Transform t = element.transform;
             t.DOKill();
+            Renderer[] renderers = element.GetComponentsInChildren<Renderer>(true);
+            for (int i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] != null)
+                    renderers[i].sortingOrder += 10;
+            }
             Collider[] colliders = element.GetComponentsInChildren<Collider>(true);
             for (int i = 0; i < colliders.Length; i++)
                 colliders[i].enabled = false;
