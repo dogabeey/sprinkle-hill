@@ -2081,12 +2081,11 @@ namespace Game
                 grid.DetachElementVisual(propellerElement);
             }
 
-            // The source and its four-neighbour blast are resolved immediately;
-            // the propeller can keep flying while gravity refills those spaces.
+            // Free only the source cell before the flight. Neighbour impacts are
+            // intentionally delayed until after arrival, so an adjacent power-up
+            // cannot hold up the propeller's travel animation.
             grid.TriggerCellFeatureMatchedOverAt(propellerPos);
             propellerCell.elementInfo = null;
-            yield return grid.StartCoroutine(ApplyPropellerNeighborImpact(propellerPos));
-            grid.RequestImmediateGravity();
 
             // Calculate target world position
             Vector3 targetWorldPos = grid.GetWorldPosition(targetPos);
@@ -2123,6 +2122,11 @@ namespace Game
 
             // Clear only the target cell after the propeller arrives, without triggering adjacent breakables or features.
             yield return grid.StartCoroutine(ClearPropellerTargetCell(targetPos));
+
+            // Resolve the source-cell neighbour impact only after the propeller
+            // reaches its target. This includes any chained adjacent power-ups.
+            yield return grid.StartCoroutine(ApplyPropellerNeighborImpact(propellerPos));
+            grid.RequestImmediateGravity();
             StopEffect(activationSound);
         }
 
