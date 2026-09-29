@@ -40,10 +40,10 @@ namespace Game
         public float elementSwapMoveDuration = 0.3f;
         [RemoteConfig("element_fall_speed", 3.3f)]
         public float elementFallSpeed = 3.3f;
-        [RemoteConfig("element_final_landing_duration_multiplier", 1f)]
-        [Min(0.01f)] public float elementFinalLandingDurationMultiplier = 1f;
-        [RemoteConfig("element_final_landing_out_back_overshoot", 1.7f)]
-        [Min(0f)] public float elementFinalLandingOutBackOvershoot = 1.7f;
+        [RemoteConfig("element_landing_bounce_count", 2)]
+        [Min(0)] public int elementLandingBounceCount = 2;
+        [RemoteConfig("element_landing_bounce_amount", 0.08f)]
+        [Min(0f)] public float elementLandingBounceAmount = 0.08f;
         [RemoteConfig("match_clear_delay", 0.3f)]
         public float matchClearDelay = 0.3f;
         [RemoteConfig("chain_match_speed_increase_per_combo", 0.2f)]
@@ -212,8 +212,8 @@ namespace Game
             loadingScreenDuration = RemoteConfigManager.Instance.GetFloat("loading_screen_duration", ref loadingScreenDuration, pathToConfigFile);
             elementSwapMoveDuration = RemoteConfigManager.Instance.GetFloat("element_swap_move_duration", ref elementSwapMoveDuration, pathToConfigFile);
             elementFallSpeed = RemoteConfigManager.Instance.GetFloat("element_fall_speed", ref elementFallSpeed, pathToConfigFile);
-            elementFinalLandingDurationMultiplier = RemoteConfigManager.Instance.GetFloat("element_final_landing_duration_multiplier", ref elementFinalLandingDurationMultiplier, pathToConfigFile);
-            elementFinalLandingOutBackOvershoot = RemoteConfigManager.Instance.GetFloat("element_final_landing_out_back_overshoot", ref elementFinalLandingOutBackOvershoot, pathToConfigFile);
+            elementLandingBounceCount = RemoteConfigManager.Instance.GetInt("element_landing_bounce_count", ref elementLandingBounceCount, pathToConfigFile);
+            elementLandingBounceAmount = RemoteConfigManager.Instance.GetFloat("element_landing_bounce_amount", ref elementLandingBounceAmount, pathToConfigFile);
             matchClearDelay = RemoteConfigManager.Instance.GetFloat("match_clear_delay", ref matchClearDelay, pathToConfigFile);
             chainMatchSpeedIncreasePerCombo = RemoteConfigManager.Instance.GetFloat("chain_match_speed_increase_per_combo", ref chainMatchSpeedIncreasePerCombo, pathToConfigFile);
             chainMatchGroupDelay = RemoteConfigManager.Instance.GetFloat("chain_match_group_delay", ref chainMatchGroupDelay, pathToConfigFile);

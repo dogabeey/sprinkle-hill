@@ -2622,12 +2622,8 @@ namespace Game
 
             ConstantManager cm = GameManager.Instance != null ? ConstantManager.Instance : null;
             float fallSpeed = GetChainAdjustedFallSpeed(cm != null ? cm.elementFallSpeed : 3.3f);
-            float finalLandingDurationMultiplier = cm != null
-                ? Mathf.Max(0.01f, cm.elementFinalLandingDurationMultiplier)
-                : 2f;
-            float finalLandingOutBackOvershoot = cm != null
-                ? Mathf.Max(0f, cm.elementFinalLandingOutBackOvershoot)
-                : 1.7f;
+            int landingBounceCount = cm != null ? Mathf.Max(0, cm.elementLandingBounceCount) : 2;
+            float landingBounceAmount = cm != null ? Mathf.Max(0f, cm.elementLandingBounceAmount) : 0.08f;
 
             EnsureGridCells();
             List<ElementData> elementPool = BuildElementPool();
@@ -2790,27 +2786,32 @@ namespace Game
                         Vector3 targetWorldPos = pathTile.transform.position;
                         float segmentDistance = Vector3.Distance(currentWorldPos, targetWorldPos);
                         float segmentDuration = fallSpeed > 0f ? segmentDistance / fallSpeed : 0f;
-                        // Travel through every intermediate cell at a constant
-                        // speed. Only the final landing uses OutBack, so an element
-                        // that keeps falling or sliding never appears to stop at
-                        // a temporary cell.
-                        bool isFinalSegment = pathIndex == path.Count - 1;
-                        if (isFinalSegment)
-                            segmentDuration *= finalLandingDurationMultiplier;
-
-                        Tweener moveTween = movingElement.transform.DOMove(targetWorldPos, segmentDuration);
-                        if (isFinalSegment)
-                            moveTween.SetEase(Ease.OutBack, finalLandingOutBackOvershoot);
-                        else
-                            moveTween.SetEase(Ease.Linear);
-
-                        moveSequence.Append(moveTween);
+                        // Every fall/slide segment uses the same linear speed.
+                        moveSequence.Append(movingElement.transform
+                            .DOMove(targetWorldPos, segmentDuration)
+                            .SetEase(Ease.Linear));
                         currentWorldPos = targetWorldPos;
                         hasPathTween = true;
                     }
 
                     if (!hasPathTween)
                         continue;
+
+                    float bounceAmount = landingBounceAmount;
+                    for (int bounceIndex = 0; bounceIndex < landingBounceCount && bounceAmount > 0f; bounceIndex++)
+                    {
+                        float halfBounceDuration = fallSpeed > 0f
+                            ? Mathf.Max(0.03f, bounceAmount / fallSpeed)
+                            : 0f;
+                        Vector3 bouncePeak = finalTile.transform.position + Vector3.up * bounceAmount;
+                        moveSequence.Append(movingElement.transform
+                            .DOMove(bouncePeak, halfBounceDuration)
+                            .SetEase(Ease.Linear));
+                        moveSequence.Append(movingElement.transform
+                            .DOMove(finalTile.transform.position, halfBounceDuration)
+                            .SetEase(Ease.Linear));
+                        bounceAmount *= 0.5f;
+                    }
 
                     GridElement elementForCompletion = movingElement;
                     GridCellController tileForCompletion = finalTile;
