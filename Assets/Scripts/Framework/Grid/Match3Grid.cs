@@ -62,6 +62,7 @@ namespace Game
         private readonly Dictionary<Vector2Int, ParticleSystem> activeCellFeatureIdleParticles = new Dictionary<Vector2Int, ParticleSystem>();
         private readonly Dictionary<int, int> busyColumnRefCounts = new Dictionary<int, int>();
         private readonly HashSet<int> matchColumnsAwaitingGravity = new HashSet<int>();
+        private readonly Dictionary<Vector2Int, GridElement> elementsByPosition = new Dictionary<Vector2Int, GridElement>();
         private bool immediateGravityRequested;
         private bool isImmediateGravityRunning;
 
@@ -446,9 +447,25 @@ namespace Game
 
         public GridElement GetElementAt(Vector2Int pos)
         {
-            if (generatedTiles.TryGetValue(pos, out GridCellController tile) && tile != null)
-                return tile.GetComponentInChildren<GridElement>();
-            return null;
+            if (!generatedTiles.TryGetValue(pos, out GridCellController tile) || tile == null)
+                return null;
+
+            if (elementsByPosition.TryGetValue(pos, out GridElement cachedElement))
+            {
+                if (cachedElement != null && cachedElement.transform.IsChildOf(tile.transform))
+                    return cachedElement;
+
+                // Elements are regularly detached for animations and reparented
+                // by gravity. Discard stale entries lazily before falling back to
+                // Unity's hierarchy search.
+                elementsByPosition.Remove(pos);
+            }
+
+            GridElement element = tile.GetComponentInChildren<GridElement>();
+            if (element != null)
+                elementsByPosition[pos] = element;
+
+            return element;
         }
 
         public GridElement ReplaceElementAt(Vector2Int pos, GridElementInfo elementInfo)
@@ -456,7 +473,7 @@ namespace Game
             if (!generatedTiles.TryGetValue(pos, out GridCellController tile) || tile == null)
                 return null;
 
-            GridElement oldElement = tile.GetComponentInChildren<GridElement>();
+            GridElement oldElement = GetElementAt(pos);
             if (oldElement != null)
             {
                 ReleaseElementVisual(oldElement);
@@ -468,6 +485,7 @@ namespace Game
             newElement.elementInfo = elementInfo;
             generatedElements.Add(newElement);
             newElement.InitElement(this, elementInfo);
+            elementsByPosition[pos] = newElement;
             TriggerBreakableBoxCreatedEvent(pos, elementInfo?.elementData);
             return newElement;
         }
@@ -1659,7 +1677,7 @@ namespace Game
             if (generatedTiles.TryGetValue(sparklingPos, out GridCellController sTile) &&
                 generatedTiles.TryGetValue(targetPos, out GridCellController tTile))
             {
-                GridElement sparklingElement = sTile.GetComponentInChildren<GridElement>();
+                GridElement sparklingElement = GetElementAt(sparklingPos);
                 if (sparklingElement != null)
                     yield return sparklingElement.transform.DOLocalMove(tTile.transform.position - sTile.transform.position,
                         ConstantManager.Instance.elementSwapMoveDuration).SetEase(Ease.OutBack).WaitForCompletion();
@@ -1865,6 +1883,7 @@ namespace Game
 
                 element.transform.DOKill();
                 element.transform.SetParent(targetTile.transform, true);
+                elementsByPosition[targetPos] = element;
 
                 GridCell targetCell = GetCell(targetPos);
                 if (targetCell?.elementInfo != null)
@@ -1905,8 +1924,8 @@ namespace Game
                 !generatedTiles.TryGetValue(second, out GridCellController secondTile))
                 yield break;
 
-            GridElement firstEl = firstTile.GetComponentInChildren<GridElement>();
-            GridElement secondEl = secondTile.GetComponentInChildren<GridElement>();
+            GridElement firstEl = GetElementAt(first);
+            GridElement secondEl = GetElementAt(second);
             float dur = ConstantManager.Instance.elementSwapMoveDuration;
 
             if (firstEl != null && secondEl != null)
@@ -1915,17 +1934,21 @@ namespace Game
                 Transform sp = secondEl.transform.parent;
                 firstEl.transform.SetParent(sp, true);
                 secondEl.transform.SetParent(fp, true);
+                elementsByPosition[first] = secondEl;
+                elementsByPosition[second] = firstEl;
                 firstEl.transform.DOLocalMove(Vector3.zero, dur).SetEase(Ease.OutBack);
                 yield return secondEl.transform.DOLocalMove(Vector3.zero, dur).SetEase(Ease.OutBack).WaitForCompletion();
             }
             else if (firstEl != null)
             {
                 firstEl.transform.SetParent(secondTile.transform, true);
+                elementsByPosition[second] = firstEl;
                 yield return firstEl.transform.DOLocalMove(Vector3.zero, dur).SetEase(Ease.OutBack).WaitForCompletion();
             }
             else if (secondEl != null)
             {
                 secondEl.transform.SetParent(firstTile.transform, true);
+                elementsByPosition[first] = secondEl;
                 yield return secondEl.transform.DOLocalMove(Vector3.zero, dur).SetEase(Ease.OutBack).WaitForCompletion();
             }
         }
@@ -2032,6 +2055,7 @@ namespace Game
                     element.elementInfo = cell.elementInfo;
                     generatedElements.Add(element);
                     element.InitElement(this, element.elementInfo);
+                    elementsByPosition[cell.coordinates] = element;
                     powerUpHandler.ApplySortingBoost(element, cell.elementInfo.powerUpType == ElementPowerUpType.Bomb);
                     TriggerBreakableBoxCreatedEvent(cell.coordinates, element.elementInfo?.elementData);
 
@@ -2863,6 +2887,7 @@ namespace Game
 
                         elementForCompletion.transform.SetParent(tileForCompletion.transform, true);
                         elementForCompletion.transform.localPosition = Vector3.zero;
+                        elementsByPosition[finalPos] = elementForCompletion;
                     });
 
                     gravitySeq.Join(moveSequence);
@@ -2949,6 +2974,7 @@ namespace Game
                         newElement.elementInfo = newInfo;
                         generatedElements.Add(newElement);
                         newElement.InitElement(this, newInfo);
+                        elementsByPosition[targetPos] = newElement;
                         powerUpHandler.ApplySortingBoost(newElement, false);
                         elementsByInfo[newInfo] = newElement;
                         movementPaths[newInfo] = new List<Vector2Int> { targetPos };
@@ -2987,6 +3013,9 @@ namespace Game
             ReleaseMatchColumnsAwaitingGravity();
         }
 
+        // This is an opt-in recovery/validation pass, not part of normal gravity.
+        // Define ENABLE_OCCUPANCY_SANITY_CHECK explicitly to include its call sites.
+        [System.Diagnostics.Conditional("ENABLE_OCCUPANCY_SANITY_CHECK")]
         private void RunOccupancySanityPass()
         {
             EnsureGridCells();
