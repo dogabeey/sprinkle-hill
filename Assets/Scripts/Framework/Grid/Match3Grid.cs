@@ -62,6 +62,31 @@ namespace Game
         private readonly Dictionary<Vector2Int, ParticleSystem> activeCellFeatureIdleParticles = new Dictionary<Vector2Int, ParticleSystem>();
         private readonly Dictionary<int, int> busyColumnRefCounts = new Dictionary<int, int>();
         private readonly HashSet<int> matchColumnsAwaitingGravity = new HashSet<int>();
+        private bool immediateGravityRequested;
+        private bool isImmediateGravityRunning;
+
+        public bool IsImmediateGravityInProgress => isImmediateGravityRunning;
+
+        public void RequestImmediateGravity()
+        {
+            immediateGravityRequested = true;
+            if (!isImmediateGravityRunning)
+                StartCoroutine(ImmediateGravityRoutine());
+        }
+
+        private IEnumerator ImmediateGravityRoutine()
+        {
+            isImmediateGravityRunning = true;
+            while (immediateGravityRequested && !IsMatchResolutionBlocked())
+            {
+                // Coalesce hits that arrive in the same frame (for example all
+                // simultaneous disco-ball rays) before mutating board occupancy.
+                yield return null;
+                immediateGravityRequested = false;
+                yield return StartCoroutine(ApplyGravity());
+            }
+            isImmediateGravityRunning = false;
+        }
 
         public bool IsColumnBusy(int column)
         {
@@ -106,6 +131,15 @@ namespace Game
             generatedElements.Remove(element);
             element.transform.SetParent(null, true);
             StartCoroutine(element.DestroyElement(animationSpeedMultiplier));
+        }
+
+        public void DetachElementVisual(GridElement element)
+        {
+            if (element == null)
+                return;
+
+            generatedElements.Remove(element);
+            element.transform.SetParent(null, true);
         }
 
         private void LockColumn(int column)
@@ -1175,6 +1209,7 @@ namespace Game
             currentComboCount = 0;
             isResolvingIndirectCascade = true;
             yield return new WaitUntil(() => !powerUpHandler.IsChainReactionInProgress());
+            yield return new WaitUntil(() => !IsImmediateGravityInProgress);
 
             if (IsMatchResolutionBlocked())
             {

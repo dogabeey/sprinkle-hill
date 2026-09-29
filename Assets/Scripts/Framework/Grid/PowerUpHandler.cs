@@ -1322,8 +1322,7 @@ namespace Game
             List<Vector2Int> matchingCells = GetAllCellsWithElement(targetElementData);
             if (matchingCells.Count > 0)
             {
-                yield return grid.StartCoroutine(AnimateDiscoBallTrails(discoBallPos, matchingCells, targetElementData, false));
-                DestroyDiscoBallConvertedCells(matchingCells, discoBallData);
+                yield return grid.StartCoroutine(AnimateDiscoBallTrails(discoBallPos, matchingCells, discoBallData, false));
             }
 
 
@@ -1387,11 +1386,7 @@ namespace Game
             List<Vector2Int> selectedCells = GetAllCellsInGrid();
             if (selectedCells.Count > 0)
             {
-                var cm = ConstantManager.Instance;
-                float totalWait = cm.discoBallTrailDuration + cm.discoBallTrailSpawnDelay + 0.1f; // Extra buffer to ensure all trails have finished animating before we destroy any cells. 
-                grid.StartCoroutine(AnimateDiscoBallTrails(primaryDiscoBallPos, selectedCells, designatedElementData, true));
-                yield return new WaitForSeconds(0.1f);
-                DestroyDiscoBallConvertedCells(selectedCells, primaryDiscoBallData);
+                yield return grid.StartCoroutine(AnimateDiscoBallTrails(primaryDiscoBallPos, selectedCells, primaryDiscoBallData, true));
             }
 
             StopAndDestroyDiscoBallElement(primaryElement, primarySpinTween);
@@ -2064,7 +2059,17 @@ namespace Game
             // Get propeller element and kill any existing tweens
             GridElement propellerElement = grid.GetElementAt(propellerPos);
             if (propellerElement != null)
+            {
                 propellerElement.transform.DOKill();
+                grid.DetachElementVisual(propellerElement);
+            }
+
+            // The source and its four-neighbour blast are resolved immediately;
+            // the propeller can keep flying while gravity refills those spaces.
+            grid.TriggerCellFeatureMatchedOverAt(propellerPos);
+            propellerCell.elementInfo = null;
+            yield return grid.StartCoroutine(ApplyPropellerNeighborImpact(propellerPos));
+            grid.RequestImmediateGravity();
 
             // Calculate target world position
             Vector3 targetWorldPos = grid.GetWorldPosition(targetPos);
@@ -2099,12 +2104,6 @@ namespace Game
                 grid.StartDetachedDestroyAnimation(propellerElement);
             }
 
-            // Trigger cell features
-            grid.TriggerCellFeatureMatchedOverAt(propellerPos);
-            // Clear propeller cell info to prevent unintended interactions during the flight
-            propellerCell.elementInfo = null;
-            // Clear the propeller's original neighbors to simulate the blast impact
-            yield return grid.StartCoroutine(ApplyPropellerNeighborImpact(propellerPos));
             // Clear only the target cell after the propeller arrives, without triggering adjacent breakables or features.
             yield return grid.StartCoroutine(ClearPropellerTargetCell(targetPos));
             StopEffect(activationSound);
@@ -2493,7 +2492,7 @@ namespace Game
             yield return grid.StartCoroutine(grid.TriggerCauldronExplosion(cauldronPos));
         }
 
-        private IEnumerator AnimateDiscoBallTrails(Vector2Int sourcePos, List<Vector2Int> targets, ElementData targetElementData, bool animateAtOnce)
+        private IEnumerator AnimateDiscoBallTrails(Vector2Int sourcePos, List<Vector2Int> targets, PowerUpElementData sourcePowerUpData, bool animateAtOnce)
         {
             ConstantManager cm = ConstantManager.Instance;
             Vector3 sourceWorldPos = grid.GetWorldPosition(sourcePos);
@@ -2501,7 +2500,8 @@ namespace Game
             int trailIndex = 0;
             for (int i = 0; i < targets.Count; i++)
             {
-                grid.StartCoroutine(AnimateSingleDiscoTrail(sourceWorldPos, targets[i], targetElementData, trailIndex));
+                GridElement targetElement = grid.GetElementAt(targets[i]);
+                grid.StartCoroutine(AnimateSingleDiscoTrail(sourceWorldPos, targets[i], targetElement, sourcePowerUpData, trailIndex));
                 trailIndex++;
                 if(!animateAtOnce)
                     yield return new WaitForSeconds(cm.discoBallTrailSpawnDelay);
@@ -2541,7 +2541,7 @@ namespace Game
                 : ElementPowerUpType.HorizontalRocket;
         }
 
-        private IEnumerator AnimateSingleDiscoTrail(Vector3 sourcePos, Vector2Int targetPos, ElementData targetElementData, int trailIndex)
+        private IEnumerator AnimateSingleDiscoTrail(Vector3 sourcePos, Vector2Int targetPos, GridElement targetElement, PowerUpElementData sourcePowerUpData, int trailIndex)
         {
             ConstantManager cm = ConstantManager.Instance;
             Vector3 targetWorldPos = grid.GetWorldPosition(targetPos);
@@ -2554,23 +2554,11 @@ namespace Game
             if (trailTween != null && trailTween.active)
                 yield return trailTween.WaitForCompletion();
 
-            Grid3D.GridCell cell = grid.GetCellPublic(targetPos);
-            if (cell?.elementInfo != null)
+            if (targetElement != null && grid.TryGetElementPosition(targetElement, out Vector2Int resolvedTargetPos))
             {
-                cell.elementInfo.elementData = targetElementData;
-                cell.elementInfo.powerUpType = ElementPowerUpType.None;
-                cell.elementInfo.isSparkling = false;
-
-                GridElement element = grid.GetElementAt(targetPos);
-                if (element != null)
-                {
-                    element.elementInfo = cell.elementInfo;
-                    element.InitElement(grid, cell.elementInfo);
-                    GridHelper.SetEmission(element, cm.discoBallEmissionOnTrailArrival);
-                    //grid.StartCoroutine(ResetElementEmission(element, cm.discoBallEmissionResetDelay));
-                }
+                DestroyDiscoBallConvertedCells(new List<Vector2Int> { resolvedTargetPos }, sourcePowerUpData);
+                grid.RequestImmediateGravity();
             }
-
 
             if (trailObj != null) Object.Destroy(trailObj);
         }
@@ -2796,6 +2784,7 @@ namespace Game
 
             List<GameObject> rocketCopies = new List<GameObject>(directions.Length);
             List<Coroutine> travelCoroutines = new List<Coroutine>(directions.Length);
+            bool refillAsRocketTravels = rocketType == ElementPowerUpType.HorizontalRocket;
 
             for (int i = 0; i < directions.Length; i++)
             {
@@ -2804,7 +2793,14 @@ namespace Game
                 Vector3 lineEnd = GetRocketLineEnd(originWorld, lineCells, direction);
                 SpriteRenderer rocketCopy = CreateRocketCopyForDirection(rocketElement, originWorld, direction, rocketType);
                 rocketCopies.Add(rocketCopy.gameObject);
-                travelCoroutines.Add(grid.StartCoroutine(TravelRocketCopy(rocketCopy.gameObject, originWorld, lineEnd, lineCells, cm, processedWalls)));
+                travelCoroutines.Add(grid.StartCoroutine(TravelRocketCopy(
+                    rocketCopy.gameObject,
+                    originWorld,
+                    lineEnd,
+                    lineCells,
+                    cm,
+                    processedWalls,
+                    refillAsRocketTravels)));
             }
 
             if (rocketElement != null)
@@ -2963,7 +2959,7 @@ namespace Game
             yield return grid.StartCoroutine(ActivateRocketBurst(targetPos, rocketElement, rocketDirections, rocketType, clearSourceCell: false, clearOriginCell: true, preLaunchDelay: 0f, volumeMultiplier: 1f, pitchOffset: 0.02f));
         }
 
-        private IEnumerator TravelRocketCopy(GameObject rocketCopy, Vector3 start, Vector3 end, List<Vector2Int> cellsInOrder, ConstantManager cm, HashSet<Vector2Int> processedWalls)
+        private IEnumerator TravelRocketCopy(GameObject rocketCopy, Vector3 start, Vector3 end, List<Vector2Int> cellsInOrder, ConstantManager cm, HashSet<Vector2Int> processedWalls, bool refillAsRocketTravels)
         {
             if (rocketCopy == null) yield break;
 
@@ -2992,7 +2988,9 @@ namespace Game
 
                 while (nextCellIndex < cellsInOrder.Count && currentDist >= cellDistances[nextCellIndex])
                 {
-                    ClearLineCellImmediate(cellsInOrder[nextCellIndex], processedWalls);
+                    bool clearedElement = ClearLineCellImmediate(cellsInOrder[nextCellIndex], processedWalls);
+                    if (refillAsRocketTravels && clearedElement)
+                        grid.RequestImmediateGravity();
                     nextCellIndex++;
                 }
 
@@ -3001,39 +2999,41 @@ namespace Game
 
             while (nextCellIndex < cellsInOrder.Count)
             {
-                ClearLineCellImmediate(cellsInOrder[nextCellIndex], processedWalls);
+                bool clearedElement = ClearLineCellImmediate(cellsInOrder[nextCellIndex], processedWalls);
+                if (refillAsRocketTravels && clearedElement)
+                    grid.RequestImmediateGravity();
                 nextCellIndex++;
             }
         }
 
-        private void ClearLineCellImmediate(Vector2Int pos, HashSet<Vector2Int> processedWalls)
+        private bool ClearLineCellImmediate(Vector2Int pos, HashSet<Vector2Int> processedWalls)
         {
             Grid3D.GridCell cell = grid.GetCellPublic(pos);
-            if (cell == null) return;
+            if (cell == null) return false;
 
             if (cell.cellType == Grid3D.CellType.BreakableWall)
             {
                 TryBreakRocketWallImmediate(pos, processedWalls);
-                return;
+                return false;
             }
 
             if (cell.cellType != Grid3D.CellType.Normal)
             {
                 BreakAdjacentWallsImmediate(pos, processedWalls);
-                return;
+                return false;
             }
 
             if (cell.cellFeature is GlassFeature)
             {
                 grid.DamageGlassFeatureAt(pos);
                 BreakAdjacentWallsImmediate(pos, processedWalls);
-                return;
+                return false;
             }
 
             if (cell.elementInfo == null)
             {
                 BreakAdjacentWallsImmediate(pos, processedWalls);
-                return;
+                return false;
             }
 
             GridElement matchedElement = grid.GetElementAt(pos);
@@ -3041,23 +3041,24 @@ namespace Game
             BreakAdjacentWallsImmediate(pos, processedWalls);
 
             if (grid.TryRevealHiddenBoxAt(pos))
-                return;
+                return false;
                 
             if (cell.elementInfo.elementData != null &&
                 cell.elementInfo.elementData.HasBehavior(ElementData.ElementBehaviorFlags.ImmuneToClear))
-                return;
+                return false;
 
             if (IsSpecialPowerUp(cell.elementInfo.powerUpType))
             {
                 grid.StartCoroutine(ActivateAt(pos, null));
-                return;
+                return false;
             }
 
-            if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron) return;
+            if (cell.elementInfo.powerUpType == ElementPowerUpType.Cauldron) return false;
 
             grid.NotifyElementCleared(pos);
             cell.elementInfo = null;
             if (matchedElement != null) grid.StartDetachedDestroyAnimation(matchedElement);
+            return true;
         }
 
         private void BreakAdjacentWallsImmediate(Vector2Int pos, HashSet<Vector2Int> processedWalls)

@@ -4,7 +4,7 @@
     "loading_screen_duration": 1.0,
     "element_swap_move_duration": 0.3,
     "element_fall_speed": 9.0,
-    "element_landing_bounce_count": 3.0,
+    "element_landing_bounce_count": 2.0,
     "element_landing_bounce_amount": 0.16,
     "match_clear_delay": 0.0,
     "chain_match_speed_increase_per_combo": 0.0,

@@ -47,7 +47,7 @@ MonoBehaviour:
   dontDestroyOnLoad: 1
   loadingScreenDuration: 1
   elementSwapMoveDuration: 0.2
-  elementFallSpeed: 9
+  elementFallSpeed: 10
   elementLandingBounceCount: 2
   elementLandingBounceAmount: 0.16
   matchClearDelay: 0
