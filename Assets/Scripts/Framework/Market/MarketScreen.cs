@@ -11,13 +11,18 @@ namespace Game
         [Header("Prefab References")]
         [Tooltip("Disabled template instantiated once for every product shown in a category.")]
         [SerializeField] private MarketListingView listingPrefab;
-        [Tooltip("Closes the market and returns to the previous non-persistent screen.")]
-        [SerializeField] private Button closeButton;
-        [Tooltip("Shown when no configured product can be placed in any category container.")]
-        [SerializeField] private GameObject emptyState;
+        
         [Tooltip("One container per MarketCategory. Products without a matching container are skipped.")]
         [SerializeField] private List<MarketCategoryContainer> categoryContainers = new List<MarketCategoryContainer>();
-
+        [Header("Scene References")]
+        [Tooltip("Parent of the market listings.")]
+        [SerializeField] private Transform listingParent;
+        [Tooltip("Parent of the market categories.")]
+        [SerializeField] private Transform categoryParent;
+        [Tooltip("Shown when no configured product can be placed in any category container.")]
+        [SerializeField] private GameObject emptyState;
+        [Tooltip("Closes the market and returns to the previous non-persistent screen.")]
+        [SerializeField] private Button closeButton;
         private readonly List<MarketListingView> activeListings = new List<MarketListingView>();
         public override Screens ScreenID => Screens.Market;
 

@@ -26,6 +26,8 @@ namespace Game
         public IReadOnlyList<IBuyable> Listings => listings;
         public event Action ListingsChanged;
 
+        public MarketCategory CurrentCategory { get; set; } = MarketCategory.Currency; 
+
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void CreateFromPrefab()
         {

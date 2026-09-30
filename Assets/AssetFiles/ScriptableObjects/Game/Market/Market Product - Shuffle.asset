@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5933c5952dae72149843aa13d4d0f50a, type: 3}
   m_Name: Market Product - Shuffle
   m_EditorClassIdentifier: Game::Game.MarketProduct
-  itemName: Cutter
+  itemName: Shuffle
   itemDescription: Destroys the entire column of the clicked cell.
   itemIcon: {fileID: -2001848189, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
   itemCategory: 1
@@ -22,15 +22,15 @@ MonoBehaviour:
   - buyCount: 3
     discountPercentage: 0
     buyWithAd: 0
-    buySprite: {fileID: -400374839, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    buySprite: {fileID: -482402101, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
   - buyCount: 10
     discountPercentage: 0.1
     buyWithAd: 0
-    buySprite: {fileID: -955304093, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    buySprite: {fileID: 136029994, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
   - buyCount: 25
     discountPercentage: 0.25
     buyWithAd: 0
-    buySprite: {fileID: 1382202287, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+    buySprite: {fileID: -1060796528, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
   rewards:
   - rid: 7994935600147595407
   references:
@@ -39,4 +39,4 @@ MonoBehaviour:
     - rid: 7994935600147595407
       type: {class: ActionInventoryMarketReward, ns: Game, asm: Game}
       data:
-        actionItemName: Cutter
+        actionItemName: Shuffle

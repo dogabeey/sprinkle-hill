@@ -5,6 +5,7 @@ using UnityEngine;
 namespace Game.Editor
 {
     [CustomEditor(typeof(MarketProduct))]
+    [CanEditMultipleObjects]
     public sealed class MarketProductEditor : UnityEditor.Editor
     {
         public override void OnInspectorGUI()
