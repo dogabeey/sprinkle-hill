@@ -20,13 +20,13 @@ namespace Game
         private IBuyable.BuyBundle bundle;
         private GameObject source;
 
-        public void Bind(IBuyable buyable, IBuyable.BuyBundle buyBundle, GameObject purchaseSource, Sprite productIcon)
+        public void Bind(IBuyable buyable, IBuyable.BuyBundle buyBundle, GameObject purchaseSource)
         {
             listing = buyable;
             bundle = buyBundle;
             source = purchaseSource;
             if (amountText != null) amountText.text = $"x{bundle.buyCount}";
-            if (offerIcon != null) offerIcon.sprite = productIcon;
+            if (offerIcon != null) offerIcon.sprite = bundle.buySprite;
             if (priceText != null) priceText.text = bundle.buyWithAd ? string.Empty : bundle.GetTotalCost(listing.GetCost()).ToString();
             if (adIndicator != null) adIndicator.SetActive(bundle.buyWithAd);
             if (button != null)

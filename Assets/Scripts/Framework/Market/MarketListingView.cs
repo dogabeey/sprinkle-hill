@@ -23,6 +23,9 @@ namespace Game
         private readonly List<MarketOfferButton> offerButtons = new List<MarketOfferButton>();
         private IBuyable listing;
 
+        public IBuyable Listing => listing;
+        public MarketCategory Category => listing != null ? listing.ItemCategory : MarketCategory.Currency;
+
         public void Bind(IBuyable buyable)
         {
             listing = buyable;
@@ -37,7 +40,7 @@ namespace Game
             {
                 MarketOfferButton offer = Instantiate(offerButtonPrefab, offerContainer);
                 offer.gameObject.SetActive(true);
-                offer.Bind(buyable, bundle, gameObject, productIcon);
+                offer.Bind(buyable, bundle, gameObject);
                 offerButtons.Add(offer);
             }
         }

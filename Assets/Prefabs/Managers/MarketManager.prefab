@@ -45,6 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Game::Game.MarketManager
   dontDestroyOnLoad: 1
-  includeActionBarItems: 1
+  includeActionBarItems: 0
   configuredProducts:
   - {fileID: 11400000, guid: e1fb3746ebb749645a106ecface49a31, type: 2}
+  - {fileID: 11400000, guid: b489af28564cf9541b8bd1345c637f27, type: 2}
+  - {fileID: 11400000, guid: e041c4f8707cba3488e16b4874e08786, type: 2}
+  - {fileID: 11400000, guid: c2d4ddb935e1bc04b8d3b3b117f942b9, type: 2}

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Game::Game.MarketProduct
   itemName: Cutter
   itemDescription: Destroys the entire column of the clicked cell.
-  itemIcon: {fileID: -2001848189, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
+  itemIcon: {fileID: 2118993033, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
   itemCategory: 1
   costCurrency: {fileID: 11400000, guid: 31b1c667ab353af4a80bfe0daaa96451, type: 2}
   cost: 50

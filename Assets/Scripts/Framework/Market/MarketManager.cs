@@ -18,7 +18,7 @@ namespace Game
 
         [Header("Listing Sources")]
         [Tooltip("When enabled, every ActionBarItem is shown in the Boosters market category.")]
-        [SerializeField] private bool includeActionBarItems = true;
+        [SerializeField] private bool includeActionBarItems;
         [Tooltip("Additional ScriptableObject market products, such as currency packs. Create them with Create > Game > Market > Product.")]
         [SerializeField] private List<MarketProduct> configuredProducts = new List<MarketProduct>();
 
@@ -26,7 +26,24 @@ namespace Game
         public IReadOnlyList<IBuyable> Listings => listings;
         public event Action ListingsChanged;
 
-        public MarketCategory CurrentCategory { get; set; } = MarketCategory.Currency; 
+        private MarketCategory currentCategory = MarketCategory.Currency;
+
+        public MarketCategory CurrentCategory
+        {
+            get => currentCategory;
+            set
+            {
+                if (currentCategory == value)
+                    return;
+
+                currentCategory = value;
+                CategoryChanged?.Invoke(currentCategory);
+            }
+        }
+
+        public event Action<MarketCategory> CategoryChanged;
+
+        public void SelectCategory(MarketCategory category) => CurrentCategory = category;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void CreateFromPrefab()

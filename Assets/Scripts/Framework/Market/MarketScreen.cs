@@ -19,6 +19,8 @@ namespace Game
         [SerializeField] private Transform listingParent;
         [Tooltip("Parent of the market categories.")]
         [SerializeField] private Transform categoryParent;
+        [Tooltip("The group shared by every category tab. If omitted, the group on Category Parent is used.")]
+        [SerializeField] private ToggleGroup categoryToggleGroup;
         [Tooltip("Shown when no configured product can be placed in any category container.")]
         [SerializeField] private GameObject emptyState;
         [Tooltip("Closes the market and returns to the previous non-persistent screen.")]
@@ -30,19 +32,27 @@ namespace Game
         {
             if (closeButton != null)
                 closeButton.onClick.AddListener(Close);
+
+            ConfigureCategoryTabs();
         }
 
         private void OnEnable()
         {
             if (MarketManager.Instance != null)
+            {
                 MarketManager.Instance.ListingsChanged += Rebuild;
+                MarketManager.Instance.CategoryChanged += OnCategoryChanged;
+            }
             EventManager.StartListening(GameEvent.CURRENCY_CHANGED, OnCurrencyChanged);
         }
 
         private void OnDisable()
         {
             if (MarketManager.Instance != null)
+            {
                 MarketManager.Instance.ListingsChanged -= Rebuild;
+                MarketManager.Instance.CategoryChanged -= OnCategoryChanged;
+            }
             EventManager.StopListening(GameEvent.CURRENCY_CHANGED, OnCurrencyChanged);
         }
 
@@ -64,13 +74,13 @@ namespace Game
             foreach (IBuyable listing in MarketManager.Instance.Listings)
             {
                 MarketCategoryContainer container = categoryContainers.Find(item => item != null && item.Category == listing.ItemCategory);
-                if (container == null || container.Content == null)
+                if (container == null || listingParent == null)
                 {
-                    Debug.LogWarning($"Market category '{listing.ItemCategory}' has no configured container.", this);
+                    Debug.LogWarning($"Market category '{listing.ItemCategory}' has no configured container or Listing Parent.", this);
                     continue;
                 }
 
-                MarketListingView view = Instantiate(listingPrefab, container.Content);
+                MarketListingView view = Instantiate(listingPrefab, listingParent);
                 view.gameObject.SetActive(true);
                 view.Bind(listing);
                 activeListings.Add(view);
@@ -78,7 +88,49 @@ namespace Game
 
             foreach (MarketCategoryContainer container in categoryContainers)
                 if (container != null) container.RefreshVisibility();
-            if (emptyState != null) emptyState.SetActive(activeListings.Count == 0);
+            ApplyCategoryVisibility();
+        }
+
+        private void OnCategoryChanged(MarketCategory category) => ApplyCategoryVisibility();
+
+        private void ApplyCategoryVisibility()
+        {
+            MarketManager manager = MarketManager.Instance;
+            if (manager == null)
+                return;
+
+            int visibleListingCount = 0;
+            foreach (MarketListingView listing in activeListings)
+            {
+                if (listing == null)
+                    continue;
+
+                bool isSelectedCategory = listing.Category == manager.CurrentCategory;
+                listing.gameObject.SetActive(isSelectedCategory);
+                if (isSelectedCategory)
+                    visibleListingCount++;
+            }
+
+            foreach (MarketCategoryContainer container in categoryContainers)
+                if (container != null) container.SetSelected(container.Category == manager.CurrentCategory);
+
+            if (emptyState != null)
+                emptyState.SetActive(visibleListingCount == 0);
+        }
+
+        private void ConfigureCategoryTabs()
+        {
+            if (categoryToggleGroup == null && categoryParent != null)
+                categoryToggleGroup = categoryParent.GetComponent<ToggleGroup>();
+
+            if (categoryToggleGroup == null && categoryParent != null)
+                categoryToggleGroup = categoryParent.gameObject.AddComponent<ToggleGroup>();
+
+            if (categoryToggleGroup != null)
+                categoryToggleGroup.allowSwitchOff = false;
+
+            foreach (MarketCategoryContainer container in categoryContainers)
+                if (container != null) container.ConfigureToggle(categoryToggleGroup);
         }
 
         private void OnCurrencyChanged(EventParam eventParam)

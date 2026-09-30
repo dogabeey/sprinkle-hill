@@ -87,27 +87,31 @@ namespace Game.Editor
             layout.padding = new RectOffset(40, 40, 44, 38); layout.spacing = 16;
             MarketScreen screen = root.AddComponent<MarketScreen>();
             Text("Title", root.transform, "MARKET", 48).alignment = TextAlignmentOptions.Center;
+            Transform tabs = UIObject("Category Tabs", root.transform).transform;
+            tabs.gameObject.AddComponent<HorizontalLayoutGroup>().spacing = 10;
+            ToggleGroup toggleGroup = tabs.gameObject.AddComponent<ToggleGroup>();
             GameObject scroll = UIObject("Category Scroll View", root.transform); scroll.AddComponent<Image>().color = new Color(1, 1, 1, .04f);
             scroll.AddComponent<LayoutElement>().flexibleHeight = 1;
-            Transform categoryRoot = UIObject("Categories", scroll.transform).transform;
-            categoryRoot.gameObject.AddComponent<VerticalLayoutGroup>().spacing = 20;
+            Transform listingRoot = UIObject("Listings", scroll.transform).transform;
+            listingRoot.gameObject.AddComponent<VerticalLayoutGroup>().spacing = 20;
             List<MarketCategoryContainer> containers = new List<MarketCategoryContainer>();
-            foreach (MarketCategory category in System.Enum.GetValues(typeof(MarketCategory))) containers.Add(Category(category, categoryRoot));
+            foreach (MarketCategory category in System.Enum.GetValues(typeof(MarketCategory))) containers.Add(Category(category, tabs));
             GameObject empty = UIObject("Empty State", root.transform); Text("Text", empty.transform, "No offers available", 24).alignment = TextAlignmentOptions.Center;
             GameObject closeObject = UIObject("Close Button", root.transform); closeObject.AddComponent<Image>().color = new Color(.18f, .68f, .42f); Button close = closeObject.AddComponent<Button>(); Text("Label", closeObject.transform, "CLOSE", 24).alignment = TextAlignmentOptions.Center;
-            Set(screen, "listingPrefab", listing); Set(screen, "closeButton", close); Set(screen, "emptyState", empty); Set(screen, "categoryContainers", containers);
+            Set(screen, "listingPrefab", listing); Set(screen, "listingParent", listingRoot); Set(screen, "categoryParent", tabs); Set(screen, "categoryToggleGroup", toggleGroup); Set(screen, "closeButton", close); Set(screen, "emptyState", empty); Set(screen, "categoryContainers", containers);
             PrefabUtility.SaveAsPrefabAsset(root, Root + "/Market Panel.prefab");
             Object.DestroyImmediate(root);
         }
 
         private static MarketCategoryContainer Category(MarketCategory category, Transform parent)
         {
-            GameObject root = UIObject(category + " Category", parent); root.AddComponent<VerticalLayoutGroup>().spacing = 8;
+            GameObject root = UIObject(category + " Category", parent);
+            root.AddComponent<Image>().color = new Color(.2f, .53f, .82f);
+            root.AddComponent<LayoutElement>().minHeight = 48;
+            Toggle toggle = root.AddComponent<Toggle>();
             MarketCategoryContainer container = root.AddComponent<MarketCategoryContainer>();
-            Text("Header", root.transform, category.ToString().ToUpperInvariant(), 28);
-            Transform content = UIObject("Content", root.transform).transform; content.gameObject.AddComponent<VerticalLayoutGroup>().spacing = 10;
-            GameObject empty = UIObject("Empty", root.transform); Text("Text", empty.transform, "No offers", 18);
-            Set(container, "category", category); Set(container, "content", content); Set(container, "emptyState", empty); return container;
+            Text("Label", root.transform, category.ToString().ToUpperInvariant(), 20).alignment = TextAlignmentOptions.Center;
+            Set(container, "category", category); Set(container, "categoryToggle", toggle); return container;
         }
 
         private static GameObject UIObject(string name, Transform parent)
