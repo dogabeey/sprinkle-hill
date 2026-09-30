@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5933c5952dae72149843aa13d4d0f50a, type: 3}
+  m_Name: Market Product - Shuffle
+  m_EditorClassIdentifier: Game::Game.MarketProduct
+  itemName: Cutter
+  itemDescription: Destroys the entire column of the clicked cell.
+  itemIcon: {fileID: -2001848189, guid: 86746599a6a5ca24e893b7a0c9d06cf7, type: 3}
+  itemCategory: 1
+  costCurrency: {fileID: 11400000, guid: 31b1c667ab353af4a80bfe0daaa96451, type: 2}
+  cost: 50
+  buyConfig:
+  - buyCount: 3
+    discountPercentage: 0
+    buyWithAd: 0
+    buySprite: {fileID: -400374839, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+  - buyCount: 10
+    discountPercentage: 0.1
+    buyWithAd: 0
+    buySprite: {fileID: -955304093, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+  - buyCount: 25
+    discountPercentage: 0.25
+    buyWithAd: 0
+    buySprite: {fileID: 1382202287, guid: d593170e6aee61b489643cdaa82800d4, type: 3}
+  rewards:
+  - rid: 7994935600147595407
+  references:
+    version: 2
+    RefIds:
+    - rid: 7994935600147595407
+      type: {class: ActionInventoryMarketReward, ns: Game, asm: Game}
+      data:
+        actionItemName: Cutter

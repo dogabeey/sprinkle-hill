@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using Unity.Services.Core;
 using UnityEngine.UnityConsent ;
-using UnityEngine; using Game.EventManagement;
+using UnityEngine;
+using Game.EventManagement;
 using System;
 using Game.SimpleJSON;
-using Game.EventManagement;
-
 
 namespace Game
 {
