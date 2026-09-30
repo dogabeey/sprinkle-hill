@@ -24,7 +24,7 @@ MonoBehaviour:
   tutorialAnimationSettings:
     tutorialAnimationType: 4
     tutorialObject: {fileID: 5451101766555202300, guid: cc3af2eacfaf7494889f27e86121efad, type: 3}
-    screenPositionOffset: {x: 50, y: -50}
+    screenPositionOffset: {x: 80, y: -80}
     duration: 1
     isLoop: 1
     rotationOffset: -90
@@ -32,6 +32,8 @@ MonoBehaviour:
     endCoordinate: {x: 5, y: 4}
   highlightSelectors:
   - highlightSelectorType: 8
+    highlightCornerRadius: 8
+    highlightEdgeSoftness: 4
     actionName: 
     selectedTags: []
     selectedCoordinates:
@@ -39,9 +41,13 @@ MonoBehaviour:
     - {x: 4, y: 4}
     - {x: 5, y: 4}
     - {x: 5, y: 3}
+    columnIndex: 0
+    rowIndex: 0
   highlightSelectorType: 0
   highlightSelectorSettings:
     highlightSelectorType: 8
+    highlightCornerRadius: 8
+    highlightEdgeSoftness: 4
     actionName: 
     selectedTags: []
     selectedCoordinates:
@@ -49,6 +55,8 @@ MonoBehaviour:
     - {x: 4, y: 4}
     - {x: 5, y: 4}
     - {x: 5, y: 3}
+    columnIndex: 0
+    rowIndex: 0
   startEvent: 202
   startEventExpectedParams: 0
   startEventExpectedParamValues:

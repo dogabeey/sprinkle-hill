@@ -756,7 +756,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 407152368}
+    m_TransformParent: {fileID: 4133448082132307929}
     m_Modifications:
     - target: {fileID: 737799903617502648, guid: f7075eebbc9e32e42b1516c9e353f330, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -812,15 +812,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2644979211408110882, guid: f7075eebbc9e32e42b1516c9e353f330, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2644979211408110882, guid: f7075eebbc9e32e42b1516c9e353f330, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2644979211408110882, guid: f7075eebbc9e32e42b1516c9e353f330, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2644979211408110882, guid: f7075eebbc9e32e42b1516c9e353f330, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -861,6 +861,18 @@ PrefabInstance:
     - target: {fileID: 8633675657938603941, guid: f7075eebbc9e32e42b1516c9e353f330, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 55.894043
+      objectReference: {fileID: 0}
+    - target: {fileID: 8884203161157993170, guid: f7075eebbc9e32e42b1516c9e353f330, type: 3}
+      propertyPath: isPersistent
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8884203161157993170, guid: f7075eebbc9e32e42b1516c9e353f330, type: 3}
+      propertyPath: doesNotCloseOtherOpenScreens
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8884203161157993170, guid: f7075eebbc9e32e42b1516c9e353f330, type: 3}
+      propertyPath: preventsOtherScreensFromOpening
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1086,7 +1098,6 @@ RectTransform:
   - {fileID: 8865604690170923533}
   - {fileID: 1061930360}
   - {fileID: 4796880475106837074}
-  - {fileID: 299557236}
   - {fileID: 2644979211194878112}
   - {fileID: 529080064}
   - {fileID: 4380953324491230259}
@@ -3974,6 +3985,7 @@ RectTransform:
   - {fileID: 1068210311}
   - {fileID: 900864207}
   - {fileID: 752889591}
+  - {fileID: 299557236}
   - {fileID: 1510078031}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -23,7 +23,9 @@ namespace Game
         private async void Awake()
         {
             SaveManager.Instance.Register(this);
+#if !UNITY_EDITOR
             await UnityServices.InitializeAsync();
+#endif
             
             if (Instance != null && Instance != this)
             {

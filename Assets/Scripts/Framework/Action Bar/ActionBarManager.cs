@@ -19,6 +19,8 @@ namespace Game
         [SerializeReference]
         public List<ActionBarItem> actionBarItemList;
         public Transform actionBarParent;
+        [Tooltip("Name of the action-bar layout container when the manager is stored in a persistent prefab.")]
+        [SerializeField] private string actionBarParentName = "action bar container";
         public Sprite lockedSprite; // Used for not available actions.
 
         internal List<ActionBarView> actionBarViews = new List<ActionBarView>();
@@ -145,12 +147,51 @@ namespace Game
 
         protected virtual void DrawUI()
         {
+            if (actionBarViews.Count > 0)
+                return;
+
+            if (actionBarViewPrefab == null)
+            {
+                Debug.LogError("[ActionBar] Cannot draw action views: Action Bar View prefab is not assigned.", this);
+                return;
+            }
+
+            if (actionBarItemList == null)
+            {
+                Debug.LogError("[ActionBar] Cannot draw action views: action item list is not assigned.", this);
+                return;
+            }
+
+            ResolveActionBarParent();
+            if (actionBarParent == null)
+            {
+                Debug.LogError($"[ActionBar] Cannot draw action views: no UI container named '{actionBarParentName}' was found.", this);
+                return;
+            }
+
             foreach (ActionBarItem actionBarItem in actionBarItemList)
             {
+                if (actionBarItem == null)
+                {
+                    Debug.LogWarning("[ActionBar] Skipping an empty action item.", this);
+                    continue;
+                }
+
                 var actionBar = Instantiate(actionBarViewPrefab, actionBarParent);
                 actionBar.Init(actionBarItem);
                 actionBarViews.Add(actionBar);
             }
+        }
+
+        private void ResolveActionBarParent()
+        {
+            if (actionBarParent != null)
+                return;
+
+            Transform[] transforms = FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            actionBarParent = transforms.FirstOrDefault(transform =>
+                transform.gameObject.scene.isLoaded &&
+                transform.name == actionBarParentName);
         }
 
         internal ActionBarView GetActionBarView(ActionBarItem addTimeAction)
