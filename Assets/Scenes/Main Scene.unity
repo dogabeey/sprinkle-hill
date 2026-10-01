@@ -2277,7 +2277,6 @@ RectTransform:
   - {fileID: 4796880475106837074}
   - {fileID: 2644979211194878112}
   - {fileID: 529080064}
-  - {fileID: 4380953324491230259}
   m_Father: {fileID: 4133448082132307929}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4865,6 +4864,10 @@ PrefabInstance:
       propertyPath: 'winParticle.Array.data[1]'
       value: 
       objectReference: {fileID: 2021190170}
+    - target: {fileID: 5261046741829581099, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
+      propertyPath: debugStartingLevelIndex
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: 6015500058473221691, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: directiveText
       value: 
@@ -4881,6 +4884,14 @@ PrefabInstance:
       propertyPath: animationObjectParent
       value: 
       objectReference: {fileID: 752889591}
+    - target: {fileID: 6015500058473221691, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
+      propertyPath: tutorialSteps.Array.size
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6015500058473221691, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
+      propertyPath: 'tutorialSteps.Array.data[9]'
+      value: 
+      objectReference: {fileID: 11400000, guid: f6e37063b9129db4ba8bca7e6c244dca, type: 2}
     - target: {fileID: 8204118713837901211, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5187,6 +5198,7 @@ RectTransform:
   - {fileID: 1068210311}
   - {fileID: 900864207}
   - {fileID: 752889591}
+  - {fileID: 4380953324491230259}
   - {fileID: 299557236}
   - {fileID: 1510078031}
   m_Father: {fileID: 0}
@@ -5248,7 +5260,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 407152368}
+    m_TransformParent: {fileID: 4133448082132307929}
     m_Modifications:
     - target: {fileID: 145882791731837899, guid: 305f63f73e757ff4ea505e30d379a808, type: 3}
       propertyPath: m_LocalRotation.x
@@ -5466,7 +5478,7 @@ PrefabInstance:
     - target: {fileID: 2645911229673195427, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 1006600997, guid: e1721e006356ea443baff2090acf6c5d, type: 3}
+      objectReference: {fileID: -320327708, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
     - target: {fileID: 4391334057077226476, guid: 77372c52a9c36484788a109a22b083cd, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
