@@ -144,7 +144,7 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: 0.0.5
+  bundleVersion: 0.0.6
   preloadedAssets:
   - {fileID: 11400000, guid: 4d9be9ee80c6a6c4ab8348a765c79a32, type: 2}
   metroInputSource: 0
@@ -170,13 +170,14 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.solaris.sprinklehill
     Standalone: com.lionsfall.hypercasualtemplate
+    iPhone: com.solaris.sprinklehill
   buildNumber:
     Standalone: 1
     VisionOS: 0
-    iPhone: 25
+    iPhone: 26
     tvOS: 0
   overrideDefaultApplicationIdentifier: 1
-  AndroidBundleVersionCode: 25
+  AndroidBundleVersionCode: 26
   AndroidMinSdkVersion: 25
   AndroidTargetSdkVersion: 36
   AndroidPreferredInstallLocation: 1
