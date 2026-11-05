@@ -301,7 +301,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e7242f07a524d28a683a16b0cde37d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game::Game.ClickSoundButton
-  buttonClickSound: ButtonClickSuccess
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
@@ -334,6 +333,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  buttonClickSound: ButtonClickSuccess
 --- !u!1 &4783129388458251860
 GameObject:
   m_ObjectHideFlags: 0
@@ -399,7 +399,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: fcaedb1b76455bf43bc9458a3dd38118, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cbe976dfe7e57324287a730fe97830f4, type: 3}
   m_Type: 1
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -408,7 +408,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 12
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &5235771890845898198
 GameObject:
   m_ObjectHideFlags: 0
@@ -467,7 +467,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e7242f07a524d28a683a16b0cde37d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Game::Game.ClickSoundButton
-  buttonClickSound: ButtonClickSuccess
   m_Navigation:
     m_Mode: 3
     m_WrapAround: 0
@@ -500,6 +499,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  buttonClickSound: ButtonClickSuccess
 --- !u!1 &5235771891358879647
 GameObject:
   m_ObjectHideFlags: 0
@@ -643,7 +643,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: -52.1218, y: -52.1218}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6496942337649309053
 CanvasRenderer:
@@ -673,7 +673,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -320327708, guid: 8ddfe8e62a0b3dc46b6200c1e964b609, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d56943361f662a346b1cc1ab0d372f03, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -718,7 +718,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -23.2, y: -23.2}
+  m_SizeDelta: {x: -42.9703, y: -42.9703}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8717423338878820796
 CanvasRenderer:
@@ -828,7 +828,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b9fe37eeea6e1df46816caf01fb917f9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 085da1d5516b645419ae9d4c6c42121f, type: 3}
   m_Type: 1
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -837,4 +837,4 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 12
+  m_PixelsPerUnitMultiplier: 1
