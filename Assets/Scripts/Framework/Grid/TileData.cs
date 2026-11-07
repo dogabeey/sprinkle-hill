@@ -102,7 +102,7 @@ namespace Game
                                 Sprite tileSprite = DetermineTileType(createData, i, j, drawStartingCorner, gridCells);
                                 if (cellController.gridSprite != null)
                                 {
-                                    cellController.gridSprite.sprite = FallbackToErrorTile(tileSprite);
+                                    cellController.gridSprite.sprite = FallbackToErrorTile(tileSprite, new Vector2Int(i, j));
                                     Color currentColor = cellController.gridSprite.color;
                                     cellController.gridSprite.color = selectedSet != null
                                         ? selectedSet.GetColorForTile(new Vector2Int(i, j), currentColor)
@@ -236,7 +236,7 @@ namespace Game
                 Sprite tileSprite = DetermineTileType(createData, x, y, drawStartingCorner, gridCells);
                 if (cellController.gridSprite != null)
                 {
-                    cellController.gridSprite.sprite = FallbackToErrorTile(tileSprite);
+                    cellController.gridSprite.sprite = FallbackToErrorTile(tileSprite, coordinates);
                     Color currentColor = cellController.gridSprite.color;
                     cellController.gridSprite.color = selectedSet != null
                         ? selectedSet.GetColorForTile(coordinates, currentColor)
@@ -351,37 +351,46 @@ namespace Game
                 ? unbreakableWallTileSprites
                 : normalTileSprites;
 
-            if (!up && !left && right && down) return ResolveSprite(selectedSet != null ? selectedSet.topLeftCorner : null);
-            if (!up && !right && left && down) return ResolveSprite(selectedSet != null ? selectedSet.topRightCorner : null);
-            if (!down && !left && right && up) return ResolveSprite(selectedSet != null ? selectedSet.bottomLeftCorner : null);
-            if (!down && !right && left && up) return ResolveSprite(selectedSet != null ? selectedSet.bottomRightCorner : null);
-            if (!up && down && left && right) return ResolveSprite(selectedSet != null ? selectedSet.topEdge : null);
-            if (!down && up && left && right) return ResolveSprite(selectedSet != null ? selectedSet.bottomEdge : null);
-            if (!left && right && up && down) return ResolveSprite(selectedSet != null ? selectedSet.leftEdge : null);
-            if (!right && left && up && down) return ResolveSprite(selectedSet != null ? selectedSet.rightEdge : null);
-            if (!up && down && !left && !right) return ResolveSprite(selectedSet != null ? selectedSet.topTip : null);
-            if (!down && up && !left && !right) return ResolveSprite(selectedSet != null ? selectedSet.bottomTip : null);
-            if (!left && right && !up && !down) return ResolveSprite(selectedSet != null ? selectedSet.leftTip : null);
-            if (!right && left && !up && !down) return ResolveSprite(selectedSet != null ? selectedSet.rightTip : null);
-            if (!left && !right && up && down) return ResolveSprite(selectedSet != null ? selectedSet.verticalTile : null);
-            if (!up && !down && left && right) return ResolveSprite(selectedSet != null ? selectedSet.horizontalTile : null);
-            if (!upLeft && !downLeft && up && down && left) return ResolveSprite(selectedSet != null ? selectedSet.verticalWithLeftConnectionTile : null);
-            if (!upRight && !downRight && up && down && right) return ResolveSprite(selectedSet != null ? selectedSet.verticalWithRightConnectionTile : null);
-            if (!upLeft && !upRight && left && right && up) return ResolveSprite(selectedSet != null ? selectedSet.horizontalWithUpConnectionTile : null);
-            if (!downLeft && !downRight && left && right && down) return ResolveSprite(selectedSet != null ? selectedSet.horizontalWithDownConnectionTile : null);
-            if (up && down && left && right && !upLeft && !upRight && !downLeft && !downRight) return ResolveSprite(selectedSet != null ? selectedSet.onlyVerticalAndHorizontalConnectionTile : null);
-            if (up && !down && left && !right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedSet != null ? selectedSet.upperAndLeftTile : null);
-            if (up && !down && !left && right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedSet != null ? selectedSet.upperAndRightTile : null);
-            if (!up && down && left && !right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedSet != null ? selectedSet.lowerAndLeftTile : null);
-            if (!up && down && !left && right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedSet != null ? selectedSet.lowerAndRightTile : null);
-            if (!up && !down && !left && !right) return ResolveSprite(selectedSet != null ? selectedSet.singleTileStandalone : null);
-            if (!upLeft && upRight && downLeft && downRight) return ResolveSprite(selectedSet != null ? selectedSet.topLeftConvexCorner : null);
-            if (!upRight && upLeft && downLeft && downRight) return ResolveSprite(selectedSet != null ? selectedSet.topRightConvexCorner : null);
-            if (!downLeft && upLeft && upRight && downRight) return ResolveSprite(selectedSet != null ? selectedSet.bottomLeftConvexCorner : null);
-            if (!downRight && upLeft && upRight && downLeft) return ResolveSprite(selectedSet != null ? selectedSet.bottomRightConvexCorner : null);
-            if (up && down && left && right && upLeft && upRight && downLeft && downRight) return ResolveSprite(selectedSet != null ? selectedSet.singleInnerTile : null);
+            Tiles selectedTiles = selectedSet != null
+                ? selectedSet.GetTilesForTile(new Vector2Int(x, y), sourceCell)
+                : null;
+            Sprite ResolveSprite(Sprite sprite) => sprite != null
+                ? sprite
+                : selectedTiles != null && selectedTiles.errorTile != null
+                    ? selectedTiles.errorTile
+                    : FallbackToErrorTile(null, new Vector2Int(x, y));
 
-            return ResolveSprite(selectedSet != null ? selectedSet.errorTile : null);
+            if (!up && !left && right && down) return ResolveSprite(selectedTiles != null ? selectedTiles.topLeftCorner : null);
+            if (!up && !right && left && down) return ResolveSprite(selectedTiles != null ? selectedTiles.topRightCorner : null);
+            if (!down && !left && right && up) return ResolveSprite(selectedTiles != null ? selectedTiles.bottomLeftCorner : null);
+            if (!down && !right && left && up) return ResolveSprite(selectedTiles != null ? selectedTiles.bottomRightCorner : null);
+            if (!up && down && left && right) return ResolveSprite(selectedTiles != null ? selectedTiles.topEdge : null);
+            if (!down && up && left && right) return ResolveSprite(selectedTiles != null ? selectedTiles.bottomEdge : null);
+            if (!left && right && up && down) return ResolveSprite(selectedTiles != null ? selectedTiles.leftEdge : null);
+            if (!right && left && up && down) return ResolveSprite(selectedTiles != null ? selectedTiles.rightEdge : null);
+            if (!up && down && !left && !right) return ResolveSprite(selectedTiles != null ? selectedTiles.topTip : null);
+            if (!down && up && !left && !right) return ResolveSprite(selectedTiles != null ? selectedTiles.bottomTip : null);
+            if (!left && right && !up && !down) return ResolveSprite(selectedTiles != null ? selectedTiles.leftTip : null);
+            if (!right && left && !up && !down) return ResolveSprite(selectedTiles != null ? selectedTiles.rightTip : null);
+            if (!left && !right && up && down) return ResolveSprite(selectedTiles != null ? selectedTiles.verticalTile : null);
+            if (!up && !down && left && right) return ResolveSprite(selectedTiles != null ? selectedTiles.horizontalTile : null);
+            if (!upLeft && !downLeft && up && down && left) return ResolveSprite(selectedTiles != null ? selectedTiles.verticalWithLeftConnectionTile : null);
+            if (!upRight && !downRight && up && down && right) return ResolveSprite(selectedTiles != null ? selectedTiles.verticalWithRightConnectionTile : null);
+            if (!upLeft && !upRight && left && right && up) return ResolveSprite(selectedTiles != null ? selectedTiles.horizontalWithUpConnectionTile : null);
+            if (!downLeft && !downRight && left && right && down) return ResolveSprite(selectedTiles != null ? selectedTiles.horizontalWithDownConnectionTile : null);
+            if (up && down && left && right && !upLeft && !upRight && !downLeft && !downRight) return ResolveSprite(selectedTiles != null ? selectedTiles.onlyVerticalAndHorizontalConnectionTile : null);
+            if (up && !down && left && !right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedTiles != null ? selectedTiles.upperAndLeftTile : null);
+            if (up && !down && !left && right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedTiles != null ? selectedTiles.upperAndRightTile : null);
+            if (!up && down && left && !right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedTiles != null ? selectedTiles.lowerAndLeftTile : null);
+            if (!up && down && !left && right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedTiles != null ? selectedTiles.lowerAndRightTile : null);
+            if (!up && !down && !left && !right) return ResolveSprite(selectedTiles != null ? selectedTiles.singleTileStandalone : null);
+            if (!upLeft && upRight && downLeft && downRight) return ResolveSprite(selectedTiles != null ? selectedTiles.topLeftConvexCorner : null);
+            if (!upRight && upLeft && downLeft && downRight) return ResolveSprite(selectedTiles != null ? selectedTiles.topRightConvexCorner : null);
+            if (!downLeft && upLeft && upRight && downRight) return ResolveSprite(selectedTiles != null ? selectedTiles.bottomLeftConvexCorner : null);
+            if (!downRight && upLeft && upRight && downLeft) return ResolveSprite(selectedTiles != null ? selectedTiles.bottomRightConvexCorner : null);
+            if (up && down && left && right && upLeft && upRight && downLeft && downRight) return ResolveSprite(selectedTiles != null ? selectedTiles.singleInnerTile : null);
+
+            return ResolveSprite(selectedTiles != null ? selectedTiles.errorTile : null);
         }
 
         public void ApplyFeatureSprite(GridCellController cellController, Grid3D.GridCell[,] gridCells, int x, int y, DrawStartingCorner drawStartingCorner)
@@ -467,37 +476,49 @@ namespace Game
                     break;
             }
 
-            if (!up && !left && right && down) return ResolveSprite(selectedSet.topLeftCorner);
-            if (!up && !right && left && down) return ResolveSprite(selectedSet.topRightCorner);
-            if (!down && !left && right && up) return ResolveSprite(selectedSet.bottomLeftCorner);
-            if (!down && !right && left && up) return ResolveSprite(selectedSet.bottomRightCorner);
-            if (!up && down && left && right) return ResolveSprite(selectedSet.topEdge);
-            if (!down && up && left && right) return ResolveSprite(selectedSet.bottomEdge);
-            if (!left && right && up && down) return ResolveSprite(selectedSet.leftEdge);
-            if (!right && left && up && down) return ResolveSprite(selectedSet.rightEdge);
-            if (!up && down && !left && !right) return ResolveSprite(selectedSet.topTip);
-            if (!down && up && !left && !right) return ResolveSprite(selectedSet.bottomTip);
-            if (!left && right && !up && !down) return ResolveSprite(selectedSet.leftTip);
-            if (!right && left && !up && !down) return ResolveSprite(selectedSet.rightTip);
-            if (!left && !right && up && down) return ResolveSprite(selectedSet.verticalTile);
-            if (!up && !down && left && right) return ResolveSprite(selectedSet.horizontalTile);
-            if (!upLeft && !downLeft && up && down && left) return ResolveSprite(selectedSet.verticalWithLeftConnectionTile);
-            if (!upRight && !downRight && up && down && right) return ResolveSprite(selectedSet.verticalWithRightConnectionTile);
-            if (!upLeft && !upRight && left && right && up) return ResolveSprite(selectedSet.horizontalWithUpConnectionTile);
-            if (!downLeft && !downRight && left && right && down) return ResolveSprite(selectedSet.horizontalWithDownConnectionTile);
-            if (up && down && left && right && !upLeft && !upRight && !downLeft && !downRight) return ResolveSprite(selectedSet.onlyVerticalAndHorizontalConnectionTile);
-            if (up && !down && left && !right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedSet.upperAndLeftTile);
-            if (up && !down && !left && right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedSet.upperAndRightTile);
-            if (!up && down && left && !right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedSet.lowerAndLeftTile);
-            if (!up && down && !left && right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedSet.lowerAndRightTile);
-            if (!up && !down && !left && !right) return ResolveSprite(selectedSet.singleTileStandalone);
-            if (!upLeft && upRight && downLeft && downRight) return ResolveSprite(selectedSet.topLeftConvexCorner);
-            if (!upRight && upLeft && downLeft && downRight) return ResolveSprite(selectedSet.topRightConvexCorner);
-            if (!downLeft && upLeft && upRight && downRight) return ResolveSprite(selectedSet.bottomLeftConvexCorner);
-            if (!downRight && upLeft && upRight && downLeft) return ResolveSprite(selectedSet.bottomRightConvexCorner);
-            if (up && down && left && right && upLeft && upRight && downLeft && downRight) return ResolveSprite(selectedSet.singleInnerTile);
+            Tiles selectedTiles = selectedSet != null
+                ? selectedSet.GetTilesForTile(new Vector2Int(x, y), gridCells[x, y])
+                : null;
+            Sprite ResolveSprite(Sprite sprite) => sprite != null
+                ? sprite
+                : selectedTiles != null && selectedTiles.errorTile != null
+                    ? selectedTiles.errorTile
+                    : FallbackToErrorTile(null, new Vector2Int(x, y));
 
-            return ResolveSprite(selectedSet.errorTile);
+            if (selectedTiles == null)
+                return ResolveSprite(null);
+
+            if (!up && !left && right && down) return ResolveSprite(selectedTiles.topLeftCorner);
+            if (!up && !right && left && down) return ResolveSprite(selectedTiles.topRightCorner);
+            if (!down && !left && right && up) return ResolveSprite(selectedTiles.bottomLeftCorner);
+            if (!down && !right && left && up) return ResolveSprite(selectedTiles.bottomRightCorner);
+            if (!up && down && left && right) return ResolveSprite(selectedTiles.topEdge);
+            if (!down && up && left && right) return ResolveSprite(selectedTiles.bottomEdge);
+            if (!left && right && up && down) return ResolveSprite(selectedTiles.leftEdge);
+            if (!right && left && up && down) return ResolveSprite(selectedTiles.rightEdge);
+            if (!up && down && !left && !right) return ResolveSprite(selectedTiles.topTip);
+            if (!down && up && !left && !right) return ResolveSprite(selectedTiles.bottomTip);
+            if (!left && right && !up && !down) return ResolveSprite(selectedTiles.leftTip);
+            if (!right && left && !up && !down) return ResolveSprite(selectedTiles.rightTip);
+            if (!left && !right && up && down) return ResolveSprite(selectedTiles.verticalTile);
+            if (!up && !down && left && right) return ResolveSprite(selectedTiles.horizontalTile);
+            if (!upLeft && !downLeft && up && down && left) return ResolveSprite(selectedTiles.verticalWithLeftConnectionTile);
+            if (!upRight && !downRight && up && down && right) return ResolveSprite(selectedTiles.verticalWithRightConnectionTile);
+            if (!upLeft && !upRight && left && right && up) return ResolveSprite(selectedTiles.horizontalWithUpConnectionTile);
+            if (!downLeft && !downRight && left && right && down) return ResolveSprite(selectedTiles.horizontalWithDownConnectionTile);
+            if (up && down && left && right && !upLeft && !upRight && !downLeft && !downRight) return ResolveSprite(selectedTiles.onlyVerticalAndHorizontalConnectionTile);
+            if (up && !down && left && !right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedTiles.upperAndLeftTile);
+            if (up && !down && !left && right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedTiles.upperAndRightTile);
+            if (!up && down && left && !right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedTiles.lowerAndLeftTile);
+            if (!up && down && !left && right && !downLeft && !upLeft && !upRight && !downRight) return ResolveSprite(selectedTiles.lowerAndRightTile);
+            if (!up && !down && !left && !right) return ResolveSprite(selectedTiles.singleTileStandalone);
+            if (!upLeft && upRight && downLeft && downRight) return ResolveSprite(selectedTiles.topLeftConvexCorner);
+            if (!upRight && upLeft && downLeft && downRight) return ResolveSprite(selectedTiles.topRightConvexCorner);
+            if (!downLeft && upLeft && upRight && downRight) return ResolveSprite(selectedTiles.bottomLeftConvexCorner);
+            if (!downRight && upLeft && upRight && downLeft) return ResolveSprite(selectedTiles.bottomRightConvexCorner);
+            if (up && down && left && right && upLeft && upRight && downLeft && downRight) return ResolveSprite(selectedTiles.singleInnerTile);
+
+            return ResolveSprite(selectedTiles.errorTile);
         }
 
         private bool HasMatchingFeature(Grid3D.GridCell[,] gridCells, int x, int y, CellFeature feature, int groupIndex)
@@ -618,23 +639,17 @@ namespace Game
             return normalCell != null ? normalCell.gameObject : null;
         }
 
-        private Sprite FallbackToErrorTile(Sprite tile)
+        private Sprite FallbackToErrorTile(Sprite tile, Vector2Int coordinates)
         {
             if (tile != null)
                 return tile;
 
-            if (normalTileSprites != null && normalTileSprites.errorTile != null)
-                return normalTileSprites.errorTile;
+            Tiles normalTiles = normalTileSprites != null ? normalTileSprites.GetTilesForTile(coordinates) : null;
+            if (normalTiles != null && normalTiles.errorTile != null)
+                return normalTiles.errorTile;
 
-            if (unbreakableWallTileSprites != null && unbreakableWallTileSprites.errorTile != null)
-                return unbreakableWallTileSprites.errorTile;
-
-            return null;
-        }
-
-        private Sprite ResolveSprite(Sprite sprite)
-        {
-            return FallbackToErrorTile(sprite);
+            Tiles wallTiles = unbreakableWallTileSprites != null ? unbreakableWallTileSprites.GetTilesForTile(coordinates) : null;
+            return wallTiles != null ? wallTiles.errorTile : null;
         }
         /*
         /// <summary>

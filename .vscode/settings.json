@@ -67,5 +67,5 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "sprinkle-hill.slnx"
+    "dotnet.defaultSolution": "Sprinkle Hill.slnx"
 }
