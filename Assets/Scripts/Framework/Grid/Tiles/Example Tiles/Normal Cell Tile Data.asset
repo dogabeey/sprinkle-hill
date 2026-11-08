@@ -26,4 +26,4 @@ MonoBehaviour:
       type: {class: CheckeredTileRuleSet, ns: Game, asm: Game}
       data:
         tiles1: {fileID: 11400000, guid: b9f2ce0536d340c5a8043f044cce9810, type: 2}
-        tiles2: {fileID: 0}
+        tiles2: {fileID: 11400000, guid: 7edd456d3b00bcd4db7f9d5c8bc0f08d, type: 2}
