@@ -14,13 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileMaterial: {fileID: 0}
   colorRuleset:
-    rid: 7533469493743321291
+    rid: -2
   tileRuleset:
-    rid: 9223372036854775000
+    rid: 8953727986737872896
   references:
     version: 2
     RefIds:
-    - rid: 9223372036854775000
-      type: {class: SingleTileRuleSet, ns: Game, asm: Game}
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 8953727986737872896
+      type: {class: CheckeredTileRuleSet, ns: Game, asm: Game}
       data:
-        tiles: {fileID: 11400000, guid: b9f2ce0536d340c5a8043f044cce9810, type: 2}
+        tiles1: {fileID: 11400000, guid: b9f2ce0536d340c5a8043f044cce9810, type: 2}
+        tiles2: {fileID: 0}
