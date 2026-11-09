@@ -16,4 +16,4 @@ MonoBehaviour:
   description: Break %c boxes.
   creationCountEvent: 818
   completionEvent: 800
-  objectiveTypeSprite: {fileID: -474482603, guid: a46309d38df06264b96c750375a58bd1, type: 3}
+  objectiveTypeSprite: {fileID: 21300000, guid: 3ee9d898dca472b4383ed73c871b8c19, type: 3}
