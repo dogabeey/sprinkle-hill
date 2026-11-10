@@ -4902,7 +4902,7 @@ PrefabInstance:
       objectReference: {fileID: 2021190170}
     - target: {fileID: 5261046741829581099, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: debugStartingLevelIndex
-      value: 13
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6015500058473221691, guid: 6af59354d5893e442b8db0ff1e3185f9, type: 3}
       propertyPath: directiveText
